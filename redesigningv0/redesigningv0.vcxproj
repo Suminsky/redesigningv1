@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{45FF0DB4-4632-48BB-9165-3F219D9276C9}</ProjectGuid>
+    <RootNamespace>redesigningv0</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProgramFiles)\Windows Kits\8.0\bin\x86;$(ProgramFiles)\Windows Kits\8.0\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(ProgramFiles)\Windows Kits\8.0\bin\x86;$(ProgramFiles)\Windows Kits\8.0\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x64;$(LibraryPath)</LibraryPath>
+    <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(ProgramFiles)\Windows Kits\8.0\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x86;$(LibraryPath)</LibraryPath>
+    <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ExecutablePath>$(ProgramFiles)\Windows Kits\8.0\bin\x86;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LibraryPath>$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x86;$(LibraryPath)</LibraryPath>
+    <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="namespace game\Component.h" />
+    <ClInclude Include="namespace game\Game.h" />
+    <ClInclude Include="namespace game\Object.h" />
+    <ClInclude Include="namespace sprite\Camera.h" />
+    <ClInclude Include="namespace render\ConstantBuffer.h" />
+    <ClInclude Include="namespace render\dx\pipeline\BinderBinds.h" />
+    <ClInclude Include="namespace render\dx\pipeline\Command.h" />
+    <ClInclude Include="namespace render\dx\HLSLResource.h" />
+    <ClInclude Include="namespace render\Drawable.h" />
+    <ClInclude Include="namespace render\dx\pipeline\DrawCall.h" />
+    <ClInclude Include="namespace render\dx\pipeline\Binder.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\DepthStencilState.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\BlendState.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\BufferResource.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\InputLayout.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\RenderTargetView.h" />
+    <ClInclude Include="namespace gen\gen_data.h" />
+    <ClInclude Include="namespace gen\gen_macros.h" />
+    <ClInclude Include="namespace sprite\binders cache\binderscache.h" />
+    <ClInclude Include="namespace sprite\binders cache\BlendStateBinders.h" />
+    <ClInclude Include="namespace sprite\CameraCbuffer.h" />
+    <ClInclude Include="namespace sprite\DrawableCbuffer.h" />
+    <ClInclude Include="namespace sprite\Movable.h" />
+    <ClInclude Include="namespace win\FileLogger.h" />
+    <ClInclude Include="namespace win\HighPerformanceTimer.h" />
+    <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
+    <ClInclude Include="namespace win\Window.h" />
+    <ClInclude Include="namespace win\win_genData.h" />
+    <ClInclude Include="namespace win\win_IDs.h" />
+    <ClInclude Include="namespace win\win_macros.h" />
+    <ClInclude Include="namespace render\dx\ResourceCache.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\VertexShader.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\PixelShader.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\TextureResource.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\ShaderResourceView.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\RasterizerState.h" />
+    <ClInclude Include="namespace render\dx\type wrappers\SamplerState.h" />
+    <ClInclude Include="namespace render\DrawablesQueue.h" />
+    <ClInclude Include="namespace sprite\SpriteRenderer.h" />
+    <ClInclude Include="namespace render\dx\SwapChain.h" />
+    <ClInclude Include="namespace render\dx\Device.h" />
+    <ClInclude Include="namespace sprite\Sprite.h" />
+    <ClInclude Include="namespace sprite\binders cache\TextureBinders.h" />
+    <ClInclude Include="namespace sprite\binders cache\SamplerStateBinders.h" />
+    <ClInclude Include="namespace game\State.h" />
+    <ClInclude Include="namespace game\StateMachine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="namespace game\Component.cpp" />
+    <ClCompile Include="namespace game\Game.cpp" />
+    <ClCompile Include="namespace game\Object.cpp" />
+    <ClCompile Include="namespace render\ConstantBuffer.cpp" />
+    <ClCompile Include="namespace sprite\Camera.cpp" />
+    <ClCompile Include="namespace sprite\binders cache\BlendStateBinders.cpp" />
+    <ClCompile Include="namespace render\dx\pipeline\Command.cpp" />
+    <ClCompile Include="namespace render\dx\HLSLResource.cpp" />
+    <ClCompile Include="namespace render\Drawable.cpp" />
+    <ClCompile Include="namespace render\dx\pipeline\DrawCall.cpp" />
+    <ClCompile Include="namespace render\dx\pipeline\Binder.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\DepthStencilState.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\BlendState.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
+    <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
+    <ClCompile Include="namespace sprite\Movable.cpp" />
+    <ClCompile Include="namespace win\FileLogger.cpp" />
+    <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
+    <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />
+    <ClCompile Include="namespace win\Window.cpp" />
+    <ClCompile Include="namespace render\dx\ResourceCache.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\VertexShader.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\PixelShader.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\TextureResource.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\ShaderResourceView.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\RasterizerState.cpp" />
+    <ClCompile Include="namespace render\dx\type wrappers\SamplerState.cpp" />
+    <ClCompile Include="namespace render\DrawablesQueue.cpp" />
+    <ClCompile Include="namespace sprite\SpriteRenderer.cpp" />
+    <ClCompile Include="namespace render\dx\SwapChain.cpp" />
+    <ClCompile Include="namespace render\dx\Device.cpp" />
+    <ClCompile Include="namespace sprite\Sprite.cpp" />
+    <ClCompile Include="namespace sprite\binders cache\TextureBinders.cpp" />
+    <ClCompile Include="namespace sprite\binders cache\SamplerStateBinders.cpp" />
+    <ClCompile Include="namespace game\State.cpp" />
+    <ClCompile Include="namespace game\StateMachine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gsp_Icons.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RC_icon.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
