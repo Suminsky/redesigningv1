@@ -9,7 +9,7 @@ void Game::FixedStepLoop(){
 
 	// get time since last timer update
 	double && dDeltaSeconds = m_timer.GetDeltaSeconds();
-	double && dSeconds = m_timer.GetSecondsAccum();
+	//double && dSeconds = m_timer.GetSecondsAccum();
 
 	// cap to max frame delay allowed, this is to avoid spiral of death
 
@@ -28,7 +28,7 @@ void Game::FixedStepLoop(){
 		// consume the fixed amount from the accumulated buffer
 		dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;
 
-		m_stateControl.Update( dSeconds, m_dFixedTimeStep );
+		m_stateControl.Update( m_dFixedTimeStep );
 	}
 
 	// compute the interpolation factor based on the remaining timing

@@ -1,4 +1,5 @@
 #include "DrawablesQueue.h"
+#include <algorithm>
 
 void render::DrawablesQueue::CreateCommandBuffer( dx::commandbuffer & commandList_p, bool bClearStateCache_p )
 {

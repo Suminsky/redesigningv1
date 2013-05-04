@@ -29,7 +29,7 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 {
 	// primitive topology
 
-	m_defaultVertexInput.AddBinderCommand( new dx::BindIAPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ));
+	m_defaultVertexInput.AddBinderCommand(  std::make_shared<dx::BindIAPrimitiveTopology>( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ));
 
 	// input layout
 
@@ -53,7 +53,7 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	ID3D11InputLayout * pInputLayout = NULL;
 	pDevice_p->m_pCacheInputLayout->Acquire(params, pInputLayout);
 
-	m_defaultVertexInput.AddBinderCommand(new dx::BindIAInputLayout( pInputLayout));
+	m_defaultVertexInput.AddBinderCommand( std::make_shared<dx::BindIAInputLayout>( pInputLayout));
 
 	// vertex buffer
 
@@ -76,7 +76,7 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	ID3D11Buffer * pVB = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire(vbParams, pVB);
 
-	m_defaultVertexInput.AddBinderCommand(new dx::BindIAVertexBuffer(0, pVB, sizeof(float)*5) );
+	m_defaultVertexInput.AddBinderCommand( std::make_shared< dx::BindIAVertexBuffer>(0, pVB, sizeof(float)*5) );
 
 	// index buffer
 
@@ -91,7 +91,7 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 
 	//pVB = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire(vbParams, pVB);
-	m_defaultVertexInput.AddBinderCommand(new dx::BindIAIndexBuffer(pVB));
+	m_defaultVertexInput.AddBinderCommand( std::make_shared< dx::BindIAIndexBuffer>(pVB));
 }
 
 void sprite::SpriteRenderer::LoadShader( dx::Device *pDevice_p, const char * szVS_p,const char * szPS_p )

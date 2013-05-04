@@ -19,7 +19,7 @@
 // system/standard headers
 
 #include <vector>
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
 
 // private headers
 

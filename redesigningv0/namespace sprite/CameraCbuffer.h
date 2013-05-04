@@ -19,7 +19,7 @@
 
 #include <D3D11.h>
 #include <DirectXMath.h>
-#include <boost/shared_ptr.hpp>
+//#include <boost/shared_ptr.hpp>
 
 // private headers
 
@@ -59,7 +59,7 @@ namespace sprite{
 		}
 	};
 
-	typedef boost::shared_ptr<CameraCbuffer> shared_CameraCbuffer_ptr;
+	typedef std::shared_ptr<CameraCbuffer> shared_CameraCbuffer_ptr;
 
 	//========================================================================
 	// bind command specialized for drawable cbuffer

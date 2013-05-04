@@ -138,7 +138,9 @@
   <ItemGroup>
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\Game.h" />
+    <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
+    <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace sprite\Camera.h" />
     <ClInclude Include="namespace render\ConstantBuffer.h" />
     <ClInclude Include="namespace render\dx\pipeline\BinderBinds.h" />
@@ -187,6 +189,7 @@
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\Game.cpp" />
     <ClCompile Include="namespace game\Object.cpp" />
+    <ClCompile Include="namespace game\Timer.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
     <ClCompile Include="namespace sprite\Camera.cpp" />
     <ClCompile Include="namespace sprite\binders cache\BlendStateBinders.cpp" />

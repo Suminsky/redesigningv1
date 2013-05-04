@@ -36,7 +36,7 @@ Sprite::Sprite( dx::Device * pDevice_p,
 
 	// initialize pipe state for this sprite
 
-	m_pipeState.AddBinderCommand( new BindVSDrawableCBuffer(pBuffer, shared_DrawableCbuffer_ptr(&m_renderData, &gen::NoOp<DrawableCbuffer>) )  );
+	m_pipeState.AddBinderCommand(  std::make_shared<BindVSDrawableCBuffer>(pBuffer, shared_DrawableCbuffer_ptr(&m_renderData, &gen::NoOp<DrawableCbuffer>) )  );
 
 	m_pipeState.AddBinderCommand( dx::shared_Binder_ptr(&pSpriteRenderer_p->m_texs.Get(szTexture_p), &gen::NoOp<dx::Binder>  ));
 	m_pipeState.AddBinderCommand( dx::shared_Binder_ptr(&pSpriteRenderer_p->m_samplers.GetSamplerBind(sampler_p), &gen::NoOp<dx::Binder>  ));

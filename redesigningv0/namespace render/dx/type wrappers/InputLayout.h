@@ -54,6 +54,7 @@ namespace dx{
 		//------------------------------------------------------------------------
 		struct Description{
 
+
 			boost::shared_array<D3D11_INPUT_ELEMENT_DESC> pInputElementsDescs;
 			UINT nElements;
 

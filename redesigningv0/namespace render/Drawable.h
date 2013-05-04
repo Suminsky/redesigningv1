@@ -18,7 +18,7 @@
 
 // system/standard headers
 
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
 
 // private headers
 
@@ -36,7 +36,7 @@ namespace render{
 	public:		
 
 		dx::statevec m_PipeStatesGroup;					// binder commands
-		boost::shared_ptr<dx::DrawCall> m_pDrawCall;	// draw
+		std::shared_ptr<dx::DrawCall> m_pDrawCall;	// draw
 
 		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
 
@@ -58,7 +58,7 @@ namespace render{
 
 			return &m_PipeStatesGroup;
 		}
-		boost::shared_ptr<dx::DrawCall> GetDrawCall() const{
+		std::shared_ptr<dx::DrawCall> GetDrawCall() const{
 			return m_pDrawCall;
 		}
 

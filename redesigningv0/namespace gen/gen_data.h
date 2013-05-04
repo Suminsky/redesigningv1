@@ -29,6 +29,16 @@ namespace gen{
 	}
 
 	//========================================================================
+	// used nitially for std::shared_ptr which for some really stupid reason
+	// don't have a T[] version like unique_ptr
+	//========================================================================
+	template <class T>
+	static void ArrayDeleter(T* obj){
+
+		delete [] obj;
+	}
+
+	//========================================================================
 	// 
 	//========================================================================
 	enum EHORZALIGN{

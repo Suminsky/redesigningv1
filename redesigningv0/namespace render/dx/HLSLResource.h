@@ -29,7 +29,7 @@
 
 #include <string>
 
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
 
 // private includes
 
@@ -66,7 +66,7 @@ namespace dx{
 	struct ShaderResource{
 
 		std::string m_szName;
-		boost::scoped_array<ShaderPermutation> m_permutations;
+		std::unique_ptr<ShaderPermutation[]> m_permutations;
 
 		UINT m_nPermutations;
 

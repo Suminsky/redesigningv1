@@ -19,7 +19,7 @@
 // system/standard headers
 
 #include <vector>
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
 
 // private headers
 #include "Command.h"
@@ -205,7 +205,7 @@ namespace dx{
 		}
 	};
 
-	typedef boost::shared_ptr<Binder> shared_Binder_ptr;
+	typedef std::shared_ptr<Binder> shared_Binder_ptr;
 	typedef std::vector<shared_Binder_ptr> bindervec;
 	
 
@@ -265,7 +265,7 @@ namespace dx{
 	};
 
 
-	typedef boost::shared_ptr<State> shared_State_ptr;
+	typedef std::shared_ptr<State> shared_State_ptr;
 	typedef std::vector<shared_State_ptr> statevec;
 }
 

@@ -28,7 +28,6 @@
 #include <D3DX11core.h>	//including because of D3DERR_INVALIDCALL
 
 #include <vector>
-#include <boost/smart_ptr.hpp>
 
 namespace dx{
 
@@ -44,6 +43,6 @@ namespace dx{
 		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ) = 0;
 	};
 
-	typedef std::vector<boost::shared_ptr<Command>> commandbuffer;
+	typedef std::vector<std::shared_ptr<Command>> commandbuffer;
 
 }

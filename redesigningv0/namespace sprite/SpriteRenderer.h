@@ -20,7 +20,7 @@
 
 // system/standard headers
 
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
 
 // private headers
 #include "../namespace gen/gen_data.h"

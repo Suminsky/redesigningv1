@@ -1,33 +1,29 @@
 #pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
-	created:	2013/04/12
-	created:	12:4:2013   20:21
-	file:		AState.h
+	created:	2013/05/04
+	created:	4:5:2013   17:36
+	file:		Layer.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	A game state.
-				I.e. menu, level 1, level 2, map screen, game over, etc.
+	purpose:	a state is composed of layers (in game, hud, pause menu, denug console..) 
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-#include <memory>
 
+// standard includes
+
+// private includes
 #include "Timer.h"
 
 namespace game{
 
-	class AState{
+	class ALayer{
 
 		Timer<double> m_timer;
+		bool m_bActive;
 
-	public:
-
-		//------------------------------------------------------------------------
-		// dctor
-		//------------------------------------------------------------------------
-		virtual ~AState(){}
 
 		//------------------------------------------------------------------------
 		// updates state timer and call updates with timer time
@@ -39,6 +35,10 @@ namespace game{
 			VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
 		}
 
+
+	public:
+
+		
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
@@ -48,5 +48,5 @@ namespace game{
 		virtual void VDestroy(){}
 	};
 
-	typedef std::shared_ptr<AState> shared_AState_ptr;
+	typedef std::shared_ptr<ALayer> shared_ALayer_ptr;
 }

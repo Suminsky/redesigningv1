@@ -17,6 +17,7 @@
 #pragma once
 
 #include "../../ConstantBuffer.h"
+#include <assert.h>
 
 namespace dx{
 
@@ -135,11 +136,11 @@ class BindVSConstantBuffer : public Binder{
 
 	UINT m_iStartSlot;
 	ID3D11Buffer *m_pConstantBuffer;
-	boost::shared_ptr<render::ConstantBuffer> m_pConstantBufferData;
+	std::shared_ptr<render::ConstantBuffer> m_pConstantBufferData;
 
 public:
 
-	BindVSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p,  const boost::shared_ptr<render::ConstantBuffer> & pConstBufferData_p )
+	BindVSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p,  const std::shared_ptr<render::ConstantBuffer> & pConstBufferData_p )
 		:
 	  Binder( 1LL << (E_VS_CBuffer0 + iSlot_p), E_BIND(E_VS_CBuffer0 + iSlot_p) ),
 	  m_iStartSlot( iSlot_p ), m_pConstantBuffer( pConstantBuffers_p ),
@@ -235,11 +236,11 @@ class BindPSConstantBuffer : public Binder{
 
 	UINT m_iStartSlot;
 	ID3D11Buffer *m_pConstantBuffer;
-	boost::shared_ptr<render::ConstantBuffer> m_pConstantBufferData;
+	std::shared_ptr<render::ConstantBuffer> m_pConstantBufferData;
 
 public:
 
-	BindPSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p,  const boost::shared_ptr<render::ConstantBuffer> & pConstBufferData_p )
+	BindPSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p,  const std::shared_ptr<render::ConstantBuffer> & pConstBufferData_p )
 		:
 		Binder( 1LL << (E_PS_CBuffer0 + iSlot_p), E_BIND(E_PS_CBuffer0 + iSlot_p) ),
 		m_iStartSlot( iSlot_p ), m_pConstantBuffer( pConstantBuffers_p ),

@@ -20,7 +20,8 @@
 
 
 #include <D3D11.h>
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
+#include <memory>
 
 namespace render{
 
@@ -35,9 +36,9 @@ namespace render{
 		UINT m_nBytes;
 		UINT m_nVariables;
 
-		boost::scoped_array<BYTE> m_variablesBuffer;
-		boost::scoped_array<byteoffset> m_variablesOffsets;
-		boost::scoped_array<UINT> m_variablesSizes;
+		std::unique_ptr<BYTE[]> m_variablesBuffer;
+		std::unique_ptr<byteoffset[]> m_variablesOffsets;
+		std::unique_ptr<UINT[]> m_variablesSizes;
 
 		bool m_bNeedUpdate;	// used to check if it needs update to the pipeline
 
@@ -113,5 +114,5 @@ namespace render{
 		}
 	};
 
-	typedef boost::shared_ptr<ConstantBuffer> shared_CBuffer_ptr;
+	typedef std::shared_ptr<ConstantBuffer> shared_CBuffer_ptr;
 }

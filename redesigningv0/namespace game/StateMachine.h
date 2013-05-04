@@ -33,11 +33,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		// Updates current state
 		//------------------------------------------------------------------------
-		void Update( const double dTime_p, const double dDeltaTime_p ){
+		void Update( const double dDeltaTime_p ){
 
 			if( m_pCurrentState ){
 
-				m_pCurrentState->VUpdate( dTime_p, dDeltaTime_p );
+				m_pCurrentState->Update( dDeltaTime_p );
 			}
 		}
 
