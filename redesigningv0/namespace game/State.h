@@ -3,7 +3,7 @@
 /*
 	created:	2013/04/12
 	created:	12:4:2013   20:21
-	file:		AState.h
+	file:		State.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	A game state.
@@ -13,40 +13,95 @@
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #include <memory>
+#include <vector>
 
 #include "Timer.h"
+#include "Layer.h"
+
 
 namespace game{
 
-	class AState{
+	//class ALayer;
+	class StateMachine;
+	typedef std::vector<shared_ALayer_ptr> StateLayers;
+
+	class State{
+
+		friend StateMachine;
 
 		Timer<double> m_timer;
+		StateLayers m_layers;
+
+
+		//------------------------------------------------------------------------
+		// updates state timer and call updates with timer time, for each layer
+		//------------------------------------------------------------------------
+		void Update( const double dDeltaTime_p ){
+
+			m_timer.Update( dDeltaTime_p );
+
+			// traverse layers and update them, if active
+
+			for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
+				it != itEnd; ++ it ){
+
+					if( (*it)->m_bActive ){
+					
+						(*it)->Update( dDeltaTime_p );
+					}
+			}
+		}
+
+		//------------------------------------------------------------------------
+		// traverse layer and call draw
+		//------------------------------------------------------------------------
+		void Draw( const double dInterpolation_p ){
+
+			for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
+				it != itEnd; ++ it ){
+
+					if( (*it)->m_bActive ){
+
+						(*it)->VDraw( dInterpolation_p );
+					}
+			}
+		}
+
 
 	public:
 
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		virtual ~AState(){}
-
-		//------------------------------------------------------------------------
-		// updates state timer and call updates with timer time
-		//------------------------------------------------------------------------
-		void Update( const double dDeltaTime_p ){
-
-			m_timer.Update( dDeltaTime_p );
-
-			VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
-		}
+		virtual ~State(){}
 
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VInit(){}
-		virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ) = 0;
-		virtual void VDraw( const double /*dInterpolation_p*/ ){}
 		virtual void VDestroy(){}
+
+
+		//------------------------------------------------------------------------
+		// layer stuff
+		//------------------------------------------------------------------------
+		void AddLayer( shared_ALayer_ptr pNewLayer_p ){
+
+			pNewLayer_p->VInit();
+
+			m_layers.push_back( pNewLayer_p );
+			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+		}
+		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
+
+			 m_layers[layerCurrentIndex_p]->VDestroy();
+
+			std::swap( m_layers[layerCurrentIndex_p], m_layers[m_layers.size()-1] );
+			m_layers[layerCurrentIndex_p]->m_currentStateIndex = layerCurrentIndex_p; // update index
+			m_layers.pop_back();
+		}
+
 	};
 
-	typedef std::shared_ptr<AState> shared_AState_ptr;
+	typedef std::shared_ptr<State> shared_State_ptr;
 }

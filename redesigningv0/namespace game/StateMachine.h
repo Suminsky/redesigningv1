@@ -20,7 +20,7 @@ namespace game{
 
 	class StateMachine{
 
-		shared_AState_ptr m_pCurrentState;
+		shared_State_ptr m_pCurrentState;
 
 	public:
 
@@ -48,14 +48,14 @@ namespace game{
 
 			if( m_pCurrentState ){
 
-				m_pCurrentState->VDraw( dInterpolation_p );
+				m_pCurrentState->Draw( dInterpolation_p );
 			}
 		}
 
 		//------------------------------------------------------------------------
 		// Changes current state, destroying current and initializing the new properly.
 		//------------------------------------------------------------------------
-		void ChangeState( shared_AState_ptr pNewState_p ){
+		void ChangeState( shared_State_ptr pNewState_p ){
 
 			// destroy current state, if any
 

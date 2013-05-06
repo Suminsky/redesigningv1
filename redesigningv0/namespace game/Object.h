@@ -32,6 +32,7 @@ namespace game{
 	class AComponent;
 
 	typedef unsigned int ObjectID;
+	typedef std::vector<shared_AComponent_ptr> ObjectComponents;
 
 	//========================================================================
 	// 
@@ -40,15 +41,29 @@ namespace game{
 	protected:
 
 		ObjectID m_ID;
-		std::vector<shared_AComponent_ptr> m_components;
+		ObjectComponents m_components;
 
 	public:
+
+		bool m_bActive;
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
 		Object(){}
 		virtual ~Object(){}
+
+		//------------------------------------------------------------------------
+		// update the object components
+		//------------------------------------------------------------------------
+		void Update( double dTime_p, double dDelta_p ){
+
+			for( ObjectComponents::iterator it = m_components.begin(), itEnd = m_components.end();
+					it != itEnd; ++ it ){
+
+					(*it)->VOnUpdate( dTime_p, dDelta_p );
+			}
+		}
 
 		//------------------------------------------------------------------------
 		// get id
