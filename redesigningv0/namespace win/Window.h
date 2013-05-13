@@ -60,7 +60,7 @@ namespace win{
 		void RegisterWndClass(  TCHAR * szClassName_p,
 								HBRUSH bgBrush_p,
 								const HICON hIcon_p,		// application icon(include all sizes in the .ico file)
-								UINT style_p								);
+								UINT style_p								) const;
 
 		//------------------------------------------------------------------------
 		// Creates a Win32 window, initializing m_hWnd

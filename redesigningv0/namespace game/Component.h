@@ -17,7 +17,6 @@
 namespace game{
 
 	class Object;
-
 	typedef unsigned int ComponentID;
 
 	//========================================================================
@@ -43,6 +42,7 @@ namespace game{
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ) = 0;
+		//virtual void VOnEvent( Event event_p ) = 0;
 
 		//------------------------------------------------------------------------
 		// get id

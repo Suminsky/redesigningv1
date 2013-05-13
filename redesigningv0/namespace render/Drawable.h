@@ -33,7 +33,7 @@ namespace render{
 
 	class Drawable{
 
-	public:		
+	public:
 
 		dx::statevec m_PipeStatesGroup;					// binder commands
 		std::shared_ptr<dx::DrawCall> m_pDrawCall;	// draw

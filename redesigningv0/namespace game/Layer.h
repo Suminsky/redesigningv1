@@ -27,7 +27,7 @@ namespace game{
 	typedef unsigned int LAYER_STATEINDEX;
 	typedef std::vector<shared_Object_ptr> LayerObjects;
 
-	class ALayer{
+	class Layer{
 
 		friend State;
 
@@ -58,7 +58,6 @@ namespace game{
 			}
 		}
 
-
 	public:
 
 		bool m_bActive;
@@ -67,10 +66,10 @@ namespace game{
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VInit(){}
-		virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ) = 0;
+		virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
 		virtual void VDraw( const double /*dInterpolation_p*/ ){}
 		virtual void VDestroy(){}
 	};
 
-	typedef std::shared_ptr<ALayer> shared_ALayer_ptr;
+	typedef std::shared_ptr<Layer> shared_Layer_ptr;
 }

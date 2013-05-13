@@ -159,6 +159,15 @@
     <ClInclude Include="namespace game\Layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace input\Mapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testing\gameWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testing\TestState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">

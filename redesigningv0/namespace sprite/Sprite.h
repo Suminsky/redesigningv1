@@ -49,7 +49,6 @@ namespace sprite{
 			UINT Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
 			UINT shaderID		: 15;
 			UINT textureID		: 15;
-
 		} bitField;
 
 		UINT64 intRepresentation;

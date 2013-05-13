@@ -141,6 +141,7 @@
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
     <ClInclude Include="namespace game\Timer.h" />
+    <ClInclude Include="namespace input\Mapper.h" />
     <ClInclude Include="namespace sprite\Camera.h" />
     <ClInclude Include="namespace render\ConstantBuffer.h" />
     <ClInclude Include="namespace render\dx\pipeline\BinderBinds.h" />
@@ -184,6 +185,8 @@
     <ClInclude Include="namespace sprite\binders cache\SamplerStateBinders.h" />
     <ClInclude Include="namespace game\State.h" />
     <ClInclude Include="namespace game\StateMachine.h" />
+    <ClInclude Include="testing\gameWindow.h" />
+    <ClInclude Include="testing\TestState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace game\Component.cpp" />

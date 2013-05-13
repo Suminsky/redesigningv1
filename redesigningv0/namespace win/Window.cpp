@@ -6,7 +6,7 @@
 
 using namespace win;
 
-void win::Window::RegisterWndClass( TCHAR * szClassName_p, HBRUSH bgBrush_p, const HICON hIcon_p, /* application icon(include all sizes in the .ico file) */ UINT style_p )
+void win::Window::RegisterWndClass( TCHAR * szClassName_p, HBRUSH bgBrush_p, const HICON hIcon_p, /* application icon(include all sizes in the .ico file) */ UINT style_p ) const
 {
 	WNDCLASSEX wcX;
 

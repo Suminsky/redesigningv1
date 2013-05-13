@@ -23,13 +23,16 @@ namespace game{
 
 	//class ALayer;
 	class StateMachine;
-	typedef std::vector<shared_ALayer_ptr> StateLayers;
+	typedef std::vector<shared_Layer_ptr> StateLayers;
 
 	class State{
 
 		friend StateMachine;
 
+	protected:
 		Timer<double> m_timer;
+
+	private:
 		StateLayers m_layers;
 
 
@@ -85,7 +88,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// layer stuff
 		//------------------------------------------------------------------------
-		void AddLayer( shared_ALayer_ptr pNewLayer_p ){
+		void AddLayer( shared_Layer_ptr pNewLayer_p ){
 
 			pNewLayer_p->VInit();
 

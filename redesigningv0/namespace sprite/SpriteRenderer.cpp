@@ -58,11 +58,11 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	// vertex buffer
 
 	vpostex vData[] = {
+
 		{{-0.5f, 0.5f, 0.5f},	{0.0f, 0.0f}},			//0
 		{{ 0.5f, 0.5f, 0.5f},	{1.0f, 0.0f}},			//1
 		{{-0.5f,-0.5f, 0.5f},	{0.0f, 1.0f}},			//2
-
-		{{ 0.5f, -0.5f, 0.5f},	{1.0f, 1.0f}}			//3		
+		{{ 0.5f, -0.5f, 0.5f},	{1.0f, 1.0f}}			//3
 	};
 
 	dx::BufferResource::CreationParams vbParams = {0};
@@ -76,7 +76,7 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	ID3D11Buffer * pVB = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire(vbParams, pVB);
 
-	m_defaultVertexInput.AddBinderCommand( std::make_shared< dx::BindIAVertexBuffer>(0, pVB, sizeof(float)*5) );
+	m_defaultVertexInput.AddBinderCommand( std::make_shared< dx::BindIAVertexBuffer>(0, pVB, (UINT)(sizeof(float)*5) ) );
 
 	// index buffer
 
