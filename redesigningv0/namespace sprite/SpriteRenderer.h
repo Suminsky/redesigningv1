@@ -34,6 +34,8 @@
 #include "CameraCbuffer.h"
 #include "Sprite.h"
 
+class SpriteComponent;
+
 namespace sprite{
 
 
@@ -82,6 +84,7 @@ namespace sprite{
 		// queue the states of a sprite
 		//------------------------------------------------------------------------
 		void Render( Sprite * pSprite_p );
+		void Render( SpriteComponent *pSprite_p);
 
 		//------------------------------------------------------------------------
 		// batch commands and executes

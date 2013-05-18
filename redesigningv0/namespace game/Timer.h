@@ -6,7 +6,7 @@
 	file:		Timer.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	a timer. can be pause. updates from a system gathered clock
+	purpose:	a timer. can be pause. updates from a given delta
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -18,12 +18,8 @@
 
 namespace game{
 
-	class State;
-
 template< typename ClockType >
 class Timer{
-
-	friend class State;
 
 	float m_fSpeed;
 	ClockType m_deltaTime;
@@ -36,7 +32,7 @@ public:
 	//------------------------------------------------------------------------
 	// ctor
 	//------------------------------------------------------------------------
-	Timer():m_fSpeed(1.0f), m_bPaused(false){}
+	Timer():m_fSpeed(1.0f), m_accumTime(0.0f), m_bPaused(false){}
 	//------------------------------------------------------------------------
 	// dctor
 	//------------------------------------------------------------------------
@@ -44,6 +40,7 @@ public:
 
 	//------------------------------------------------------------------------
 	// call this to update time
+	// IMPORTANT!: once per frame
 	//------------------------------------------------------------------------
 	void Update( ClockType delta_p ){
 
@@ -69,8 +66,9 @@ public:
 	}
 	void PauseToogle(){
 
-		if( m_bPaused ) m_bPaused = false;
-		else m_bPaused = true;
+		//if( m_bPaused ) m_bPaused = false;
+		//else m_bPaused = true;
+		m_bPaused = !m_bPaused;
 	}
 
 	//------------------------------------------------------------------------
@@ -78,5 +76,15 @@ public:
 	//------------------------------------------------------------------------
 	ClockType GetDelta(){ return m_deltaTime;}
 	ClockType GetTime(){ return m_accumTime; }
+	float GetSpeed(){ return m_fSpeed;}
+
+	//------------------------------------------------------------------------
+	// setters
+	//------------------------------------------------------------------------
+	void SetSpeed( float fSpeed_p ){
+
+		assert( fSpeed_p > 0.0f );
+		m_fSpeed = fSpeed_p;
+	}
 };
 }

@@ -18,6 +18,8 @@
 #include "Timer.h"
 #include "Layer.h"
 
+#define private public
+#define protected public
 
 namespace game{
 
@@ -29,7 +31,7 @@ namespace game{
 
 		friend StateMachine;
 
-	protected:
+	public:
 		Timer<double> m_timer;
 
 	private:
@@ -50,7 +52,7 @@ namespace game{
 
 					if( (*it)->m_bActive ){
 					
-						(*it)->Update( dDeltaTime_p );
+						(*it)->Update( m_timer.GetDelta() );
 					}
 			}
 		}
@@ -93,11 +95,12 @@ namespace game{
 			pNewLayer_p->VInit();
 
 			m_layers.push_back( pNewLayer_p );
+			
 			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
 		}
 		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
 
-			 m_layers[layerCurrentIndex_p]->VDestroy();
+			m_layers[layerCurrentIndex_p]->VDestroy();
 
 			std::swap( m_layers[layerCurrentIndex_p], m_layers[m_layers.size()-1] );
 			m_layers[layerCurrentIndex_p]->m_currentStateIndex = layerCurrentIndex_p; // update index

@@ -23,6 +23,7 @@
 // Inspired on "component model", its a movable component, focused on render
 // data (methods for interpolating between prev and current position)
 //========================================================================
+//__declspec(align(16))
 class Movable{
 
 	DirectX::XMVECTOR	m_vPreviousPosition,

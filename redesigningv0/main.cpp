@@ -16,11 +16,6 @@
 
 #pragma once
 
-#define FULLSCREEN	false
-#define N_RENDERBUFFERS 3
-#define WINDOW_W 1280
-#define WINDOW_H 720
-
 // system includes
 
 #include <crtdbg.h>
@@ -44,13 +39,15 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 		UNREFERENCED_PARAMETER( hPrevInstance_p );
 		UNREFERENCED_PARAMETER( nShowCmd_p );
 
-#ifdef DEBUG
+#ifdef _DEBUG
 		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
 		TestGameWindow myGameWindow( hInstance_p );
 
-		myGameWindow.RegisterWndClass( TEXT("className"), NULL, LoadIcon( hInstance_p, TEXT("RC_GSP_ICONS")), CS_PARENTDC );
+		myGameWindow.m_stateControl.ChangeState( std::make_shared<TestState>(TestState(&myGameWindow.m_device, &myGameWindow.m_spriteRenderer)) );
+
+		/*myGameWindow.RegisterWndClass( TEXT("className"), NULL, LoadIcon( hInstance_p, TEXT("RC_GSP_ICONS")), CS_PARENTDC );
 
 		win::Rect winRect( 100, 100, WINDOW_W, WINDOW_H );
 		myGameWindow.Create(winRect, TEXT("className"), NULL, TEXT("title"), WS_VISIBLE|WS_OVERLAPPEDWINDOW, WS_EX_CLIENTEDGE );
@@ -64,10 +61,10 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 			myGameWindow.m_spriteRenderer.m_camera.BuildPipeState( 1440, 900, &myGameWindow.m_device, myGameWindow.m_swapChain.m_pBackBufferRTV );
 		else
 			myGameWindow.m_spriteRenderer.m_camera.BuildPipeState( WINDOW_W, WINDOW_H, &myGameWindow.m_device, myGameWindow.m_swapChain.m_pBackBufferRTV );
+*/
 
 
-
-		sprite::Sprite mySprite(	&myGameWindow.m_device, "Contents/samusSetTry1.png",
+		/*sprite::Sprite mySprite(	&myGameWindow.m_device, "Contents/samusSetTry1.png",
 									468.0f, 234.0f, 0.0f, 0.0f,
 									sprite::E_ALPHA_BLENDED, sprite::E_NONE, &myGameWindow.m_spriteRenderer );
 		sprite::Sprite myOtherSprite(	&myGameWindow.m_device, "Contents/samusSetTry1.png",
@@ -76,27 +73,23 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 
 		myOtherSprite.m_trafo.m_vCurrentPosition = DirectX::XMVectorAdd( myOtherSprite.m_trafo.m_vCurrentPosition, DirectX::XMVectorSet(0.0f, -234.0f, 0.0f, 0.0f));
 
-
+*/
 		//---
-
+		//int * pX = new int[1024];
 
 		MSG Msg; ZeroMemory( &Msg, sizeof(MSG));
 		win::UniqueHigPerfTimer().Init();
 		win::UniqueFileLogger().SetDigitsCount( 6, 6);
 
-
 		myGameWindow.Init();
-
 
 		//bool bGoingRight = true;
 		while( Msg.message != WM_QUIT ){
 
-			myGameWindow.FixedStepLoop();
-
 			//myGameWindow.m_swapChain.m_pSwapChain->Present(1, 0);		
 
 			//win::UniqueHigPerfTimer().Update();
-			win::UniqueFileLogger()<<win::UniqueHigPerfTimer().GetDeltaSeconds()<<SZ_NEWLINE;
+			//win::UniqueFileLogger()<<win::UniqueHigPerfTimer().GetDeltaSeconds()<<SZ_NEWLINE;
 
 			while( PeekMessage( &Msg, NULL, NULL, NULL, PM_REMOVE )	){
 
@@ -107,6 +100,12 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 			}
 
 			win::UniqueKeyboardAsyncInput().UpdateKeyStates();
+
+			myGameWindow.FixedStepLoop();
+
+			//myGameWindow.m_spriteRenderer.Raster( myGameWindow.m_device.GetContext());
+
+			myGameWindow.m_swapChain.m_pSwapChain->Present(1, 0);
 
 
 			// uncomment bellow here
@@ -177,8 +176,8 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 			////========================================================================
 			//
 
-			//	mySprite.m_trafo.Step();
-			//	myOtherSprite.m_trafo.Step();
+				//mySprite.m_trafo.Step();
+				//myOtherSprite.m_trafo.Step();
 
 			//	if( win::UniqueKeyboardAsyncInput().KeySinglePress(VK_A)){
 
@@ -218,8 +217,8 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 
 			//const double alpha = frameDeltaAccumulated / fixedStep;
 
-			//mySprite.Update( alpha );
-			//myOtherSprite.Update( alpha );
+			//mySprite.Update( 1.0);//alpha );
+			//myOtherSprite.Update( 1.0);//alpha );
 			////------------------------------------------------------------------------
 			//myGameWindow.m_spriteRenderer.m_camera.Update();
 			////static FLOAT clearcolor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };

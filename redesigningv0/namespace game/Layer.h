@@ -14,6 +14,7 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
+#include <algorithm>
 
 // private includes
 #include "Timer.h"
@@ -22,19 +23,23 @@
 namespace game{
 
 	class State;
-	//class shared_Object_ptr;
 
 	typedef unsigned int LAYER_STATEINDEX;
+	static const unsigned int INVALID_STATEINDEX = (unsigned int)-1;
 	typedef std::vector<shared_Object_ptr> LayerObjects;
 
 	class Layer{
 
 		friend State;
 
+	public:
+		bool m_bActive;
+		Timer<double> m_timer;
+
+	private:
+		LAYER_STATEINDEX m_currentStateIndex;
 		LayerObjects m_objects;
 
-		Timer<double> m_timer;
-		LAYER_STATEINDEX m_currentStateIndex;
 
 		//------------------------------------------------------------------------
 		// updates state timer and call updates with timer time
@@ -43,7 +48,7 @@ namespace game{
 
 			m_timer.Update( dDeltaTime_p );
 
-			VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
+			//VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
 
 			// update game::Objects
 
@@ -60,15 +65,47 @@ namespace game{
 
 	public:
 
-		bool m_bActive;
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		Layer( bool bActive_p = true ):m_bActive(bActive_p), m_currentStateIndex(INVALID_STATEINDEX){}
+		~Layer(){}
 		
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VInit(){}
-		virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
+		//virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
 		virtual void VDraw( const double /*dInterpolation_p*/ ){}
 		virtual void VDestroy(){}
+
+
+		//------------------------------------------------------------------------
+		// return index of this layer in the state layers container
+		//------------------------------------------------------------------------
+		LAYER_STATEINDEX GetStateIndex(){return m_currentStateIndex;}
+
+		//------------------------------------------------------------------------
+		// object to be updated per loop
+		//------------------------------------------------------------------------
+		void AddObject( shared_Object_ptr && object_p ){
+
+			m_objects.push_back(object_p);
+			object_p->m_currentLayerIndex = m_objects.size()-1;
+		}
+		void AddObject( shared_Object_ptr object_p ){
+
+			m_objects.push_back(object_p);
+		}
+		//
+		void RmeoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
+
+			//m_objects[objectCurrentIndex_p]->VDestroy();
+
+			std::swap( m_objects[objectCurrentIndex_p], m_objects[m_objects.size()-1] );
+			m_objects[objectCurrentIndex_p]->m_currentLayerIndex = objectCurrentIndex_p; // update index
+			m_objects.pop_back();
+		}
 	};
 
 	typedef std::shared_ptr<Layer> shared_Layer_ptr;

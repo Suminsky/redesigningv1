@@ -1,5 +1,10 @@
 #pragma once
 
+#define FULLSCREEN	false
+#define N_RENDERBUFFERS 3
+#define WINDOW_W 1280
+#define WINDOW_H 720
+
 // private includes
 #include "../namespace win/win_IDs.h"
 #include "../namespace win/Window.h"
@@ -18,8 +23,30 @@ public:
 	dx::Device m_device;
 	sprite::SpriteRenderer m_spriteRenderer;
 
+	//------------------------------------------------------------------------
+	// ctor
+	//------------------------------------------------------------------------
+	TestGameWindow( HINSTANCE hInst_p ):Window(hInst_p){
 
-	TestGameWindow( HINSTANCE hInst_p ):Window(hInst_p){}
+		RegisterWndClass( TEXT("className"), NULL, LoadIcon( hInst_p, TEXT("RC_GSP_ICONS")), CS_PARENTDC );
+
+		win::Rect winRect( 100, 100, WINDOW_W, WINDOW_H );
+		Create(winRect, TEXT("className"), NULL, TEXT("title"), WS_VISIBLE|WS_OVERLAPPEDWINDOW, WS_EX_CLIENTEDGE );
+
+
+		//m_spriteRenderer.LoadShader( &m_device, "vs_Sprite", "ps_Sprite");
+
+
+
+		//if(FULLSCREEN)
+		//	m_spriteRenderer.m_camera.BuildPipeState( 1440, 900, &m_device, m_swapChain.m_pBackBufferRTV );
+		//else
+		//	m_spriteRenderer.m_camera.BuildPipeState( WINDOW_W, WINDOW_H, &m_device, m_swapChain.m_pBackBufferRTV );
+
+		////---
+		//
+		////Game::m_stateControl.ChangeState( std::make_shared<TestState>(TestState(&m_device, &m_spriteRenderer)) );
+	}
 
 	//------------------------------------------------------------------------
 	// Check current client rect and compares with the client rect the Window
@@ -89,7 +116,6 @@ public:
 			gpuAndMode.modeMatchPriority.iScaling = 0;
 			gpuAndMode.modeMatchPriority.iRefreshRate = gpuAndMode.modeMatchPriority.iResolution = gpuAndMode.modeMatchPriority.iScanlineOrder = 0;
 
-
 			IDXGIFactory1 * pFactory = NULL;
 			int result = m_swapChain.GetCapableAdapterAndOutputAndModeClosestMatch( modeDesc, gpuAndMode, pFactory );
 			if( !result ) return -1;
@@ -105,7 +131,6 @@ public:
 				windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;
 			}
 
-
 			//windowedMode.RefreshRate.Numerator = 60.0;
 			//windowedMode.RefreshRate.Denominator = 1.0;
 
@@ -113,16 +138,22 @@ public:
 			m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, N_RENDERBUFFERS, gpuAndMode.pOutput );
 			m_swapChain.CreateRTVFromBackBuffer(m_device.GetDevice());
 
-
 			if(FULLSCREEN)
 				m_swapChain.SwitchFullscreenMode();
 
 
-
-			//m_swapChain.m_pSwapChain->Present(0, 0);
-
+			//---
 			m_spriteRenderer.Init(&m_device);
+			m_spriteRenderer.LoadShader( &m_device, "vs_Sprite", "ps_Sprite");
 
+			if(FULLSCREEN)
+				m_spriteRenderer.m_camera.BuildPipeState( 1440, 900, &m_device, m_swapChain.m_pBackBufferRTV );
+			else
+				m_spriteRenderer.m_camera.BuildPipeState( WINDOW_W, WINDOW_H, &m_device, m_swapChain.m_pBackBufferRTV );
+
+			//---
+
+			//Game::m_stateControl.ChangeState( std::make_shared<TestState>(TestState(&m_device, &m_spriteRenderer)) );
 
 
 					   }return 0;

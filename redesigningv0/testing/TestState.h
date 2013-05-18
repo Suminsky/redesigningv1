@@ -14,14 +14,17 @@
 #include "../namespace sprite/Movable.h"
 #include "../namespace sprite/DrawableCbuffer.h"
 
+#include "../namespace win/FileLogger.h"
+
 using namespace DirectX;
 using namespace sprite;
+using namespace dx;
 
 //========================================================================
 // OBJECT
 //========================================================================
 class SpriteComponent:public game::AComponent{
-
+public:
 	friend class SpriteRenderer;
 
 	//------------------------------------------------------------------------
@@ -58,9 +61,10 @@ class SpriteComponent:public game::AComponent{
 
 	dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
 	sprite::DrawableCbuffer m_renderData;
+	sprite::BindVSDrawableCBuffer * m_pBindDrawableCB;
 
 
-	sprite::SpriteRenderer * m_pRenderer;
+	sprite::SpriteRenderer * m_pSpriteRendererRef;
 
 public:
 
@@ -76,7 +80,8 @@ public:
 						E_BLENDTYPE blendType_p, E_SAMPLERTYPE sampler_p,
 						SpriteRenderer * pSpriteRenderer_p ){
 
-		m_pRenderer = pSpriteRenderer_p;
+		m_TextureID= m_BlendModeID= m_FilterModeID= m_ShaderID = 21;
+		m_pSpriteRendererRef = pSpriteRenderer_p;
 		m_iShaderPermutation = 0;
 
 		m_renderData.m_mWorld = XMMatrixIdentity();
@@ -85,6 +90,7 @@ public:
 		m_renderData.m_res.y = fHeight_p;
 		m_renderData.m_uvOffset.x = fUVOffset_U_p;
 		m_renderData.m_uvOffset.y = fUVOffset_V_p;
+		m_renderData.m_bUpdate = true;
 
 		// creates a ID3DBuffer for the vs constant buffer
 
@@ -101,12 +107,25 @@ public:
 		pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
 
 		// initialize pipe state for this sprite
-
-		m_pipeState.AddBinderCommand(  std::make_shared<BindVSDrawableCBuffer>(pBuffer, shared_DrawableCbuffer_ptr(&m_renderData, &gen::NoOp<DrawableCbuffer>) )  );
+		m_pipeState.AddBinderCommand( std::make_shared<BindVSDrawableCBuffer>(pBuffer, shared_DrawableCbuffer_ptr(&m_renderData, &gen::NoOp<DrawableCbuffer>)) );
 
 		m_pipeState.AddBinderCommand( dx::shared_Binder_ptr(&pSpriteRenderer_p->m_texs.Get(szTexture_p), &gen::NoOp<dx::Binder>  ));
 		m_pipeState.AddBinderCommand( dx::shared_Binder_ptr(&pSpriteRenderer_p->m_samplers.GetSamplerBind(sampler_p), &gen::NoOp<dx::Binder>  ));
 		m_pipeState.AddBinderCommand( dx::shared_Binder_ptr(&pSpriteRenderer_p->m_blends.GetBlendBind(blendType_p), &gen::NoOp<dx::Binder>  ));
+	}
+	//------------------------------------------------------------------------
+	// dctor
+	//------------------------------------------------------------------------
+	~SpriteComponent(){
+
+	}
+
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
+	virtual void VOnUpdate( double, double ){
+
+		m_trafo.Step();
 	}
 
 	//------------------------------------------------------------------------
@@ -125,37 +144,99 @@ public:
 			// send to GPU?
 			m_renderData.m_bUpdate = true;
 		}
+		DBG(m_renderData.m_bUpdate = true;)
+		//m_pipeState.m_binds
 
 		//---
 
-		static render::Drawable drawable;
-		drawable.m_PipeStatesGroup.resize(0);
+		m_pSpriteRendererRef->Render(this);
 
-		drawable.m_sortKey = m_sortKey.intRepresentation;
-		// shader
-		drawable.m_PipeStatesGroup.push_back(m_pRenderer->m_spriteShaderRes.m_permutations[m_iShaderPermutation].m_pPipeState);
-		// vb
-		drawable.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_pRenderer->m_defaultVertexInput, &gen::NoOp<dx::State>)  );
-		// camera
-		drawable.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_pRenderer->m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
-		// sprite
-		drawable.m_PipeStatesGroup.push_back(  dx::shared_State_ptr(&m_pipeState, &gen::NoOp<dx::State>) );
-
-		// draw call
-		drawable.m_pDrawCall.reset(&m_pRenderer->m_drawIndexed, &gen::NoOp<dx::DrawCall>);
-
-		m_pRenderer->m_queue.Submit( &drawable );
 	}
 };
+
+ typedef std::shared_ptr<SpriteComponent> shared_SpriteComp_ptr;
 
 //========================================================================
 // LAYER
 //========================================================================
 class TestLayer: public game::Layer{
 
+	 dx::Device * m_pDevice;
+	 SpriteRenderer * m_pSpriteRenderer;
 
+	 typedef std::vector<std::shared_ptr<SpriteComponent> > renderables;
+
+	 renderables m_renderables;
+
+public:
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
+	TestLayer( dx::Device * pDevice_p, SpriteRenderer * pSpriteRenderer_p ){
+		m_pDevice = pDevice_p;
+		m_pSpriteRenderer = pSpriteRenderer_p;
+	}
+
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
+	void VInit(){
+
+		static game::shared_Object_ptr pObject = std::make_shared<game::Object>(game::Object());
+		static game::shared_Object_ptr pObject2 = std::make_shared<game::Object>(game::Object());
+
+#ifdef _WIN64
+		static std::shared_ptr<SpriteComponent> pComponent = 
+			std::make_shared<SpriteComponent>(	m_pDevice,
+												"Contents/samusSetTry1.png",
+												468.0f, 234.0f, 0.0f, 0.0f,
+												sprite::E_ALPHA_BLENDED, sprite::E_NONE,
+												m_pSpriteRenderer);
+		static std::shared_ptr<SpriteComponent> pComponent2 = 
+			std::make_shared<SpriteComponent>(	m_pDevice, "Contents/samusSetTry1.png",
+												468.0f, 234.0f, 0.0f, 0.0f,
+												sprite::E_ALPHA_BLENDED, sprite::E_NONE, m_pSpriteRenderer );
+#else
+		static std::shared_ptr<SpriteComponent> pComponent(new SpriteComponent(m_pDevice,
+			"Contents/samusSetTry1.png",
+			468.0f, 234.0f, 0.0f, 0.0f,
+			sprite::E_ALPHA_BLENDED, sprite::E_NONE,
+			m_pSpriteRenderer));
+		static std::shared_ptr<SpriteComponent> pComponent2(new SpriteComponent(m_pDevice,
+			"Contents/samusSetTry1.png",
+			468.0f, 234.0f, 0.0f, 0.0f,
+			sprite::E_ALPHA_BLENDED, sprite::E_NONE,
+			m_pSpriteRenderer));
+
+#endif
+
+		pComponent2->m_trafo.m_vCurrentPosition = DirectX::XMVectorSetY(pComponent2->m_trafo.m_vCurrentPosition, 100.0f);
+
+		m_renderables.push_back(pComponent );
+		m_renderables.push_back(pComponent2 );
+		pObject->AddComponent(pComponent);
+		pObject2->AddComponent(pComponent2);
+		AddObject(pObject);
+		AddObject(pObject2);
+	}
+
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
 	void VDraw( const double interpolation_p ){
 
+		m_pSpriteRenderer->m_camera.Update();
+
+		for( renderables::iterator it = m_renderables.begin(), itEnd = m_renderables.end();
+			it != itEnd;
+			++it ){
+
+				(*it)->OnDraw(interpolation_p);
+		}
+
+		m_pSpriteRenderer->m_queue.ResetState(E_GS_CBuffer0);
+		m_pSpriteRenderer->m_queue.ResetState(E_GS_CBuffer1);
+		m_pSpriteRenderer->Raster( m_pDevice->GetContext());
 
 	}
 
@@ -166,12 +247,18 @@ class TestLayer: public game::Layer{
 class TestState: public game::State{
 
 	TestLayer myLayer;
-
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
 	void VInit(){
-
 
 		AddLayer( game::shared_Layer_ptr(&myLayer, &gen::NoOp<game::Layer>));
 	}
+
+public:
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
+	TestState( dx::Device * pDevice_p, SpriteRenderer * pSpriteRenderer_p ):myLayer(pDevice_p, pSpriteRenderer_p){};
+	~TestState(){};
 };
-
-

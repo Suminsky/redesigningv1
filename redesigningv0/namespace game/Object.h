@@ -18,7 +18,7 @@
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-// standar includes
+// standard includes
 
 #include <memory>
 #include <unordered_map>
@@ -32,25 +32,32 @@ namespace game{
 	class AComponent;
 
 	typedef unsigned int ObjectID;
+	typedef unsigned int OBJECT_LAYERINDEX;
+	static const unsigned int INVALID_LAYERINDEX = (unsigned int)-1;
+	
 	typedef std::vector<shared_AComponent_ptr> ObjectComponents;
 
 	//========================================================================
 	// 
 	//========================================================================
 	class Object{
-	protected:
 
+		friend class State;
+		friend class Layer;
+
+	public:
+		bool m_bActive;
+
+	private:
 		ObjectID m_ID;
+		OBJECT_LAYERINDEX m_currentLayerIndex;
 		ObjectComponents m_components;
 
 	public:
-
-		bool m_bActive;
-
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Object(){}
+		Object( bool bActive_p = true ):m_bActive(bActive_p), m_currentLayerIndex(INVALID_LAYERINDEX){}
 		virtual ~Object(){}
 
 		//------------------------------------------------------------------------
@@ -77,9 +84,25 @@ namespace game{
 		// get component by id (the id is the index on the object)
 		//------------------------------------------------------------------------
 		template<class DerivedComponent>
-		std::weak_ptr<DerivedComponent> GetComponent( ComponentID id_p ) const {
+		std::weak_ptr<DerivedComponent> GetComponent( COMPONENT_OBJECTINDEX index_p ) const {
 
-			return m_components[id_p];
+			return m_components[index_p];
+		}
+		void AddComponent( shared_AComponent_ptr && pComponent_p ){
+
+			m_components.push_back( pComponent_p );
+			pComponent_p->m_currentObjectIndex = m_components.size()-1;
+		}
+		void AddComponent( shared_AComponent_ptr pComponent_p ){
+
+			m_components.push_back( pComponent_p );
+			pComponent_p->m_currentObjectIndex = m_components.size()-1;
+		}
+		void RemoveComponent( COMPONENT_OBJECTINDEX componentCurrentIndex_p ){
+
+			std::swap( m_components[componentCurrentIndex_p], m_components[m_components.size()-1] );
+			m_components[componentCurrentIndex_p]->m_currentObjectIndex = componentCurrentIndex_p; // update index
+			m_components.pop_back();
 		}
 	};
 

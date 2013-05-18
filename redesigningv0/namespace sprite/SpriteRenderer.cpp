@@ -3,6 +3,7 @@
 #include <D3D11Shader.h>
 
 #include "../namespace render/dx/HLSLResource.h"
+#include "../testing/TestState.h"
 
 void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 {
@@ -12,6 +13,26 @@ void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 	drawInst.m_sortKey = pSprite_p->m_renderSortKey.intRepresentation;
 	// shader
 	drawInst.m_PipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pPipeState);
+	// vb
+	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	// camera
+	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
+	// sprite
+	drawInst.m_PipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+
+	// draw call
+	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
+
+	m_queue.Submit( &drawInst );
+}
+void sprite::SpriteRenderer::Render( SpriteComponent * pSprite_p )
+{
+	static render::Drawable drawInst;
+	drawInst.m_PipeStatesGroup.resize(0);
+
+	drawInst.m_sortKey = pSprite_p->m_sortKey.intRepresentation;
+	// shader
+	drawInst.m_PipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
 	// vb
 	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
 	// camera

@@ -17,6 +17,8 @@
 namespace game{
 
 	class Object;
+	typedef unsigned int COMPONENT_OBJECTINDEX;
+	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
 	typedef unsigned int ComponentID;
 
 	//========================================================================
@@ -25,6 +27,8 @@ namespace game{
 	class AComponent{
 
 		friend class Object;
+
+		COMPONENT_OBJECTINDEX m_currentObjectIndex;
 
 	protected:
 
@@ -36,7 +40,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		virtual ~AComponent() = 0;
+		AComponent():m_currentObjectIndex(INVALID_OBJECTINDEX){}
+		virtual ~AComponent(){};
 
 		//------------------------------------------------------------------------
 		// to be override
