@@ -17,8 +17,8 @@ Sprite::Sprite( dx::Device * pDevice_p,
 
 	m_renderData.m_res.x = fWidth_p;
 	m_renderData.m_res.y = fHeight_p;
-	m_renderData.m_uvOffset.x = fUVOffset_U_p;
-	m_renderData.m_uvOffset.y = fUVOffset_V_p;
+	m_renderData.m_uvRect.x = fUVOffset_U_p;
+	m_renderData.m_uvRect.y = fUVOffset_V_p;
 
 	// creates a ID3DBuffer for the vs constant buffer
 

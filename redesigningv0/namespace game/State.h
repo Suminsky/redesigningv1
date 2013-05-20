@@ -90,12 +90,20 @@ namespace game{
 		//------------------------------------------------------------------------
 		// layer stuff
 		//------------------------------------------------------------------------
-		void AddLayer( shared_Layer_ptr pNewLayer_p ){
+		void AddLayer( const shared_Layer_ptr & pNewLayer_p ){
 
 			pNewLayer_p->VInit();
 
 			m_layers.push_back( pNewLayer_p );
 			
+			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+		}
+		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
+
+			pNewLayer_p->VInit();
+
+			m_layers.push_back( pNewLayer_p );
+
 			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
 		}
 		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){

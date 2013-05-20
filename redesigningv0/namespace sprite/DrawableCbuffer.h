@@ -29,20 +29,24 @@ namespace sprite{
 
 	//========================================================================
 	// Specialized layout cbuffer
-	// sprite Drawable data
-	// 						n	floats	//bytes	//align
+	//sprite data-----	//n	floats	//bytes	//align
 	//float2 res;			//2			8		0-7
-	//float2 uvOffset;		//2			8		8-15
-	//matrix mWorld;		//16		64		16-79
+	//float4 uvRect;		//4			16		8-23
+	//matrix mWorld;		//16		64		24-87
 	//						___			___		______
-	//						20			80		0-79
+	//						24			88		0-87
+	//----------------
 	//========================================================================
+#pragma warning(push)
+#pragma warning(disable:4324)
+
 	struct DrawableCbuffer{
 		
-		static const UINT s_SIZE = 80;
-		DirectX::XMFLOAT2 m_res;
-		DirectX::XMFLOAT2 m_uvOffset;
-		DirectX::XMMATRIX m_mWorld;	// a.k.a render mWorld
+		static const UINT s_SIZE = 96;
+		__declspec(align(16))DirectX::XMFLOAT2 m_res;
+		__declspec(align(16))DirectX::XMFLOAT4 m_uvRect;
+		__declspec(align(16))DirectX::XMMATRIX m_mWorld;	// a.k.a render mWorld
+		__declspec(align(16))DirectX::XMFLOAT2 m_padding;
 
 		bool m_bUpdate;	// set to true to update the ID3D11Buffer
 						// IMPORTANT: this NEED to be placed after the above data, because this class itself is the one
@@ -87,6 +91,8 @@ namespace sprite{
 		}
 	};
 
+#pragma warning(pop)
+
 	typedef std::shared_ptr<DrawableCbuffer> shared_DrawableCbuffer_ptr;
 
 
@@ -103,7 +109,7 @@ namespace sprite{
 
 	public:
 
-		BindVSDrawableCBuffer( ID3D11Buffer *pConstantBuffers_p,  const shared_DrawableCbuffer_ptr pConstBufferData_p )
+		BindVSDrawableCBuffer( ID3D11Buffer *pConstantBuffers_p,  const shared_DrawableCbuffer_ptr & pConstBufferData_p )
 			:
 		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
 			m_iStartSlot( 0 ), m_pConstantBuffer( pConstantBuffers_p ),

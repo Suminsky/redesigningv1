@@ -13,6 +13,8 @@
 #include "../namespace sprite/SpriteRenderer.h"
 #include "../namespace game/Game.h"
 
+#include "../namespace win/MouseInput.h"
+
 #include "TestState.h"
 
 class TestGameWindow : public win::Window, public game::Game{
@@ -22,6 +24,7 @@ public:
 	dx::SwapChain m_swapChain;
 	dx::Device m_device;
 	sprite::SpriteRenderer m_spriteRenderer;
+	win::MouseInput m_mouseInput;
 
 	//------------------------------------------------------------------------
 	// ctor
@@ -100,6 +103,31 @@ public:
 	virtual LRESULT CALLBACK WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p ){
 
 		switch( Msg_p ){
+
+		case WM_MOUSEMOVE:
+			m_mouseInput.OnWM_MOUSEMOVE(lParam_p);
+			return 0;
+		case WM_MOUSEHWHEEL:
+			m_mouseInput.OnWM_MOUSEWHEEL(wParam_p);
+			return 0;
+		case WM_LBUTTONDOWN:
+			m_mouseInput.OnWM_LBUTTONDOWN();
+			return 0;
+		case WM_MBUTTONDOWN:
+			m_mouseInput.OnWM_MBUTTONDOWN();
+			return 0;
+		case WM_RBUTTONDOWN:
+			m_mouseInput.OnWM_RBUTTONDOWN();
+			return 0;
+		case WM_LBUTTONUP:
+			m_mouseInput.OnWM_LBUTTONUP();
+			return 0;
+		case WM_MBUTTONUP:
+			m_mouseInput.OnWM_MBUTTONUP();
+			return 0;
+		case WM_RBUTTONUP:
+			m_mouseInput.OnWM_RBUTTONUP();
+			return 0;
 
 		case WM_CREATE:{
 

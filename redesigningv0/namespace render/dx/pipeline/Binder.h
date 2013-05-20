@@ -232,19 +232,24 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// Adds a command updating the state mask
 		//------------------------------------------------------------------------
-		void AddBinderCommand( const shared_Binder_ptr binder_p ){
+		void AddBinderCommand( const shared_Binder_ptr & binder_p ){
 
 			m_binds.push_back(binder_p);
 			m_stateMask &= binder_p->TypeBits();
 		}
+		/*void AddBinderCommand( shared_Binder_ptr && binder_p ){
+
+			m_binds.push_back(binder_p);
+			m_stateMask &= binder_p->TypeBits();
+		}*/
 		//------------------------------------------------------------------------
 		// Adds a command updating the state mask
 		//------------------------------------------------------------------------
-		void AddBinderCommand( Binder * binder_p ){
+		/*void AddBinderCommand( Binder * binder_p ){
 
 			m_binds.push_back(shared_Binder_ptr(binder_p));
 			m_stateMask &= binder_p->TypeBits();
-		}
+		}*/
 
 		//------------------------------------------------------------------------
 		// Iterators

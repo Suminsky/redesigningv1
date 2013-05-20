@@ -198,13 +198,13 @@ int dx::SwapChain::GetCapableAdapterAndOutputAndModeClosestMatch( /*in: */ DXGI_
 
 	// check whats the best match for the required pOutput mode:
 	int currentHigScore = 0, itHigScore = 0;
-	for( int it = 0; it < validAdapters.size(); ++ it ){
+	for( unsigned int it = 0; it < validAdapters.size(); ++ it ){
 
 		if( memcmp( &desiredFSDisplayMode_p, &validAdapters[it].mode, sizeof(DXGI_MODE_DESC) ) == 0 ){
 
 			gpuAndMode_p = validAdapters[it];
 
-			for( int it2 = 0; it2 < validAdapters.size(); ++it2){
+			for( unsigned int it2 = 0; it2 < validAdapters.size(); ++it2){
 				if( it2 == it ) continue;
 				gpuAndMode_p.pAdapter->Release();
 				gpuAndMode_p.pOutput->Release();
@@ -267,7 +267,7 @@ int dx::SwapChain::GetCapableAdapterAndOutputAndModeClosestMatch( /*in: */ DXGI_
 
 	gpuAndMode_p = validAdapters[itHigScore];
 
-	for( int it2 = 0; it2 < validAdapters.size(); ++it2){
+	for( int it2 = 0; it2 < (int)validAdapters.size(); ++it2){
 		if( it2 == itHigScore ) continue;
 		gpuAndMode_p.pAdapter->Release();
 		gpuAndMode_p.pOutput->Release();

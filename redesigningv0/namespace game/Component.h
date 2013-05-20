@@ -24,7 +24,7 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class AComponent{
+	class Component{
 
 		friend class Object;
 
@@ -40,13 +40,13 @@ namespace game{
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		AComponent():m_currentObjectIndex(INVALID_OBJECTINDEX){}
-		virtual ~AComponent(){};
+		Component():m_currentObjectIndex(INVALID_OBJECTINDEX){}
+		virtual ~Component(){};
 
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
-		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ) = 0;
+		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ){};
 		//virtual void VOnEvent( Event event_p ) = 0;
 
 		//------------------------------------------------------------------------
@@ -58,5 +58,5 @@ namespace game{
 		}
 	};
 
-	typedef std::shared_ptr<AComponent> shared_AComponent_ptr;
+	typedef std::shared_ptr<Component> shared_Component_ptr;
 }

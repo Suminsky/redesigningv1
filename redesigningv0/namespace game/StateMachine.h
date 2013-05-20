@@ -55,7 +55,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// Changes current state, destroying current and initializing the new properly.
 		//------------------------------------------------------------------------
-		void ChangeState( shared_State_ptr pNewState_p ){
+		void ChangeState( const shared_State_ptr & pNewState_p ){
 
 			// destroy current state, if any
 

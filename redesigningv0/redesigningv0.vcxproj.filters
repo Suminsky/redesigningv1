@@ -168,6 +168,12 @@
     <ClInclude Include="testing\TestState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace win\MouseInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\components\MovableComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -288,6 +294,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace win\MouseInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testing\TestState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

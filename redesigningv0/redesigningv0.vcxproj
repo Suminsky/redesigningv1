@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="namespace game\Component.h" />
+    <ClInclude Include="namespace game\components\MovableComponent.h" />
     <ClInclude Include="namespace game\Game.h" />
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="namespace win\FileLogger.h" />
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
+    <ClInclude Include="namespace win\MouseInput.h" />
     <ClInclude Include="namespace win\Window.h" />
     <ClInclude Include="namespace win\win_genData.h" />
     <ClInclude Include="namespace win\win_IDs.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="namespace win\FileLogger.cpp" />
     <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
     <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />
+    <ClCompile Include="namespace win\MouseInput.cpp" />
     <ClCompile Include="namespace win\Window.cpp" />
     <ClCompile Include="namespace render\dx\ResourceCache.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\VertexShader.cpp" />
@@ -229,6 +232,7 @@
     <ClCompile Include="namespace sprite\binders cache\SamplerStateBinders.cpp" />
     <ClCompile Include="namespace game\State.cpp" />
     <ClCompile Include="namespace game\StateMachine.cpp" />
+    <ClCompile Include="testing\TestState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico" />

@@ -2,7 +2,7 @@
 
 // private
 
-#include "../namespace gen/gen_macros.h"
+//#include "../namespace gen/gen_macros.h"
 
 using namespace render;
 

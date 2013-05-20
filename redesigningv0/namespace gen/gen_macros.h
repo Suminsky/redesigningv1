@@ -35,3 +35,42 @@
 #else
 #define IDIOTSPROOF(p) p
 #endif
+
+#include <exception>
+//------------------------------------------------------------------------
+// this macro simply implements aligned malloc overloaded new and delete
+// but only if its not a x64 build, on x64 builds align is already by 16
+// disallow placement new
+// placement new is used by std::make_shared, which means mem will not
+// be properly aligned
+// PRIVATE DOESNT SOLVE
+//------------------------------------------------------------------------
+		//void* operator new ( size_t size_p, void * p_p ){return p_p;}
+		//void operator delete (void*, void*){}
+#ifndef _WIN64
+#define ALLIGN16ONLY 													\
+						void* operator new( size_t size_p){				\
+							void * p =  _aligned_malloc(size_p, 16);	\
+							if( p == NULL)								\
+								throw std::bad_alloc();					\
+							return p;									\
+						}												\
+						void operator delete(void* p_p){				\
+							_aligned_free(p_p);							\
+						}												
+						
+
+//------------------------------------------------------------------------
+// this macro allows single line initialization for both shared pointer
+// creation versions
+//------------------------------------------------------------------------
+#define MAKE_SHARED_ALIGN16(s_ptr, type, ctor)\
+	s_ptr ( new type ctor );
+#else
+
+#define ALLIGN16ONLY
+
+#define MAKE_SHARED_ALIGN16(s_ptr, type, ctor)\
+	s_ptr = std::make_shared<type> ctor;
+
+#endif

@@ -45,7 +45,7 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 
 		TestGameWindow myGameWindow( hInstance_p );
 
-		myGameWindow.m_stateControl.ChangeState( std::make_shared<TestState>(TestState(&myGameWindow.m_device, &myGameWindow.m_spriteRenderer)) );
+		myGameWindow.m_stateControl.ChangeState( std::make_shared<TestState>(TestState(&myGameWindow.m_device, &myGameWindow.m_spriteRenderer, &myGameWindow.m_mouseInput)) );
 
 		/*myGameWindow.RegisterWndClass( TEXT("className"), NULL, LoadIcon( hInstance_p, TEXT("RC_GSP_ICONS")), CS_PARENTDC );
 
@@ -90,6 +90,8 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 
 			//win::UniqueHigPerfTimer().Update();
 			//win::UniqueFileLogger()<<win::UniqueHigPerfTimer().GetDeltaSeconds()<<SZ_NEWLINE;
+
+			myGameWindow.m_mouseInput.Update();
 
 			while( PeekMessage( &Msg, NULL, NULL, NULL, PM_REMOVE )	){
 

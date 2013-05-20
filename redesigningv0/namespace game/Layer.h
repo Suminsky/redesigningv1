@@ -48,7 +48,7 @@ namespace game{
 
 			m_timer.Update( dDeltaTime_p );
 
-			//VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
+			VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
 
 			// update game::Objects
 
@@ -75,7 +75,7 @@ namespace game{
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VInit(){}
-		//virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
+		virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
 		virtual void VDraw( const double /*dInterpolation_p*/ ){}
 		virtual void VDestroy(){}
 
@@ -91,9 +91,9 @@ namespace game{
 		void AddObject( shared_Object_ptr && object_p ){
 
 			m_objects.push_back(object_p);
-			object_p->m_currentLayerIndex = m_objects.size()-1;
+			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size()-1;
 		}
-		void AddObject( shared_Object_ptr object_p ){
+		void AddObject( const shared_Object_ptr & object_p ){
 
 			m_objects.push_back(object_p);
 		}
