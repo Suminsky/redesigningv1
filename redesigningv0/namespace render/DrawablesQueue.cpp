@@ -49,6 +49,9 @@ void render::DrawablesQueue::CreateCommandBuffer( dx::commandbuffer & commandLis
 						m_stateCache[(*itBinds)->TypeIndex()] = (*itBinds).get();
 						commandList_p.push_back((*itBinds));
 					}
+					else{
+						int x = 0;
+					}
 			}
 
 		}

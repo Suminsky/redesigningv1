@@ -1,3 +1,4 @@
+#pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
 	created:	2013/02/12
@@ -13,8 +14,6 @@
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-#pragma once
 
 // libraries needed
 

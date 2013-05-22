@@ -271,7 +271,7 @@ public:
 
 	BindPSShaderResourceView( UINT iSlot_p, ID3D11ShaderResourceView *pSRV_p )
 		:
-	Binder( 1LL << (E_VS_ShaderResourceView0 + iSlot_p), E_BIND(E_VS_ShaderResourceView0 + iSlot_p) ),
+	Binder( 1LL << (E_PS_ShaderResourceView0 + iSlot_p), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) ),
 		m_iStartSlot( iSlot_p ), m_pSRV( pSRV_p ){
 
 			assert( iSlot_p < 4);	// handling up to 4 srv slot

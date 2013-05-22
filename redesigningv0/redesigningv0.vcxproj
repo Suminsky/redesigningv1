@@ -207,7 +207,8 @@
     <ClCompile Include="namespace render\dx\type wrappers\BlendState.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="testing\gameWindow.cpp" />
+    <ClCompile Include="testing\main.cpp" />
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
     <ClCompile Include="namespace sprite\Movable.cpp" />

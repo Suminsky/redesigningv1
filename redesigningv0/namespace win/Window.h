@@ -89,6 +89,12 @@ namespace win{
 			}
 			else if( Msg_p == WM_NCCREATE ){
 
+				// initialize wnd handle
+				((Window*)
+					((CREATESTRUCT*)lParam_p)->lpCreateParams
+				)->m_hWnd = hWnd_p;
+
+				// set this pointer (given on CreateWindow) on windows user data
 				SetWindowLongPtr( hWnd_p, GWLP_USERDATA, (LONG) ((CREATESTRUCT*)lParam_p)->lpCreateParams );
 				// returns last set value, witch can be 0 (so setlasterror to zero to test)
 

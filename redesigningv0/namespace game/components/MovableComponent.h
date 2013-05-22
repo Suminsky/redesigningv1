@@ -23,6 +23,9 @@
 
 namespace game{
 
+#pragma warning(push)
+#pragma warning( disable : 4324)
+
 	class MovableComponent: public Component{
 
 		DirectX::XMVECTOR	m_vPreviousPosition,
@@ -85,6 +88,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		ALLIGN16ONLY;
 	};
+
+#pragma warning(pop)
 
 	typedef std::shared_ptr<MovableComponent> shared_MovableComponent_ptr;
 	typedef std::weak_ptr<MovableComponent> weak_MovableComponent_ptr;

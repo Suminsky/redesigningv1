@@ -42,10 +42,11 @@ namespace sprite{
 
 	struct DrawableCbuffer{
 		
-		static const UINT s_SIZE = 96;
+		static const UINT s_SIZE = 112;
 		__declspec(align(16))DirectX::XMFLOAT2 m_res;
 		__declspec(align(16))DirectX::XMFLOAT4 m_uvRect;
 		__declspec(align(16))DirectX::XMMATRIX m_mWorld;	// a.k.a render mWorld
+		__declspec(align(16))DirectX::XMFLOAT4 m_color;
 		__declspec(align(16))DirectX::XMFLOAT2 m_padding;
 
 		bool m_bUpdate;	// set to true to update the ID3D11Buffer

@@ -21,14 +21,14 @@
 #include <crtdbg.h>
 
 // private includes
-#include "namespace sprite/Sprite.h"
+#include "../namespace sprite/Sprite.h"
 
-#include "namespace win/FileLogger.h"
-#include "namespace win/HighPerformanceTimer.h"
-#include "namespace win/KeyboardAsyncInput.h"
+#include "../namespace win/FileLogger.h"
+#include "../namespace win/HighPerformanceTimer.h"
+#include "../namespace win/KeyboardAsyncInput.h"
 
 
-#include "testing/gameWindow.h"
+#include "gameWindow.h"
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //entrypoint
@@ -45,7 +45,7 @@ INT WINAPI WinMain( HINSTANCE hInstance_p, HINSTANCE hPrevInstance_p, LPSTR lpCm
 
 		TestGameWindow myGameWindow( hInstance_p );
 
-		myGameWindow.m_stateControl.ChangeState( std::make_shared<TestState>(TestState(&myGameWindow.m_device, &myGameWindow.m_spriteRenderer, &myGameWindow.m_mouseInput)) );
+		myGameWindow.m_stateControl.ChangeState( std::make_shared<TestState>(&myGameWindow ) );
 
 		/*myGameWindow.RegisterWndClass( TEXT("className"), NULL, LoadIcon( hInstance_p, TEXT("RC_GSP_ICONS")), CS_PARENTDC );
 

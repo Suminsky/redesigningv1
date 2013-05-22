@@ -98,6 +98,7 @@ public:
 		m_renderData.m_res.y = fHeight_p;
 		m_renderData.m_uvRect = uvRect_p;
 		m_renderData.m_bUpdate = true;
+		m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
 
 		// creates a ID3DBuffer for the vs constant buffer
 
@@ -232,175 +233,38 @@ public:
 //========================================================================
 // LAYER
 //========================================================================
+class TestGameWindow;
 class TestLayer: public game::Layer{
 
-	 dx::Device * m_pDevice;
-	 SpriteRenderer * m_pSpriteRenderer;
+	typedef std::vector<shared_SpriteComp_ptr > sprites;
+	typedef std::vector<shared_ButtonComponent_ptr> buttonables;
 
-	 win::MouseInput * m_pMouseInputRef;
+	//
 
-	 typedef std::vector<shared_SpriteComp_ptr > renderables;
-	 typedef std::vector<shared_ButtonComponent_ptr> buttonables;
-
-	 renderables m_renderables;
+	 TestGameWindow * m_pGameWindowRef;
+	 sprites m_sprites;
 	 buttonables m_buttons;
 
 public:
 	//------------------------------------------------------------------------
 	// 
 	//------------------------------------------------------------------------
-	TestLayer( dx::Device * pDevice_p, SpriteRenderer * pSpriteRenderer_p, win::MouseInput * pMouseInput  ){
-
-		m_pDevice = pDevice_p;
-		m_pSpriteRenderer = pSpriteRenderer_p;
-		m_pMouseInputRef = pMouseInput;
-	}
+	TestLayer( TestGameWindow * pGameWindowRef_p  ): m_pGameWindowRef(pGameWindowRef_p){}
 
 	//------------------------------------------------------------------------
-	// 
+	// build the game objects
 	//------------------------------------------------------------------------
-	void VInit(){
-
-		// build obj 1
-		//		create object		
-		game::shared_Object_ptr pObject = std::make_shared<game::Object>(game::Object());
-		//		create sprite component
-		MAKE_SHARED_ALIGN16( shared_SpriteComp_ptr pSpriteComponent, SpriteComponent,
-			(	m_pDevice, "Contents/bg_mainmenu.png",
-				1280.0f, 720.0f, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-				sprite::E_ALPHA_BLENDED, sprite::E_LINEAR,
-				m_pSpriteRenderer, nullptr	)			);
-		//		add component to object
-		pObject->AddComponent(pSpriteComponent);
-
-		// build obj 2
-		//		create object
-		game::shared_Object_ptr pObject2 = std::make_shared<game::Object>(game::Object());
-		//		create movable component
-		MAKE_SHARED_ALIGN16(game::shared_MovableComponent_ptr pMovableComponent2, game::MovableComponent, () );
-		pMovableComponent2->m_vCurrentPosition = DirectX::XMVectorSetY(pMovableComponent2->m_vCurrentPosition, -155.0f);
-		//pSpriteComponent->m_pMovableRef.m_vCurrentPosition = DirectX::XMVectorSet(-1280.0f/2.0f, -720.0f/2.0f, 0.0f, 1.0f);
-		//		create sprite component
-		MAKE_SHARED_ALIGN16( shared_SpriteComp_ptr pSpriteComponent2, SpriteComponent,
-			(	m_pDevice, "Contents/buttons_mainmenu.png",
-				626.0f, 648.0f/6.0f, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f/6.0f),
-				sprite::E_ALPHA_BLENDED, sprite::E_LINEAR,
-				m_pSpriteRenderer, pMovableComponent2 )		);
-		//		create button component
-		shared_ButtonComponent_ptr pButtonComponent2 = 
-			std::make_shared<ButtonComponent>( pSpriteComponent2, XMFLOAT4(0.0f, 1.0f/6.0f, 1.0f, 1.0f/6.0f), 20.0f, 30.0f);
-		//		add components to object
-		pObject2->AddComponent(pSpriteComponent2);
-		pObject2->AddComponent(pButtonComponent2);
-		pObject2->AddComponent(pMovableComponent2);
-
-		// build obj 3
-		//		create object
-		game::shared_Object_ptr pObject3 = std::make_shared<game::Object>(game::Object());
-		//		create movable component
-		MAKE_SHARED_ALIGN16(game::shared_MovableComponent_ptr pMovableComponent3, game::MovableComponent, () );
-		pMovableComponent3->m_vCurrentPosition = DirectX::XMVectorSetY(pMovableComponent3->m_vCurrentPosition, -225.0f);
-		//pSpriteComponent->m_pMovableRef.m_vCurrentPosition = DirectX::XMVectorSet(-1280.0f/2.0f, -720.0f/2.0f, 0.0f, 1.0f);
-		//		create sprite component
-		MAKE_SHARED_ALIGN16( shared_SpriteComp_ptr pSpriteComponent3, SpriteComponent,
-			(	m_pDevice, "Contents/buttons_mainmenu.png",
-			626.0f, 648.0f/6.0f, XMFLOAT4(0.0f, 2.0f/6.0f, 1.0f, 1.0f/6.0f),
-			sprite::E_ALPHA_BLENDED, sprite::E_LINEAR,
-			m_pSpriteRenderer, pMovableComponent3 )		);
-		//		create button component
-		shared_ButtonComponent_ptr pButtonComponent3 = 
-			std::make_shared<ButtonComponent>( pSpriteComponent3, XMFLOAT4(0.0f, 3.0f/6.0f, 1.0f, 1.0f/6.0f), 20.0f, 30.0f);
-		//		add components to object
-		pObject3->AddComponent(pSpriteComponent3);
-		pObject3->AddComponent(pButtonComponent3);
-		pObject3->AddComponent(pMovableComponent3);
-
-		// build obj 4
-		//		create object
-		game::shared_Object_ptr pObject4 = std::make_shared<game::Object>(game::Object());
-		//		create movable component
-		MAKE_SHARED_ALIGN16(game::shared_MovableComponent_ptr pMovableComponent4, game::MovableComponent, () );
-		pMovableComponent4->m_vCurrentPosition = DirectX::XMVectorSetY(pMovableComponent4->m_vCurrentPosition, -300.0f);
-		//pSpriteComponent->m_pMovableRef.m_vCurrentPosition = DirectX::XMVectorSet(-1280.0f/2.0f, -720.0f/2.0f, 0.0f, 1.0f);
-		//		create sprite component
-		MAKE_SHARED_ALIGN16( shared_SpriteComp_ptr pSpriteComponent4, SpriteComponent,
-			(	m_pDevice, "Contents/buttons_mainmenu.png",
-			626.0f, 648.0f/6.0f, XMFLOAT4(0.0f, 4.0f/6.0f, 1.0f, 1.0f/6.0f),
-			sprite::E_ALPHA_BLENDED, sprite::E_LINEAR,
-			m_pSpriteRenderer, pMovableComponent4 )		);
-		//		create button component
-		shared_ButtonComponent_ptr pButtonComponent4 = 
-			std::make_shared<ButtonComponent>( pSpriteComponent4, XMFLOAT4(0.0f, 5.0f/6.0f, 1.0f, 1.0f/6.0f), 20.0f, 30.0f);
-		//		add components to object
-		pObject4->AddComponent(pSpriteComponent4);
-		pObject4->AddComponent(pButtonComponent4);
-		pObject4->AddComponent(pMovableComponent4);
-
-
-
-		
-		//---
-		
-		// add components to systems
-		 
-		m_renderables.push_back(pSpriteComponent );
-		m_renderables.push_back(pSpriteComponent2 );
-		m_renderables.push_back(pSpriteComponent3);
-		m_renderables.push_back(pSpriteComponent4);
-		m_buttons.push_back(pButtonComponent2);
-		m_buttons.push_back(pButtonComponent3);
-		m_buttons.push_back(pButtonComponent4);
-		
-		// add objects to layer
-
-		AddObject(pObject);
-		AddObject(pObject2);
-		AddObject(pObject3);
-		AddObject(pObject4);
-	}
-
-	void VUpdate( const double , const double ){
-
-		XMFLOAT2 m_mousePos((float)m_pMouseInputRef->GetPos().x, (float)m_pMouseInputRef->GetPos().y);
-		m_pMouseInputRef->ConvertMousePosToNormalizedScreenSpace(m_mousePos.x, m_mousePos.y, 1280, 720);
-
-		bool bOneHover = false;
-		for( buttonables::iterator it = m_buttons.begin(), itEnd = m_buttons.end();
-			it!=itEnd;
-			++it){
-
-				if( !bOneHover && (*it)->GetPointCollision(m_mousePos) ){
-
-					(*it)->SetHoverImage();
-					bOneHover = true;					
-				}
-				else{
-
-					(*it)->SetNormalImage();
-				}
-		}
-
-	}
+	void VInit();
 
 	//------------------------------------------------------------------------
-	// 
+	// currently just check the buttons for hover state
 	//------------------------------------------------------------------------
-	void VDraw( const double interpolation_p ){
+	void VUpdate( const double , const double );
 
-		m_pSpriteRenderer->m_camera.Update();
-
-		for( renderables::iterator it = m_renderables.begin(), itEnd = m_renderables.end();
-			it != itEnd;
-			++it ){
-
-				(*it)->OnDraw(interpolation_p);
-		}
-
-		m_pSpriteRenderer->m_queue.ResetState(E_GS_CBuffer0);
-		m_pSpriteRenderer->m_queue.ResetState(E_GS_CBuffer1);
-		m_pSpriteRenderer->Raster( m_pDevice->GetContext());
-
-	}
+	//------------------------------------------------------------------------
+	// draw the sprite components
+	//------------------------------------------------------------------------
+	void VDraw( const double interpolation_p );
 
 };
 //========================================================================
@@ -409,18 +273,17 @@ public:
 class TestState: public game::State{
 
 	TestLayer myLayer;
-	//------------------------------------------------------------------------
-	// 
-	//------------------------------------------------------------------------
-	void VInit(){
 
-		AddLayer( game::shared_Layer_ptr(&myLayer, &gen::NoOp<game::Layer>));
-	}
+	//------------------------------------------------------------------------
+	// just add a layer
+	//------------------------------------------------------------------------
+	void VInit(){AddLayer( game::shared_Layer_ptr(&myLayer, &gen::NoOp<game::Layer>));}
 
 public:
+
 	//------------------------------------------------------------------------
-	// 
+	// ctor/dctor
 	//------------------------------------------------------------------------
-	TestState( dx::Device * pDevice_p, SpriteRenderer * pSpriteRenderer_p, win::MouseInput * pMouseInput ):myLayer(pDevice_p, pSpriteRenderer_p, pMouseInput){};
+	TestState( TestGameWindow * pGameWnd_p ):myLayer(pGameWnd_p){};
 	~TestState(){};
 };

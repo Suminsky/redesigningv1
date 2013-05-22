@@ -50,7 +50,10 @@ bool win::Window::Create( Rect & cliRect_p, /* desired client rect */ const TCHA
 
 	//m_dwWS = dwWS_p|WS_CLIPCHILDREN; // save // clipchildren prevent parent updating over child, preventing further WM_PAINT to childs
 
-	m_hWnd = CreateWindowEx(	dwWSEX_p,
+	//m_hWnd = // NOW MOVED TO NC_CREATE, because WM_SIZE is called before returning, and one might use m_hWnd there, so Im better initializing
+	// it as soon as possible!
+	
+	CreateWindowEx(	dwWSEX_p,
 		szRegisteredWndClassName_p,
 		szTitle_p,
 		dwWS_p,
