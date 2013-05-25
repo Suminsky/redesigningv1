@@ -46,14 +46,9 @@ namespace game{
 		friend class Layer;
 
 	public:
+
 		bool m_bActive;
 
-	private:
-		ObjectID m_ID;
-		OBJECT_LAYERINDEX m_currentLayerIndex;
-		ObjectComponents m_components;
-
-	public:
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
@@ -96,11 +91,13 @@ namespace game{
 
 			m_components.push_back( pComponent_p );
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
+			pComponent_p->m_pOwner = this;
 		}
 		void AddComponent( const shared_Component_ptr & pComponent_p ){
 
 			m_components.push_back( pComponent_p );
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
+			pComponent_p->m_pOwner = this;
 		}
 		void RemoveComponent( COMPONENT_OBJECTINDEX componentCurrentIndex_p ){
 
@@ -108,6 +105,11 @@ namespace game{
 			m_components[componentCurrentIndex_p]->m_currentObjectIndex = componentCurrentIndex_p; // update index
 			m_components.pop_back();
 		}
+
+	private:
+		ObjectID m_ID;
+		OBJECT_LAYERINDEX m_currentLayerIndex;
+		ObjectComponents m_components;
 	};
 
 	typedef std::shared_ptr<Object> shared_Object_ptr;

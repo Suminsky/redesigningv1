@@ -113,12 +113,12 @@ LRESULT CALLBACK TestGameWindow::WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM
 
 		DXGI_MODE_DESC windowMode = {0};
 		windowMode = gpuAndMode.mode; // initialize defaults
-		if( !FULLSCREEN ){
+#if FULLSCREEN == 0
 
 			windowMode.Height = WINDOW_H;
 			windowMode.Width = WINDOW_W;
 			windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;
-		}
+#endif
 
 		//windowedMode.RefreshRate.Numerator = 60.0;
 		//windowedMode.RefreshRate.Denominator = 1.0;
@@ -127,8 +127,9 @@ LRESULT CALLBACK TestGameWindow::WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM
 		m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, N_RENDERBUFFERS, gpuAndMode.pOutput );
 		m_swapChain.CreateRTVFromBackBuffer(m_device.GetDevice());
 
-		if(FULLSCREEN)
+#if FULLSCREEN == 1
 			m_swapChain.SwitchFullscreenMode();
+#endif
 
 
 		//---
@@ -138,10 +139,11 @@ LRESULT CALLBACK TestGameWindow::WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM
 		m_spriteRenderer.Init(&m_device);
 		m_spriteRenderer.LoadShader( &m_device, "vs_Sprite", "ps_Sprite");
 
-		if(FULLSCREEN)
+#if FULLSCREEN == 1
 			m_spriteRenderer.m_camera.BuildPipeState( 1440, 900, &m_device, m_swapChain.m_pBackBufferRTV );
-		else
+#else
 			m_spriteRenderer.m_camera.BuildPipeState( WINDOW_W, WINDOW_H, &m_device, m_swapChain.m_pBackBufferRTV );
+#endif
 
 		//---
 

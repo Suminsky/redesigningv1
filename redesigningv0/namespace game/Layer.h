@@ -25,6 +25,7 @@ namespace game{
 	class State;
 
 	typedef unsigned int LAYER_STATEINDEX;
+	typedef std::vector<OBJECT_LAYERINDEX> ObjectIndexes;
 	static const unsigned int INVALID_STATEINDEX = (unsigned int)-1;
 	typedef std::vector<shared_Object_ptr> LayerObjects;
 
@@ -36,54 +37,11 @@ namespace game{
 		bool m_bActive;
 		Timer<double> m_timer;
 
-	private:
-		LAYER_STATEINDEX m_currentStateIndex;
-		LayerObjects m_objects;
-
-
-		//------------------------------------------------------------------------
-		// updates state timer and call updates with timer time
-		//------------------------------------------------------------------------
-		void Update( const double dDeltaTime_p ){
-
-			m_timer.Update( dDeltaTime_p );
-
-			VUpdate( m_timer.GetTime(), m_timer.GetDelta() );
-
-			// update game::Objects
-
-			for( LayerObjects::const_iterator it = m_objects.begin(), itEnd = m_objects.end();
-				 it != itEnd;
-				 ++it ){
-
-					 if( (*it)->m_bActive ){
-						 
-						 (*it)->Update( m_timer.GetTime(), m_timer.GetDelta() );
-					 }
-			}
-		}
-
-	public:
-
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
 		Layer( bool bActive_p = true ):m_bActive(bActive_p), m_currentStateIndex(INVALID_STATEINDEX){}
-		~Layer(){}
-		
-		//------------------------------------------------------------------------
-		// to be override
-		//------------------------------------------------------------------------
-		virtual void VInit(){}
-		virtual void VUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
-		virtual void VDraw( const double /*dInterpolation_p*/ ){}
-		virtual void VDestroy(){}
-
-
-		//------------------------------------------------------------------------
-		// return index of this layer in the state layers container
-		//------------------------------------------------------------------------
-		LAYER_STATEINDEX GetStateIndex(){return m_currentStateIndex;}
+		virtual ~Layer(){}
 
 		//------------------------------------------------------------------------
 		// object to be updated per loop
@@ -100,11 +58,82 @@ namespace game{
 		//
 		void RmeoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
 
-			//m_objects[objectCurrentIndex_p]->VDestroy();
+			m_removedObjects.push_back( objectCurrentIndex_p );
+		}
 
-			std::swap( m_objects[objectCurrentIndex_p], m_objects[m_objects.size()-1] );
-			m_objects[objectCurrentIndex_p]->m_currentLayerIndex = objectCurrentIndex_p; // update index
-			m_objects.pop_back();
+		//------------------------------------------------------------------------
+		// return index of this layer in the state layers container
+		//------------------------------------------------------------------------
+		LAYER_STATEINDEX GetStateIndex(){return m_currentStateIndex;}
+
+	private:
+
+		LAYER_STATEINDEX m_currentStateIndex;
+		LayerObjects m_objects;
+		ObjectIndexes m_removedObjects;
+
+		//------------------------------------------------------------------------
+		// updates state timer and call updates with timer time
+		//------------------------------------------------------------------------
+		void Update( const double dDeltaTime_p ){
+
+			m_timer.Update( dDeltaTime_p );
+
+			VOnUpdate( m_timer.GetTime(), m_timer.GetDelta() );
+
+			// update game::Objects
+
+			for( LayerObjects::const_iterator it = m_objects.begin(), itEnd = m_objects.end();
+				 it != itEnd;
+				 ++it ){
+
+					 if( (*it)->m_bActive ){
+						 
+						 (*it)->Update( m_timer.GetTime(), m_timer.GetDelta() );
+					 }
+			}
+
+			// clean removed objects
+
+			if( ! m_removedObjects.empty() )
+				CleanRemovedObjects();
+		}
+		
+		//------------------------------------------------------------------------
+		// to be override
+		//------------------------------------------------------------------------
+		virtual void VOnInit(){}
+		virtual void VOnUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
+		virtual void VOnDraw( const double /*dInterpolation_p*/ ){}
+		virtual void VOnDestroy(){}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void CleanRemovedObjects(){
+
+			// swap all destroyed layers to the end of the vector than resizes
+
+			unsigned int nDestroyed = m_removedObjects.size(); // cache
+
+			if( nDestroyed == 1 ){
+
+				m_objects.clear();
+				m_removedObjects.clear();
+				return;
+			}
+
+			for( unsigned int it = 0; it < nDestroyed; ){
+
+				std::swap( m_objects[m_removedObjects[it]], m_objects[m_objects.size()- ++it] ); // size - 1, size -2, size -3
+
+				m_objects[m_removedObjects[it]]->m_currentLayerIndex = m_removedObjects[it]; // update index
+			}
+
+			// "trim"
+			m_objects.resize(m_objects.size() - nDestroyed);
+
+			m_removedObjects.clear();
 		}
 	};
 

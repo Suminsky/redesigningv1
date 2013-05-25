@@ -61,7 +61,7 @@ namespace game{
 
 			if( m_pCurrentState ){
 
-				m_pCurrentState->VDestroy();
+				m_pCurrentState->VOnDestroy();
 			}
 
 			// assign new state
@@ -72,7 +72,7 @@ namespace game{
 
 			if( m_pCurrentState ){
 
-				m_pCurrentState->VInit(); // TODO: give old state to new state
+				m_pCurrentState->VOnInit(); // TODO: give old state to new state
 			}
 		}
 	};

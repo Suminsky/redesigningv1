@@ -122,7 +122,7 @@ namespace win{
 		virtual ~HighPerformanceTimer(void){};
 	};
 
-
+//#pragma warning( disable : 4505 ) // 'win::UniqueHigPerfTimer' : unreferenced local function has been removed
 	static HighPerformanceTimer & UniqueHigPerfTimer(){
 
 		static HighPerformanceTimer timer;

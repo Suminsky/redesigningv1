@@ -1,10 +1,11 @@
 #include "TestState.h"
 #include "gameWindow.h"
+#include "FadeSpriteTask.h"
 
 //========================================================================
 // LAYER LAYER LAYER LAYER LAYER LAYER LAYER LAYER LAYER LAYER LAYER LAYER
 //========================================================================
-void TestLayer::VInit()
+void TestLayer::VOnInit()
 {
 	// build obj 1
 	//		create object		
@@ -90,7 +91,7 @@ void TestLayer::VInit()
 		1280.0f, 720.0f, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
 		sprite::E_ALPHA_BLENDED, sprite::E_LINEAR,
 		&m_pGameWindowRef->m_spriteRenderer, nullptr	)			);
-	pSpriteComponent5->m_renderData.m_color = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	pSpriteComponent5->m_renderData.m_color = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	//		add component to object
 	pObject5->AddComponent(pSpriteComponent5);
 
@@ -116,9 +117,12 @@ void TestLayer::VInit()
 	AddObject(pObject3);
 	AddObject(pObject4);
 	AddObject(pObject5);
+
+	// create fader task
+	m_tasker.AddTask( std::make_shared<FadeSpriteTask>(0.5f, pSpriteComponent5));
 }
 
-void TestLayer::VUpdate( const double , const double )
+void TestLayer::VOnUpdate( const double dAccum_p, const double dDelta_p )
 {
 	XMFLOAT2 m_mousePos((float)m_pGameWindowRef->m_mouseInput.GetPos().x, (float)m_pGameWindowRef->m_mouseInput.GetPos().y);
 	m_pGameWindowRef->m_mouseInput.ConvertMousePosToNormalizedScreenSpace(m_mousePos.x, m_mousePos.y, m_pGameWindowRef->m_cliRect.w,  m_pGameWindowRef->m_cliRect.h);
@@ -142,9 +146,13 @@ void TestLayer::VUpdate( const double , const double )
 	//
 
 	m_pGameWindowRef->m_spriteRenderer.m_camera.Update();
+
+	//
+
+	m_tasker.Update( dAccum_p, dDelta_p );
 }
 
-void TestLayer::VDraw( const double interpolation_p )
+void TestLayer::VOnDraw( const double interpolation_p )
 {
 	for( sprites::iterator it = m_sprites.begin(), itEnd = m_sprites.end();
 		it != itEnd;
@@ -153,7 +161,7 @@ void TestLayer::VDraw( const double interpolation_p )
 			(*it)->OnDraw(interpolation_p);
 	}
 
-	//m_pGameWindowRef->m_spriteRenderer.m_queue.ResetState(E_GS_CBuffer0);
-	//m_pGameWindowRef->m_spriteRenderer.m_queue.ResetState(E_GS_CBuffer1);
+	//m_pGameWindowRef->m_spriteRenderer.m_queue.ResetState(E_VS_CBuffer0);
+	//m_pGameWindowRef->m_spriteRenderer.m_queue.ResetState(E_VS_CBuffer1);
 	m_pGameWindowRef->m_spriteRenderer.Raster(m_pGameWindowRef->m_device.GetContext());
 }

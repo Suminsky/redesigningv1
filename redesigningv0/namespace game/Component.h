@@ -28,13 +28,6 @@ namespace game{
 
 		friend class Object;
 
-		COMPONENT_OBJECTINDEX m_currentObjectIndex;
-
-	protected:
-
-		ComponentID m_ID;
-		Object * m_pOwner;
-
 	public:
 
 		//------------------------------------------------------------------------
@@ -56,6 +49,15 @@ namespace game{
 
 			return m_ID;
 		}
+
+	protected:
+
+		ComponentID m_ID;
+		Object * m_pOwner;
+
+	private:
+
+		COMPONENT_OBJECTINDEX m_currentObjectIndex;
 	};
 
 	typedef std::shared_ptr<Component> shared_Component_ptr;

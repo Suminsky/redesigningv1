@@ -43,7 +43,7 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		CameraCbuffer():m_mViewProjection(DirectX::XMMatrixIdentity()), m_bUpdate(false){}
+		CameraCbuffer():m_mViewProjection(DirectX::XMMatrixIdentity()), m_bUpdate(true){}
 
 		//------------------------------------------------------------------------
 		// Test if buffer data was modified since last update call, than updates it,

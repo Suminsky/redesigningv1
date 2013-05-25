@@ -118,6 +118,8 @@ namespace win{
 
 
 
+//+
+//+ .+#pragma warning( disable : 4505 ) // 'win::UniqueFileLogger' : unreferenced local function has been removed
 	static FileLogger& UniqueFileLogger(){
 
 		static FileLogger logger;

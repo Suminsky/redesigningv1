@@ -141,6 +141,8 @@
     <ClInclude Include="namespace game\Game.h" />
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
+    <ClInclude Include="namespace game\Task.h" />
+    <ClInclude Include="namespace game\TaskMachine.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace input\Mapper.h" />
     <ClInclude Include="namespace sprite\Camera.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="namespace sprite\binders cache\SamplerStateBinders.h" />
     <ClInclude Include="namespace game\State.h" />
     <ClInclude Include="namespace game\StateMachine.h" />
+    <ClInclude Include="testing\FadeSpriteTask.h" />
     <ClInclude Include="testing\gameWindow.h" />
     <ClInclude Include="testing\TestState.h" />
   </ItemGroup>
@@ -194,6 +197,8 @@
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\Game.cpp" />
     <ClCompile Include="namespace game\Object.cpp" />
+    <ClCompile Include="namespace game\Task.cpp" />
+    <ClCompile Include="namespace game\TaskMAchine.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
     <ClCompile Include="namespace sprite\Camera.cpp" />
@@ -207,6 +212,7 @@
     <ClCompile Include="namespace render\dx\type wrappers\BlendState.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
+    <ClCompile Include="testing\FadeSpriteTask.cpp" />
     <ClCompile Include="testing\gameWindow.cpp" />
     <ClCompile Include="testing\main.cpp" />
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />

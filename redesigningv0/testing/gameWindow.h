@@ -1,6 +1,6 @@
 #pragma once
 
-#define FULLSCREEN	false
+#define FULLSCREEN	0
 #define N_RENDERBUFFERS 3
 #define WINDOW_W 1280
 #define WINDOW_H 720

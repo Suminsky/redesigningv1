@@ -26,17 +26,60 @@ namespace game{
 	//class ALayer;
 	class StateMachine;
 	typedef std::vector<shared_Layer_ptr> StateLayers;
+	typedef std::vector<LAYER_STATEINDEX> LayerIndexes;
 
 	class State{
 
 		friend StateMachine;
 
 	public:
+
 		Timer<double> m_timer;
 
-	private:
-		StateLayers m_layers;
+		//------------------------------------------------------------------------
+		// dctor
+		//------------------------------------------------------------------------
+		virtual ~State(){}
 
+		//------------------------------------------------------------------------
+		// layer stuff
+		//------------------------------------------------------------------------
+		void AddLayer( const shared_Layer_ptr & pNewLayer_p ){
+
+			pNewLayer_p->VOnInit();
+
+			m_layers.push_back( pNewLayer_p );
+
+			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+		}
+		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
+
+			pNewLayer_p->VOnInit();
+
+			m_layers.push_back( pNewLayer_p );
+
+			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+		}
+		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
+
+			m_layers[layerCurrentIndex_p]->VOnDestroy();
+			m_removedLayers.push_back(layerCurrentIndex_p);
+
+			//std::swap( m_layers[layerCurrentIndex_p], m_layers[m_layers.size()-1] );
+			//m_layers[layerCurrentIndex_p]->m_currentStateIndex = layerCurrentIndex_p; // update index
+			//m_layers.pop_back();
+		}
+
+	private:
+
+		StateLayers m_layers;
+		LayerIndexes m_removedLayers;
+
+		//------------------------------------------------------------------------
+		// to be override
+		//------------------------------------------------------------------------
+		virtual void VOnInit(){}
+		virtual void VOnDestroy(){}
 
 		//------------------------------------------------------------------------
 		// updates state timer and call updates with timer time, for each layer
@@ -55,6 +98,11 @@ namespace game{
 						(*it)->Update( m_timer.GetDelta() );
 					}
 			}
+
+			// clean dead layers
+
+			if( !m_removedLayers.empty() )
+				CleanRemovedLayers();
 		}
 
 		//------------------------------------------------------------------------
@@ -67,54 +115,39 @@ namespace game{
 
 					if( (*it)->m_bActive ){
 
-						(*it)->VDraw( dInterpolation_p );
+						(*it)->VOnDraw( dInterpolation_p );
 					}
 			}
 		}
 
-
-	public:
-
 		//------------------------------------------------------------------------
-		// dctor
+		// 
 		//------------------------------------------------------------------------
-		virtual ~State(){}
+		void CleanRemovedLayers(){
 
-		//------------------------------------------------------------------------
-		// to be override
-		//------------------------------------------------------------------------
-		virtual void VInit(){}
-		virtual void VDestroy(){}
+			// swap all destroyed layers to the end of the vector than resizes
 
+			unsigned int nDestroyed = m_removedLayers.size(); // cache
 
-		//------------------------------------------------------------------------
-		// layer stuff
-		//------------------------------------------------------------------------
-		void AddLayer( const shared_Layer_ptr & pNewLayer_p ){
+			if( nDestroyed == 1 ){
 
-			pNewLayer_p->VInit();
+				m_layers.clear();
+				m_removedLayers.clear();
+				return;
+			}
 
-			m_layers.push_back( pNewLayer_p );
-			
-			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+			for( unsigned int it = 0; it < nDestroyed; ){
+
+				std::swap( m_layers[m_removedLayers[it]], m_layers[m_layers.size()- ++it] ); // size - 1, size -2, size -3
+
+				m_layers[m_removedLayers[it]]->m_currentStateIndex = m_removedLayers[it]; // update index
+			}
+
+			// "trim"
+			m_layers.resize(m_layers.size() - nDestroyed);
+
+			m_removedLayers.clear();
 		}
-		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
-
-			pNewLayer_p->VInit();
-
-			m_layers.push_back( pNewLayer_p );
-
-			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
-		}
-		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
-
-			m_layers[layerCurrentIndex_p]->VDestroy();
-
-			std::swap( m_layers[layerCurrentIndex_p], m_layers[m_layers.size()-1] );
-			m_layers[layerCurrentIndex_p]->m_currentStateIndex = layerCurrentIndex_p; // update index
-			m_layers.pop_back();
-		}
-
 	};
 
 	typedef std::shared_ptr<State> shared_State_ptr;

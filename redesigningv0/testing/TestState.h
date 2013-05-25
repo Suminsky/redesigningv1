@@ -19,6 +19,9 @@
 
 #include "../namespace win/MouseInput.h"
 #include "../namespace game/components/MovableComponent.h"
+#include "../namespace game/TaskMachine.h"
+
+
 
 using namespace DirectX;
 using namespace sprite;
@@ -29,9 +32,10 @@ using namespace dx;
 //========================================================================
 
 class SpriteComponent:public game::Component{
-public:
+
 	friend class SpriteRenderer;
 
+public:
 	//------------------------------------------------------------------------
 	// Used to sort the draw calls
 	// This level of the rendering cant worry about this more specific stuff!
@@ -156,12 +160,13 @@ public:
 				// send to GPU?
 				m_renderData.m_bUpdate = true;
 			}
-			DBG(m_renderData.m_bUpdate = true;)
+			//DBG(m_renderData.m_bUpdate = true;)
 			//m_pipeState.m_binds
 
 			//---
 		}
-			m_pSpriteRendererRef->Render(this);
+		//m_renderData.m_bUpdate = true;
+		m_pSpriteRendererRef->Render(this);
 		
 	}
 
@@ -179,6 +184,7 @@ public:
 	 shared_SpriteComp_ptr m_pSpriteCompoRef;
 	 XMFLOAT4 m_uv_Normal, m_uv_Hover;
 	 XMFLOAT2 m_borderGap;	// used to make the "collision box" smaller
+
  public:
 
 	 //------------------------------------------------------------------------
@@ -230,6 +236,8 @@ public:
  };
 
  typedef std::shared_ptr<ButtonComponent> shared_ButtonComponent_ptr;
+
+
 //========================================================================
 // LAYER
 //========================================================================
@@ -245,6 +253,8 @@ class TestLayer: public game::Layer{
 	 sprites m_sprites;
 	 buttonables m_buttons;
 
+	game::TaskMachine m_tasker;
+
 public:
 	//------------------------------------------------------------------------
 	// 
@@ -254,17 +264,17 @@ public:
 	//------------------------------------------------------------------------
 	// build the game objects
 	//------------------------------------------------------------------------
-	void VInit();
+	void VOnInit();
 
 	//------------------------------------------------------------------------
 	// currently just check the buttons for hover state
 	//------------------------------------------------------------------------
-	void VUpdate( const double , const double );
+	void VOnUpdate( const double , const double );
 
 	//------------------------------------------------------------------------
 	// draw the sprite components
 	//------------------------------------------------------------------------
-	void VDraw( const double interpolation_p );
+	void VOnDraw( const double interpolation_p );
 
 };
 //========================================================================
@@ -277,7 +287,7 @@ class TestState: public game::State{
 	//------------------------------------------------------------------------
 	// just add a layer
 	//------------------------------------------------------------------------
-	void VInit(){AddLayer( game::shared_Layer_ptr(&myLayer, &gen::NoOp<game::Layer>));}
+	void VOnInit(){AddLayer( game::shared_Layer_ptr(&myLayer, &gen::NoOp<game::Layer>));}
 
 public:
 
