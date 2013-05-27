@@ -3,7 +3,7 @@
 #include <D3D11Shader.h>
 
 #include "../namespace render/dx/HLSLResource.h"
-#include "../testing/TestState.h"
+#include "../namespace game/components/SpriteComponent.h"
 
 void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 {
@@ -25,7 +25,7 @@ void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 
 	m_queue.Submit( &drawInst );
 }
-void sprite::SpriteRenderer::Render( SpriteComponent * pSprite_p )
+void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
 {
 	static render::Drawable drawInst;
 	drawInst.m_PipeStatesGroup.resize(0);

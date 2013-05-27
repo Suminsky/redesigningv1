@@ -40,7 +40,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Layer( bool bActive_p = true ):m_bActive(bActive_p), m_currentStateIndex(INVALID_STATEINDEX){}
+		Layer( bool bActive_p = true ):m_bActive(bActive_p), m_currentStateIndex(INVALID_STATEINDEX), m_pStateOwner(nullptr){}
 		virtual ~Layer(){}
 
 		//------------------------------------------------------------------------
@@ -48,11 +48,13 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddObject( shared_Object_ptr && object_p ){
 
+			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
 			m_objects.push_back(object_p);
-			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size()-1;
+			
 		}
 		void AddObject( const shared_Object_ptr & object_p ){
 
+			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
 			m_objects.push_back(object_p);
 		}
 		//
@@ -66,11 +68,16 @@ namespace game{
 		//------------------------------------------------------------------------
 		LAYER_STATEINDEX GetStateIndex(){return m_currentStateIndex;}
 
+	protected:
+
+		State * m_pStateOwner;
+
 	private:
 
 		LAYER_STATEINDEX m_currentStateIndex;
 		LayerObjects m_objects;
 		ObjectIndexes m_removedObjects;
+		
 
 		//------------------------------------------------------------------------
 		// updates state timer and call updates with timer time
@@ -114,24 +121,32 @@ namespace game{
 
 			// swap all destroyed layers to the end of the vector than resizes
 
-			unsigned int nDestroyed = m_removedObjects.size(); // cache
+			unsigned int nDestroyed = (unsigned int)m_removedObjects.size(); // cache
+			unsigned int nObjects = (unsigned int)m_objects.size();
 
-			if( nDestroyed == 1 ){
+			if( nDestroyed == nObjects ){
 
 				m_objects.clear();
 				m_removedObjects.clear();
 				return;
 			}
 
-			for( unsigned int it = 0; it < nDestroyed; ){
+			for( unsigned int it = 0, itLast = nObjects - 1; it < nDestroyed; ++it ){
 
-				std::swap( m_objects[m_removedObjects[it]], m_objects[m_objects.size()- ++it] ); // size - 1, size -2, size -3
+				// check if "to be removed" already at end
+
+				if( m_removedObjects[it] == itLast - it){ // increment here
+
+					continue;
+				}
+
+				std::swap( m_objects[m_removedObjects[it]], m_objects[itLast - it] ); // size - 1, size -2, size -3
 
 				m_objects[m_removedObjects[it]]->m_currentLayerIndex = m_removedObjects[it]; // update index
 			}
 
 			// "trim"
-			m_objects.resize(m_objects.size() - nDestroyed);
+			m_objects.resize(nObjects - nDestroyed);
 
 			m_removedObjects.clear();
 		}

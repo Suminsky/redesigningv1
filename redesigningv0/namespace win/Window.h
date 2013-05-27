@@ -29,7 +29,9 @@
 namespace win{
 
 	class Window{
+
 	protected:
+
 		HWND m_hWnd;
 
 		const TCHAR * m_szTitle_p;		

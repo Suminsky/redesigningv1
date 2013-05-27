@@ -75,5 +75,25 @@ namespace game{
 				m_pCurrentState->VOnInit(); // TODO: give old state to new state
 			}
 		}
+		void ChangeState( shared_State_ptr && pNewState_p ){
+
+			// destroy current state, if any
+
+			if( m_pCurrentState ){
+
+				m_pCurrentState->VOnDestroy();
+			}
+
+			// assign new state
+
+			m_pCurrentState = pNewState_p;
+
+			// init new state, if any
+
+			if( m_pCurrentState ){
+
+				m_pCurrentState->VOnInit(); // TODO: give old state to new state
+			}
+		}
 	};
 }

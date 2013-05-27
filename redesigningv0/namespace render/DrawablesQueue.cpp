@@ -59,5 +59,5 @@ void render::DrawablesQueue::CreateCommandBuffer( dx::commandbuffer & commandLis
 		commandList_p.push_back(m_drawables[(*it).index].GetDrawCall());
 	}
 
-	Prepare();
+	//Prepare();
 }

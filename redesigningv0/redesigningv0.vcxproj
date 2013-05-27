@@ -136,8 +136,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
+    <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
+    <ClInclude Include="Mentle\MentleWindow.h" />
+    <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
     <ClInclude Include="namespace game\Component.h" />
+    <ClInclude Include="namespace game\components\ButtonComponent.h" />
     <ClInclude Include="namespace game\components\MovableComponent.h" />
+    <ClInclude Include="namespace game\components\SpriteComponent.h" />
     <ClInclude Include="namespace game\Game.h" />
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
@@ -189,12 +195,16 @@
     <ClInclude Include="namespace sprite\binders cache\SamplerStateBinders.h" />
     <ClInclude Include="namespace game\State.h" />
     <ClInclude Include="namespace game\StateMachine.h" />
-    <ClInclude Include="testing\FadeSpriteTask.h" />
-    <ClInclude Include="testing\gameWindow.h" />
-    <ClInclude Include="testing\TestState.h" />
+    <ClInclude Include="namespace game\tasks\FadeSpriteTask.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
+    <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
+    <ClCompile Include="Mentle\MentleWindow.cpp" />
+    <ClCompile Include="Mentle\MainMenu\MainMenu.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
+    <ClCompile Include="namespace game\components\ButtonComponent.cpp" />
+    <ClCompile Include="namespace game\components\SpriteComponent.cpp" />
     <ClCompile Include="namespace game\Game.cpp" />
     <ClCompile Include="namespace game\Object.cpp" />
     <ClCompile Include="namespace game\Task.cpp" />
@@ -212,9 +222,8 @@
     <ClCompile Include="namespace render\dx\type wrappers\BlendState.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
-    <ClCompile Include="testing\FadeSpriteTask.cpp" />
-    <ClCompile Include="testing\gameWindow.cpp" />
-    <ClCompile Include="testing\main.cpp" />
+    <ClCompile Include="namespace game\tasks\FadeSpriteTask.cpp" />
+    <ClCompile Include="Mentle\main.cpp" />
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
     <ClCompile Include="namespace sprite\Movable.cpp" />
@@ -239,7 +248,6 @@
     <ClCompile Include="namespace sprite\binders cache\SamplerStateBinders.cpp" />
     <ClCompile Include="namespace game\State.cpp" />
     <ClCompile Include="namespace game\StateMachine.cpp" />
-    <ClCompile Include="testing\TestState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico" />

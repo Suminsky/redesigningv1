@@ -78,6 +78,14 @@ namespace game{
 			m_destroyedTasks.push_back(taskCurrentIndex_p);
 		}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		bool Empty(){
+
+			return m_tasks.empty();
+		}
+
 	private:
 
 		Tasks m_tasks;
@@ -102,24 +110,32 @@ namespace game{
 
 			// swap all destroyed tasks to the end of the vector than resizes
 
-			unsigned int nDestroyed = m_destroyedTasks.size(); // cache
+			unsigned int nDestroyed = (unsigned int)m_destroyedTasks.size(); // cache
+			unsigned int nTasks = (unsigned int)m_tasks.size();
 
-			if( nDestroyed == 1 ){
+			if( nDestroyed == nTasks ){
 
 				m_tasks.clear();
 				m_destroyedTasks.clear();
 				return;
 			}
 
-			for( unsigned int it = 0; it < nDestroyed; ){
+			for( unsigned int it = 0, itLast = nTasks - 1; it < nDestroyed; ++it ){
 
-				std::swap( m_tasks[m_destroyedTasks[it]], m_tasks[m_tasks.size()- ++it] ); // size - 1, size -2, size -3
+				// check if "to be removed" already at end
+
+				if( m_destroyedTasks[it] == itLast - it){ // increment here
+
+					continue;
+				}
+
+				std::swap( m_tasks[m_destroyedTasks[it]], m_tasks[itLast - it] ); // size - 1, size -2, size -3
 
 				m_tasks[m_destroyedTasks[it]]->m_currentTaskIndex = m_destroyedTasks[it]; // update index
 			}
 
 			// "trim"
-			m_tasks.resize(m_tasks.size() - nDestroyed);
+			m_tasks.resize(nTasks - nDestroyed);
 
 			m_destroyedTasks.clear();
 		}

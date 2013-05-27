@@ -50,24 +50,22 @@ namespace game{
 
 			m_layers.push_back( pNewLayer_p );
 
-			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size());
+			pNewLayer_p->m_pStateOwner = this;
 		}
 		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
 
-			pNewLayer_p->VOnInit();
+			pNewLayer_p->m_pStateOwner = this;
+			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size());
 
 			m_layers.push_back( pNewLayer_p );
 
-			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size()-1);
+			pNewLayer_p->VOnInit();
 		}
 		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
 
 			m_layers[layerCurrentIndex_p]->VOnDestroy();
 			m_removedLayers.push_back(layerCurrentIndex_p);
-
-			//std::swap( m_layers[layerCurrentIndex_p], m_layers[m_layers.size()-1] );
-			//m_layers[layerCurrentIndex_p]->m_currentStateIndex = layerCurrentIndex_p; // update index
-			//m_layers.pop_back();
 		}
 
 	private:
@@ -125,26 +123,34 @@ namespace game{
 		//------------------------------------------------------------------------
 		void CleanRemovedLayers(){
 
-			// swap all destroyed layers to the end of the vector than resizes
+			// swap all destroyed layers to the end of the vector, than resizes
 
-			unsigned int nDestroyed = m_removedLayers.size(); // cache
+			unsigned int nDestroyed = (unsigned int)m_removedLayers.size(); // cache
+			unsigned int nLayers = (unsigned int)m_layers.size();
 
-			if( nDestroyed == 1 ){
+			if( nDestroyed == nLayers ){
 
 				m_layers.clear();
 				m_removedLayers.clear();
 				return;
 			}
 
-			for( unsigned int it = 0; it < nDestroyed; ){
+			for( unsigned int it = 0, itLast = nLayers - 1; it < nDestroyed; ++it ){
 
-				std::swap( m_layers[m_removedLayers[it]], m_layers[m_layers.size()- ++it] ); // size - 1, size -2, size -3
+				// check if "to be removed" already at end
+
+				if( m_removedLayers[it] == itLast - it){ // increment here
+
+					continue;
+				}
+
+				std::swap( m_layers[m_removedLayers[it]], m_layers[itLast - it] ); // size - 1, size -2, size -3
 
 				m_layers[m_removedLayers[it]]->m_currentStateIndex = m_removedLayers[it]; // update index
 			}
 
 			// "trim"
-			m_layers.resize(m_layers.size() - nDestroyed);
+			m_layers.resize(nLayers - nDestroyed);
 
 			m_removedLayers.clear();
 		}

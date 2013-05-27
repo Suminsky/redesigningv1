@@ -10,6 +10,7 @@
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
 	purpose:	generic tests
+				TODO
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -33,7 +34,9 @@
 #include "CameraCbuffer.h"
 #include "Sprite.h"
 
-class SpriteComponent;
+namespace game{
+	class SpriteComponent;
+}
 
 namespace sprite{
 
@@ -83,7 +86,7 @@ namespace sprite{
 		// queue the states of a sprite
 		//------------------------------------------------------------------------
 		void Render( Sprite * pSprite_p );
-		void Render( SpriteComponent *pSprite_p);
+		void Render( game::SpriteComponent *pSprite_p);
 
 		//------------------------------------------------------------------------
 		// batch commands and executes

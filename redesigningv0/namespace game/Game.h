@@ -20,11 +20,6 @@
 namespace game{
 
 	class Game{
-	protected:
-
-		StateMachine				m_stateControl;
-		win::HighPerformanceTimer	m_timer;
-		double						m_dFixedTimeStep, m_dMaxFrameTimeDelay;
 
 	public:
 
@@ -49,5 +44,10 @@ namespace game{
 		//------------------------------------------------------------------------
 		void FixedStepLoop();
 
+	protected:
+
+		StateMachine				m_stateControl;
+		win::HighPerformanceTimer	m_timer;
+		double						m_dFixedTimeStep, m_dMaxFrameTimeDelay;
 	};
 }

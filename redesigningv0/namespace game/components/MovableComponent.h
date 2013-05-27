@@ -18,7 +18,7 @@
 
 // private includes
 #include "../Component.h"
-#include "../namespace gen/gen_macros.h"
+#include "../../namespace gen/gen_macros.h"
 
 
 namespace game{

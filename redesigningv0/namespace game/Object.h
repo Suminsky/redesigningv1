@@ -63,7 +63,7 @@ namespace game{
 			for( ObjectComponents::iterator it = m_components.begin(), itEnd = m_components.end();
 					it != itEnd; ++ it ){
 
-					(*it)->VOnUpdate( dTime_p, dDelta_p );
+				(*it)->VOnUpdate( dTime_p, dDelta_p );
 			}
 		}
 
@@ -89,15 +89,17 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddComponent( shared_Component_ptr && pComponent_p ){
 
-			m_components.push_back( pComponent_p );
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
 			pComponent_p->m_pOwner = this;
+
+			m_components.push_back( pComponent_p );	
 		}
 		void AddComponent( const shared_Component_ptr & pComponent_p ){
 
-			m_components.push_back( pComponent_p );
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
 			pComponent_p->m_pOwner = this;
+
+			m_components.push_back( pComponent_p );	
 		}
 		void RemoveComponent( COMPONENT_OBJECTINDEX componentCurrentIndex_p ){
 
