@@ -222,3 +222,11 @@ void FileLogger::FlushToFile()
 	m_iAvailableSize = I_BUFFSIZE_MINUS_SZABOVEFLUSHED;
 }
 //------------------------------------------------------------------------
+
+namespace win{
+	FileLogger& UniqueFileLogger(){
+
+		static FileLogger logger;
+		return logger;
+	}
+}

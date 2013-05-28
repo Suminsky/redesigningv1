@@ -184,3 +184,11 @@ LONGLONG HighPerformanceTimer::GetCountAccum()const{
 	return m_nCounts_persistent;
 }
 //=====================================================================================================================
+
+namespace win{
+	HighPerformanceTimer & UniqueHigPerfTimer(){
+
+		static HighPerformanceTimer timer;
+		return timer;
+	}
+}

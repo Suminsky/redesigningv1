@@ -36,15 +36,9 @@ namespace dx{
 				iRefreshRate,
 				iScanlineOrder,
 				iScaling;
-
-			/*ModePriority( int iResolution_p, int iFormat_p, int iRefreshRate_p, int iScanlineOrder_p, int iScaling_p):
-				iResolution(iResolution_p),
-				iFormat(iFormat_p),
-				iRefreshRate(iRefreshRate_p),
-				iScanlineOrder(iScanlineOrder_p),
-				iScaling(iScaling_p){};*/
 		};
 		struct GpuAndMode{
+
 			IDXGIAdapter1 * pAdapter;
 			IDXGIOutput * pOutput;
 			DXGI_MODE_DESC mode;
@@ -77,6 +71,9 @@ namespace dx{
 		//------------------------------------------------------------------------
 		SwapChain() : m_pSwapChain(NULL), m_pOutput(NULL), m_pBackBufferRTV(NULL){};
 		virtual ~SwapChain(){
+
+			if(!m_bWindowed)
+				SwitchFullscreenMode(); // otherwise debug outputs shows live states //TODO: should I move it to swap chain dctor?
 
 			if( m_pSwapChain )
 				m_pSwapChain->Release();

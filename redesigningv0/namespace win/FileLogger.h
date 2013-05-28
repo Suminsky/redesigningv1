@@ -115,14 +115,8 @@ namespace win{
 		void FlushToFile();
 	};
 
-
-
-
-//+
-//+ .+#pragma warning( disable : 4505 ) // 'win::UniqueFileLogger' : unreferenced local function has been removed
-	static FileLogger& UniqueFileLogger(){
-
-		static FileLogger logger;
-		return logger;
-	}
+	//------------------------------------------------------------------------
+	// unique logger
+	//------------------------------------------------------------------------
+	extern FileLogger& UniqueFileLogger();
 }

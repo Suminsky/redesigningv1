@@ -77,6 +77,7 @@ namespace game{
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VOnInit(){}
+		virtual void VOnUpdate(double, double){}
 		virtual void VOnDestroy(){}
 
 		//------------------------------------------------------------------------
@@ -85,6 +86,8 @@ namespace game{
 		void Update( const double dDeltaTime_p ){
 
 			m_timer.Update( dDeltaTime_p );
+
+			VOnUpdate(m_timer.GetTime(), m_timer.GetDelta() );
 
 			// traverse layers and update them, if active
 

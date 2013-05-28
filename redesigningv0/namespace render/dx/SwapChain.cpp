@@ -9,6 +9,10 @@
 
 void dx::SwapChain::CreateRTVFromBackBuffer( ID3D11Device * pDevice_p )
 {
+
+	// TODO
+	// what if I call it out of nowhere, I think current m_pBackBufferRTV will leak
+
 	// get swc bbuff
 
 	ID3D11Texture2D *pBBuffTexture = NULL;

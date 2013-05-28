@@ -34,10 +34,9 @@ namespace win{
 		bool IsKeyToogledON( const USHORT VK ) const;
 	};
 
-	static KeyboardAsyncInput & UniqueKeyboardAsyncInput(){
-
-		static KeyboardAsyncInput input;
-		return input;
-	}
+	//------------------------------------------------------------------------
+	// unique keyboard async input
+	//------------------------------------------------------------------------
+	extern KeyboardAsyncInput & UniqueKeyboardAsyncInput();
 }
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

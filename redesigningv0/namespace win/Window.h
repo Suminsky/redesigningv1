@@ -155,6 +155,13 @@ namespace win{
 			ShowWindow( m_hWnd, bVisible_p ? SW_SHOW : SW_HIDE );
 		}
 
+		//------------------------------------------------------------------------
+		// send close message
+		//------------------------------------------------------------------------
+		inline void Close(){
+
+			SendMessage( m_hWnd, WM_CLOSE, 0, 0 );
+		}
 
 		//------------------------------------------------------------------------
 		// Set window "state" functions

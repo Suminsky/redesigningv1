@@ -41,3 +41,11 @@ bool KeyboardAsyncInput::IsKeyToogledON( const USHORT VK ) const{
 	return (GetKeyState( VK ) & 0x0001);
 }
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+namespace win{
+	KeyboardAsyncInput & UniqueKeyboardAsyncInput(){
+
+		static KeyboardAsyncInput input;
+		return input;
+	}
+}
