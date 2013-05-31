@@ -68,6 +68,8 @@ namespace win{
 			//m_releasedButtons.Reset();
 			m_pressedButtons.Reset();
 			m_releasedButtons.Reset();
+
+			m_fScrollDelta = 0.0f;
 		}
 
 		//------------------------------------------------------------------------

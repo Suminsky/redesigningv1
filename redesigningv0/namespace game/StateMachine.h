@@ -21,13 +21,14 @@ namespace game{
 	class StateMachine{
 
 		shared_State_ptr m_pCurrentState;
+		shared_State_ptr m_pToBeChangedTo_Tmp;
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		StateMachine():m_pCurrentState(nullptr){}
+		StateMachine():m_pCurrentState(nullptr), m_pToBeChangedTo_Tmp(nullptr){}
 		virtual ~StateMachine(){}
 
 		//------------------------------------------------------------------------
@@ -53,30 +54,30 @@ namespace game{
 		}
 
 		//------------------------------------------------------------------------
-		// Changes current state, destroying current and initializing the new properly.
+		// set state to be changed to
 		//------------------------------------------------------------------------
 		void ChangeState( const shared_State_ptr & pNewState_p ){
 
-			// destroy current state, if any
+			// TODO: warning if already set to change
 
-			if( m_pCurrentState ){
-
-				m_pCurrentState->VOnDestroy();
-			}
-
-			// assign new state
-
-			m_pCurrentState = pNewState_p;
-
-			// init new state, if any
-
-			if( m_pCurrentState ){
-
-				m_pCurrentState->VOnInit(); // TODO: give old state to new state
-			}
+			m_pToBeChangedTo_Tmp = pNewState_p;
 		}
 		void ChangeState( shared_State_ptr && pNewState_p ){
 
+			m_pToBeChangedTo_Tmp = std::move(pNewState_p);
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+
+		//------------------------------------------------------------------------
+		// Changes current state, destroying current and initializing the new properly.
+		//------------------------------------------------------------------------
+		void ResolveStateChange(){
+
+			if( !m_pToBeChangedTo_Tmp ) return;
+
 			// destroy current state, if any
 
 			if( m_pCurrentState ){
@@ -86,7 +87,8 @@ namespace game{
 
 			// assign new state
 
-			m_pCurrentState = pNewState_p;
+			m_pCurrentState = std::move( m_pToBeChangedTo_Tmp );
+			m_pToBeChangedTo_Tmp.reset();
 
 			// init new state, if any
 

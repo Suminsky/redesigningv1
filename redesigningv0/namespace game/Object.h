@@ -92,7 +92,7 @@ namespace game{
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
 			pComponent_p->m_pOwner = this;
 
-			m_components.push_back( pComponent_p );	
+			m_components.push_back( std::move(pComponent_p) );	
 		}
 		void AddComponent( const shared_Component_ptr & pComponent_p ){
 

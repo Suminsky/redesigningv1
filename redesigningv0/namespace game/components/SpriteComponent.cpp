@@ -15,9 +15,9 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 										const shared_MovableComponent_ptr & pMovable_p )
 {
 	m_pMovableRef = pMovable_p;
-	m_sortKey.intRepresentation = 0;
+	m_sortKey.intRepresentation = 0LL;
 
-	m_TextureID= m_BlendModeID= m_FilterModeID= m_ShaderID = 21;
+	m_TextureID= m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
 	m_pSpriteRendererRef = pSpriteRenderer_p;
 	m_iShaderPermutation = 0;
 

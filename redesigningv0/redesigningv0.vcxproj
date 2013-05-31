@@ -136,6 +136,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Mentle\InGame\BGLayer.h" />
+    <ClInclude Include="Mentle\InGame\CardsLayer.h" />
+    <ClInclude Include="Mentle\InGame\InGame.h" />
     <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
@@ -198,6 +201,9 @@
     <ClInclude Include="namespace game\tasks\FadeSpriteTask.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
+    <ClCompile Include="Mentle\InGame\CardsLayer.cpp" />
+    <ClCompile Include="Mentle\InGame\InGame.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />

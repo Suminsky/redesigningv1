@@ -28,6 +28,10 @@ namespace game{
 	typedef std::vector<shared_Layer_ptr> StateLayers;
 	typedef std::vector<LAYER_STATEINDEX> LayerIndexes;
 
+
+	//========================================================================
+	// 
+	//========================================================================
 	class State{
 
 		friend StateMachine;
@@ -57,11 +61,15 @@ namespace game{
 
 			pNewLayer_p->m_pStateOwner = this;
 			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size());
-
-			m_layers.push_back( pNewLayer_p );
-
 			pNewLayer_p->VOnInit();
+			
+			m_layers.push_back( std::move(pNewLayer_p) );
+
+			// THIS CODE CALLS LVALUE VERSION!!!
+			//shared_Layer_ptr && pNewLayer = std::move(pNewLayer_p);
+			//m_layers.push_back( pNewLayer );
 		}
+
 		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
 
 			m_layers[layerCurrentIndex_p]->VOnDestroy();
@@ -77,7 +85,8 @@ namespace game{
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VOnInit(){}
-		virtual void VOnUpdate(double, double){}
+		virtual void VOnUpdate(double, double){} // called before layers update
+		virtual void VOnDraw(){}				 // called after layers draw
 		virtual void VOnDestroy(){}
 
 		//------------------------------------------------------------------------
@@ -104,6 +113,8 @@ namespace game{
 
 			if( !m_removedLayers.empty() )
 				CleanRemovedLayers();
+
+			//
 		}
 
 		//------------------------------------------------------------------------
@@ -119,6 +130,8 @@ namespace game{
 						(*it)->VOnDraw( dInterpolation_p );
 					}
 			}
+
+			VOnDraw();
 		}
 
 		//------------------------------------------------------------------------

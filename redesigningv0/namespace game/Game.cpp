@@ -39,4 +39,7 @@ void Game::FixedStepLoop(){
 	// draw
 
 	m_stateControl.Draw( dInterpolationAmount );
+
+
+	m_stateControl.ResolveStateChange();
 }

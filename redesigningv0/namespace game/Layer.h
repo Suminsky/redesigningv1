@@ -6,7 +6,7 @@
 	file:		Layer.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	a state is composed of layers (in game, hud, pause menu, denug console..)
+	purpose:	a state is composed of layers (in game, HUD, pause menu, debug console, fade splash..)
 				the layer is the last "stage", where the game objects needs to lie to be updated
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
@@ -29,6 +29,9 @@ namespace game{
 	static const unsigned int INVALID_STATEINDEX = (unsigned int)-1;
 	typedef std::vector<shared_Object_ptr> LayerObjects;
 
+	//========================================================================
+	// 
+	//========================================================================
 	class Layer{
 
 		friend State;
@@ -49,7 +52,7 @@ namespace game{
 		void AddObject( shared_Object_ptr && object_p ){
 
 			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
-			m_objects.push_back(object_p);
+			m_objects.push_back(std::move(object_p));
 			
 		}
 		void AddObject( const shared_Object_ptr & object_p ){

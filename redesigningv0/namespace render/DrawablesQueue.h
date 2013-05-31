@@ -29,7 +29,7 @@
 namespace render{
 
 #pragma warning( push )
-#pragma warning( disable : 4351 )
+#pragma warning( disable : 4351 ) // array on initialization list now default initialized, VS specific
 
 	//------------------------------------------------------------------------
 	// Receives the Drawables objects, sorts them and creates a command list.

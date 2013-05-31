@@ -93,7 +93,7 @@ namespace game{
 
 		dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
 		sprite::DrawableCbuffer m_renderData;
-		sprite::BindVSDrawableCBuffer * m_pBindDrawableCB;
+		//sprite::BindVSDrawableCBuffer * m_pBindDrawableCB;
 
 		sprite::SpriteRenderer * m_pSpriteRendererRef;
 

@@ -38,7 +38,7 @@ namespace sprite{
 	//----------------
 	//========================================================================
 #pragma warning(push)
-#pragma warning(disable:4324)
+#pragma warning(disable:4324) // padding due forced align
 
 	struct DrawableCbuffer{
 		
