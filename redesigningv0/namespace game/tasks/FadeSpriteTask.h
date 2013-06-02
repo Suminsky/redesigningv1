@@ -35,20 +35,23 @@ namespace game{
 						float fTimeToComplete_p = 1.0f,
 						float from = 1.0f, float to = 0.0f,
 						shared_Task_ptr pChainedTask_p = nullptr );
+		FadeSpriteTask(){}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
 		void Set( float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set( const shared_SpriteComponent_ptr & pSpriteComp_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set( const shared_Task_ptr & pChainedTask_p, const shared_SpriteComponent_ptr & pSpriteComp_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
 
 	private:
 
 		double m_elapsed;
 		float m_fTimeToComplete;
-		float & m_alphaReference;
+		float * m_pAlphaReference;
 		float m_from, m_to;
 
-		FadeSpriteTask & operator =( const FadeSpriteTask & other_p ); // warning supress
+		//FadeSpriteTask & operator =( const FadeSpriteTask & other_p ); // warning supress
 
 		//------------------------------------------------------------------------
 		// update

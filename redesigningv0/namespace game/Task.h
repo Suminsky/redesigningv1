@@ -38,6 +38,14 @@ namespace game{
 		explicit Task( shared_Task_ptr pChainedTask_p = nullptr ): m_pChainedTask(pChainedTask_p), m_currentTaskIndex(INVALID_TASKINDEX){}
 		virtual ~Task(){}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		bool Running(){
+
+			return m_currentTaskIndex != INVALID_TASKINDEX;
+		}
+
 	protected:
 
 		//------------------------------------------------------------------------
@@ -46,10 +54,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		void Chain();
 		void Destroy();
+		
+		shared_Task_ptr m_pChainedTask; // the task to be launched after this one is over
 
 	private: // how could I not think on that before (private virtuals)..well I didn't know u could overload those
 
-		shared_Task_ptr m_pChainedTask; // the task to be launched after this one is over
 		TASKINDEX m_currentTaskIndex;
 		TaskMachine * m_pTaskMachineRef;
 

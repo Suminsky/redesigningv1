@@ -8,7 +8,8 @@
 	file ext:	h
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
-	purpose:	
+	purpose:	TODO: create a default camera that holds common RTV (the back buffer), common viewport (full screen one), and cameras that get
+				their bind commands from it
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */
@@ -47,9 +48,7 @@ namespace sprite{
 
 	private:
 
-		ID3D11Buffer * m_pBuffer;
 		CameraCbuffer  m_renderData;
-
 
 	public:
 		//------------------------------------------------------------------------

@@ -22,16 +22,16 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 
 	// cbuffer
 
-	m_renderData.m_mViewProjection = m_mProjection = DirectX::XMMatrixOrthographicLH( (float)width_p, (float)height_p, 0.0f, 1.0f );
+	m_renderData.m_mViewProjection = m_mProjection = DirectX::XMMatrixOrthographicLH( (float)width_p/*/2.0f*/, (float)height_p/*/2.0f*/, 0.0f, 1.0f );
 
 	dx::BufferResource::CreationParams params = {0};
 	params.desc.bufferDesc.ByteWidth = CameraCbuffer::s_SIZE;
 	params.desc.bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	params.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
-	
-	pDevice_p->m_pCacheBuffer->Acquire( params, m_pBuffer );
-	m_pipeState.AddBinderCommand( std::make_shared<BindVSCameraCBuffer>( m_pBuffer, shared_CameraCbuffer_ptr(&m_renderData, &gen::NoOp<CameraCbuffer>)) );
+	ID3D11Buffer * pBuffer = NULL;
+	pDevice_p->m_pCacheBuffer->Acquire( params, pBuffer );
+	m_pipeState.AddBinderCommand( std::make_shared<BindVSCameraCBuffer>( pBuffer, shared_CameraCbuffer_ptr(&m_renderData, &gen::NoOp<CameraCbuffer>)) );
 
 	// render target
 

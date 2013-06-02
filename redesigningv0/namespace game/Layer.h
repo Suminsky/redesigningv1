@@ -117,6 +117,8 @@ namespace game{
 		virtual void VOnDraw( const double /*dInterpolation_p*/ ){}
 		virtual void VOnDestroy(){}
 
+		virtual void VOnResize( int /*W_p*/, int /*H_p*/ ){}
+
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 
 // private includes
 #include "Task.h"
+#include "../namespace gen/gen_macros.h"
 
 namespace game{
 
@@ -53,27 +54,25 @@ namespace game{
 		void AddTask( const shared_Task_ptr & pNewTask_p ){
 
 			pNewTask_p->VOnInit();
+			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
+			pNewTask_p->m_pTaskMachineRef = this;
 
 			m_tasks.push_back( pNewTask_p );
-
-			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size()-1);
-			pNewTask_p->m_pTaskMachineRef = this;
 		}
 		void AddTask( shared_Task_ptr && pNewTask_p ){
-
+			
 			pNewTask_p->VOnInit();
-
-			m_tasks.push_back( pNewTask_p );
-
-			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size()-1);
+			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
 			pNewTask_p->m_pTaskMachineRef = this;
+
+			m_tasks.push_back( std::move(pNewTask_p) );
 		}
 
 		//------------------------------------------------------------------------
 		// The only way a task can be finished not spontaneously
 		//------------------------------------------------------------------------
 		void AbortTask( TASKINDEX taskCurrentIndex_p ){
-
+	
 			m_tasks[taskCurrentIndex_p]->VOnDestroy();
 			m_destroyedTasks.push_back(taskCurrentIndex_p);
 		}
@@ -100,13 +99,14 @@ namespace game{
 
 			m_tasks[taskCompletedIndex_p] = std::move( m_tasks[taskCompletedIndex_p]->m_pChainedTask );
 			m_tasks[taskCompletedIndex_p]->m_currentTaskIndex = taskCompletedIndex_p;
+			m_tasks[taskCompletedIndex_p]->m_pTaskMachineRef = this;
 			m_tasks[taskCompletedIndex_p]->VOnInit();
 		}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void CleanAbortedTasks(){
+		void CleanAbortedTasks(){				
 
 			// swap all destroyed tasks to the end of the vector than resizes
 
@@ -124,7 +124,7 @@ namespace game{
 
 				// check if "to be removed" already at end
 
-				if( m_destroyedTasks[it] == itLast - it){ // increment here
+				if( m_destroyedTasks[it] == itLast - it){
 
 					continue;
 				}

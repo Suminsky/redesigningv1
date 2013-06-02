@@ -89,6 +89,8 @@ namespace game{
 		virtual void VOnDraw(){}				 // called after layers draw
 		virtual void VOnDestroy(){}
 
+		virtual void VOnResize(){}
+
 		//------------------------------------------------------------------------
 		// updates state timer and call updates with timer time, for each layer
 		//------------------------------------------------------------------------
@@ -117,6 +119,17 @@ namespace game{
 			//
 		}
 
+		void OnResize( int W_p, int H_p){
+
+			VOnResize();
+
+			for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
+				it != itEnd; ++ it ){
+
+					(*it)->VOnResize( W_p, H_p );
+			}
+
+		}
 		//------------------------------------------------------------------------
 		// traverse layer and call draw
 		//------------------------------------------------------------------------
@@ -155,7 +168,7 @@ namespace game{
 
 				// check if "to be removed" already at end
 
-				if( m_removedLayers[it] == itLast - it){ // increment here
+				if( m_removedLayers[it] == itLast - it){
 
 					continue;
 				}

@@ -46,6 +46,26 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
 	m_queue.Submit( &drawInst );
 }
 
+void sprite::SpriteRenderer::Render( game::SpriteComponent *pSprite_p, Camera *pCamera_p )
+{
+	static render::Drawable drawInst;
+	drawInst.m_PipeStatesGroup.resize(0);
+
+	drawInst.m_sortKey = pSprite_p->m_sortKey.intRepresentation;
+	// shader
+	drawInst.m_PipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
+	// vb
+	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	// camera
+	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&pCamera_p->m_pipeState, &gen::NoOp<dx::State>)  );
+	// sprite
+	drawInst.m_PipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+
+	// draw call
+	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
+
+	m_queue.Submit( &drawInst );
+}
 void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBytes_p, dx::Device * pDevice_p )
 {
 	// primitive topology

@@ -87,6 +87,7 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		void Render( Sprite * pSprite_p );
 		void Render( game::SpriteComponent *pSprite_p);
+		void Render( game::SpriteComponent *pSprite_p, Camera *pCamera_p );
 
 		//------------------------------------------------------------------------
 		// batch commands and executes

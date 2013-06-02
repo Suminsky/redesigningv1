@@ -21,6 +21,8 @@ namespace game{
 	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
 	typedef unsigned int ComponentID;
 
+	typedef unsigned int OBJECT_LAYERINDEX;
+
 	//========================================================================
 	// 
 	//========================================================================
@@ -49,6 +51,11 @@ namespace game{
 
 			return m_ID;
 		}
+
+		//------------------------------------------------------------------------
+		// get owner object
+		//------------------------------------------------------------------------
+		OBJECT_LAYERINDEX GetOwner();
 
 	protected:
 

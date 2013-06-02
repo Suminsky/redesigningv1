@@ -17,6 +17,7 @@
 // private includes
 #include "MovableComponent.h"
 #include "../../namespace sprite/SpriteRenderer.h"
+#include "../../namespace sprite/Camera.h"
 
 namespace dx{
 	class Device;
@@ -55,6 +56,7 @@ namespace game{
 		// interpolates
 		//------------------------------------------------------------------------
 		void OnDraw( double dInterpolation_p );
+		void OnDraw( double dInterpolation_p, sprite::Camera * pCamera_p );
 
 	public:
 		//------------------------------------------------------------------------

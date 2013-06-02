@@ -74,3 +74,25 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 	//m_renderData.m_bUpdate = true;
 	m_pSpriteRendererRef->Render(this);
 }
+void game::SpriteComponent::OnDraw( double dInterpolation_p, Camera * pCamera_p )
+{
+	// interpolate
+	if( shared_MovableComponent_ptr pMovable = m_pMovableRef.lock() ){
+
+		XMMATRIX && mNewWorld = pMovable->ComputeRenderWorldMatrix( (float)dInterpolation_p );
+
+		if( memcmp( &m_renderData.m_mWorld, &mNewWorld, sizeof(XMMATRIX)) ){
+
+			m_renderData.m_mWorld = mNewWorld;
+
+			// send to GPU?
+			m_renderData.m_bUpdate = true;
+		}
+		//DBG(m_renderData.m_bUpdate = true;)
+		//m_pipeState.m_binds
+
+		//---
+	}
+	//m_renderData.m_bUpdate = true;
+	m_pSpriteRendererRef->Render(this, pCamera_p);
+}

@@ -11,7 +11,7 @@ FadeSpriteTask::FadeSpriteTask( const shared_SpriteComponent_ptr & pSpriteComp_p
 	: Task(pChainedTask_p),
 	m_fTimeToComplete(fTimeToComplete_p),
 	m_from(from),m_to(to),
-	m_alphaReference(pSpriteComp_p->m_renderData.m_color.w),
+	m_pAlphaReference(&pSpriteComp_p->m_renderData.m_color.w),
 	m_elapsed(0.0f)
 {
 
@@ -25,13 +25,13 @@ void game::FadeSpriteTask::VOnUpdate( double, double delta )
 
 	if( m_elapsed >=  m_fTimeToComplete ){
 
-		m_alphaReference = m_to;
+		*m_pAlphaReference = m_to;
 
 		Chain();
 	}
 	else{
 
-		m_alphaReference = alpha;
+		*m_pAlphaReference = alpha;
 	}
 }
 
@@ -39,6 +39,24 @@ void game::FadeSpriteTask::Set( float fTimeToComplete_p /*= 1.0f*/, float from /
 {
 	m_elapsed = 0.0;
 	m_fTimeToComplete = fTimeToComplete_p;
-	m_alphaReference = m_from = from;
+	*m_pAlphaReference = m_from = from;
+	m_to = to;
+}
+void game::FadeSpriteTask::Set( const shared_SpriteComponent_ptr & pSpriteComp_p, float fTimeToComplete_p /*= 1.0f*/, float from /*= 1.0f*/, float to /*= 0.0f */ )
+{
+	m_elapsed = 0.0;
+	m_fTimeToComplete = fTimeToComplete_p;
+	m_pAlphaReference = &pSpriteComp_p->m_renderData.m_color.w;
+	*m_pAlphaReference = m_from = from;
+	m_to = to;
+}
+
+void game::FadeSpriteTask::Set( const shared_Task_ptr & pChainedTask_p, const shared_SpriteComponent_ptr & pSpriteComp_p, float fTimeToComplete_p /*= 1.0f*/, float from /*= 1.0f*/, float to /*= 0.0f */ )
+{
+	m_pChainedTask = pChainedTask_p;
+	m_elapsed = 0.0;
+	m_fTimeToComplete = fTimeToComplete_p;
+	m_pAlphaReference = &pSpriteComp_p->m_renderData.m_color.w;
+	*m_pAlphaReference = m_from = from;
 	m_to = to;
 }

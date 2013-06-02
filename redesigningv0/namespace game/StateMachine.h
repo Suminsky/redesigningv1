@@ -70,6 +70,13 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
+		void OnResize( int W_p, int H_p){
+
+			if( m_pCurrentState ){
+
+				m_pCurrentState->OnResize( W_p, H_p );
+			}
+		}
 
 		//------------------------------------------------------------------------
 		// Changes current state, destroying current and initializing the new properly.

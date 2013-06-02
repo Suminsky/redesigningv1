@@ -15,9 +15,11 @@ void Task::Chain()
 
 		m_pTaskMachineRef->AbortTask( m_currentTaskIndex );
 	}
+	m_currentTaskIndex = INVALID_TASKINDEX;
 }
 
 void Task::Destroy()
 {
 	m_pTaskMachineRef->AbortTask( m_currentTaskIndex );
+	m_currentTaskIndex = INVALID_TASKINDEX;
 }
