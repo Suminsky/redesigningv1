@@ -36,14 +36,8 @@ namespace game{
 		// dctor
 		//------------------------------------------------------------------------
 		Component():m_currentObjectIndex(INVALID_OBJECTINDEX){}
-		virtual ~Component(){};
-
-		//------------------------------------------------------------------------
-		// to be override
-		//------------------------------------------------------------------------
-		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ){};
-		//virtual void VOnEvent( Event event_p ) = 0;
-
+		virtual ~Component(){}
+		
 		//------------------------------------------------------------------------
 		// get id
 		//------------------------------------------------------------------------
@@ -63,6 +57,12 @@ namespace game{
 		Object * m_pOwner;
 
 	private:
+
+		//------------------------------------------------------------------------
+		// to be override
+		//------------------------------------------------------------------------
+		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ){}
+		//virtual void VOnEvent( Event event_p ) = 0;
 
 		COMPONENT_OBJECTINDEX m_currentObjectIndex;
 	};

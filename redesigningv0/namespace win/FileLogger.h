@@ -25,6 +25,7 @@ namespace win{
 	//100KB
 	#define SZBUFF_SIZE 10240
 
+	#define SZ_TAB "\t"
 	#define SZ_NEWLINE "\r\n"
 	#define SZ_ABOVE_FLUSHED "-ABOVE FLUSHED-\r\n"
 	#define I_ABOVEFLUSHED_LEN 17

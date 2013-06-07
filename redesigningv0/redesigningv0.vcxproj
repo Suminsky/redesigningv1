@@ -148,6 +148,9 @@
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
     <ClInclude Include="namespace game\components\MovableComponent.h" />
     <ClInclude Include="namespace game\components\SpriteComponent.h" />
+    <ClInclude Include="namespace game\Event.h" />
+    <ClInclude Include="namespace game\EventHandler.h" />
+    <ClInclude Include="namespace game\EventMachine.h" />
     <ClInclude Include="namespace game\Game.h" />
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
@@ -213,6 +216,7 @@
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\components\ButtonComponent.cpp" />
     <ClCompile Include="namespace game\components\SpriteComponent.cpp" />
+    <ClCompile Include="namespace game\EventMachine.cpp" />
     <ClCompile Include="namespace game\Game.cpp" />
     <ClCompile Include="namespace game\Object.cpp" />
     <ClCompile Include="namespace game\Task.cpp" />

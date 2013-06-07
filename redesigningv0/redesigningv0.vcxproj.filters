@@ -207,6 +207,15 @@
     <ClInclude Include="Mentle\InGame\MentleCardComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace game\EventHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\EventMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -369,6 +378,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\EventMachine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
