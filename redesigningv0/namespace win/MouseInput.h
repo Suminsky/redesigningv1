@@ -40,18 +40,10 @@ namespace win{
 			Pos():x(0), y(0){}
 		};
 
-	private:
-		Pos m_pos, m_prevPos, m_deltaPos;
-		Buttons m_downButtons;
-		Buttons m_pressedButtons;
-		Buttons m_releasedButtons;
-		float m_fScrollDelta;
-
-	public:
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		MouseInput(): m_fScrollDelta(0.0f){}
+		MouseInput(): m_fScrollDelta(0.0f), m_bCaptured(false){}
 
 		//------------------------------------------------------------------------
 		// call per frame
@@ -80,7 +72,7 @@ namespace win{
 			m_pos.x = GET_X_LPARAM(lParam_p);
 			m_pos.y = GET_Y_LPARAM(lParam_p);
 		}
-		static void ConvertMousePosToNormalizedScreenSpace( float & x_p, float & y_p, UINT screenW_p, UINT screenH_p ){
+		static void ConvertMousePosToCentralizedScreenSpace( float & x_p, float & y_p, UINT screenW_p, UINT screenH_p ){
 
 			float x = ((float)x_p / (float)screenW_p); // interpolation amount
 			float y = ((float)y_p / (float)screenH_p);
@@ -135,13 +127,66 @@ namespace win{
 		}
 
 		//------------------------------------------------------------------------
+		// message sent when window lose capture
+		//------------------------------------------------------------------------
+		void OnWM_CAPTURECHANGED(){
+
+			m_bCaptured = false;
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void ToogleCapture( HWND hWnd_p ){
+
+			if( !m_bCaptured ){
+
+				SetCapture( hWnd_p );
+				m_bCaptured = true;
+			}
+			else{
+
+				ReleaseCapture();
+
+				// See On_WM_CAPTURECHANGED
+			}
+		}
+		void Capture( HWND hWnd_p ){
+
+			if( !m_bCaptured ){
+
+				SetCapture( hWnd_p );
+				m_bCaptured = true;
+			}
+		}
+		void ReleaseCapture(){
+
+			if( m_bCaptured ){
+
+				::ReleaseCapture();
+
+				// See On_WM_CAPTURECHANGED
+			}
+		}
+
+		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		Buttons GetDownButtons(){return m_downButtons;}
-		Buttons GetPressedButtons(){return m_pressedButtons;}
-		Buttons GetReleasedButtons(){return m_releasedButtons;}
-		Pos GetPos(){return m_pos;}
-		Pos GetDelta(){return m_deltaPos;}
-		float GetWheelNormalizedAmount(){return m_fScrollDelta;}
+		Buttons GetDownButtons()const{return m_downButtons;}
+		Buttons GetPressedButtons()const{return m_pressedButtons;}
+		Buttons GetReleasedButtons()const{return m_releasedButtons;}
+		Pos GetPos()const{return m_pos;}
+		Pos GetDelta()const{return m_deltaPos;}
+		float GetWheelNormalizedAmount()const{return m_fScrollDelta;}
+		bool IsCaptured()const{return m_bCaptured;}
+
+	private:
+
+		Pos m_pos, m_prevPos, m_deltaPos;
+		Buttons m_downButtons;
+		Buttons m_pressedButtons;
+		Buttons m_releasedButtons;
+		float m_fScrollDelta;
+		bool m_bCaptured;
 	};
 }

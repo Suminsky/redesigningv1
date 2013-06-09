@@ -74,3 +74,12 @@
 	s_ptr = std::make_shared<type> ctor;
 
 #endif
+
+
+//------------------------------------------------------------------------
+// macro to release the burden of typing all the enormous shit
+//------------------------------------------------------------------------
+#include <memory>
+#include "gen_data.h"
+
+#define MAKE_STACK_SHAREDPTR( rawType, stackPtr ) std::shared_ptr<rawType>( stackPtr, &gen::NoOp<rawType> )

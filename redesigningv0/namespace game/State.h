@@ -50,6 +50,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddLayer( const shared_Layer_ptr & pNewLayer_p ){
 
+			assert( pNewLayer_p->m_currentStateIndex == INVALID_LAYERINDEX);
+
 			pNewLayer_p->VOnInit();
 
 			m_layers.push_back( pNewLayer_p );
@@ -58,6 +60,8 @@ namespace game{
 			pNewLayer_p->m_pStateOwner = this;
 		}
 		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
+
+			assert( pNewLayer_p->m_currentStateIndex == INVALID_LAYERINDEX);
 
 			pNewLayer_p->m_pStateOwner = this;
 			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size());
@@ -73,6 +77,7 @@ namespace game{
 		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
 
 			m_layers[layerCurrentIndex_p]->VOnDestroy();
+			m_layers[layerCurrentIndex_p]->m_currentStateIndex = INVALID_LAYERINDEX;
 			m_removedLayers.push_back(layerCurrentIndex_p);
 		}
 
@@ -86,6 +91,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		virtual void VOnInit(){}
 		virtual void VOnUpdate(double, double){} // called before layers update
+		virtual void VLateUpdate(double, double){} // called after layers update
 		virtual void VOnDraw(){}				 // called after layers draw
 		virtual void VOnDestroy(){}
 
@@ -110,6 +116,8 @@ namespace game{
 						(*it)->Update( m_timer.GetDelta() );
 					}
 			}
+
+			VLateUpdate( m_timer.GetTime(), m_timer.GetDelta() );
 
 			// clean dead layers
 

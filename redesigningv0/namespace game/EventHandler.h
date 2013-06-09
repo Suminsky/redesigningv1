@@ -6,7 +6,7 @@
 	file:		EventHandler.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	The handler is supposed to register for events and override a OnEvent method
+	purpose:	The handler is supposed to register for events and override a VOnEvent method
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -37,7 +37,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		virtual void OnEvent( const Event & event_p ) = 0;
+		virtual void VOnEvent( const Event & event_p ) = 0;
 	
 	};
 

@@ -9,7 +9,7 @@ using namespace game;
 
 void EventMachine::DispatchEvents()
 {
-	// move events, cause the m_events may still change inside OnEvent, so
+	// move events, cause the m_events may still change inside VOnEvent, so
 	// its better to decouple them from new ones
 
 	// as it is for now...adding or removing listeners would also fuck everything up..
@@ -30,7 +30,7 @@ void EventMachine::DispatchEvents()
 
 			EventHandlerRegister::iterator itHandlersOfCurrentEvent = m_register.find( (*itEvent).GetType() );
 
-			if(	 itHandlersOfCurrentEvent != m_register.end() ) continue;
+			if(	 itHandlersOfCurrentEvent == m_register.end() ) continue;
 
 			EventHandlers & handlers = itHandlersOfCurrentEvent->second; // cache for readability..
 
@@ -40,7 +40,7 @@ void EventMachine::DispatchEvents()
 					itHandler != itHandlersEnd;
 					++ itHandler ){
 
-					(*itHandler)->OnEvent( *itEvent ); // TODO: consider "consuming" event if OnEvent returns false
+					(*itHandler)->VOnEvent( *itEvent ); // TODO: consider "consuming" event if VOnEvent returns false
 
 			}// traverse handlers
 	}// traverse events
@@ -57,7 +57,7 @@ bool EventMachine::DispatchEventImmetiately( EventType type_p, INT_PTR data_p )
 	EventHandlerRegister::iterator itHandlersOfCurrentEvent =
 		m_register.find( immEvent.GetType() );
 
-	if(	 itHandlersOfCurrentEvent != m_register.end() ) return false;
+	if(	 itHandlersOfCurrentEvent == m_register.end() ) return false;
 
 	EventHandlers & handlers = itHandlersOfCurrentEvent->second; // cache
 
@@ -67,7 +67,7 @@ bool EventMachine::DispatchEventImmetiately( EventType type_p, INT_PTR data_p )
 			itHandler != itHandlersEnd;
 			++ itHandler ){
 
-			(*itHandler)->OnEvent( immEvent );
+			(*itHandler)->VOnEvent( immEvent );
 	}
 
 	return true;
@@ -98,7 +98,7 @@ void EventMachine::RegisterForEvent( AEventHandler * pHandler_p, EventType event
 
 			EventHandlers::const_iterator itHandlersEnd = handlers.cend();
 			EventHandlers::const_iterator itFound = std::find( handlers.cbegin(), itHandlersEnd, pHandler_p );
-			assert( itFound != itHandlersEnd );
+			assert( itFound == itHandlersEnd );
 
 			handlers.push_back( pHandler_p );
 		}

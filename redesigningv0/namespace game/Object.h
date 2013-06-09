@@ -29,6 +29,7 @@
 
 namespace game{
 
+	class Layer;
 	class Component;
 
 	typedef unsigned int ObjectID;
@@ -52,7 +53,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Object( bool bActive_p = true ):m_bActive(bActive_p), m_currentLayerIndex(INVALID_LAYERINDEX){}
+		Object( bool bActive_p = true ):m_bActive(bActive_p), m_currentLayerIndex(INVALID_LAYERINDEX), m_pLayerOwner(nullptr){}
 		virtual ~Object(){}
 
 		//------------------------------------------------------------------------
@@ -90,14 +91,14 @@ namespace game{
 		void AddComponent( shared_Component_ptr && pComponent_p ){
 
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
-			pComponent_p->m_pOwner = this;
+			pComponent_p->m_pObjectOwner = this;
 
 			m_components.push_back( std::move(pComponent_p) );	
 		}
 		void AddComponent( const shared_Component_ptr & pComponent_p ){
 
 			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
-			pComponent_p->m_pOwner = this;
+			pComponent_p->m_pObjectOwner = this;
 
 			m_components.push_back( pComponent_p );	
 		}
@@ -108,7 +109,17 @@ namespace game{
 			m_components.pop_back();
 		}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		Layer * GetLayerOwner(){ return m_pLayerOwner; }
+
+	protected:
+
+		Layer * m_pLayerOwner;
+
 	private:
+
 		ObjectID m_ID;
 		OBJECT_LAYERINDEX m_currentLayerIndex;
 		ObjectComponents m_components;

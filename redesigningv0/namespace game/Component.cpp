@@ -5,5 +5,5 @@ using namespace game;
 
 OBJECT_LAYERINDEX Component::GetOwner()
 {
-	return m_pOwner->ID();
+	return m_pObjectOwner->ID();
 }

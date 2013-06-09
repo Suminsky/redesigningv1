@@ -102,6 +102,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -156,6 +157,7 @@
     <ClInclude Include="namespace game\Object.h" />
     <ClInclude Include="namespace game\Task.h" />
     <ClInclude Include="namespace game\TaskMachine.h" />
+    <ClInclude Include="namespace game\tasks\AlarmTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace input\Mapper.h" />
     <ClInclude Include="namespace sprite\Camera.h" />
@@ -221,6 +223,7 @@
     <ClCompile Include="namespace game\Object.cpp" />
     <ClCompile Include="namespace game\Task.cpp" />
     <ClCompile Include="namespace game\TaskMAchine.cpp" />
+    <ClCompile Include="namespace game\tasks\AlarmTask.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
     <ClCompile Include="namespace sprite\Camera.cpp" />

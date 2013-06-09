@@ -14,6 +14,7 @@
 
 // standard includes
 #include <vector>
+#include <assert.h>
 
 // private includes
 #include "Task.h"
@@ -53,6 +54,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddTask( const shared_Task_ptr & pNewTask_p ){
 
+			assert(pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX); // prevent double insertion TODO: perhaps a warning?
+
 			pNewTask_p->VOnInit();
 			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
 			pNewTask_p->m_pTaskMachineRef = this;
@@ -60,6 +63,8 @@ namespace game{
 			m_tasks.push_back( pNewTask_p );
 		}
 		void AddTask( shared_Task_ptr && pNewTask_p ){
+
+			assert(pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX);
 			
 			pNewTask_p->VOnInit();
 			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
@@ -74,6 +79,8 @@ namespace game{
 		void AbortTask( TASKINDEX taskCurrentIndex_p ){
 	
 			m_tasks[taskCurrentIndex_p]->VOnDestroy();
+			m_tasks[taskCurrentIndex_p]->m_currentTaskIndex = INVALID_TASKINDEX;
+
 			m_destroyedTasks.push_back(taskCurrentIndex_p);
 		}
 
@@ -96,6 +103,7 @@ namespace game{
 		void ChainTask( TASKINDEX taskCompletedIndex_p ){
 			
 			m_tasks[taskCompletedIndex_p]->VOnDestroy();
+			m_tasks[taskCompletedIndex_p]->m_currentTaskIndex = INVALID_TASKINDEX;
 
 			m_tasks[taskCompletedIndex_p] = std::move( m_tasks[taskCompletedIndex_p]->m_pChainedTask );
 			m_tasks[taskCompletedIndex_p]->m_currentTaskIndex = taskCompletedIndex_p;

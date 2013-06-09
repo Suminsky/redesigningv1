@@ -21,6 +21,7 @@
 namespace game{
 
 	typedef int EventType;
+	static const unsigned int INVALID_EVENTTYPE = (unsigned int)-1;
 
 	struct Event{
 
@@ -29,7 +30,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Event( EventType type_p, INT_PTR data_p ): m_type(type_p), m_data(data_p){}
+		Event( EventType type_p = INVALID_EVENTTYPE, INT_PTR data_p = 0 ): m_type(type_p), m_data(data_p){}
 		virtual ~Event(){}
 
 		//------------------------------------------------------------------------
@@ -51,6 +52,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		template< typename T >
 		T GetData() const { return (T)m_data; }
+		INT_PTR GetData() const { return m_data; }
 
 	private:
 

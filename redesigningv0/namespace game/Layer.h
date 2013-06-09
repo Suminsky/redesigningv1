@@ -15,6 +15,7 @@
 
 // standard includes
 #include <algorithm>
+#include <assert.h>
 
 // private includes
 #include "Timer.h"
@@ -51,25 +52,37 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddObject( shared_Object_ptr && object_p ){
 
+			assert( object_p->m_currentLayerIndex == INVALID_OBJECTINDEX );
+
 			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
+			object_p->m_pLayerOwner = this;
 			m_objects.push_back(std::move(object_p));
 			
 		}
 		void AddObject( const shared_Object_ptr & object_p ){
 
+			assert( object_p->m_currentLayerIndex == INVALID_OBJECTINDEX );
+
 			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
+			object_p->m_pLayerOwner = this;
 			m_objects.push_back(object_p);
 		}
 		//
 		void RmeoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
 
 			m_removedObjects.push_back( objectCurrentIndex_p );
+			m_objects[objectCurrentIndex_p]->m_currentLayerIndex = INVALID_OBJECTINDEX;
 		}
 
 		//------------------------------------------------------------------------
 		// return index of this layer in the state layers container
 		//------------------------------------------------------------------------
 		LAYER_STATEINDEX GetStateIndex(){return m_currentStateIndex;}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		State * GetStateOwner(){ return m_pStateOwner; }
 
 	protected:
 
@@ -103,6 +116,8 @@ namespace game{
 					 }
 			}
 
+			VLateUpdate( m_timer.GetTime(), m_timer.GetDelta() );
+
 			// clean removed objects
 
 			if( ! m_removedObjects.empty() )
@@ -113,7 +128,8 @@ namespace game{
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VOnInit(){}
-		virtual void VOnUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){};
+		virtual void VOnUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called before objects update
+		virtual void VLateUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called after objects update
 		virtual void VOnDraw( const double /*dInterpolation_p*/ ){}
 		virtual void VOnDestroy(){}
 

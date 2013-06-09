@@ -35,7 +35,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		Component():m_currentObjectIndex(INVALID_OBJECTINDEX){}
+		Component():m_currentObjectIndex(INVALID_OBJECTINDEX), m_pObjectOwner(nullptr){}
 		virtual ~Component(){}
 		
 		//------------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace game{
 	protected:
 
 		ComponentID m_ID;
-		Object * m_pOwner;
+		Object * m_pObjectOwner;
 
 	private:
 
