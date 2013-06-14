@@ -46,10 +46,10 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void AddEvent( EventType type_p, INT_PTR data_p ){
+		void AddEvent( EventType type_p, INT_PTR data_p, INT_PTR data2_p = 0 ){
 
 			// TODO: use real emplace_back on vs2012
-			m_events.emplace_back( Event(type_p, data_p) );
+			m_events.emplace_back( Event(type_p, data_p, data2_p) );
 		}
 
 		//------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace game{
 		// before the call returns.
 		// returns false if no one processed the event.
 		//------------------------------------------------------------------------
-		bool DispatchEventImmetiately( EventType type_p, INT_PTR data_p );
+		bool DispatchEventImmetiately( EventType type_p, INT_PTR data_p, INT_PTR data2_p = 0 );
 
 		//------------------------------------------------------------------------
 		// do NOT register inside OnEvent

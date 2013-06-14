@@ -71,7 +71,8 @@ namespace render{
 
 		void Prepare(){
 
-			m_drawables.clear();
+			//m_drawables.clear();
+			m_drawables.resize(0);
 			m_sortqueue.clear();
 		}
 

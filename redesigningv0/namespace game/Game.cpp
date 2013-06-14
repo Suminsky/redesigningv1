@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../namespace win/FileLogger.h"
 
 using namespace game;
 
@@ -29,6 +30,8 @@ void Game::FixedStepLoop(){
 		dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;
 
 		m_stateControl.Update( m_dFixedTimeStep );
+
+		win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
 	}
 
 	// compute the interpolation factor based on the remaining timing
@@ -40,6 +43,8 @@ void Game::FixedStepLoop(){
 
 	m_stateControl.Draw( dInterpolationAmount );
 
+	win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
+	win::UniqueFileLogger()<<m_timer.GetDeltaMilliseconds()<<SZ_NEWLINE;
 
 	m_stateControl.ResolveStateChange();
 }

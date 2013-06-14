@@ -46,11 +46,11 @@ void EventMachine::DispatchEvents()
 	}// traverse events
 }
 
-bool EventMachine::DispatchEventImmetiately( EventType type_p, INT_PTR data_p )
+bool EventMachine::DispatchEventImmetiately( EventType type_p, INT_PTR data_p, INT_PTR data2_p )
 {
 	// build event
 
-	Event immEvent(type_p, data_p);
+	Event immEvent(type_p, data_p, data2_p);
 
 	// get handlers registered for current even type
 

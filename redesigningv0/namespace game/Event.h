@@ -30,16 +30,20 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Event( EventType type_p = INVALID_EVENTTYPE, INT_PTR data_p = 0 ): m_type(type_p), m_data(data_p){}
+		Event( EventType type_p = INVALID_EVENTTYPE, INT_PTR data_p = 0, INT_PTR data2_p = 0 )
+			:
+		m_type(type_p), m_data(data_p), m_data2(data2_p){}
+		
 		virtual ~Event(){}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Set( EventType type_p, INT_PTR data_p ){
+		void Set( EventType type_p, INT_PTR data_p, INT_PTR data2_p = 0 ){
 
 			m_type = type_p;
 			m_data = data_p;
+			m_data2 = data2_p;
 		}
 
 		//------------------------------------------------------------------------
@@ -54,11 +58,17 @@ namespace game{
 		T GetData() const { return (T)m_data; }
 		INT_PTR GetData() const { return m_data; }
 
+		// perhaps its good idea..
+		template< typename T >
+		T GetData2() const { return (T)m_data2; }
+		INT_PTR GetData2() const { return m_data2; }
+		// fuckoff, it will do for now // TODO
+
 	private:
 
 		EventType m_type;
 		INT_PTR m_data;
-	
+		INT_PTR m_data2;
 	};
 
 	typedef std::shared_ptr<Event> shared_Event_ptr;

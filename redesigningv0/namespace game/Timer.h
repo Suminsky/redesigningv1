@@ -48,9 +48,14 @@ public:
 
 			delta_p *= m_fSpeed;
 
+		}
+		else{
+
+			delta_p = (ClockType)0.0;
+		}
+
 			m_deltaTime = delta_p;
 			m_accumTime += delta_p;
-		}
 	}
 
 	//------------------------------------------------------------------------
