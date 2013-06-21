@@ -219,6 +219,15 @@
     <ClInclude Include="namespace game\tasks\AlarmTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\InGame\InputMapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sound\sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sound\SoundScreamer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -387,6 +396,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\tasks\AlarmTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\InputMapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sound\sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sound\SoundScreamer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -33,6 +33,7 @@
 #include "../namespace render/dx/pipeline/Binder.h"
 #include "../namespace render/dx/Device.h"
 #include "CameraCbuffer.h"
+#include "../namespace gen/gen_macros.h"
 
 namespace sprite{
 
@@ -80,5 +81,7 @@ namespace sprite{
 		// Update cbuffer data, and set to update to buffer interface
 		//------------------------------------------------------------------------
 		void Update();
+
+		ALLIGN16ONLY;
 	};
 }

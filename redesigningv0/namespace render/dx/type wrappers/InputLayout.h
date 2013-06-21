@@ -28,7 +28,8 @@
 #include <D3D11.h>
 #include <D3DX11core.h>	//including because of D3DERR_INVALIDCALL
 
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
+#include <memory>
 
 namespace dx{
 
@@ -55,7 +56,8 @@ namespace dx{
 		struct Description{
 
 
-			boost::shared_array<D3D11_INPUT_ELEMENT_DESC> pInputElementsDescs;
+			//boost::shared_array<D3D11_INPUT_ELEMENT_DESC> pInputElementsDescs;
+			std::shared_ptr<D3D11_INPUT_ELEMENT_DESC> pInputElementsDescs;
 			UINT nElements;
 
 			//------------------------------------------------------------------------
@@ -67,12 +69,12 @@ namespace dx{
 
 				for( UINT it = 0; it < nElements; it ++ ){
 
-					if(		pInputElementsDescs[it].Format != anotherDesc_p.pInputElementsDescs[it].Format			// byte format
-						||	pInputElementsDescs[it].InputSlot != anotherDesc_p.pInputElementsDescs[it].InputSlot	// 0-15
-						||	pInputElementsDescs[it].InputSlotClass != anotherDesc_p.pInputElementsDescs[it].InputSlotClass	// per vertex? per instance?	
-						||	pInputElementsDescs[it].InstanceDataStepRate != anotherDesc_p.pInputElementsDescs[it].InstanceDataStepRate	// per instance then, how many per buffer element?
-						||	pInputElementsDescs[it].AlignedByteOffset != anotherDesc_p.pInputElementsDescs[it].AlignedByteOffset // opt offset between elements, gen D3D11_APPEND_ALIGNED_ELEMENT 
-						||	pInputElementsDescs[it].SemanticIndex  != anotherDesc_p.pInputElementsDescs[it].SemanticIndex	// semantic name modifier
+					if(		pInputElementsDescs.get()[it].Format != anotherDesc_p.pInputElementsDescs.get()[it].Format			// byte format
+						||	pInputElementsDescs.get()[it].InputSlot != anotherDesc_p.pInputElementsDescs.get()[it].InputSlot	// 0-15
+						||	pInputElementsDescs.get()[it].InputSlotClass != anotherDesc_p.pInputElementsDescs.get()[it].InputSlotClass	// per vertex? per instance?	
+						||	pInputElementsDescs.get()[it].InstanceDataStepRate != anotherDesc_p.pInputElementsDescs.get()[it].InstanceDataStepRate	// per instance then, how many per buffer element?
+						||	pInputElementsDescs.get()[it].AlignedByteOffset != anotherDesc_p.pInputElementsDescs.get()[it].AlignedByteOffset // opt offset between elements, gen D3D11_APPEND_ALIGNED_ELEMENT 
+						||	pInputElementsDescs.get()[it].SemanticIndex  != anotherDesc_p.pInputElementsDescs.get()[it].SemanticIndex	// semantic name modifier
 						)
 						return false;
 				}

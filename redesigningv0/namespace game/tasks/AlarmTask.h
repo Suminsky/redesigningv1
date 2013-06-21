@@ -21,9 +21,13 @@
 
 namespace game{
 
+	template< typename EVENT_DATA >
 	class AlarmTask: public Task{
 
 	public:
+
+		typedef std::shared_ptr<AlarmTask> shared_AlarmTask_ptr;
+		typedef std::weak_ptr<AlarmTask> weak_AlarmTask_ptr;
 
 		//------------------------------------------------------------------------
 		// ctor
@@ -34,14 +38,14 @@ namespace game{
 			m_pEventMachineRef(nullptr)
 		{}
 
-		void Set( const Event & event_p, double duration_p ){
+		void Set( const Event<EVENT_DATA> & event_p, double duration_p ){
 
 			m_elapsed = 0.0;
 			m_duration = duration_p;
 			m_event = event_p;
 		}
 
-		void Set( EventMachine * pEventMachine_p ){
+		void Set( EventMachine<EVENT_DATA> * pEventMachine_p ){
 
 			m_pEventMachineRef = pEventMachine_p;
 		}
@@ -63,11 +67,11 @@ namespace game{
 		double m_elapsed;
 		double m_duration;
 
-		EventMachine * m_pEventMachineRef;
-		Event m_event;
+		EventMachine<EVENT_DATA> * m_pEventMachineRef;
+		Event<EVENT_DATA> m_event;
 
 	};
 
-	typedef std::shared_ptr<AlarmTask> shared_AlarmTask_ptr;
-	typedef std::weak_ptr<AlarmTask> weak_AlarmTask_ptr;
+	//typedef std::shared_ptr<AlarmTask> shared_AlarmTask_ptr;
+	//typedef std::weak_ptr<AlarmTask> weak_AlarmTask_ptr;
 }

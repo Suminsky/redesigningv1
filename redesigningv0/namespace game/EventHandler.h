@@ -19,11 +19,13 @@
 
 namespace game{
 
+	template<typename EVENT_DATA>
 	class EventMachine;
 
+	template<typename EVENT_DATA>
 	class AEventHandler{
 
-		friend class EventMachine;
+		friend class EventMachine<EVENT_DATA>;
 
 	public:
 
@@ -37,10 +39,10 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		virtual void VOnEvent( const Event & event_p ) = 0;
+		virtual void VOnEvent( const Event<EVENT_DATA> & event_p ) = 0;
 	
 	};
 
-	typedef std::shared_ptr<AEventHandler> shared_AEventHandler_ptr;
-	typedef std::weak_ptr<AEventHandler> weak_AEventHandler_ptr;
+	//typedef std::shared_ptr<AEventHandler> shared_AEventHandler_ptr;
+	//typedef std::weak_ptr<AEventHandler> weak_AEventHandler_ptr;
 }

@@ -43,6 +43,10 @@ void Game::FixedStepLoop(){
 
 	m_stateControl.Draw( dInterpolationAmount );
 
+	// scream
+
+
+
 	win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
 	win::UniqueFileLogger()<<m_timer.GetDeltaMilliseconds()<<SZ_NEWLINE;
 

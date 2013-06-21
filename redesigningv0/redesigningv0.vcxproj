@@ -93,6 +93,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -103,6 +104,8 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,9 +117,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
@@ -131,7 +135,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
@@ -141,6 +145,7 @@
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
     <ClInclude Include="Mentle\InGame\CardsLayer.h" />
     <ClInclude Include="Mentle\InGame\InGame.h" />
+    <ClInclude Include="Mentle\InGame\InputMapper.h" />
     <ClInclude Include="Mentle\InGame\MentleCardComponent.h" />
     <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
@@ -161,6 +166,8 @@
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace input\Mapper.h" />
+    <ClInclude Include="namespace sound\sound.h" />
+    <ClInclude Include="namespace sound\SoundScreamer.h" />
     <ClInclude Include="namespace sprite\Camera.h" />
     <ClInclude Include="namespace render\ConstantBuffer.h" />
     <ClInclude Include="namespace render\dx\pipeline\BinderBinds.h" />
@@ -211,6 +218,7 @@
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
     <ClCompile Include="Mentle\InGame\CardsLayer.cpp" />
     <ClCompile Include="Mentle\InGame\InGame.cpp" />
+    <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
     <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
@@ -227,6 +235,8 @@
     <ClCompile Include="namespace game\tasks\AlarmTask.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
+    <ClCompile Include="namespace sound\sound.cpp" />
+    <ClCompile Include="namespace sound\SoundScreamer.cpp" />
     <ClCompile Include="namespace sprite\Camera.cpp" />
     <ClCompile Include="namespace sprite\binders cache\BlendStateBinders.cpp" />
     <ClCompile Include="namespace render\dx\pipeline\Command.cpp" />

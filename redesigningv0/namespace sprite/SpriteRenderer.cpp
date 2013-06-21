@@ -80,18 +80,18 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	params.pShaderSig = pShaderBytes_p->GetBufferPointer();
 	params.iSizeShaderSig = pShaderBytes_p->GetBufferSize();
 	params.desc.nElements = 2;
-	params.desc.pInputElementsDescs.reset(new D3D11_INPUT_ELEMENT_DESC[2]());
+	params.desc.pInputElementsDescs.reset(new D3D11_INPUT_ELEMENT_DESC[2](), &gen::ArrayDeleter<D3D11_INPUT_ELEMENT_DESC>);
 
-	params.desc.pInputElementsDescs[0].SemanticName =  "POSITION";
+	params.desc.pInputElementsDescs.get()[0].SemanticName =  "POSITION";
 	//params.desc.pInputElementsDescs[0].SemanticIndex = 0;
-	params.desc.pInputElementsDescs[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	params.desc.pInputElementsDescs[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	params.desc.pInputElementsDescs.get()[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	params.desc.pInputElementsDescs.get()[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-	params.desc.pInputElementsDescs[1].SemanticName =  "TEXCOORD";
+	params.desc.pInputElementsDescs.get()[1].SemanticName =  "TEXCOORD";
 	//params.desc.pInputElementsDescs[0].SemanticIndex = 0;
-	params.desc.pInputElementsDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	params.desc.pInputElementsDescs[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	params.desc.pInputElementsDescs[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	params.desc.pInputElementsDescs.get()[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	params.desc.pInputElementsDescs.get()[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	params.desc.pInputElementsDescs.get()[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 
 	ID3D11InputLayout * pInputLayout = NULL;
 	pDevice_p->m_pCacheInputLayout->Acquire(params, pInputLayout);

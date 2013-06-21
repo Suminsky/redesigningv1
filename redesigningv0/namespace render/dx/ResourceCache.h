@@ -12,6 +12,8 @@
 				- it will release all resources on destruction
 				- it will look for a resource with the given description
 				- it can return by ID
+				TODO: ..if the game changes of level, things like textures may not be used anymore ( some of them ),
+				so it would be good to have a cleaning
 
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
