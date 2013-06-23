@@ -104,8 +104,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
+      <PreprocessorDefinitions>SOUND</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -133,12 +132,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PreprocessorDefinitions>SOUND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <Profile>true</Profile>
+      <Profile>false</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -212,7 +212,7 @@
     <ClInclude Include="namespace sprite\binders cache\SamplerStateBinders.h" />
     <ClInclude Include="namespace game\State.h" />
     <ClInclude Include="namespace game\StateMachine.h" />
-    <ClInclude Include="namespace game\tasks\FadeSpriteTask.h" />
+    <ClInclude Include="namespace game\tasks\FadeTask.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
@@ -248,7 +248,7 @@
     <ClCompile Include="namespace render\dx\type wrappers\BlendState.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
-    <ClCompile Include="namespace game\tasks\FadeSpriteTask.cpp" />
+    <ClCompile Include="namespace game\tasks\FadeTask.cpp" />
     <ClCompile Include="Mentle\main.cpp" />
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />

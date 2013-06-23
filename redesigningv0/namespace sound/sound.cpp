@@ -2,6 +2,36 @@
 
 using namespace sound;
 
+namespace sound{
+
+	void SetXAudioBufferFromWaveData( XAUDIO2_BUFFER & xBuffer_p, WaveData & waveData_p, bool bLoop_p /*= false*/, bool bConcludeVoice_p /*= true*/  ){
+
+		//bConcludeVoice_p = bConcludeVoice_p;
+		xBuffer_p.AudioBytes = waveData_p.nBytes;
+		xBuffer_p.pAudioData = waveData_p.pData;
+		xBuffer_p.Flags = bConcludeVoice_p ? XAUDIO2_END_OF_STREAM : 0;
+		xBuffer_p.LoopCount = bLoop_p ? XAUDIO2_LOOP_INFINITE : 0;
+	}
+}
+
+sound::Sounder::~Sounder()
+{
+	m_pFXSourceVoice->Stop();
+	m_pMusicSourceVoice->Stop();
+
+	// Not sure if I should call DestroyVoice: NEW: yes, otherwise erro is reported
+
+	if( m_pFXSourceVoice ) m_pFXSourceVoice->DestroyVoice();
+	if( m_pMusicSourceVoice ) m_pMusicSourceVoice->DestroyVoice();
+	if( m_pMasterVoice ) m_pMasterVoice->DestroyVoice();
+
+	if( m_pXAudio ) m_pXAudio->Release();
+
+	//CoUninitialize();
+	//if( m_pMasterVoice )
+	MFShutdown();
+}
+
 bool sound::Sounder::Init()
 {
 	// NOTE win8: second param MUST be zero
@@ -22,16 +52,23 @@ bool sound::Sounder::Init()
 
 	if( hr == S_OK ){
 
-		DBG(
+		/*DBG(
 		XAUDIO2_DEBUG_CONFIGURATION debug = {0};
 		debug.BreakMask = XAUDIO2_LOG_ERRORS;
 		debug.LogFileline = true;
 		debug.LogFunctionName = true;
 		debug.LogTiming = true;
-		debug.TraceMask = XAUDIO2_LOG_MEMORY|XAUDIO2_LOG_WARNINGS|XAUDIO2_LOG_DETAIL;
+		debug.TraceMask = XAUDIO2_LOG_MEMORY|XAUDIO2_LOG_WARNINGS;
 		m_pXAudio->SetDebugConfiguration(&debug );
-		)
-		return true;
+		)*/
+
+		// init media foundation
+		hr = MFStartup(MF_VERSION);
+
+		if( hr == S_OK ){
+			
+			return true;
+		}
 	}
 
 	assert( hr != XAUDIO2_E_INVALID_CALL );
@@ -124,18 +161,20 @@ bool sound::Sounder::CreateMasterVoice( UINT32 nInputChannels_p /*= XAUDIO2_DEFA
 
 	return false;
 }
-
-bool sound::Sounder::CreateSourceVoice( const WAVEFORMATEX & waveData_p, UINT32 iFlags_p /*= 0*/,
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+bool sound::Sounder::CreateFXSourceVoice( const WAVEFORMATEX & waveData_p, UINT32 iFlags_p /*= 0*/,
 	float fMaxFrquenceRatio_p /*= XAUDIO2_DEFAULT_FREQ_RATIO*/, IXAudio2VoiceCallback * pCallback_p /*= nullptr*/,
 	XAUDIO2_VOICE_SENDS * pSendList_p /*= nullptr*/, XAUDIO2_EFFECT_CHAIN * pEffectChain_p /*= nullptr */ )
 {
 	// after created, it can play any XAUDIO2_BUFFER send to it, IF it conforms with WAVEFORMATEX
 
 	HRESULT hr =
-		m_pXAudio->CreateSourceVoice(	&m_pSourceVoice, &waveData_p, iFlags_p, fMaxFrquenceRatio_p, pCallback_p,
+		m_pXAudio->CreateSourceVoice(	&m_pFXSourceVoice, &waveData_p, iFlags_p, fMaxFrquenceRatio_p, pCallback_p,
 		pSendList_p, pEffectChain_p );
 
-	//m_pSourceVoice->
+	//m_pFXSourceVoice->
 
 	if( hr == S_OK ) return true;
 
@@ -151,13 +190,13 @@ bool sound::Sounder::CreateSourceVoice( const WAVEFORMATEX & waveData_p, UINT32 
 	return false;
 }
 
-bool sound::Sounder::LoadSound( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_WMA * pWMABuffer_p /*= nullptr */ )
+bool sound::Sounder::LoadSoundFX( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_WMA * pWMABuffer_p /*= nullptr */ )
 {
 	// Note  The audio sample data to which buffer points is still 'owned'
 	// by the app and must remain allocated and accessible until the sound stops playing.
 	
 	HRESULT hr =
-		m_pSourceVoice->SubmitSourceBuffer( pAudioBuffer_p, pWMABuffer_p );
+		m_pFXSourceVoice->SubmitSourceBuffer( pAudioBuffer_p, pWMABuffer_p );
 
 	if( hr == S_OK ) return true;
 
@@ -181,10 +220,25 @@ bool sound::Sounder::LoadSound( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_
 	// with an OperationSet of XAUDIO2_COMMIT_NOW.
 }
 
-bool sound::Sounder::Play( UINT32 iOperationSet_p /*= XAUDIO2_COMMIT_NOW*/, UINT32 iFlags_p /*= 0 */ )
+bool sound::Sounder::PlayFX( UINT32 iOperationSet_p /*= XAUDIO2_COMMIT_NOW*/, UINT32 iFlags_p /*= 0 */, XAUDIO2_BUFFER * pAudioBuffer_p /*= nullptr*/ )
 {
+	//m_pFXSourceVoice->Stop();
+
+	XAUDIO2_VOICE_STATE state = {0};
+	m_pFXSourceVoice->GetState(&state);
+
+	if( state.BuffersQueued > 0 ){
+		m_pFXSourceVoice->Stop();
+		m_pFXSourceVoice->FlushSourceBuffers();
+		m_pFXSourceVoice->SubmitSourceBuffer( pAudioBuffer_p );
+	}
+	else{
+		m_pFXSourceVoice->Stop();
+		m_pFXSourceVoice->SubmitSourceBuffer( pAudioBuffer_p );
+	}
+
 	HRESULT hr =
-		m_pSourceVoice->Start(iFlags_p, iOperationSet_p);
+		m_pFXSourceVoice->Start(iFlags_p, iOperationSet_p);
 
 	if( hr == S_OK ) return true;
 
@@ -200,7 +254,139 @@ bool sound::Sounder::Play( UINT32 iOperationSet_p /*= XAUDIO2_COMMIT_NOW*/, UINT
 	return false;
 }
 
-bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WAVEFORMATEX *& pWaveData_p, XAUDIO2_BUFFER & audioBuffer_p )
+bool sound::Sounder::StopFX( UINT32 iOperationSet_p /*= XAUDIO2_COMMIT_NOW*/, UINT32 iFlags_p /*= 0 */ )
+{
+
+	HRESULT hr = m_pFXSourceVoice->Stop( iFlags_p, iOperationSet_p );
+	//hr = m_pFXSourceVoice->FlushSourceBuffers();
+
+	if( hr == S_OK ) return true;
+
+	assert( hr != XAUDIO2_E_INVALID_CALL );
+	assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+	assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+	// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+	assert (hr == XAUDIO2_E_DEVICE_INVALIDATED
+		||
+		hr == ERROR_NOT_FOUND );
+
+	return false;
+}
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+bool sound::Sounder::CreateMusicSourceVoice( const WAVEFORMATEX & waveData_p, UINT32 iFlags_p /*= 0*/,
+											float fMaxFrquenceRatio_p /*= XAUDIO2_DEFAULT_FREQ_RATIO*/, IXAudio2VoiceCallback * pCallback_p /*= nullptr*/,
+											XAUDIO2_VOICE_SENDS * pSendList_p /*= nullptr*/, XAUDIO2_EFFECT_CHAIN * pEffectChain_p /*= nullptr */ )
+{
+	// after created, it can play any XAUDIO2_BUFFER send to it, IF it conforms with WAVEFORMATEX
+
+	HRESULT hr =
+		m_pXAudio->CreateSourceVoice(	&m_pMusicSourceVoice, &waveData_p, iFlags_p, fMaxFrquenceRatio_p, pCallback_p,
+		pSendList_p, pEffectChain_p );
+
+	//m_pFXSourceVoice->
+
+	if( hr == S_OK ) return true;
+
+	assert( hr != XAUDIO2_E_INVALID_CALL );
+	assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+	assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+	// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+	assert ( hr == XAUDIO2_E_DEVICE_INVALIDATED
+		||
+		hr == ERROR_NOT_FOUND );
+
+	return false;
+}
+
+bool sound::Sounder::LoadSoundMusic( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_WMA * pWMABuffer_p /*= nullptr */ )
+{
+	// Note  The audio sample data to which buffer points is still 'owned'
+	// by the app and must remain allocated and accessible until the sound stops playing.
+
+	HRESULT hr =
+		m_pMusicSourceVoice->SubmitSourceBuffer( pAudioBuffer_p, pWMABuffer_p );
+
+	if( hr == S_OK ) return true;
+
+	assert( hr != XAUDIO2_E_INVALID_CALL );
+	assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+	assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+	// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+	assert (hr == XAUDIO2_E_DEVICE_INVALIDATED
+		||
+		hr == ERROR_NOT_FOUND );
+
+	return false;
+
+	// The pMediaBuffer pointer can be reused or freed immediately after calling this method,
+	// but the actual audio data referenced by pMediaBuffer must remain valid until the buffer
+	// has been fully consumed by XAudio2 (which is indicated by the
+	// IXAudio2VoiceCallback::OnBufferEnd callback).
+	// Up to XAUDIO2_MAX_QUEUED_BUFFERS buffers can be queued on a voice at any one time.
+	// SubmitSourceBuffer takes effect immediately when called from an XAudio2 callback
+	// with an OperationSet of XAUDIO2_COMMIT_NOW.
+}
+
+bool sound::Sounder::PlayMusic( UINT32 iOperationSet_p /*= XAUDIO2_COMMIT_NOW*/, UINT32 iFlags_p /*= 0 */, XAUDIO2_BUFFER * pAudioBuffer_p /*= nullptr*/ )
+{
+	//m_pFXSourceVoice->Stop();
+
+	XAUDIO2_VOICE_STATE state = {0};
+	m_pMusicSourceVoice->GetState(&state);
+
+	if( state.BuffersQueued > 0 ){
+		m_pMusicSourceVoice->Stop();
+		m_pMusicSourceVoice->FlushSourceBuffers();
+		m_pMusicSourceVoice->SubmitSourceBuffer( pAudioBuffer_p );
+	}
+	else{
+		m_pMusicSourceVoice->Stop();
+		m_pMusicSourceVoice->SubmitSourceBuffer( pAudioBuffer_p );
+	}
+
+	HRESULT hr =
+		m_pMusicSourceVoice->Start(iFlags_p, iOperationSet_p);
+
+	if( hr == S_OK ) return true;
+
+	assert( hr != XAUDIO2_E_INVALID_CALL );
+	assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+	assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+	// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+	assert (hr == XAUDIO2_E_DEVICE_INVALIDATED
+		||
+		hr == ERROR_NOT_FOUND );
+
+	return false;
+}
+
+bool sound::Sounder::StopMusic( UINT32 iOperationSet_p /*= XAUDIO2_COMMIT_NOW*/, UINT32 iFlags_p /*= 0 */ )
+{
+
+	HRESULT hr = m_pMusicSourceVoice->Stop( iFlags_p, iOperationSet_p );
+	//hr = m_pFXSourceVoice->FlushSourceBuffers();
+
+	if( hr == S_OK ) return true;
+
+	assert( hr != XAUDIO2_E_INVALID_CALL );
+	assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+	assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+	// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+	assert (hr == XAUDIO2_E_DEVICE_INVALIDATED
+		||
+		hr == ERROR_NOT_FOUND );
+
+	return false;
+}
+
+bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WaveData & waveData_p )
 {
 	IMFSourceReader * pMFSourceReader = nullptr;
 	//IMFAttributes * pAttributes = nullptr;
@@ -236,7 +422,10 @@ bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WAVEFORMATEX *& p
 
 	UINT32 iSize = 0;
 
-	hr = MFCreateWaveFormatExFromMFMediaType(	pPCMAudio, &pWaveData_p, &iSize, MFWaveFormatExConvertFlag_Normal );
+	WAVEFORMATEX * pWaveFormatex = nullptr;
+	hr = MFCreateWaveFormatExFromMFMediaType(	pPCMAudio, &pWaveFormatex, &iSize, MFWaveFormatExConvertFlag_Normal );
+	waveData_p.format = *pWaveFormatex;
+	CoTaskMemFree(pWaveFormatex);
 
 	if( hr != S_OK ){
 
@@ -262,7 +451,7 @@ bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WAVEFORMATEX *& p
 	//duration = duration / 10000000LL; // nano to sec (fails if less than a sec (becames 0)
 	//duration *= 1000; // sec to msec
 
-
+	waveData_p.llDuration_ms = duration;
 	//DWORD header[] = { 
 	//	// RIFF header
 	//	FCC('RIFF'), 
@@ -275,20 +464,19 @@ bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WAVEFORMATEX *& p
 	//header[0] = header[1];
 	//DWORD dataHeader[] = { FCC('data'), 0 };
 	//dataHeader[0] = dataHeader[1];
-	DWORD dataSize = CalculateMaxAudioDataSize( pPCMAudio, iSize + sizeof(DWORD)*5 + sizeof(DWORD)*2, (DWORD)duration );
+	waveData_p.nBytes = CalculateMaxAudioDataSize( pPCMAudio, iSize + sizeof(DWORD)*5 + sizeof(DWORD)*2, (DWORD)duration );
 
 	//pMFSourceReader->GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE, MF_PD_DURATION, &var);
 
-	audioBuffer_p.pAudioData = new BYTE[dataSize];
+	waveData_p.pData = new BYTE[waveData_p.nBytes];
+	UINT32 nBytesWritten = 0;
 
-	hr = SourceReader_ReadAudioData( pMFSourceReader, audioBuffer_p, dataSize );
+	hr = SourceReader_ReadAudioData( pMFSourceReader, waveData_p, waveData_p.nBytes, nBytesWritten );
 
-	if( dataSize != audioBuffer_p.AudioBytes ){
-
+	if( waveData_p.nBytes != nBytesWritten )
 		BREAKHERE;
-	}
 
-	audioBuffer_p.LoopCount = XAUDIO2_LOOP_INFINITE;
+	waveData_p.nBytes = nBytesWritten;
 
 	//clean
 
@@ -379,11 +567,12 @@ HRESULT sound::Sounder::SourceReader_ConfigureToDecodeAudioStream( IMFSourceRead
 	return hr;
 }
 
-HRESULT sound::Sounder::SourceReader_ReadAudioData( IMFSourceReader *pSourceReader_p, XAUDIO2_BUFFER & audioBuffer_p, UINT32 nMaxBytesToWrite_p )
+HRESULT sound::Sounder::SourceReader_ReadAudioData( IMFSourceReader *pSourceReader_p, WaveData & waveData_p, UINT32 nMaxBytesToWrite_p , UINT32 & nBytesWritten_p )
 {
 	IMFSample *pMediaSample = nullptr;
 	IMFMediaBuffer *pMediaBuffer = nullptr;
 	HRESULT hr = S_OK;
+	nBytesWritten_p = 0;
 
 	while( hr == S_OK ){
 
@@ -435,20 +624,23 @@ HRESULT sound::Sounder::SourceReader_ReadAudioData( IMFSourceReader *pSourceRead
 		// #4# Calls IMFMediaBuffer::Lock to get a pointer to the buffer memory.
 		DWORD nBytes = 0;
 		BYTE * pBuffer = nullptr;
-		hr = pMediaBuffer->Lock( &pBuffer,//(BYTE**)&audioBuffer_p.pAudioData,
-			NULL,						// size of data that can be written to he buffer (max lenght)
-			&nBytes	// current lenght
-			);
+		hr = pMediaBuffer->Lock(	&pBuffer,//(BYTE**)&audioBuffer_p.pAudioData,
+									NULL,	// size of data that can be written to he buffer (max lenght)
+									&nBytes	// current lenght
+									);
 
 		if( FAILED(hr) ) break;
 
 		// #6# Writes the audio data to the output file.
 
-		if( audioBuffer_p.AudioBytes + nBytes >  nMaxBytesToWrite_p ) break;
+		if( nBytesWritten_p + nBytes >  nMaxBytesToWrite_p ){
+		
+			//break;
+			BREAKHERE;
+		}
 
-		memcpy( (void*)&audioBuffer_p.pAudioData[audioBuffer_p.AudioBytes], (void*)pBuffer, nBytes );
-		audioBuffer_p.AudioBytes += nBytes;
-		audioBuffer_p.Flags = XAUDIO2_END_OF_STREAM;
+		memcpy( (void*)&waveData_p.pData[nBytesWritten_p], (void*)pBuffer, nBytes );
+		nBytesWritten_p += nBytes;
 
 		// #7# Calls IMFMediaBuffer::Unlock to unlock the buffer object.
 

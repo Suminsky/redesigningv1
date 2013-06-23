@@ -89,7 +89,7 @@ namespace game{
 
 			if( m_pCurrentState ){
 
-				m_pCurrentState->VOnDestroy();
+				m_pCurrentState->Destroy();
 			}
 
 			// assign new state

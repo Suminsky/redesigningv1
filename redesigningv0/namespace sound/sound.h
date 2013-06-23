@@ -20,8 +20,16 @@
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-// media foundation libs and headers
+#ifdef SOUND
+#define IFSOUND(stuff) stuff
+#define SNDCOMMA() ,
+#else
+#define IFSOUND(stuff)
+#define SNDCOMMA()
+#endif // _DEBUG
 
+// media foundation libs and headers
+#pragma comment(lib, "XAudio2.lib")
 #pragma comment(lib, "mfplat.lib")
 #pragma comment(lib, "mfreadwrite.lib")
 #pragma comment(lib, "mfuuid.lib")
@@ -49,6 +57,20 @@
 
 namespace sound{
 
+	//------------------------------------------------------------------------
+	// holds raw audio data.
+	// a file will be parsed into this structure.
+	//------------------------------------------------------------------------
+	struct WaveData{
+
+		WAVEFORMATEX format;
+		UINT32 nBytes;
+		BYTE * pData; // PCMData?
+		LONGLONG llDuration_ms;
+	};
+
+	extern void SetXAudioBufferFromWaveData( XAUDIO2_BUFFER & xBuffer_p, WaveData & waveData_p, bool bLoop_p = false, bool bConcludeVoice_p = true  );
+
 	class Sounder{
 
 	public:
@@ -60,25 +82,14 @@ namespace sound{
 			:
 		m_pXAudio(nullptr),
 		m_pMasterVoice(nullptr),
-		m_pSourceVoice(nullptr)
+		m_pFXSourceVoice(nullptr),
+		m_pMusicSourceVoice(nullptr)
 		{}
 
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		virtual ~Sounder(){
-
-			// Not sure if I should call DestroyVoice, TODO
-
-			if( m_pSourceVoice ) m_pSourceVoice->DestroyVoice();
-			if( m_pMasterVoice ) m_pMasterVoice->DestroyVoice();
-
-			if( m_pXAudio ) m_pXAudio->Release();
-
-			//CoUninitialize();
-			//if( m_pMasterVoice )
-			MFShutdown();
-		}
+		virtual ~Sounder();
 
 		//------------------------------------------------------------------------
 		// initializes the XAudio engine
@@ -102,46 +113,74 @@ namespace sound{
 		// to use ADPCM, cast the structure needed to WAVEFORMATEX 
 		// "Note  You can use the lowest possible MaxFrequencyRatio value to reduce XAudio2's memory usage."
 		//------------------------------------------------------------------------
-		bool CreateSourceVoice( const WAVEFORMATEX & waveData_p,
+		bool CreateFXSourceVoice( const WAVEFORMATEX & waveData_p,
 								UINT32 iFlags_p = 0,
 								float fMaxFrquenceRatio_p = XAUDIO2_DEFAULT_FREQ_RATIO,
 								IXAudio2VoiceCallback * pCallback_p = nullptr,
 								XAUDIO2_VOICE_SENDS * pSendList_p = nullptr,
 								XAUDIO2_EFFECT_CHAIN * pEffectChain_p = nullptr
 								);
+		bool CreateMusicSourceVoice(	const WAVEFORMATEX & waveData_p,
+										UINT32 iFlags_p = 0,
+										float fMaxFrquenceRatio_p = XAUDIO2_DEFAULT_FREQ_RATIO,
+										IXAudio2VoiceCallback * pCallback_p = nullptr,
+										XAUDIO2_VOICE_SENDS * pSendList_p = nullptr,
+										XAUDIO2_EFFECT_CHAIN * pEffectChain_p = nullptr
+										);
 
 		//------------------------------------------------------------------------
 		// NOTE:  "The audio sample data to which buffer points is still 'owned' by the app and must remain
 		// allocated and accessible until the sound stops playing"
 		//------------------------------------------------------------------------
-		bool LoadSound( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_WMA * pWMABuffer_p = nullptr );
+		bool LoadSoundFX( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_WMA * pWMABuffer_p = nullptr );
+		bool LoadSoundMusic( XAUDIO2_BUFFER * pAudioBuffer_p, XAUDIO2_BUFFER_WMA * pWMABuffer_p = nullptr );
 
 		//------------------------------------------------------------------------
 		// operation set is used to make lots of operations in parallell, so they will
 		// only occur when calling xaudio2 commit.
 		// flags must be 0
 		//------------------------------------------------------------------------
-		bool Play( UINT32 iOperationSet_p = XAUDIO2_COMMIT_NOW, UINT32 iFlags_p = 0  );
+		bool PlayFX( UINT32 iOperationSet_p = XAUDIO2_COMMIT_NOW, UINT32 iFlags_p = 0, XAUDIO2_BUFFER * pAudioBuffer_p = nullptr  );
+		bool StopFX(UINT32 iOperationSet_p = XAUDIO2_COMMIT_NOW, UINT32 iFlags_p = 0 );
 
+		bool PlayMusic( UINT32 iOperationSet_p = XAUDIO2_COMMIT_NOW, UINT32 iFlags_p = 0, XAUDIO2_BUFFER * pAudioBuffer_p = nullptr  );
+		bool StopMusic(UINT32 iOperationSet_p = XAUDIO2_COMMIT_NOW, UINT32 iFlags_p = 0 );
 
 		//------------------------------------------------------------------------
-		// need CoInitializeEx to be already called
+		// 
 		//------------------------------------------------------------------------
-		bool InitMediaFoundation(){
+		bool LoadAudioFile( const WCHAR * szFileURL_p, WaveData & waveData_p );
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		bool SetVolume( float fPercent_p, UINT32 iOperationSet_p = XAUDIO2_COMMIT_NOW ){
 
 			HRESULT hr =
-			MFStartup(MF_VERSION);
+			m_pMasterVoice->SetVolume( fPercent_p, iOperationSet_p );
 
 			if( hr == S_OK ) return true;
 
 			return false;
 		}
+		float GetVolume(){
+
+			float volume = 0.0f;
+			m_pMasterVoice->GetVolume( &volume );
+
+			return volume;
+		}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		bool LoadAudioFile( const WCHAR * szFileURL_p, WAVEFORMATEX *& pWaveData_p, XAUDIO2_BUFFER & audioBuffer_p );
+		void Scream(){
 
+			HRESULT hr = m_pXAudio->CommitChanges(XAUDIO2_COMMIT_ALL);
+
+			if( hr != S_OK )
+				BREAKHERE;
+		}
 
 		IXAudio2 * m_pXAudio;
 
@@ -154,7 +193,7 @@ namespace sound{
 		// subformat: mp3, wave, mpeg
 		//------------------------------------------------------------------------
 		HRESULT SourceReader_ConfigureToDecodeAudioStream( IMFSourceReader *pSourceReader_p, IMFMediaType **ppPCMAudio_p );
-		HRESULT SourceReader_ReadAudioData( IMFSourceReader *pSourceReader_p, XAUDIO2_BUFFER & audioBuffer_p, UINT32 nMaxBytesToWrite_p );
+		HRESULT SourceReader_ReadAudioData( IMFSourceReader *pSourceReader_p, WaveData & waveData_p, UINT32 nMaxBytesToWrite_p, UINT32 & nBytesWritten_p );
 		HRESULT SourceReader_GetDuration(IMFSourceReader *pReader, LONGLONG & i64Duration_p );
 		DWORD CalculateMaxAudioDataSize(
 			IMFMediaType *pAudioType,    // The PCM audio format.
@@ -162,10 +201,9 @@ namespace sound{
 			DWORD msecAudioData          // Maximum duration, in milliseconds.
 			);
 
-
-
 		IXAudio2MasteringVoice * m_pMasterVoice; // those should be holded by the user (bg music master, snd fx master, ambient master)
-		IXAudio2SourceVoice * m_pSourceVoice;	 // those should be holded by the user, one per sound file..I guess
+		IXAudio2SourceVoice * m_pFXSourceVoice;	 // those should be holded by the user, one per sound file..I guess
+		IXAudio2SourceVoice * m_pMusicSourceVoice;
 	};
 
 	typedef std::shared_ptr<Sounder> shared_Sounder_ptr;

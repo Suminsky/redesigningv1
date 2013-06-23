@@ -13,6 +13,8 @@ game::ButtonComponent::ButtonComponent( const shared_SpriteComponent_ptr & pSpri
 
 	m_borderGap.x = wBorder_p;
 	m_borderGap.y = hBorder_p;
+
+	m_eState = E_STATE_NORMAL;
 }
 game::ButtonComponent::ButtonComponent( const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, XMFLOAT4 uvPressed_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
 {
@@ -24,6 +26,8 @@ game::ButtonComponent::ButtonComponent( const shared_SpriteComponent_ptr & pSpri
 
 	m_borderGap.x = wBorder_p;
 	m_borderGap.y = hBorder_p;
+
+	m_eState = E_STATE_NORMAL;
 }
 
 bool game::ButtonComponent::GetPointCollision( XMFLOAT2 mouseXY_p )

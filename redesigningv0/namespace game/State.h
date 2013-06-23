@@ -138,6 +138,20 @@ namespace game{
 			}
 
 		}
+
+		//------------------------------------------------------------------------
+		// calls all layers VOnDestroy than state VOnDestroy
+		//------------------------------------------------------------------------
+		void Destroy(){
+
+			for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
+				it != itEnd; ++ it ){
+
+					(*it)->VOnDestroy();
+			}
+
+			VOnDestroy();
+		}
 		//------------------------------------------------------------------------
 		// traverse layer and call draw
 		//------------------------------------------------------------------------

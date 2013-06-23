@@ -3,7 +3,7 @@
 /*
 	created:	2013/05/24
 	created:	24:5:2013   10:12
-	file:		FadeSpriteTask.h
+	file:		FadeTask.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	
@@ -21,37 +21,34 @@
 
 namespace game{
 
-	class SpriteComponent;
-	typedef std::shared_ptr<SpriteComponent> shared_SpriteComponent_ptr;
-
-	class FadeSpriteTask: public Task{
+	class FadeTask: public Task{
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		FadeSpriteTask( const shared_SpriteComponent_ptr & pSpriteComp_p,
-						float fTimeToComplete_p = 1.0f,
-						float from = 1.0f, float to = 0.0f,
-						shared_Task_ptr pChainedTask_p = nullptr );
-		FadeSpriteTask(){}
+		FadeTask(	float & fValueToFade_p,
+					float fTimeToComplete_p = 1.0f,
+					float from = 1.0f, float to = 0.0f,
+					shared_Task_ptr pChainedTask_p = nullptr );
+		FadeTask(){}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
 		void Set( float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
-		void Set( const shared_SpriteComponent_ptr & pSpriteComp_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
-		void Set( const shared_Task_ptr & pChainedTask_p, const shared_SpriteComponent_ptr & pSpriteComp_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set( float * fValueToFade_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set( const shared_Task_ptr & pChainedTask_p, float & fValueToFade_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
 
 	private:
 
 		double m_elapsed;
 		float m_fTimeToComplete;
-		float * m_pAlphaReference;
+		float * m_pfFadingReference;
 		float m_from, m_to;
 
-		//FadeSpriteTask & operator =( const FadeSpriteTask & other_p ); // warning supress
+		//FadeTask & operator =( const FadeTask & other_p ); // warning supress
 
 		//------------------------------------------------------------------------
 		// update
@@ -59,6 +56,6 @@ namespace game{
 		virtual void VOnUpdate( double, double delta );
 	};
 
-	typedef std::shared_ptr<FadeSpriteTask> shared_FadeSpriteTask_ptr;
+	typedef std::shared_ptr<FadeTask> shared_FadeSpriteTask_ptr;
 
 }

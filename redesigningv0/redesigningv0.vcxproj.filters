@@ -189,9 +189,6 @@
     <ClInclude Include="namespace game\components\ButtonComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace game\tasks\FadeSpriteTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mentle\MainMenu\FadeLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -226,6 +223,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace sound\SoundScreamer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\tasks\FadeTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -374,9 +374,6 @@
     <ClCompile Include="namespace game\components\ButtonComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace game\tasks\FadeSpriteTask.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -405,6 +402,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace sound\SoundScreamer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\tasks\FadeTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

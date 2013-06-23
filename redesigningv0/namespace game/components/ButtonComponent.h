@@ -20,12 +20,14 @@
 namespace game{
 
 	class ButtonComponent: public Component{
-
-		shared_SpriteComponent_ptr m_pSpriteCompoRef;
-		DirectX::XMFLOAT4 m_uv_Normal, m_uv_Hover, m_uv_Pressed;
-		DirectX::XMFLOAT2 m_borderGap;	// used to make the "collision box" smaller
-
+	
 	public:
+
+		enum E_STATE{
+			E_STATE_NORMAL = 0,
+			E_STATE_HOVER,
+			E_STATE_PRESSED
+		};
 
 		//------------------------------------------------------------------------
 		// ctor
@@ -36,20 +38,32 @@ namespace game{
 		void SetHoverImage(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Hover;
+			m_eState = E_STATE_HOVER;
 		}
 		void SetNormalImage(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Normal;
+			m_eState = E_STATE_NORMAL;
 		}
 		void SetPressedImage(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Pressed;
+			m_eState = E_STATE_PRESSED;
 		}
+
+		E_STATE GetState(){ return m_eState; }
 
 		//------------------------------------------------------------------------
 		// use for mouse collision
 		//------------------------------------------------------------------------
 		bool GetPointCollision( DirectX::XMFLOAT2 mouseXY_p );	
+
+		private:
+
+		shared_SpriteComponent_ptr m_pSpriteCompoRef;
+		DirectX::XMFLOAT4 m_uv_Normal, m_uv_Hover, m_uv_Pressed;
+		DirectX::XMFLOAT2 m_borderGap;	// used to make the "collision box" smaller
+		E_STATE m_eState;
 	};
 
 	typedef std::shared_ptr<ButtonComponent> shared_ButtonComponent_ptr;
