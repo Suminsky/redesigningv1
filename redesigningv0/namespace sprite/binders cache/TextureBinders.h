@@ -39,11 +39,6 @@ namespace sprite{
 	//========================================================================
 	class TextureBinders{
 
-		std::vector<dx::BindPSShaderResourceView> m_cache;
-		std::vector< std::string > m_names;
-
-		dx::Device * m_pDevice;
-
 	public:
 
 		//------------------------------------------------------------------------
@@ -81,6 +76,14 @@ namespace sprite{
 
 			return m_cache[iTexture_p];
 		}
+
+
+	private:
+
+		std::vector<dx::BindPSShaderResourceView> m_cache;
+		std::vector< std::string > m_names;
+
+		dx::Device * m_pDevice;
 
 	};
 }

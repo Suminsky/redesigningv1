@@ -3,7 +3,7 @@
 /*
 	created:	2013/06/21
 	created:	21:6:2013   12:39
-	file:		SoundScreamer.h
+	file:		SoundPlayer.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	
@@ -38,51 +38,42 @@
 
 namespace sound{
 
-	//template< int NTRACKS = 32 >
-	//struct FXTracks{
-
-	//	IXAudio2SourceVoice * pFXVoices[NTRACKS];
-	//	UINT m_iCurrentIndex;
-	//};
-
-	//template< int NTRACKS = 4 >
-	//struct MusicTracks{
-
-	//	IXAudio2SourceVoice * pFXVoices[NTRACKS];
-	//	UINT m_iCurrentIndex;
-	//};
-	
 
 	// NOTE: "WAVEFORMATEX structure contains the expected format for all
 	// audio buffers submitted to the source voice. XAudio2 supports PCM
 	// and ADPCM voice types.""
-	
 	//------------------------------------------------------------------------
-	// This class is supposed to group voices that have the same wave format
-	// and send to the same voice(s) on a graph.
-	// It works like a poll for paralleling playing sounds.
+	// holds raw audio data.
+	// a file will be parsed into this structure.
 	//------------------------------------------------------------------------
-	template< int NTRACKS = 32 >
-	class SourceVoiceTracks{
+	struct WaveData{
 
-		WAVEFORMATEX m_waveFormat;
-		IXAudio2SourceVoice * pFXVoices[NTRACKS];
-		UINT m_iLastIndex;
+		WAVEFORMATEX format;
+		UINT32 nBytes; // not necessarily amount allocated, but amount of audio data written to the buffer
+		BYTE * pData; // PCMData?
+		LONGLONG llDuration_ms;
 	};
 
-	class SndFX{
+
+
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
+	class SoundData{
+
+	private:
 
 		XAUDIO2_BUFFER audioBuffer;
+
 		UINT nTracksUsing;
+		UINT nTracksPlaying;
 	};
 
 	//========================================================================
 	// 
 	//========================================================================
 	template< int N_MASTERVOICES = 1 >
-	class SoundScreamer{
-
-		
+	class SoundPlayer{
 
 	public:
 

@@ -29,7 +29,13 @@ namespace game{
 		// ctor/dctor
 		//------------------------------------------------------------------------
 		StateMachine():m_pCurrentState(nullptr), m_pToBeChangedTo_Tmp(nullptr){}
-		virtual ~StateMachine(){}
+		virtual ~StateMachine(){
+
+			if( m_pCurrentState ){
+
+				m_pCurrentState->Destroy();
+			}
+		}
 
 		//------------------------------------------------------------------------
 		// Updates current state
@@ -102,6 +108,19 @@ namespace game{
 			if( m_pCurrentState ){
 
 				m_pCurrentState->VOnInit(); // TODO: give old state to new state
+			}
+		}
+
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Destroy(){
+
+			if( m_pCurrentState ){
+
+				m_pCurrentState->Destroy();
+				m_pCurrentState = nullptr;
 			}
 		}
 	};

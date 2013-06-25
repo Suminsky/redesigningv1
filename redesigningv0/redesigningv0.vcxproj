@@ -166,8 +166,12 @@
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace input\Mapper.h" />
+    <ClInclude Include="namespace sound\FinitSoundTracks.h" />
     <ClInclude Include="namespace sound\sound.h" />
     <ClInclude Include="namespace sound\SoundScreamer.h" />
+    <ClInclude Include="namespace sound\SourceReader.h" />
+    <ClInclude Include="namespace sound\WaveCache.h" />
+    <ClInclude Include="namespace sound\StreamedSoundTrack.h" />
     <ClInclude Include="namespace sprite\Camera.h" />
     <ClInclude Include="namespace render\ConstantBuffer.h" />
     <ClInclude Include="namespace render\dx\pipeline\BinderBinds.h" />
@@ -235,8 +239,12 @@
     <ClCompile Include="namespace game\tasks\AlarmTask.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
+    <ClCompile Include="namespace sound\FinitSoundTracks.cpp" />
     <ClCompile Include="namespace sound\sound.cpp" />
     <ClCompile Include="namespace sound\SoundScreamer.cpp" />
+    <ClCompile Include="namespace sound\SourceReader.cpp" />
+    <ClCompile Include="namespace sound\StreamedSoundTrack.cpp" />
+    <ClCompile Include="namespace sound\WaveCache.cpp" />
     <ClCompile Include="namespace sprite\Camera.cpp" />
     <ClCompile Include="namespace sprite\binders cache\BlendStateBinders.cpp" />
     <ClCompile Include="namespace render\dx\pipeline\Command.cpp" />

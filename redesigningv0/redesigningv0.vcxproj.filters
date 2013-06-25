@@ -228,6 +228,18 @@
     <ClInclude Include="namespace game\tasks\FadeTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace sound\FinitSoundTracks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sound\WaveCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sound\SourceReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sound\StreamedSoundTrack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -405,6 +417,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\tasks\FadeTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sound\FinitSoundTracks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sound\WaveCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sound\SourceReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sound\StreamedSoundTrack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -29,7 +29,7 @@
 #endif // _DEBUG
 
 // media foundation libs and headers
-#pragma comment(lib, "XAudio2.lib")
+//#pragma comment(lib, "XAudio2.lib")
 #pragma comment(lib, "mfplat.lib")
 #pragma comment(lib, "mfreadwrite.lib")
 #pragma comment(lib, "mfuuid.lib")

@@ -38,6 +38,15 @@ namespace game{
 		}
 
 		//------------------------------------------------------------------------
+		// allows for graceful destruction. Calling Destroy on the layers,
+		// than on the state, in order.
+		//------------------------------------------------------------------------
+		void Destroy(){
+
+			m_stateControl.Destroy();
+		}
+
+		//------------------------------------------------------------------------
 		// The main loop
 		// the loop calls updates passing m_dFixedStep as time, accumulating or
 		// skipping, and then calls draw passing the interpolation amount

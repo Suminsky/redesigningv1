@@ -16,15 +16,22 @@ namespace sound{
 
 sound::Sounder::~Sounder()
 {
-	m_pFXSourceVoice->Stop();
-	m_pMusicSourceVoice->Stop();
+	
+	
 
-	// Not sure if I should call DestroyVoice: NEW: yes, otherwise erro is reported
+	// Not sure if I should call DestroyVoice: NEW: yes, otherwise erro is reported on XAudio release(voice still have senders)
+	// the stop is the one not necessary I think (NEW: yes, it is not necessary, however, its good to stop before destroying)
 
-	if( m_pFXSourceVoice ) m_pFXSourceVoice->DestroyVoice();
-	if( m_pMusicSourceVoice ) m_pMusicSourceVoice->DestroyVoice();
+	if( m_pFXSourceVoice ){
+		m_pFXSourceVoice->Stop();
+		m_pFXSourceVoice->DestroyVoice();
+	}
+	if( m_pMusicSourceVoice ){
+		m_pMusicSourceVoice->Stop();
+		m_pMusicSourceVoice->DestroyVoice();
+	}
+
 	if( m_pMasterVoice ) m_pMasterVoice->DestroyVoice();
-
 	if( m_pXAudio ) m_pXAudio->Release();
 
 	//CoUninitialize();
@@ -485,7 +492,7 @@ bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WaveData & waveDa
 
 	return true;
 }
-
+//------------------------------------------------------------------------
 HRESULT sound::Sounder::SourceReader_ConfigureToDecodeAudioStream( IMFSourceReader *pSourceReader_p, IMFMediaType **ppPCMAudio_p )
 {
 	// #1# Calls the IMFSourceReader::SetStreamSelection method to select the audio stream and deselect all other streams.
@@ -634,9 +641,9 @@ HRESULT sound::Sounder::SourceReader_ReadAudioData( IMFSourceReader *pSourceRead
 		// #6# Writes the audio data to the output file.
 
 		if( nBytesWritten_p + nBytes >  nMaxBytesToWrite_p ){
-		
-			//break;
+
 			BREAKHERE;
+			break;
 		}
 
 		memcpy( (void*)&waveData_p.pData[nBytesWritten_p], (void*)pBuffer, nBytes );

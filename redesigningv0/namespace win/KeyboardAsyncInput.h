@@ -12,6 +12,7 @@
 
 
 #include <windows.h>
+#include "win_IDs.h"
 
 namespace win{
 
