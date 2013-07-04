@@ -160,7 +160,8 @@ namespace win{
 		//------------------------------------------------------------------------
 		inline void Close(){
 
-			SendMessage( m_hWnd, WM_CLOSE, 0, 0 );
+			PostMessage( m_hWnd, WM_CLOSE, 0, 0 );
+			//SendMessage( m_hWnd, WM_CLOSE, 0, 0 );
 		}
 
 		//------------------------------------------------------------------------

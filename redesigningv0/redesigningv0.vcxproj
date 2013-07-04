@@ -68,9 +68,9 @@
     <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Visual Leak Detector\include;$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ProgramFiles)\Windows Kits\8.0\bin\x86;$(ProgramFiles)\Windows Kits\8.0\bin\x64;$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x64;$(LibraryPath)</LibraryPath>
     <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -166,6 +166,9 @@
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace input\Mapper.h" />
+    <ClInclude Include="namespace net\Address.h" />
+    <ClInclude Include="namespace net\net.h" />
+    <ClInclude Include="namespace net\Socket.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
     <ClInclude Include="namespace sound\sound.h" />
     <ClInclude Include="namespace sound\SoundScreamer.h" />
@@ -238,6 +241,9 @@
     <ClCompile Include="namespace game\TaskMAchine.cpp" />
     <ClCompile Include="namespace game\tasks\AlarmTask.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
+    <ClCompile Include="namespace net\Address.cpp" />
+    <ClCompile Include="namespace net\net.cpp" />
+    <ClCompile Include="namespace net\Socket.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
     <ClCompile Include="namespace sound\FinitSoundTracks.cpp" />
     <ClCompile Include="namespace sound\sound.cpp" />

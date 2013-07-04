@@ -78,16 +78,20 @@ bool sound::SourceReader::Initialize( const wchar_t * szFilename_p )
 		return false;
 	}
 
-	// NOTE: duration is in nanoseconds
+	// NOTE: duration is in 100 nanoseconds
 
 	m_maxSize = (int)(
-		( var.uhVal.QuadPart * (LONGLONG)m_waveFormat.nAvgBytesPerSec
-		+ 10000000 ) // round up to the nearest byte
-		/ 10000000
+		( var.uhVal.QuadPart * (ULONGLONG)m_waveFormat.nAvgBytesPerSec
+		+ (10000000 -1) ) // round up to the nearest byte // ?? NEW: this is a round up of integer division: x/y -> to round up: x + (y-1)/y
+		/ 10000000	// 100ns to sec
 		);
 
-	m_llDuration_ms = var.uhVal.QuadPart /= 10000LL; // 100ns to ms
-	PropVariantClear(&var); // TODO, don t know if needed, theres samples using and not using
+	m_llDuration_ms = var.uhVal.QuadPart /= 10000LL; // 100ns to ms (if duration less than 1ms, results zero, thus ms is more appropriated than s)
+	//PropVariantClear(&var); // TODO, don t know if needed, theres samples using and not using
+
+	// TODO: TESTAR COM FLOATS pra v a diferenca em precisao...
+
+	pPCMAudio->Release();
 
 	return true;
 }
@@ -188,6 +192,7 @@ bool sound::SourceReader::ReadAllWaveData( BYTE * pData_p, UINT nMaxBytesToWrite
 
 		DWORD dwFlags = 0;
 		bool bLocked = false;
+
 		if( pUnreadBuffer == nullptr ){
 
 			hr =
@@ -196,7 +201,7 @@ bool sound::SourceReader::ReadAllWaveData( BYTE * pData_p, UINT nMaxBytesToWrite
 				nullptr,				// Receives the zero-based index of the stream.
 				&dwFlags,				// MF_SOURCE_READER_FLAG
 				nullptr,				// Receives the time stamp of the sample, or the time
-				// of the stream event indicated in pdwStreamFlags.
+										// of the stream event indicated in pdwStreamFlags.
 				&pMediaSample
 				);
 
@@ -234,10 +239,8 @@ bool sound::SourceReader::ReadAllWaveData( BYTE * pData_p, UINT nMaxBytesToWrite
 				break;
 			}
 
-			//DWORD nBytes = 0;
-			//BYTE * pBuffer = nullptr;
-			hr = pMediaBuffer->Lock(	&pUnreadBuffer,//(BYTE**)&audioBuffer_p.pAudioData,
-										NULL,	// size of data that can be written to he buffer (max lenght)
+			hr = pMediaBuffer->Lock(	&pUnreadBuffer,	//(BYTE**)&audioBuffer_p.pAudioData,
+										NULL,			// size of data that can be written to he buffer (max lenght)
 										&nUnreadBufferBytes	// current lenght
 										);
 
@@ -255,6 +258,13 @@ bool sound::SourceReader::ReadAllWaveData( BYTE * pData_p, UINT nMaxBytesToWrite
 		if( nBytesWritten_p + nUnreadBufferBytes >  nMaxBytesToWrite_p ){
 
 			bSucceed = false;
+
+			if( bLocked ){
+
+				m_pLockedBuffer = pMediaBuffer;
+				m_pLockedBuffer->AddRef();
+			}
+
 			break;
 		}
 
@@ -266,6 +276,7 @@ bool sound::SourceReader::ReadAllWaveData( BYTE * pData_p, UINT nMaxBytesToWrite
 		if( bLocked ){
 
 			// #7# Calls IMFMediaBuffer::Unlock to unlock the buffer object.
+
 			hr = pMediaBuffer->Unlock();
 			if( FAILED(hr) ){
 				assert(false); //TODO
@@ -277,7 +288,12 @@ bool sound::SourceReader::ReadAllWaveData( BYTE * pData_p, UINT nMaxBytesToWrite
 
 			pMediaBuffer->Release();pMediaBuffer = nullptr;
 			pMediaSample->Release(); pMediaSample = nullptr;
-		}		
+		}
+		else{
+
+			m_pLockedBuffer->Unlock();
+			m_pLockedBuffer->Release();
+		}
 	}
 
 	if( pMediaBuffer ){ pMediaBuffer->Release(); }

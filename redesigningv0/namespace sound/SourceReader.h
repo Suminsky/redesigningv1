@@ -42,13 +42,14 @@ namespace sound{
 		//------------------------------------------------------------------------
 		SourceReader()
 			:
-		m_pReader(nullptr){}
+		m_pReader(nullptr)
+		{}
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
 		virtual ~SourceReader(){
 
-			if( m_pReader ) m_pReader->Release();
+			if( m_pReader ) m_pReader->Release();			
 		}
 
 		//------------------------------------------------------------------------
@@ -102,6 +103,7 @@ namespace sound{
 
 		BYTE * pUnreadBuffer;
 		DWORD nUnreadBufferBytes;
+		IMFMediaBuffer * m_pLockedBuffer;
 
 		WAVEFORMATEX m_waveFormat;
 		LONGLONG m_llDuration_ms;

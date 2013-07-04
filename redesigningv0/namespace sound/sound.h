@@ -26,7 +26,7 @@
 #else
 #define IFSOUND(stuff)
 #define SNDCOMMA()
-#endif // _DEBUG
+#endif
 
 // media foundation libs and headers
 //#pragma comment(lib, "XAudio2.lib")
@@ -43,6 +43,7 @@
 // NOTE: explicit link against dx sdk XAudio2 if win 7, if not, link against win 8 XAudio2
 
 #include "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\xaudio2.h"
+//#include "%DXSDK_DIR%\Include\xaudio2.h"
 //#pragma comment(lib,"ole32.lib") // com stuff
 
 // standard includes
@@ -54,6 +55,7 @@
 // private includes
 
 #include "../namespace gen/gen_macros.h"
+#include "WaveCache.h"
 
 namespace sound{
 
@@ -61,19 +63,21 @@ namespace sound{
 	// holds raw audio data.
 	// a file will be parsed into this structure.
 	//------------------------------------------------------------------------
-	struct WaveData{
+	//struct WaveData{
 
-		WAVEFORMATEX format;
-		UINT32 nBytes;
-		BYTE * pData; // PCMData?
-		LONGLONG llDuration_ms;
-	};
+	//	WAVEFORMATEX format;
+	//	UINT32 nBytes;
+	//	BYTE * pData; // PCMData?
+	//	LONGLONG llDuration_ms;
+	//};
 
 	extern void SetXAudioBufferFromWaveData( XAUDIO2_BUFFER & xBuffer_p, WaveData & waveData_p, bool bLoop_p = false, bool bConcludeVoice_p = true  );
 
 	class Sounder{
 
 	public:
+
+		WaveCache m_waveCache;
 
 		//------------------------------------------------------------------------
 		// ctor
@@ -186,6 +190,12 @@ namespace sound{
 
 	private:
 
+		IXAudio2MasteringVoice * m_pMasterVoice; // those should be holded by the user (bg music master, snd fx master, ambient master)
+		IXAudio2SourceVoice * m_pFXSourceVoice;	 // those should be holded by the user, one per sound file..I guess
+		IXAudio2SourceVoice * m_pMusicSourceVoice;
+
+
+
 		//------------------------------------------------------------------------
 		// TODO: encapsulate source reader
 		// media types describes the formats of a media stream
@@ -200,10 +210,6 @@ namespace sound{
 			DWORD cbHeader,              // The size of the WAVE file header.
 			DWORD msecAudioData          // Maximum duration, in milliseconds.
 			);
-
-		IXAudio2MasteringVoice * m_pMasterVoice; // those should be holded by the user (bg music master, snd fx master, ambient master)
-		IXAudio2SourceVoice * m_pFXSourceVoice;	 // those should be holded by the user, one per sound file..I guess
-		IXAudio2SourceVoice * m_pMusicSourceVoice;
 	};
 
 	typedef std::shared_ptr<Sounder> shared_Sounder_ptr;

@@ -16,9 +16,6 @@ namespace sound{
 
 sound::Sounder::~Sounder()
 {
-	
-	
-
 	// Not sure if I should call DestroyVoice: NEW: yes, otherwise erro is reported on XAudio release(voice still have senders)
 	// the stop is the one not necessary I think (NEW: yes, it is not necessary, however, its good to stop before destroying)
 
