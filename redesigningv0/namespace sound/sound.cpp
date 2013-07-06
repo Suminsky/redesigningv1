@@ -477,8 +477,8 @@ bool sound::Sounder::LoadAudioFile( const WCHAR * szFileURL_p, WaveData & waveDa
 
 	hr = SourceReader_ReadAudioData( pMFSourceReader, waveData_p, waveData_p.nBytes, nBytesWritten );
 
-	if( waveData_p.nBytes != nBytesWritten )
-		BREAKHERE;
+	//if( waveData_p.nBytes != nBytesWritten )
+	//	BREAKHERE;
 
 	waveData_p.nBytes = nBytesWritten;
 

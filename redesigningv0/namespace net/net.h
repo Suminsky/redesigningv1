@@ -6,7 +6,12 @@
 	file:		net.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	ATTENTION!!!
+				Winsock2.h must be placed before any windows.h include, OR windows.h needs to be included with WIN32_LEAN_AND_MEAN.
+				Well, bullshit, with windows kit 8 theres still lots of shit going on and I dont have a clue where exactly is the problem..
+				Heres the thing..winsock is just included if _WINSOCKAPI_ is not defined yet, while winsock2 if _WINSOCK2API_ is not defined yet.
+				So one just needs to define _WINSOCKAPI_ globably to avoid the old winsock being included..Note that winsock2 define both macros
+				to prevent this (but still is ordering dependent, so we need to supress that warning. 
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -30,6 +35,7 @@ namespace net{
 
 	enum E_ERROR{
 
+		E_ERROR_NONE,
 		E_ERROR_SYSTEMNOTREADY,
 		E_ERROR_VERSIONNOTSUPPORTED,
 		E_ERROR_BLOCKCALLINPROGRESS,

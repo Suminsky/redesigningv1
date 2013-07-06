@@ -13,10 +13,11 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-#include <memory>
-#include <stdint.h>
+#pragma warning( push )
+#pragma warning( disable: 4005 ) //'_WINSOCKAPI_' : macro redefinition
 #include <WinSock2.h>
-
+#pragma warning( pop )
+#include <stdint.h>
 
 // private includes
 
@@ -26,49 +27,63 @@ namespace net{
 
 	public:
 
+		union address{
+
+			struct{
+				uint8_t	ucD;
+				uint8_t	ucC;
+				uint8_t	ucB;
+				uint8_t	ucA;
+			}octets;
+
+			int32_t iInteger;
+		};
+
 		//------------------------------------------------------------------------
 		// ctors
 		//------------------------------------------------------------------------
-		Address_HostOrder_IPv4( uint8_t a_p, uint8_t b_p, uint8_t c_p, uint8_t d_p, uint16_t port_p ){
+		Address_HostOrder_IPv4( uint8_t a_p, uint8_t b_p, uint8_t c_p, uint8_t d_p, uint16_t port_p );
+		Address_HostOrder_IPv4( int32_t iAddress_p, uint16_t usPort_p );
+		Address_HostOrder_IPv4( const char * szAddressDotedForm_p, uint16_t port_p );
+		Address_HostOrder_IPv4( const sockaddr_in & address_p );
 
-			m_address.octets.ucA = a_p;
-			m_address.octets.ucB = b_p;
-			m_address.octets.ucC = c_p;
-			m_address.octets.ucD = d_p;
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Set( const sockaddr_in & address_p ){
 
-			m_usPort = port_p;
+			m_address.iInteger = ntohl( address_p.sin_addr.s_addr );
+			m_usPort = ntohs( address_p.sin_port );
 		}
-		Address_HostOrder_IPv4( int32_t iAddress_p, uint16_t usPort_p ){
 
-			m_address.iInteger = iAddress_p;
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		int32_t GetAddress() const{
 
-			m_usPort = usPort_p;
+			return m_address.iInteger;
 		}
-		Address_HostOrder_IPv4( const char * szAddressDotedForm_p, uint16_t port_p ){
+		uint16_t GetPort() const{
 
-			m_address.iInteger = inet_addr( szAddressDotedForm_p );
+			return m_usPort;
+		}
 
-			m_usPort = port_p;
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		bool operator == ( const Address_HostOrder_IPv4 & other_p ){
+
+			if( m_address.iInteger == other_p.GetAddress() 
+				&&
+				m_usPort == other_p.GetPort() )
+				return true;
+
+			return false;
 		}
 
 	private:
 
-		union address{
-
-			struct{
-				uint8_t	ucA;
-				uint8_t	ucB;
-				uint8_t	ucC;
-				uint8_t	ucD;
-			}octets;
-
-			int32_t iInteger;
-
-		} m_address;
-
+		address m_address;
 		uint16_t m_usPort;
 	};
-
-	typedef std::shared_ptr<Address_HostOrder_IPv4> shared_Address_IPv4_ptr;
-	typedef std::weak_ptr<Address_HostOrder_IPv4> weak_Address_IPv4_ptr;
 }

@@ -1,6 +1,9 @@
 #include "net.h"
 
+#pragma warning( push )
+#pragma warning( disable: 4005 ) //'_WINSOCKAPI_' : macro redefinition
 #include <WinSock2.h>
+#pragma warning( pop )
 #include <assert.h>
 
 #include "../namespace gen/gen_macros.h"

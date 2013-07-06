@@ -180,10 +180,11 @@ namespace sound{
 		//------------------------------------------------------------------------
 		void Scream(){
 
-			HRESULT hr = m_pXAudio->CommitChanges(XAUDIO2_COMMIT_ALL);
+			//HRESULT hr = 
+				m_pXAudio->CommitChanges(XAUDIO2_COMMIT_ALL);
 
-			if( hr != S_OK )
-				BREAKHERE;
+			//if( hr != S_OK )
+			//	BREAKHERE;
 		}
 
 		IXAudio2 * m_pXAudio;

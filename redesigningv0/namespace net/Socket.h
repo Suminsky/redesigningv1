@@ -16,7 +16,6 @@
 
 // standard includes
 #include <memory>
-#include <WinSock2.h>
 
 // private includes
 #include "../namespace gen/gen_macros.h"
@@ -30,11 +29,19 @@ namespace net{
 
 		enum E_ERROR{
 
+			E_ERROR_NONE, // uninitialized
 			E_ERROR_TOOMANYSOCKETSOPEN,
 			E_ERROR_NOSYSRESOURCESAVAILABLE,
 			E_ERROR_EXCLUSIVEADDRESSINUSE,
 			E_ERROR_WOULDBLOCK,
 			E_ERROR_INVALIDPORT,
+			E_ERROR_TIMETOLIVEEXPIRED, // ??
+			E_ERROR_MESSAGETRUNCATEDDUEBUFFERSIZE,
+			E_ERROR_SOCKETISGONE,
+			E_ERROR_NOTALLDATASENT,
+			E_ERROR_REMOTEUNREACHABLE,
+			E_ERROR_REMOTECANTREACHHOST,
+			E_ERROR_NETWORKNOTREACHABLE,
 			E_ERROR_NOIDEA,
 			E_ERROR_SHITGOTFUCKED
 		};
@@ -63,11 +70,16 @@ namespace net{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		bool ReceiveFrom( Address_HostOrder_IPv4 & senderAddress_p, BYTE *& pDataBuffer_p, UINT nMaxBytesToRead_p, E_ERROR * peError_p = nullptr ){
+		bool Receive(	int & nBytesRead_p, Address_HostOrder_IPv4 & remoteAddress_out_p,
+						BYTE * pDataBuffer_p, UINT nMaxBytesToRead_p,
+						E_ERROR * peError_p = nullptr );
 
-			//UINT16
-		}
-
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		bool SendTo(	const Address_HostOrder_IPv4 & remoteAddress_in_p,
+						const BYTE * pData_p, UINT nDataBytes_p,
+						E_ERROR * peError_p = nullptr );
 	private:
 
 		SOCKET m_socket;

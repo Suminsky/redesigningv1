@@ -13,7 +13,7 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-#include <windows.h>
+//#include <windows.h>
 //#include <memory>
 
 
@@ -93,15 +93,15 @@ namespace game{
 	// that thing really works
 	//========================================================================
 	template<int SIZE>
-	struct EvilBlob{
+	struct MorpherUnion{ // previously EvilBlob
 
-		BYTE m_data[SIZE];
+		unsigned char m_data[SIZE];
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
 		template< typename TYPE >
-		TYPE GetChunkAs( UINT iByteOffset_p ){
+		TYPE GetChunkAs( unsigned int iByteOffset_p ){
 
 			assert( iByteOffset_p + sizeof(TYPE) <= SIZE );
 
@@ -112,7 +112,7 @@ namespace game{
 		// 
 		//------------------------------------------------------------------------
 		template< typename TYPE >
-		void SetChunkAs( UINT iByteOffset_p, TYPE newData_p ){
+		void SetChunkAs( unsigned int iByteOffset_p, TYPE newData_p ){
 
 			assert( iByteOffset_p + sizeof(TYPE) <= SIZE );
 
@@ -125,7 +125,7 @@ namespace game{
 			testingB.banana = 435;
 			testingB.floating = 23.2f;
 
-		EvilBlob<sizeof(int)*2 + sizeof(testingBlob)> blobTest;
+		MorpherUnion<sizeof(int)*2 + sizeof(testingBlob)> blobTest;
 
 		blobTest.SetChunkAs<int>( 0, 35 );
 		blobTest.SetChunkAs<int>( sizeof(int), 402 );

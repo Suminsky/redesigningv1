@@ -62,18 +62,24 @@ namespace game{
 		//------------------------------------------------------------------------
 		// Used to sort the draw calls
 		// This level of the rendering cant worry about this more specific stuff!
+		// Figured out that byte order for the bitfields, just like on a union,
+		// is different from struct and arrays:
+		// struct{ m0, m1, m2} == array[3];
+		// union{ char a, b, c, d } == integer{ d<<24 | c << 16 | b << 8 | a << 0 }
+		// And the bitfields are like
+		// struct{ :1, :3, :4, :1 } == xxxxxxxx1, xxxxx111x, x1111xxxx, 1xxxxxxxx
+		// I dont know why, and its not portable either.
 		//------------------------------------------------------------------------
 		union SortMask{
 			struct{
-				unsigned int layer			: 2;	// 4 layers: game, HUD, full screen effect...
 				unsigned int viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
 				unsigned int viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
 				unsigned int transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
 				unsigned int Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
 				unsigned int shaderID		: 15;
 				unsigned int textureID		: 15;
+				unsigned int layer			: 2;	// 4 layers: game, HUD, full screen effect...
 			} bitField;
-
 			unsigned __int64 intRepresentation;
 		}m_sortKey;
 

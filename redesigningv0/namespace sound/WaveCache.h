@@ -63,7 +63,7 @@ namespace sound{
 		// gets
 		//------------------------------------------------------------------------
 		WaveData & GetWave( const wchar_t * szWaveFileName_p );
-		WaveData & GetWave( int iIndex_p ){
+		WaveData & GetWave( unsigned int iIndex_p ){
 
 			assert( iIndex_p < m_waves.size() );
 
@@ -77,7 +77,7 @@ namespace sound{
 
 		void DestroyWavesData(){
 
-			for( int it = 0, size = (int)m_waves.size(); it < size; ++it ){
+			for( unsigned int it = 0, size = (int)m_waves.size(); it < size; ++it ){
 
 				delete m_waves[it].pData;
 			}
