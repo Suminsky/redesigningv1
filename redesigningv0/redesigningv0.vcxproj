@@ -105,7 +105,8 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>NETWORK;SOUND;_WINSOCKAPI_</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -135,12 +136,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <Profile>false</Profile>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -173,6 +175,8 @@
     <ClInclude Include="namespace net\Packet.h" />
     <ClInclude Include="namespace net\PeerHost.h" />
     <ClInclude Include="namespace net\Socket.h" />
+    <ClInclude Include="namespace text\BmpFont.h" />
+    <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
     <ClInclude Include="namespace sound\sound.h" />
     <ClInclude Include="namespace sound\SoundScreamer.h" />
@@ -199,6 +203,7 @@
     <ClInclude Include="namespace sprite\CameraCbuffer.h" />
     <ClInclude Include="namespace sprite\DrawableCbuffer.h" />
     <ClInclude Include="namespace sprite\Movable.h" />
+    <ClInclude Include="namespace text\TextRenderer.h" />
     <ClInclude Include="namespace win\FileLogger.h" />
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
@@ -268,10 +273,15 @@
     <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
     <ClCompile Include="namespace game\tasks\FadeTask.cpp" />
-    <ClCompile Include="Mentle\main.cpp" />
+    <ClCompile Include="Mentle\main.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NETWORK;SOUND;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
     <ClCompile Include="namespace sprite\Movable.cpp" />
+    <ClCompile Include="namespace text\BmpFont.cpp" />
+    <ClCompile Include="namespace text\CreateFontTexture.cpp" />
+    <ClCompile Include="namespace text\TextRenderer.cpp" />
     <ClCompile Include="namespace win\FileLogger.cpp" />
     <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
     <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />

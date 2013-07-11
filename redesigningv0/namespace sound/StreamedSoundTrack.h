@@ -7,6 +7,8 @@
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	TODO: error codes, .inl for the implementation
+				TODO: Delayed "initialization": stream till all music is on mem, than switch to just having the
+				entire shit looping
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -20,7 +22,7 @@
 
 namespace sound{
 
-	template< int NBUFFERS = 3, int NBUFFBYTESIZE = 65536 > // 3 x 64KB
+	template< int NBUFFERS = 3, int NBUFFBYTESIZE = 65536 > //4096>// // 3 x 64KB
 	class StreamedSoundTrack{
 
 	public:
@@ -77,34 +79,35 @@ namespace sound{
 				return false;
 			}
 
-			// fill buffers
+			//// fill buffers
 
-			XAUDIO2_BUFFER audioBuffer = {0};
-			UINT32 nBytesWritten = 0;
-			for( m_iCurrentBuffer = 0; m_iCurrentBuffer < NBUFFERS; ++m_iCurrentBuffer ){
+			//XAUDIO2_BUFFER audioBuffer = {0};
+			//UINT32 nBytesWritten = 0;
+			//for( m_iCurrentBuffer = 0; m_iCurrentBuffer < NBUFFERS; ++m_iCurrentBuffer ){
 
-				bool bStreamComplete = 
-					m_reader.ReadAllWaveData(	m_buffers[m_iCurrentBuffer],
-												NBUFFBYTESIZE,
-												nBytesWritten );
+			//	bool bStreamComplete = 
+			//		m_reader.ReadAllWaveData(	m_buffers[m_iCurrentBuffer],
+			//									NBUFFBYTESIZE,
+			//									nBytesWritten );
 
-				audioBuffer.AudioBytes = nBytesWritten;
-				audioBuffer.pAudioData = m_buffers[m_iCurrentBuffer];
-				audioBuffer.Flags = bStreamComplete ? XAUDIO2_END_OF_STREAM : 0;
+			//	audioBuffer.AudioBytes = nBytesWritten;
+			//	audioBuffer.pAudioData = m_buffers[m_iCurrentBuffer];
+			//	audioBuffer.Flags = bStreamComplete ? XAUDIO2_END_OF_STREAM : 0;
 
-				hr =
-				m_pVoice->SubmitSourceBuffer( &audioBuffer );
+			//	hr =
+			//	m_pVoice->SubmitSourceBuffer( &audioBuffer );
 
-				if( hr != S_OK ) return false;
+			//	if( hr != S_OK ) return false;
 
-				if( bStreamComplete ){
-					
-					m_reader.ResetReadingPosition();
-					break;
-				}
-			}
+			//	if( bStreamComplete ){
+			//		
+			//		m_reader.ResetReadingPosition();
+			//		break;
+			//	}
+			//}
 
-			m_iCurrentBuffer %= NBUFFERS;
+			//m_iCurrentBuffer %= NBUFFERS;
+			m_iCurrentBuffer = 0;
 
 			return true;
 		}
@@ -129,10 +132,10 @@ namespace sound{
 			XAUDIO2_BUFFER audioBuffer = {0};
 			UINT32 nBytesWritten = 0;
 
-			while( voiceState.BuffersQueued < NBUFFERS ){
+			while( voiceState.BuffersQueued < NBUFFERS ){//since it never feel due small buffers, its stuck
 
 				bool bStreamComplete = 
-					m_reader.ReadAllWaveData(	m_buffers[m_iCurrentBuffer],
+					m_reader.ReadNextWaveSample(	m_buffers[m_iCurrentBuffer],
 													NBUFFBYTESIZE,
 													nBytesWritten );
 
@@ -141,7 +144,10 @@ namespace sound{
 						m_reader.ResetReadingPosition();
 						break;
 					}
-					else continue;
+					else{
+						MessageBox(0, "Music sample size bigger than supported buffer..STUCK", "sound error", MB_E );
+						continue;
+					}
 				}
 
 				audioBuffer.AudioBytes = nBytesWritten;

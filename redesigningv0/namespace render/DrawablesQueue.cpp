@@ -16,17 +16,17 @@ void render::DrawablesQueue::CreateCommandBuffer( dx::commandbuffer & commandLis
 	// holds current render binds (I feel this should be holded)
 
 	// traverse "sorted drawables"
-	sortarray::const_iterator itEnd = m_sortqueue.end();
-	for( sortarray::const_iterator it = m_sortqueue.begin();
-		 it != itEnd; ++it){
+	for( sortarray::const_iterator itDrawable = m_sortqueue.begin(),
+		 itEnd = m_sortqueue.end();
+		 itDrawable != itEnd; ++itDrawable){
 
-		const dx::statevec * pPipeStates = m_drawables[(*it).index].GetPipeStateGroup();
+		const dx::StateGroup * pPipeStates = m_drawables[(*itDrawable).index].GetPipeStateGroup();
 
 		// traverse pipe states
 
 		UINT64 bindsSetMask = 0;
 
-		for( dx::statevec::const_iterator itStates = pPipeStates->begin(),
+		for( dx::StateGroup::const_iterator itStates = pPipeStates->begin(),
 			statesEnd =  pPipeStates->end();
 			itStates != statesEnd;
 			++itStates ){
@@ -39,9 +39,9 @@ void render::DrawablesQueue::CreateCommandBuffer( dx::commandbuffer & commandLis
 				itBinds != bindsEnd;
 				++itBinds ){
 
-					// check redundancy: needs to check precedences redundancy between pipe states of the same drawable
+					// check redundancy: needs to check precedences redundancy between pipe states binds of the same drawable
 
-					if( !(bindsSetMask & (*itBinds)->TypeBits())
+					if( !(bindsSetMask & (*itBinds)->TypeBits())	// check if bind was not set by previous states*
 						&&
 						m_stateCache[(*itBinds)->TypeIndex()] != (*itBinds).get() ){		// check if bind not already set
 
@@ -52,11 +52,16 @@ void render::DrawablesQueue::CreateCommandBuffer( dx::commandbuffer & commandLis
 					/*else{
 						int x = 0;
 					}*/
+
+					// * NOTE that later binds are discarded, so to add default binds that may be discarded if drawable
+					// is setting a specific bind, it must came later on the states, not before
 			}
 
 		}
 
-		commandList_p.push_back(m_drawables[(*it).index].GetDrawCall());
+		// add draw call
+
+		commandList_p.push_back(m_drawables[(*itDrawable).index].GetDrawCall());
 	}
 
 	//Prepare();

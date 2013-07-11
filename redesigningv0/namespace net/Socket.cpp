@@ -35,7 +35,7 @@ bool net::Socket_UDP_NonBlocking_IPv4::Init( unsigned short usPort_p, E_ERROR * 
 
 	DBG(
 		int result = WSAGetLastError();
-	);
+	
 	assert( result != WSANOTINITIALISED );
 	assert( result != WSAEAFNOSUPPORT );
 	assert( result != WSAEINPROGRESS );
@@ -45,7 +45,7 @@ bool net::Socket_UDP_NonBlocking_IPv4::Init( unsigned short usPort_p, E_ERROR * 
 	assert( result != WSAEADDRNOTAVAIL ); // invalid port number
 	assert( result != WSAEFAULT );
 	assert( result != WSAENOTSOCK );
-	
+	)
 
 	if( peError_p ){
 
@@ -77,13 +77,13 @@ bool net::Socket_UDP_NonBlocking_IPv4::Destroy( E_ERROR * peError_p /*= nullptr 
 
 		DBG(
 			int result = WSAGetLastError();
-		);
+		
 		assert( result != WSANOTINITIALISED );
 		assert( result != WSAENOTSOCK );
 		assert( result != WSAEINPROGRESS );
 		assert( result != WSAEINTR );
 		assert( result != WSAEINVAL );
-
+		)
 		
 
 		if( peError_p ){
@@ -117,9 +117,11 @@ bool net::Socket_UDP_NonBlocking_IPv4::Receive(	int & nBytesRead_p, Address_Host
 	}
 	else{
 
+		nBytesRead_p = 0;
+
 		DBG(
 			int result = WSAGetLastError();
-		)
+		
 		assert( result != WSANOTINITIALISED );
 		assert( result != WSAEFAULT ); // buffer invalid address or size of from not enough
 		assert( result != WSAEINTR );
@@ -131,7 +133,7 @@ bool net::Socket_UDP_NonBlocking_IPv4::Receive(	int & nBytesRead_p, Address_Host
 		assert( result != WSAEADDRNOTAVAIL ); // invalid port number
 		assert( result != WSAESHUTDOWN ); // socket was shutdown()
 		assert( result != WSAENOTSOCK );
-
+		)
 		if( peError_p ){
 
 			NDBG( int result = WSAGetLastError(); );
@@ -182,7 +184,7 @@ bool net::Socket_UDP_NonBlocking_IPv4::SendTo( const Address_HostOrder_IPv4 & re
 
 		DBG(
 			int result = WSAGetLastError();
-		);
+		
 		assert( result != WSANOTINITIALISED );
 		assert( result != WSAEFAULT ); // buffer invalid address or size of to too small
 		assert( result != WSAEINTR );
@@ -200,7 +202,7 @@ bool net::Socket_UDP_NonBlocking_IPv4::SendTo( const Address_HostOrder_IPv4 & re
 		assert( result != WSAEMSGSIZE ); // message size is bigger than supported
 		assert( result != WSAEDESTADDRREQ ); // receiver address required
 		assert( result != WSAETIMEDOUT );
-
+		)
 		if( peError_p ){
 
 			NDBG( int result = WSAGetLastError(); );

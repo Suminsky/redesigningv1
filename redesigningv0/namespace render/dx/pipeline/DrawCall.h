@@ -26,6 +26,7 @@
 #include <D3Dcommon.h>
 #include <D3D11.h>
 #include <D3DX11core.h>	//including because of D3DERR_INVALIDCALL
+#include <memory>
 
 // private headers
 #include "Command.h"
@@ -66,6 +67,8 @@ namespace dx{
 		}
 	};
 
+	typedef std::shared_ptr<DrawCall> shared_DrawCall_ptr;
+
 	class DrawIndexed: public DrawCall{
 
 		UINT m_nIndexes;		// how much indexes from the bound buffer to use
@@ -84,4 +87,6 @@ namespace dx{
 			pDeviceContext_p->DrawIndexed( m_nIndexes, m_iStartIndex, m_iBaseVertexLocation );
 		}
 	};
+
+	typedef std::shared_ptr<DrawIndexed> shared_DrawIndexed_ptr;
 }

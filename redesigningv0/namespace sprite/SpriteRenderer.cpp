@@ -8,17 +8,17 @@
 void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 {
 	static render::Drawable drawInst;
-	drawInst.m_PipeStatesGroup.resize(0);
+	drawInst.m_pipeStatesGroup.resize(0);
 
 	drawInst.m_sortKey = pSprite_p->m_renderSortKey.intRepresentation;
 	// shader
-	drawInst.m_PipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pPipeState);
+	drawInst.m_pipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pPipeState);
 	// vb
-	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
 	// camera
-	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
 	// sprite
-	drawInst.m_PipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
 
 	// draw call
 	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
@@ -28,17 +28,17 @@ void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
 {
 	static render::Drawable drawInst;
-	drawInst.m_PipeStatesGroup.resize(0);
+	drawInst.m_pipeStatesGroup.resize(0);
 
 	drawInst.m_sortKey = pSprite_p->m_sortKey.intRepresentation;
 	// shader
-	drawInst.m_PipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
+	drawInst.m_pipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
 	// vb
-	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
 	// camera
-	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
 	// sprite
-	drawInst.m_PipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+	drawInst.m_pipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
 
 	// draw call
 	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
@@ -51,17 +51,17 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent *pSprite_p, Camera *p
 	// NOTE/TODO: even the given pointer being on the stack, shared ptr still allocates for the ref ctrl..
 
 	static render::Drawable drawInst;
-	drawInst.m_PipeStatesGroup.resize(0);
+	drawInst.m_pipeStatesGroup.resize(0);
 
 	drawInst.m_sortKey = pSprite_p->m_sortKey.intRepresentation;
 	// shader
-	drawInst.m_PipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
+	drawInst.m_pipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
 	// vb
-	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
 	// camera
-	drawInst.m_PipeStatesGroup.push_back( dx::shared_State_ptr(&pCamera_p->m_pipeState, &gen::NoOp<dx::State>)  );
+	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&pCamera_p->m_pipeState, &gen::NoOp<dx::State>)  );
 	// sprite
-	drawInst.m_PipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+	drawInst.m_pipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
 
 	// draw call
 	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);

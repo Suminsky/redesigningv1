@@ -35,8 +35,8 @@ namespace render{
 
 	public:
 
-		dx::statevec m_PipeStatesGroup;					// binder commands
-		std::shared_ptr<dx::DrawCall> m_pDrawCall;	// draw
+		dx::StateGroup m_pipeStatesGroup;					// binder commands
+		dx::shared_DrawCall_ptr m_pDrawCall;				// draw
 
 		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
 
@@ -54,11 +54,11 @@ namespace render{
 		UINT64 GetKey()const{
 			return m_sortKey;
 		}
-		dx::statevec* GetPipeStateGroup(){
+		dx::StateGroup* GetPipeStateGroup(){
 
-			return &m_PipeStatesGroup;
+			return &m_pipeStatesGroup;
 		}
-		std::shared_ptr<dx::DrawCall> GetDrawCall() const{
+		dx::shared_DrawCall_ptr GetDrawCall() const{
 			return m_pDrawCall;
 		}
 

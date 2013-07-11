@@ -101,20 +101,31 @@ namespace sprite{
 	// bind command specialized for drawable cbuffer
 	//========================================================================
 	class BindVSDrawableCBuffer: public dx::Binder{
-	public:
+	private:
 		UINT m_iStartSlot;
+	public:
 		ID3D11Buffer *m_pConstantBuffer;
 		shared_DrawableCbuffer_ptr m_pConstantBufferData;
-
+	private:
 		static ID3D11Buffer *s_pConstantBufferBound;	// test: using to check if this buffer need to be bound
 
 	public:
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		BindVSDrawableCBuffer( ID3D11Buffer *pConstantBuffers_p,  const shared_DrawableCbuffer_ptr & pConstBufferData_p )
 			:
 		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
-			m_iStartSlot( 0 ), m_pConstantBuffer( pConstantBuffers_p ),
-			m_pConstantBufferData(pConstBufferData_p){}
+				m_iStartSlot( 0 ), m_pConstantBuffer( pConstantBuffers_p ),
+				m_pConstantBufferData(pConstBufferData_p)
+		{}
+
+		BindVSDrawableCBuffer()
+			:
+		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
+		m_iStartSlot( 0 )
+		{}
 
 		//------------------------------------------------------------------------
 		// Updates data to the buffer before binding it.

@@ -2,8 +2,6 @@
 /*
 	created:	2013/02/12
 	created:	12:2:2013   17:12
-	filename: 	C:\Users\Gateway\documents\visual studio 2010\Projects\redesigningv0\redesigningv0\namespace render\namespace dx\type wrappers\InputLayout.h
-	file path:	C:\Users\Gateway\documents\visual studio 2010\Projects\redesigningv0\redesigningv0\namespace render\namespace dx\type wrappers
 	file base:	InputLayout
 	file ext:	h
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
@@ -30,6 +28,7 @@
 #include <D3D11.h>
 #include <D3DX11core.h>	//including because of D3DERR_INVALIDCALL
 #include <string>
+#include <assert.h>
 
 //#include <boost/smart_ptr.hpp>
 
@@ -66,13 +65,11 @@ namespace dx{
 				if( !anotherDesc_p.szFilename.empty() ){
 
 					if( szFilename == anotherDesc_p.szFilename ) return true;
-
+					// TODO: compare desc
 					return false;
 				}
 				else{
-
-					if( memcmp( &tex2Ddesc, &anotherDesc_p.tex2Ddesc, sizeof(D3D11_TEXTURE2D_DESC)) == 0 )
-						return true;
+					assert(0); // use a name even if not from file
 
 					return false;
 				}

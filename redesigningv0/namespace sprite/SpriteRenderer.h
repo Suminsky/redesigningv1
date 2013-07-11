@@ -10,7 +10,7 @@
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
 	purpose:	generic tests
-				TODO
+				TODO: everything, this is a mess of tests that I should redo when I get stuff straight
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -64,9 +64,15 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		SpriteRenderer( dx::Device * pDevice_p ):m_spriteShaderRes("namespace sprite/SpriteV9.hlsl", 1),
-			m_blends(pDevice_p), m_texs(pDevice_p), m_samplers(pDevice_p), m_drawIndexed(6){
-		};
+		SpriteRenderer( dx::Device * pDevice_p )
+			:
+		m_spriteShaderRes("namespace sprite/SpriteV9.hlsl", 1),
+		m_blends(pDevice_p),
+		m_texs(pDevice_p),
+		m_samplers(pDevice_p),
+		m_drawIndexed(6)
+		{}
+
 		SpriteRenderer(): m_drawIndexed(6){}
 		virtual ~SpriteRenderer(){};
 

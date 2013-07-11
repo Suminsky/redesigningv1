@@ -197,12 +197,8 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// What this object binds?
 		//------------------------------------------------------------------------
-		UINT64 TypeBits() const {
-			return m_typeBits;
-		}
-		E_BIND TypeIndex() const {
-			return m_typeIndex;
-		}
+		UINT64 TypeBits() const { return m_typeBits;	}
+		E_BIND TypeIndex() const { return m_typeIndex;	}
 	};
 
 	typedef std::shared_ptr<Binder> shared_Binder_ptr;
@@ -254,24 +250,18 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// Iterators
 		//------------------------------------------------------------------------
-		bindervec::const_iterator Begin(){
-			return m_binds.begin();
-		}
-		bindervec::const_iterator End(){
-			return m_binds.end();
-		}
+		bindervec::const_iterator Begin(){	return m_binds.begin();	}
+		bindervec::const_iterator End(){	return m_binds.end();	}
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		UINT64 GetStateMask()const{
-			return m_stateMask;
-		}
+		UINT64 GetStateMask()const{	return m_stateMask;	}
 	};
 
 
 	typedef std::shared_ptr<State> shared_State_ptr;
-	typedef std::vector<shared_State_ptr> statevec;
+	typedef std::vector<shared_State_ptr> StateGroup;
 }
 
 //========================================================================
