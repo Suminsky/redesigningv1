@@ -8,9 +8,12 @@ using namespace win;
 HighPerformanceTimer::HighPerformanceTimer( DOUBLE interval_ms_p /*= 500.0f*/ ):m_cronometer(m_counterFrequency_inverse), m_fpi(interval_ms_p){
 
 	QueryPerformanceFrequency( &m_counterFrequency );
+	//DOUBLE test = (double)m_counterFrequency.QuadPart; seems like no info is lost in that conversion
+	//test = test;
 	m_counterFrequency_inverse = 1.0 / (DOUBLE)m_counterFrequency.QuadPart;
 
-	m_nFrameCount = 0L;
+	m_nFrameCount = 0LL;
+	m_nCounts_persistent = 0LL;
 }
 //=====================================================================================================================
 //paired:
@@ -50,7 +53,7 @@ VOID HighPerformanceTimer::Cronometer::EndCountMilliseconds( DOUBLE &msec ){
 	msec = (nCounts_sinceStartCount * m_counterFrequency_inverse)*1000.0;
 
 	//reset m_startCount_cache
-	m_startCount_cache.QuadPart = 0L;
+	m_startCount_cache.QuadPart = 0LL;
 }
 VOID HighPerformanceTimer::Cronometer::EndCountFrameCount(LONGLONG &nCount){
 

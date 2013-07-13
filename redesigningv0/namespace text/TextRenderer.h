@@ -130,7 +130,11 @@ namespace text{
 			// create a drawable for all glyphs
 
 			render::Drawable drawable;
-			drawable.m_sortKey = 0LL;drawable.m_sortKey = 1;
+			sprite::SortMask sorMask = {0};
+			sorMask.bitField.layer = 3;
+			drawable.m_sortKey = sorMask.intRepresentation;//0LL;//drawable.m_sortKey = 1;
+			
+
 			
 			drawable.m_pipeStatesGroup = m_textRenderStates; // common data
 			drawable.m_pDrawCall = m_textDrawCall;
@@ -141,6 +145,8 @@ namespace text{
 			m_textureState.AddBinderCommand(
 				dx::shared_Binder_ptr( &m_pSpriteRendererRef->m_samplers.GetSamplerBind(sprite::E_NONE), &gen::NoOp<dx::Binder>)
 				);
+			m_textureState.AddBinderCommand(
+				dx::shared_Binder_ptr( &m_pSpriteRendererRef->m_blends.GetBlendBind(sprite::E_ALPHA_BLENDED), &gen::NoOp<dx::Binder>));
 
 			// add to drawable
 
@@ -152,7 +158,7 @@ namespace text{
 
 			// color (common to all glyphs, but per drawable too)
 			
-			glyphRenderData.cbufferData.m_color.x = 0.5f;
+			glyphRenderData.cbufferData.m_color.x = //0.5f;
 			glyphRenderData.cbufferData.m_color.y = 
 			glyphRenderData.cbufferData.m_color.z = 
 			glyphRenderData.cbufferData.m_color.w = 1.0f;
@@ -160,6 +166,7 @@ namespace text{
 			
 			UINT itChar = 0;
 			float fPosOffsetX = 0.0f;
+			float fPosOffsetY = 0.0f;
 			while( szText_p[itChar] != 0x0000 ){
 
 				// handle spaces
@@ -170,21 +177,32 @@ namespace text{
 					++itChar;
 					continue;
 				}
+				else if(szText_p[itChar] == L'\n' ){
+
+					fPosOffsetY -= m_fonts[iFontID].GetMinNewLineHeight() + 1.0f;
+					fPosOffsetX = 0.0f;
+					++itChar;
+					continue;
+				}
 
 
 				// set data specific to each glyph
-				
-				// pos
-				pos_p.x += fPosOffsetX;
-				glyphRenderData.cbufferData.m_mWorld = DirectX::XMMatrixIdentity();
-				glyphRenderData.cbufferData.m_mWorld.r[3] =  DirectX::XMLoadFloat4( &pos_p );
 
 				GlyphRect uv = m_fonts[iFontID].GetGlyphUV( szText_p[itChar] );
 
 				//res
 				glyphRenderData.cbufferData.m_res.x = uv.Width * 1024;
 				glyphRenderData.cbufferData.m_res.y = uv.Height * 74.0f;
-				fPosOffsetX += glyphRenderData.cbufferData.m_res.x;
+				float halfWidth = glyphRenderData.cbufferData.m_res.x * 0.5f;
+				// pos
+				DirectX::XMFLOAT4 pos = pos_p;
+				fPosOffsetX += halfWidth;
+				pos.x += fPosOffsetX;
+				pos.y += fPosOffsetY;
+				//pos_p.x += fPosOffsetX;
+				glyphRenderData.cbufferData.m_mWorld = DirectX::XMMatrixIdentity();
+				glyphRenderData.cbufferData.m_mWorld.r[3] =  DirectX::XMLoadFloat4( &pos );
+				fPosOffsetX += halfWidth + 1.0f;
 
 				// uv
 				glyphRenderData.cbufferData.m_uvRect = DirectX::XMFLOAT4( uv.X, uv.Y, uv.Width, uv.Height );
@@ -192,13 +210,14 @@ namespace text{
 				// bind cbuffer command
 
 				glyphRenderData.bindDrawableCbuffer.m_pConstantBuffer = m_pGlyphBufferInterface;
-				glyphRenderData.bindDrawableCbuffer.m_pConstantBufferData.reset( &glyphRenderData.cbufferData, &gen::NoOp<sprite::DrawableCbuffer> );
+
+				m_glyphsRenderData.push_back( glyphRenderData ); // save glyph render data
+
+				m_glyphsRenderData[m_glyphsRenderData.size()-1].bindDrawableCbuffer.m_pConstantBufferData.reset( &m_glyphsRenderData[m_glyphsRenderData.size()-1].cbufferData, &gen::NoOp<sprite::DrawableCbuffer> );
 				
 				// create render state for this glyph
 
-				glyphRenderData.state.AddBinderCommand( dx::shared_Binder_ptr( &glyphRenderData.bindDrawableCbuffer, &gen::NoOp<dx::Binder> ) );
-				
-				m_glyphsRenderData.push_back( glyphRenderData ); // save glyph render data
+				m_glyphsRenderData[m_glyphsRenderData.size()-1].state.AddBinderCommand( dx::shared_Binder_ptr( &m_glyphsRenderData[m_glyphsRenderData.size()-1].bindDrawableCbuffer, &gen::NoOp<dx::Binder> ) );
 				
 				drawable.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_glyphsRenderData[m_glyphsRenderData.size()-1].state, &gen::NoOp<dx::State> ) );
 

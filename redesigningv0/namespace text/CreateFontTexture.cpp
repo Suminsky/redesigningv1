@@ -124,7 +124,44 @@ bool text::CreateFontFiles(	const char* szFilenmae_p,
 			}
 		}
 
+		//////========================================================================
+		////// 
+		//////========================================================================
+		////int minY = 0;
+		////for(int y = 0; y < tempSize; ++y){
+		////	for(int x = 0; x < tempSize; ++x){
+
+		////		Color color;
+		////		if( drawSingleCharBitmap.GetPixel( x, y, &color ) != Gdiplus::Ok ){ GdiplusShutdown(token);return false; }
+
+		////		if(color.GetAlpha() > 0){
+
+		////			minY = y;
+		////			y = tempSize;
+		////			break;
+		////		}
+		////	}
+		////}
+
+		////// Figure out the amount of blank space after the character
+
+		////int maxY = tempSize - 1;
+		////for(int y = tempSize - 1; y >= 0; --y){
+		////	for(int x = 0; x < tempSize; ++x){
+
+		////		Color color;
+		////		if( drawSingleCharBitmap.GetPixel(x, y, &color) != Gdiplus::Ok ){ GdiplusShutdown(token);return false; }
+		////		if(color.GetAlpha() > 0){
+
+		////			maxY = y;
+		////			y = -1;
+		////			break;
+		////		}
+		////	}
+		////}
+
 		int charWidth = maxX - minX + 1;
+		////int charH = maxY - minY + 1;
 
 		// Figure out if we need to move to the next row
 
@@ -145,6 +182,9 @@ bool text::CreateFontFiles(	const char* szFilenmae_p,
 
 		int height = static_cast<int>(charHeight + 0.5f);
 		if( textureGraphics.DrawImage( &drawSingleCharBitmap, currentX, currentY, minX, 0, charWidth, height, UnitPixel ) != Gdiplus::Ok ){ GdiplusShutdown(token);return false; }
+
+		////charDescs_out_p[i].Y =		(float)(minY + currentY) /  (float)iTextureHeight;
+		////charDescs_out_p[i].Height =  (float)charH /  (float)iTextureHeight;
 
 		currentX += charWidth + 1;
 	}

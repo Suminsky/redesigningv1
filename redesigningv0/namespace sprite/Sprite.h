@@ -38,20 +38,32 @@ namespace sprite{
 	// Used to sort the draw calls
 	// This level of the rendering cant worry about this more specific stuff!
 	//------------------------------------------------------------------------
+	//union SortMask{
+
+	//	struct{
+
+	//		UINT layer			: 2;	// 4 layers: game, HUD, full screen effect...
+	//		UINT viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
+	//		UINT viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
+	//		UINT transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
+	//		UINT Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+	//		UINT shaderID		: 15;
+	//		UINT textureID		: 15;
+	//	} bitField;
+
+	//	UINT64 intRepresentation;
+	//};
 	union SortMask{
-
 		struct{
-
-			UINT layer			: 2;	// 4 layers: game, HUD, full screen effect...
-			UINT viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
-			UINT viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
-			UINT transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
-			UINT Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
-			UINT shaderID		: 15;
-			UINT textureID		: 15;
+			unsigned int viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
+			unsigned int viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
+			unsigned int transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
+			unsigned int Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+			unsigned int shaderID		: 15;
+			unsigned int textureID		: 15;
+			unsigned int layer			: 2;	// 4 layers: game, HUD, full screen effect...
 		} bitField;
-
-		UINT64 intRepresentation;
+		unsigned __int64 intRepresentation;
 	};
 
 	class SpriteRenderer;

@@ -74,9 +74,9 @@ namespace win{
 			
 			FPI( const DOUBLE interval_p):m_timeInterval_ms(interval_p), m_nTimeElapsed_accum_ms_tmp(0.0){}
 
-			void Reset( const DOUBLE interval_p ){
+			void Reset( const DOUBLE interval_ms_p ){
 
-				m_timeInterval_ms = interval_p;
+				m_timeInterval_ms = interval_ms_p;
 				m_nTimeElapsed_accum_ms_tmp = 0.0;
 			}
 			BOOL FpI( const DOUBLE &deltaMS );//frames per interval(delta inputed)
@@ -92,6 +92,12 @@ namespace win{
 		// ctor
 		//------------------------------------------------------------------------
 		HighPerformanceTimer( DOUBLE interval_ms_p = 500.0f);
+
+		//------------------------------------------------------------------------
+		// getters
+		//------------------------------------------------------------------------
+		DOUBLE GetInverseFrequency() const { return m_counterFrequency_inverse; }
+		LARGE_INTEGER GetFrequency() const { return m_counterFrequency; }
 
 		//------------------------------------------------------------------------------------------------------
 		// per frame
