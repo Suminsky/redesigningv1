@@ -39,6 +39,8 @@ namespace text{
 		GlyphRect	*	charUVRects;
 		float			fSpaceWidth;
 		float			fNewLineMinHeight;
+		int				iTextureWidth;
+		int				iTextureHeight;
 	};
 
 	struct MorpherUnion{

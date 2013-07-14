@@ -32,8 +32,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ButtonComponent( const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
-		ButtonComponent( const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
+		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
+		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
 
 		void SetHoverImage(){
 
@@ -56,7 +56,12 @@ namespace game{
 		//------------------------------------------------------------------------
 		// use for mouse collision
 		//------------------------------------------------------------------------
-		bool GetPointCollision( DirectX::XMFLOAT2 mouseXY_p );	
+		bool GetPointCollision( DirectX::XMFLOAT2 mouseXY_p );
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		int GetID() const { return m_ID; }
 
 		private:
 
@@ -64,6 +69,7 @@ namespace game{
 		DirectX::XMFLOAT4 m_uv_Normal, m_uv_Hover, m_uv_Pressed;
 		DirectX::XMFLOAT2 m_borderGap;	// used to make the "collision box" smaller
 		E_STATE m_eState;
+		int m_ID;
 	};
 
 	typedef std::shared_ptr<ButtonComponent> shared_ButtonComponent_ptr;

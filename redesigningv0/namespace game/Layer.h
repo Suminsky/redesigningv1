@@ -54,24 +54,23 @@ namespace game{
 
 			assert( object_p->m_currentLayerIndex == INVALID_OBJECTINDEX );
 
-			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
 			object_p->m_pLayerOwner = this;
+			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
 			m_objects.push_back(std::move(object_p));
-			
 		}
 		void AddObject( const shared_Object_ptr & object_p ){
 
 			assert( object_p->m_currentLayerIndex == INVALID_OBJECTINDEX );
 
-			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
 			object_p->m_pLayerOwner = this;
+			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
 			m_objects.push_back(object_p);
 		}
 		//
 		void RmeoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
 
 			m_removedObjects.push_back( objectCurrentIndex_p );
-			m_objects[objectCurrentIndex_p]->m_currentLayerIndex = INVALID_OBJECTINDEX;
+			//m_objects[objectCurrentIndex_p]->m_currentLayerIndex = INVALID_OBJECTINDEX;
 		}
 
 		//------------------------------------------------------------------------
@@ -145,14 +144,17 @@ namespace game{
 			unsigned int nDestroyed = (unsigned int)m_removedObjects.size(); // cache
 			unsigned int nObjects = (unsigned int)m_objects.size();
 
-			if( nDestroyed == nObjects ){
+			//if( nDestroyed == nObjects ){
 
-				m_objects.clear();
-				m_removedObjects.clear();
-				return;
-			}
+			//	m_objects.clear();
+			//	m_removedObjects.clear();
+			//	return;
+			//}
 
 			for( unsigned int it = 0, itLast = nObjects - 1; it < nDestroyed; ++it ){
+
+				m_objects[m_removedObjects[it]]->m_currentLayerIndex = INVALID_OBJECTINDEX;
+				m_objects[m_removedObjects[it]]->m_pLayerOwner = nullptr;
 
 				// check if "to be removed" already at end
 

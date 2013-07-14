@@ -60,10 +60,22 @@ namespace text{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		TextRenderer( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p)
+		TextRenderer( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p )
 			:
 		m_pSpriteRendererRef(&spriteRenderer_p)
 		{
+			Initialize( pDevice_p, spriteRenderer_p );
+		}
+
+		TextRenderer(){}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Initialize( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p ){
+
+			m_pSpriteRendererRef = &spriteRenderer_p;
+
 			// creates a ID3DBuffer for the vs constant buffer
 
 			dx::BufferResource::CreationParams cbufferParams;
@@ -81,7 +93,7 @@ namespace text{
 			// creates the render state holding binds commom to all glyphs
 			// caralho d referencias, nao posso mudar essas porra, pq sao usadas em otros lugares
 			// TODO: TEM q t um cache pra todos os binders usados no jogo
-			
+
 			m_textRenderStates.push_back( dx::shared_State_ptr(&m_pSpriteRendererRef->m_defaultVertexInput, &gen::NoOp<dx::State>) );
 			m_textRenderStates.push_back( m_pSpriteRendererRef->m_spriteShaderRes.m_permutations[0].m_pPipeState );
 			m_textRenderStates.push_back( dx::shared_State_ptr(&m_pSpriteRendererRef->m_camera.m_pipeState, &gen::NoOp<dx::State>) );
@@ -106,13 +118,18 @@ namespace text{
 
 			/*for( int it = 0, size = (int)m_drawableGlyphs.size(); it < size; ++it ){
 
-				m_pSpriteRendererRef->m_queue.Submit( &m_drawableGlyphs[it] );
+			m_pSpriteRendererRef->m_queue.Submit( &m_drawableGlyphs[it] );
 			}*/
+
+			//m_drawableGlyphs.clear();
+			//m_glyphsRenderData.clear();
+			//m_textureState.m_binds.clear();m_textureState.m_stateMask = 0;
 		}
 
 		void DrawText( const WCHAR * szText_p, DirectX::XMFLOAT4 pos_p, UINT iFontID = 0 ){
 
-			//m_drawableGlyphs.clear();
+			if( szText_p[0] == 0 ) return;
+			m_drawableGlyphs.clear();
 			m_glyphsRenderData.clear();
 			m_textureState.m_binds.clear();m_textureState.m_stateMask = 0;
 
@@ -120,10 +137,14 @@ namespace text{
 			// other objects that will only release on destruction.
 			// The only thing created here is for glyph data, those need to be preserved till rendering
 			// is done, so thats why theres an array of glyphrenderdata, this array stores drawable(cbuffer)
-			// data and its binder command.
+			// data and its binder command. when to clear it?
+
+			// NOTE: since im submitting direct to the queue, means I cant call this more than once before
+			// rastering the queue, cause calling this will clear data holded for the glyphs, I must do like
+			// I was doing in the beggining. TODO NOW
 			
 			int nGlyphs = CountWString(szText_p);
-			//m_drawableGlyphs.reserve(nGlyphs);
+			m_drawableGlyphs.reserve(nGlyphs);
 			m_glyphsRenderData.reserve(nGlyphs);
 			
 
@@ -138,7 +159,7 @@ namespace text{
 			
 			drawable.m_pipeStatesGroup = m_textRenderStates; // common data
 			drawable.m_pDrawCall = m_textDrawCall;
-
+			//drawable.m_pipeStatesGroup.insert( drawable.m_pipeStatesGroup.cend(),  m_textRenderStates.begin(), m_textRenderStates.end() );
 			// render data
 
 			m_textureState.AddBinderCommand( m_fonts[iFontID].GetTextureBinder() ); // texture used for that text
@@ -191,8 +212,8 @@ namespace text{
 				GlyphRect uv = m_fonts[iFontID].GetGlyphUV( szText_p[itChar] );
 
 				//res
-				glyphRenderData.cbufferData.m_res.x = uv.Width * 1024;
-				glyphRenderData.cbufferData.m_res.y = uv.Height * 74.0f;
+				glyphRenderData.cbufferData.m_res.x = uv.Width * (float)m_fonts[iFontID].GetTextureWidth();
+				glyphRenderData.cbufferData.m_res.y = uv.Height * (float)m_fonts[iFontID].GetTextureHeight();
 				float halfWidth = glyphRenderData.cbufferData.m_res.x * 0.5f;
 				// pos
 				DirectX::XMFLOAT4 pos = pos_p;
@@ -237,7 +258,7 @@ namespace text{
 		Fonts m_fonts;
 
 		GlyphsRenderData m_glyphsRenderData;
-		//std::vector<render::Drawable> m_drawableGlyphs;
+		std::vector<render::Drawable> m_drawableGlyphs;
 
 		dx::StateGroup m_textRenderStates;
 		dx::shared_DrawCall_ptr m_textDrawCall;

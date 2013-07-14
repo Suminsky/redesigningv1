@@ -42,8 +42,8 @@ namespace text{
 
 			m_fSpaceWidth = fontDesc_p.fSpaceWidth;
 			m_fNewLineMinHeight = fontDesc_p.fNewLineMinHeight;
-			//m_iTextureW = 
-			//m_iTextureH = 
+			m_iTextureW = fontDesc_p.iTextureWidth;
+			m_iTextureH = fontDesc_p.iTextureHeight;
 
 			for( int it = 0; it < fontDesc_p.nCharacteres; ++it ){
 
@@ -90,6 +90,8 @@ namespace text{
 			 }
 		}
 		dx::shared_Binder_ptr & GetTextureBinder(){ return m_textureSRVBinder; }
+		int GetTextureWidth()const{return m_iTextureW;}
+		int GetTextureHeight()const{return m_iTextureH;}
 
 
 	private:

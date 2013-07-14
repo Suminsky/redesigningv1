@@ -152,7 +152,9 @@
     <ClInclude Include="Mentle\InGame\InputMapper.h" />
     <ClInclude Include="Mentle\InGame\MentleCardComponent.h" />
     <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
+    <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
+    <ClInclude Include="Mentle\MainMenu\PlayOptionsLayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
     <ClInclude Include="namespace game\Component.h" />
@@ -237,7 +239,9 @@
     <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
     <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
+    <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
+    <ClCompile Include="Mentle\MainMenu\PlayOptionsLayer.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenu.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />

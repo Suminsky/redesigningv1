@@ -145,7 +145,7 @@ namespace sound{
 						break;
 					}
 					else{
-						MessageBox(0, "Music sample size bigger than supported buffer..STUCK", "sound error", MB_E );
+						//MessageBox(0, "Music sample size bigger than supported buffer..STUCK", "sound error", MB_E );
 						continue;
 					}
 				}

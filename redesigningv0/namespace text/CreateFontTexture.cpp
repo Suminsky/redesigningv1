@@ -268,6 +268,8 @@ bool text::CreateFontFiles(	const char* szFilenmae_p,
 	fontDesc.charUVRects = charDescs_out_p;
 	fontDesc.fSpaceWidth = sizeRect.Width;
 	fontDesc.fNewLineMinHeight = charHeight;
+	fontDesc.iTextureWidth = iTextureWidth_p;
+	fontDesc.iTextureHeight = iTextureHeight;
 
 	DWORD nBytesWritten = 0;
 
@@ -280,20 +282,10 @@ bool text::CreateFontFiles(	const char* szFilenmae_p,
 	WriteFile( hFile, (LPCVOID)fontDesc.charUVRects,		sizeof(GlyphRect)*fontDesc.nCharacteres,(LPDWORD)&nBytesWritten, &fileOffset );
 	WriteFile( hFile, (LPCVOID)&fontDesc.fSpaceWidth,		sizeof(float),							(LPDWORD)&nBytesWritten, &fileOffset );
 	WriteFile( hFile, (LPCVOID)&fontDesc.fNewLineMinHeight,	sizeof(float),							(LPDWORD)&nBytesWritten, &fileOffset );
+	WriteFile( hFile, (LPCVOID)&fontDesc.iTextureWidth,		sizeof(int),							(LPDWORD)&nBytesWritten, &fileOffset );
+	WriteFile( hFile, (LPCVOID)&fontDesc.iTextureHeight,	sizeof(int),							(LPDWORD)&nBytesWritten, &fileOffset );
 
 	CloseHandle( hFile );
-
-	// Create the shader resource view
-	
-	//dx::ShaderResourceView::CreationParams SRVparams;
-	//SRVparams.desc.pResourceData = pTex2D;
-	//SRVparams.desc.srvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	//SRVparams.desc.srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	//SRVparams.desc.srvDesc.Texture2D.MipLevels = 1;
-	//SRVparams.desc.srvDesc.Texture2D.MostDetailedMip = 0;
-
-	//ID3D11ShaderResourceView *pSRV;
-	//device_p.m_pCacheSRV->Acquire( SRVparams, pSRV );
 	}
 
 	GdiplusShutdown(token);
@@ -367,6 +359,17 @@ bool text::ReadFontDescFromFile( const char * szFontDescFilename_p, BmpFontDesc 
 	// read new line height
 
 	fontDesc_p.fNewLineMinHeight = data.GetChunkAs<float>(iByteIndex);
+	iByteIndex += sizeof(float);
+
+	// read texture wiidth:
+
+	fontDesc_p.iTextureWidth = data.GetChunkAs<int>(iByteIndex);
+	iByteIndex += sizeof(int);
+
+	// read texture height:
+
+	fontDesc_p.iTextureHeight = data.GetChunkAs<int>(iByteIndex);
+
 
 	delete data.m_data;
 

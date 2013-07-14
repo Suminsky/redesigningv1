@@ -3,9 +3,11 @@
 using namespace game;
 using namespace DirectX;
 
-game::ButtonComponent::ButtonComponent( const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
+game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
+
+	m_ID = iID_p;
 
 	m_uv_Normal = pSpriteCompo_p->m_renderData.m_uvRect;
 	m_uv_Hover = uvHover_p;
@@ -16,9 +18,11 @@ game::ButtonComponent::ButtonComponent( const shared_SpriteComponent_ptr & pSpri
 
 	m_eState = E_STATE_NORMAL;
 }
-game::ButtonComponent::ButtonComponent( const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, XMFLOAT4 uvPressed_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
+game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, XMFLOAT4 uvPressed_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
+
+	m_ID = iID_p;
 
 	m_uv_Normal = pSpriteCompo_p->m_renderData.m_uvRect;
 	m_uv_Hover = uvHover_p;

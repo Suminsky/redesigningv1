@@ -61,7 +61,7 @@ namespace sound{
 		//------------------------------------------------------------------------
 		// initializes all the voices with the same configuration
 		//------------------------------------------------------------------------
-		bool InitTracks(	IXAudio2 * pXAudio_p, WAVEFORMATEX & waveFormat_p,
+		bool InitializeTracks(	IXAudio2 * pXAudio_p, WAVEFORMATEX & waveFormat_p,
 							UINT32 iFlags_p = 0, float fMaxFrquenceRatio_p = XAUDIO2_DEFAULT_FREQ_RATIO,
 							IXAudio2VoiceCallback	* pCallback_p		= nullptr,
 							XAUDIO2_VOICE_SENDS		* pSendList_p		= nullptr,
