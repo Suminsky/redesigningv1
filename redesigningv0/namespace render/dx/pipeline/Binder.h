@@ -9,6 +9,7 @@
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	This is a command pattern class.
+				Binds stuff to the dx render trough given device context.
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */
@@ -19,6 +20,7 @@
 // system/standard headers
 
 #include <vector>
+#include <assert.h>
 //#include <boost/smart_ptr.hpp>
 
 // private headers
@@ -27,82 +29,80 @@
 
 namespace dx{
 
-	//namespace { that shit causes link error
+
+	enum E_BIND{
+
+		E_IA_InputLayout = 0,
+
+		E_IA_VertexBuffer0,
+		E_IA_VertexBuffer1,
+		E_IA_VertexBuffer2,
+		E_IA_VertexBuffer3,
+		E_IA_VertexBuffer4,
+
+		E_IA_IndexBuffer,
+		E_IA_PrimitiveTopology,
+
+		E_VertexShader,
+		E_PixelShader,
+
+		E_VS_CBuffer0,
+		E_VS_CBuffer1,
+		E_VS_CBuffer2,
+		E_VS_CBuffer3,
+
+		E_GS_CBuffer0,
+		E_GS_CBuffer1,
+		E_GS_CBuffer2,
+		E_GS_CBuffer3,
+
+		E_PS_CBuffer0,
+		E_PS_CBuffer1,
+		E_PS_CBuffer2,
+		E_PS_CBuffer3,
+
+		E_VS_ShaderResourceView0,
+		E_VS_ShaderResourceView1,
+		E_VS_ShaderResourceView2,
+		E_VS_ShaderResourceView3,
+
+		E_GS_ShaderResourceView0,
+		E_GS_ShaderResourceView1,
+		E_GS_ShaderResourceView2,
+		E_GS_ShaderResourceView3,
+
+		E_PS_ShaderResourceView0,
+		E_PS_ShaderResourceView1,
+		E_PS_ShaderResourceView2,
+		E_PS_ShaderResourceView3,
+
+		E_VS_Sampler0,
+		E_VS_Sampler1,
+		E_VS_Sampler2,
+		E_VS_Sampler3,
+
+		E_GS_Sampler0,
+		E_GS_Sampler1,
+		E_GS_Sampler2,
+		E_GS_Sampler3,
+
+		E_PS_Sampler0,
+		E_PS_Sampler1,
+		E_PS_Sampler2,
+		E_PS_Sampler3,
+
+		E_RS_ViewPort,
+		E_RS_Scissor,
+		E_RS_RasterizerState,
+
+		E_OM_RenderTargetDepthStencil,
+		E_OM_DepthStencilState,
+		E_OM_BlendState,
+
+		E_MAX_BINDS
+	};
+
 #pragma region constants
-
-		enum E_BIND{
-
-			E_IA_InputLayout = 0,
-
-			E_IA_VertexBuffer0,
-			E_IA_VertexBuffer1,
-			E_IA_VertexBuffer2,
-			E_IA_VertexBuffer3,
-			E_IA_VertexBuffer4,
-
-			E_IA_IndexBuffer,
-			E_IA_PrimitiveTopology,
-
-			E_VertexShader,
-			E_PixelShader,
-
-			E_VS_CBuffer0,
-			E_VS_CBuffer1,
-			E_VS_CBuffer2,
-			E_VS_CBuffer3,
-
-			E_GS_CBuffer0,
-			E_GS_CBuffer1,
-			E_GS_CBuffer2,
-			E_GS_CBuffer3,
-
-			E_PS_CBuffer0,
-			E_PS_CBuffer1,
-			E_PS_CBuffer2,
-			E_PS_CBuffer3,
-
-			E_VS_ShaderResourceView0,
-			E_VS_ShaderResourceView1,
-			E_VS_ShaderResourceView2,
-			E_VS_ShaderResourceView3,
-
-			E_GS_ShaderResourceView0,
-			E_GS_ShaderResourceView1,
-			E_GS_ShaderResourceView2,
-			E_GS_ShaderResourceView3,
-
-			E_PS_ShaderResourceView0,
-			E_PS_ShaderResourceView1,
-			E_PS_ShaderResourceView2,
-			E_PS_ShaderResourceView3,
-
-			E_VS_Sampler0,
-			E_VS_Sampler1,
-			E_VS_Sampler2,
-			E_VS_Sampler3,
-
-			E_GS_Sampler0,
-			E_GS_Sampler1,
-			E_GS_Sampler2,
-			E_GS_Sampler3,
-
-			E_PS_Sampler0,
-			E_PS_Sampler1,
-			E_PS_Sampler2,
-			E_PS_Sampler3,
-
-			E_RS_ViewPort,
-			E_RS_Scissor,
-			E_RS_RasterizerState,
-
-			E_OM_RenderTargetDepthStencil,
-			E_OM_DepthStencilState,
-			E_OM_BlendState,
-
-			E_MAX_BINDS
-		};
-
-	// NOTE: you cant bind textures, dx needs a view
 
 	static const UINT64 IA_InputLayout = 1LL << 0;
 
@@ -176,10 +176,8 @@ namespace dx{
 
 #pragma endregion
 
-	//========================================================================
-	// Binds stuff to the dx render trough given device context.
-	//========================================================================
 	class Binder: public Command{
+
 	protected:
 
 		UINT64 m_typeBits;
@@ -202,66 +200,6 @@ namespace dx{
 	};
 
 	typedef std::shared_ptr<Binder> shared_Binder_ptr;
-	typedef std::vector<shared_Binder_ptr> bindervec;
-	
-
-	//========================================================================
-	// A collection of bind commands.
-	// Its good to have collections to share common sets, like a shader that
-	// have default values, materials, etc..
-	//========================================================================
-	class State{
-
-	public:
-		
-		bindervec m_binds;
-		UINT64 m_stateMask;
-
-	public:
-
-		//------------------------------------------------------------------------
-		// ctor/dctor
-		//------------------------------------------------------------------------
-		State(){}
-		~State(){}
-
-		//------------------------------------------------------------------------
-		// Adds a command updating the state mask
-		//------------------------------------------------------------------------
-		void AddBinderCommand( const shared_Binder_ptr & binder_p ){
-
-			m_binds.push_back(binder_p);
-			m_stateMask &= binder_p->TypeBits();
-		}
-		/*void AddBinderCommand( shared_Binder_ptr && binder_p ){
-
-			m_binds.push_back(binder_p);
-			m_stateMask &= binder_p->TypeBits();
-		}*/
-		//------------------------------------------------------------------------
-		// Adds a command updating the state mask
-		//------------------------------------------------------------------------
-		/*void AddBinderCommand( Binder * binder_p ){
-
-			m_binds.push_back(shared_Binder_ptr(binder_p));
-			m_stateMask &= binder_p->TypeBits();
-		}*/
-
-		//------------------------------------------------------------------------
-		// Iterators
-		//------------------------------------------------------------------------
-		bindervec::const_iterator Begin(){	return m_binds.begin();	}
-		bindervec::const_iterator End(){	return m_binds.end();	}
-
-		//------------------------------------------------------------------------
-		// getters
-		//------------------------------------------------------------------------
-		UINT64 GetStateMask()const{	return m_stateMask;	}
-	};
-
-
-	typedef std::shared_ptr<State> shared_State_ptr;
-	typedef std::vector<shared_State_ptr> StateGroup;
 }
 
 //========================================================================

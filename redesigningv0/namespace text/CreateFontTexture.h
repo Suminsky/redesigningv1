@@ -45,7 +45,7 @@ namespace text{
 
 	struct MorpherUnion{
 
-		int SIZE;
+		unsigned int SIZE;
 		unsigned char *m_data;
 
 		//------------------------------------------------------------------------

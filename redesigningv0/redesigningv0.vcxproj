@@ -139,7 +139,7 @@
       <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
@@ -177,6 +177,7 @@
     <ClInclude Include="namespace net\Packet.h" />
     <ClInclude Include="namespace net\PeerHost.h" />
     <ClInclude Include="namespace net\Socket.h" />
+    <ClInclude Include="namespace render\dx\pipeline\State.h" />
     <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="namespace net\PeerHost.cpp" />
     <ClCompile Include="namespace net\Socket.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
+    <ClCompile Include="namespace render\dx\pipeline\State.cpp" />
     <ClCompile Include="namespace sound\FinitSoundTracks.cpp" />
     <ClCompile Include="namespace sound\sound.cpp" />
     <ClCompile Include="namespace sound\SoundScreamer.cpp" />

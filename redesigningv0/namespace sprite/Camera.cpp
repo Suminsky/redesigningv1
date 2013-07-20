@@ -7,7 +7,7 @@ using namespace DirectX;
 
 void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p )
 {
-	m_pipeState.m_binds.resize(0);
+	m_pipeState.Reset(); //m_binds.resize(0);
 
 	// viewport
 
@@ -18,7 +18,8 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 	m_viewPort.MinDepth = 0.0f;
 	m_viewPort.MaxDepth = 1.0f;
 
-	m_pipeState.AddBinderCommand( std::make_shared<dx::BindRSViewPort>(m_viewPort));
+	//m_bindViewPort ( m_viewPort );
+	m_pipeState.AddBinderCommand( &m_bindViewPort );
 
 	// cbuffer
 
@@ -31,11 +32,13 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 
 	ID3D11Buffer * pBuffer = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire( params, pBuffer );
-	m_pipeState.AddBinderCommand( std::make_shared<BindVSCameraCBuffer>( pBuffer, shared_CameraCbuffer_ptr(&m_renderData, &gen::NoOp<CameraCbuffer>)) );
+
+	m_bindVSCameraCbuffer.Initialize( pBuffer, shared_CameraCbuffer_ptr( &m_renderData, &gen::NoOp<CameraCbuffer>) );
+	m_pipeState.AddBinderCommand( &m_bindVSCameraCbuffer );
 
 	// render target
-
-	m_pipeState.AddBinderCommand( std::make_shared< dx::BindOMRenderTargetDepthStencil>(pRTV_p, nullptr ) );
+	m_bindOMRTVDS.Initialize(pRTV_p, nullptr );
+	m_pipeState.AddBinderCommand( &m_bindOMRTVDS );
 }
 
 void sprite::Camera::Update()

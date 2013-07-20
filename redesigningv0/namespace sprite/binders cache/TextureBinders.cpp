@@ -42,7 +42,7 @@ int sprite::TextureBinders::Add( const char* szTexture_p )
 	return (int)(m_cache.size()-1);
 }
 
-dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTexture_p )
+dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTexture_p, int * pIndexID_p /*= nullptr*/ )
 {
 	for( int it = 0, size = (int)m_cache.size();	it < size;		++it)
 	{
@@ -55,6 +55,9 @@ dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTextur
 	// cache miss:
 
 	int index = Add( szTexture_p );
+
+	if( pIndexID_p )
+		*pIndexID_p = index;
 
 	return m_cache[index];
 }

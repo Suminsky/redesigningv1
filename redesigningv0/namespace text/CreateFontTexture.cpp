@@ -313,7 +313,7 @@ bool text::ReadFontDescFromFile( const char * szFontDescFilename_p, BmpFontDesc 
 	GetFileSizeEx( hFile, &size );
 
 	MorpherUnion data;
-	data.m_data = new BYTE[size.QuadPart];
+	data.m_data = new BYTE[(size_t)size.QuadPart];
 	data.SIZE = (int)size.QuadPart;
 	ReadFile( hFile, (LPVOID)data.m_data, data.SIZE, &dwBytesRead, NULL );
 	CloseHandle( hFile);

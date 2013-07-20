@@ -11,7 +11,7 @@
 // private headers
 
 #include "ResourceCache.h"
-#include "pipeline/Command.h"
+#include "../DrawablesQueue.h"
 
 namespace dx{
 
@@ -19,7 +19,7 @@ namespace dx{
 	typedef ResourceCache<Texture2DResource, 8> Tex2DCache;
 	typedef ResourceCache<VertexShader, 1>		VSCache;
 	typedef ResourceCache<PixelShader, 1>		PSCache;
-	typedef ResourceCache<BufferResource, 4>	BufferCache;
+	typedef ResourceCache<BufferResource, 5>	BufferCache;
 	typedef ResourceCache<BlendState, 2>		BlendStateCache;
 	typedef ResourceCache<ShaderResourceView, 8> ShaderResourceViewCache;
 	typedef ResourceCache<InputLayout, 1>		InputLayoutCache;
@@ -113,6 +113,6 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// Executes a list of render commands
 		//------------------------------------------------------------------------
-		void ExecutePipelineCommands( const commandbuffer & commandList_p );
+		void ExecutePipelineCommands( const render::RenderCommands & commandList_p );
 	};
 }

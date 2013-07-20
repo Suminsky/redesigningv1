@@ -15,7 +15,7 @@ void sprite::SamplerStateBinders::Init( dx::Device * pDevice_p )
 	ID3D11SamplerState * pSampler = NULL;
 	pDevice_p->m_pCacheSamplerState->Acquire( params, pSampler );
 
-	m_cache[E_NONE].Init(0, pSampler);
+	m_cache[E_SAMPLER_NONE].Init(0, pSampler);
 
 	// linear
 
@@ -28,5 +28,5 @@ void sprite::SamplerStateBinders::Init( dx::Device * pDevice_p )
 	pSampler = NULL;
 	pDevice_p->m_pCacheSamplerState->Acquire( params, pSampler );
 
-	m_cache[E_LINEAR].Init(0, pSampler);
+	m_cache[E_SAMPLER_LINEAR].Init(0, pSampler);
 }

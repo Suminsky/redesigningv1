@@ -32,10 +32,10 @@ namespace sprite{
 
 	enum E_BLENDTYPE{
 
-		E_ALPHA_BLENDED = 0,
-		E_ADDITIVE,
-		E_NONE_DEFAULT,
-		E_MAX_BLEND
+		E_BLEND_ALPHA_BLENDED = 0,
+		E_BLEND_ADDITIVE,
+		E_BLEND_NONE_DEFAULT,
+		E_BLEND_MAX
 	};
 
 	//========================================================================
@@ -48,7 +48,7 @@ namespace sprite{
 	//========================================================================
 	class BlendStateBinders{
 
-		dx::BindOMBlendState m_cache[E_MAX_BLEND];
+		dx::BindOMBlendState m_cache[E_BLEND_MAX];
 
 	public:
 

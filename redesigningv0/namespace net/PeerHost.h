@@ -67,6 +67,8 @@ namespace net{
 			E_STATE_CRITICALERROR
 		};
 
+		Socket_UDP_NonBlocking_IPv4::E_ERROR m_eLastSocketError;
+
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
@@ -76,7 +78,9 @@ namespace net{
 		m_eState(E_STATE_OFF),
 		m_fSendFrequencySec(1.0f/E_CONFIG_SENDFREQUENCYPERSEC),
 		m_remoteAddress(0,0),
-		m_timeoutSec(E_CONFIG_TIMEOUTMSEC/1000){}
+		m_timeoutSec(E_CONFIG_TIMEOUTMSEC/1000),
+		m_eLastSocketError(Socket_UDP_NonBlocking_IPv4::E_ERROR_NONE)
+		{}
 
 		//------------------------------------------------------------------------
 		// 
@@ -116,6 +120,12 @@ namespace net{
 			m_bufferedUserDataTosend.Set( (unsigned char*)s_char, sizeof(s_char));
 			m_eState = E_STATE_ATEMPTINGCONNECTION;
 		}
+		void Disconnect(){
+
+			m_eState = E_STATE_DISCONNECTED;
+			m_dTimeSinceLastReceiving = 0.0;
+			m_dTimeSinceLastSending = 0.0;
+		}
 		void OnAttemptingConnection( double dDelta_p ){
 
 			m_dTimeSinceLastReceiving += dDelta_p;
@@ -148,6 +158,8 @@ namespace net{
 
 				if( eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_WOULDBLOCK ){
 
+					m_eLastSocketError = eError;
+
 					switch( eError ){
 					case Socket_UDP_NonBlocking_IPv4::E_ERROR_TIMETOLIVEEXPIRED:
 					case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTEUNREACHABLE:
@@ -177,6 +189,8 @@ namespace net{
 				else{
 
 					if( eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_WOULDBLOCK ){
+						
+						m_eLastSocketError = eError;
 
 						switch( eError ){
 						case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTEUNREACHABLE:
@@ -228,6 +242,8 @@ namespace net{
 
 					if( eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_WOULDBLOCK ){
 
+						m_eLastSocketError = eError;
+
 						switch( eError ){
 						case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTEUNREACHABLE:
 							m_eState = E_STATE_DISCONNECTED;
@@ -271,6 +287,8 @@ namespace net{
 			else{
 
 				if( eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_WOULDBLOCK ){
+
+					m_eLastSocketError = eError;
 
 					switch( eError ){
 					case Socket_UDP_NonBlocking_IPv4::E_ERROR_TIMETOLIVEEXPIRED:

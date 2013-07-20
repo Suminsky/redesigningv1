@@ -55,7 +55,7 @@ namespace dx{
 	//------------------------------------------------------------------------
 	struct ShaderPermutation{
 
-		shared_State_ptr m_pPipeState;	// collection of Bind shader PROGRAMS ONLY
+		dx::State m_pipeState;	// collection of Bind shader PROGRAMS ONLY
 		UINT64 m_optionsBitMask;		// flags
 	};
 
@@ -70,23 +70,28 @@ namespace dx{
 
 		UINT m_nPermutations;
 
+		//------------------------------------------------------------------------
+		// ctor
+		//------------------------------------------------------------------------
 		ShaderResource( const char* szHLSL_p, UINT nPermutations_p )
 			:
 			m_permutations( new ShaderPermutation[nPermutations_p]()),
 			m_nPermutations(nPermutations_p),
 			m_szName(szHLSL_p)
-			//,m_pPipeState(new dx::State())
+			//,m_pipeState(new dx::State())
 			{}
 		ShaderResource(){}
+		virtual ~ShaderResource(){};
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		void Init( const char* szHLSL_p, UINT nPermutations_p ){
 
 			m_permutations.reset(new ShaderPermutation[nPermutations_p]);
 			m_nPermutations = nPermutations_p;
 			m_szName = szHLSL_p;
 		}
-
-		virtual ~ShaderResource(){};
 
 		//------------------------------------------------------------------------
 		// Add to the permutation (given) state the bind commands to bind the

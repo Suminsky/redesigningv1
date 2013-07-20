@@ -24,7 +24,7 @@ void sprite::BlendStateBinders::Init( dx::Device * pDevice_p )
 	ID3D11BlendState * pBlendState = NULL;
 	pDevice_p->m_pCacheBlendState->Acquire( params, pBlendState);
 
-	m_cache[E_ALPHA_BLENDED].Init(pBlendState, NULL);
+	m_cache[E_BLEND_ALPHA_BLENDED].Init(pBlendState, NULL);
 
 	// additive blend:
 	//final rgb:
@@ -43,8 +43,8 @@ void sprite::BlendStateBinders::Init( dx::Device * pDevice_p )
 	pBlendState = NULL;
 	pDevice_p->m_pCacheBlendState->Acquire( params, pBlendState);
 
-	m_cache[E_ADDITIVE].Init(pBlendState, NULL);
+	m_cache[E_BLEND_ADDITIVE].Init(pBlendState, NULL);
 
 	// none default blend:
-	m_cache[E_NONE_DEFAULT].Init(NULL, NULL);
+	m_cache[E_BLEND_NONE_DEFAULT].Init(NULL, NULL);
 }

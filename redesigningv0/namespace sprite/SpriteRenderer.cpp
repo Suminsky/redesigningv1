@@ -8,71 +8,73 @@
 void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 {
 	static render::Drawable drawInst;
-	drawInst.m_pipeStatesGroup.resize(0);
+	drawInst.Clear();
 
-	drawInst.m_sortKey = pSprite_p->m_renderSortKey.intRepresentation;
+	drawInst.SetSortKey( pSprite_p->m_renderSortKey.intRepresentation() );
 	// shader
-	drawInst.m_pipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pPipeState);
+	drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pipeState );
 	// vb
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	drawInst.AddPipelineState( &m_defaultVertexInput );
 	// camera
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
+	drawInst.AddPipelineState( &m_camera.m_pipeState );
 	// sprite
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+	drawInst.AddPipelineState( &pSprite_p->m_pipeState );
 
 	// draw call
-	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
+	drawInst.SetDrawCall( &m_drawIndexed );
 
-	m_queue.Submit( &drawInst );
+	m_queue.Submit( drawInst );
 }
 void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
 {
 	static render::Drawable drawInst;
-	drawInst.m_pipeStatesGroup.resize(0);
+	drawInst.Clear();
 
-	drawInst.m_sortKey = pSprite_p->m_sortKey.intRepresentation;
+	drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation() );
 	// shader
-	drawInst.m_pipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
+	drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
 	// vb
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	drawInst.AddPipelineState( &m_defaultVertexInput );
 	// camera
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_camera.m_pipeState, &gen::NoOp<dx::State>)  );
+	drawInst.AddPipelineState( &m_camera.m_pipeState );
 	// sprite
-	drawInst.m_pipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+	drawInst.AddPipelineState( &pSprite_p->m_pipeState );
 
 	// draw call
-	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
+	drawInst.SetDrawCall( &m_drawIndexed );
 
-	m_queue.Submit( &drawInst );
+	m_queue.Submit( drawInst );
 }
 
 void sprite::SpriteRenderer::Render( game::SpriteComponent *pSprite_p, Camera *pCamera_p )
 {
 	// NOTE/TODO: even the given pointer being on the stack, shared ptr still allocates for the ref ctrl..
 
-	static render::Drawable drawInst;
-	drawInst.m_pipeStatesGroup.resize(0);
+	static render::Drawable s_drawInst;
+	s_drawInst.Clear();
 
-	drawInst.m_sortKey = pSprite_p->m_sortKey.intRepresentation;
+	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation() );
 	// shader
-	drawInst.m_pipeStatesGroup.push_back(m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pPipeState);
+	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
 	// vb
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&m_defaultVertexInput, &gen::NoOp<dx::State>)  );
+	s_drawInst.AddPipelineState( &m_defaultVertexInput );
 	// camera
-	drawInst.m_pipeStatesGroup.push_back( dx::shared_State_ptr(&pCamera_p->m_pipeState, &gen::NoOp<dx::State>)  );
+	s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
 	// sprite
-	drawInst.m_pipeStatesGroup.push_back(  dx::shared_State_ptr(&pSprite_p->m_pipeState, &gen::NoOp<dx::State>) );
+	s_drawInst.AddPipelineState( &pSprite_p->m_pipeState );
 
 	// draw call
-	drawInst.m_pDrawCall.reset(&m_drawIndexed, &gen::NoOp<dx::DrawCall>);
+	s_drawInst.SetDrawCall( &m_drawIndexed );
 
-	m_queue.Submit( &drawInst );
+	m_queue.Submit( s_drawInst );
 }
 void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBytes_p, dx::Device * pDevice_p )
 {
+	// TODO: instead of statics, cache classes
+	
 	// primitive topology
-
-	m_defaultVertexInput.AddBinderCommand(  std::make_shared<dx::BindIAPrimitiveTopology>( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ));
+	static dx::BindIAPrimitiveTopology s_bindPrimitiveTopo( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+	m_defaultVertexInput.AddBinderCommand(  &s_bindPrimitiveTopo );
 
 	// input layout
 
@@ -96,7 +98,9 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	ID3D11InputLayout * pInputLayout = NULL;
 	pDevice_p->m_pCacheInputLayout->Acquire(params, pInputLayout);
 
-	m_defaultVertexInput.AddBinderCommand( std::make_shared<dx::BindIAInputLayout>( pInputLayout));
+	static dx::BindIAInputLayout s_bindISInputLayout( pInputLayout );
+
+	m_defaultVertexInput.AddBinderCommand( &s_bindISInputLayout );
 
 	// vertex buffer
 
@@ -107,6 +111,13 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 		{{-0.5f,-0.5f, 0.5f},	{0.0f, 1.0f}},			//2
 		{{ 0.5f, -0.5f, 0.5f},	{1.0f, 1.0f}}			//3
 	};
+	//vpostex vData[] = {
+
+	//	{{ 0.0f, 1.0f, 0.5f},	{0.0f, 0.0f}},			//0
+	//	{{ 1.0f, 1.0f, 0.5f},	{1.0f, 0.0f}},			//1
+	//	{{ 0.0f, 0.0f, 0.5f},	{0.0f, 1.0f}},			//2
+	//	{{ 1.0f, 0.0f, 0.5f},	{1.0f, 1.0f}}			//3
+	//};
 
 	dx::BufferResource::CreationParams vbParams = {0};
 	vbParams.desc.bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -119,7 +130,9 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	ID3D11Buffer * pVB = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire(vbParams, pVB);
 
-	m_defaultVertexInput.AddBinderCommand( std::make_shared< dx::BindIAVertexBuffer>(0, pVB, (UINT)(sizeof(float)*5) ) );
+	static dx::BindIAVertexBuffer s_bindVB( 0, pVB, (UINT)(sizeof(float)*5) );
+
+	m_defaultVertexInput.AddBinderCommand( &s_bindVB );
 
 	// index buffer
 
@@ -133,8 +146,10 @@ void sprite::SpriteRenderer::CreateDefaultVertexInputState( ID3DBlob * pShaderBy
 	bufferData.pSysMem = (void*)iData;
 
 	//pVB = NULL;
-	pDevice_p->m_pCacheBuffer->Acquire(vbParams, pVB);
-	m_defaultVertexInput.AddBinderCommand( std::make_shared< dx::BindIAIndexBuffer>(pVB));
+	pDevice_p->m_pCacheBuffer->Acquire( vbParams, pVB );
+
+	static dx::BindIAIndexBuffer s_bindIB(pVB);
+	m_defaultVertexInput.AddBinderCommand( &s_bindIB );
 }
 
 void sprite::SpriteRenderer::LoadShader( dx::Device *pDevice_p, const char * szVS_p,const char * szPS_p )
@@ -146,7 +161,7 @@ void sprite::SpriteRenderer::LoadShader( dx::Device *pDevice_p, const char * szV
 	ID3DBlob *pShaderBytes;
 	m_spriteShaderRes.LoadShaderProgram( dx::E_VertexShader, pDevice_p, szVS_p, "vs_4_0", true, &pShaderBytes );
 
-	CreateDefaultVertexInputState(pShaderBytes, pDevice_p);
+	CreateDefaultVertexInputState( pShaderBytes, pDevice_p );
 
 	/*ID3D11ShaderReflection * pReflection = NULL;
 
@@ -163,7 +178,7 @@ void sprite::SpriteRenderer::LoadShader( dx::Device *pDevice_p, const char * szV
 
 	// PS
 
-	m_spriteShaderRes.LoadShaderProgram( dx::E_PixelShader, pDevice_p, szPS_p, "ps_4_0", true, &pShaderBytes);
+	m_spriteShaderRes.LoadShaderProgram( dx::E_PixelShader, pDevice_p, szPS_p, "ps_4_0", true, &pShaderBytes );
 
 	/*m_spriteShaderRes.LoadResourceForShader( dx::E_PixelShader, pReflection, pShaderBytes, pDevice_p, "tex2D", D3D11_USAGE_IMMUTABLE, 0 );*/
 

@@ -38,32 +38,40 @@ namespace sprite{
 	// Used to sort the draw calls
 	// This level of the rendering cant worry about this more specific stuff!
 	//------------------------------------------------------------------------
-	//union SortMask{
+	struct SortMask{
 
-	//	struct{
+		unsigned short textureID	: 15;
+		unsigned short shaderID		: 15;
+		unsigned int Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+		unsigned char transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
+		unsigned char viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
+		unsigned char viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
+		unsigned char layer			: 2;	// 4 layers: game, HUD, full screen effect...
 
-	//		UINT layer			: 2;	// 4 layers: game, HUD, full screen effect...
-	//		UINT viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
-	//		UINT viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
-	//		UINT transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
-	//		UINT Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
-	//		UINT shaderID		: 15;
-	//		UINT textureID		: 15;
-	//	} bitField;
+		__int64 intRepresentation(){
 
-	//	UINT64 intRepresentation;
-	//};
-	union SortMask{
-		struct{
-			unsigned int viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
-			unsigned int viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
-			unsigned int transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
-			unsigned int Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
-			unsigned int shaderID		: 15;
-			unsigned int textureID		: 15;
-			unsigned int layer			: 2;	// 4 layers: game, HUD, full screen effect...
-		} bitField;
-		unsigned __int64 intRepresentation;
+			return   __int64(layer		& 0x03)	<< (64 -2) 
+				| __int64(viewport		& 0x07)	<< (64 -2 -3)
+				| __int64(viewportLayer & 0x07)	<< (64 -2 -3 -3)
+				| __int64(transparency  & 0x03)	<< (64 -2 -3 -3 -2)
+				| __int64(Zdepth		& 0x00ffffff)	<< (64 -2 -3 -3 -2 -24)
+				| __int64(shaderID		& 0x7fff)	<< (64 -2 -3 -3 -2 -24 -15)
+				| __int64(textureID		& 0x7fff)	<< (64 -2 -3 -3 -2 -24 -15 -15);
+		}
+		void FromInt( __int64 int_p ){
+
+			layer			= ((int_p & 0xC000000000000000) >> (64 -2) );
+			viewport		= ((int_p & 0x3800000000000000) >> (64 -2 -3) );
+			viewportLayer	= ((int_p & 0x0700000000000000) >> (64 -2 -3 -3) );
+			transparency	= ((int_p & 0x00C0000000000000) >> (64 -2 -3 -3 -2) );
+			Zdepth			= ((int_p & 0x003FFFFFC0000000) >> (64 -2 -3 -3 -2 -24) );
+			shaderID		= ((int_p & 0x000000003FFF8000) >> (64 -2 -3 -3 -2 -24 -15) );
+			textureID		= ((int_p & 0x0000000000007FFF) >> (64 -2 -3 -3 -2 -24 -15 -15) );
+		}
+
+		void Zero(){
+			memset( this, 0, sizeof(SortMask));
+		}
 	};
 
 	class SpriteRenderer;
@@ -77,6 +85,8 @@ namespace sprite{
 
 	public:
 
+		Movable m_trafo;
+
 		//------------------------------------------------------------------------
 		// Use this to access specific index on the sprite pipe state
 		//------------------------------------------------------------------------
@@ -87,20 +97,6 @@ namespace sprite{
 			E_SAMPLER,
 			E_BLEND
 		};
-
-		Movable m_trafo;
-
-	private:
-
-		dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
-		SortMask m_renderSortKey; // used to sort on the render queue
-
-		DrawableCbuffer m_renderData;
-
-		UINT64 m_currentPermutation;// used to pick the right permutation
-		UINT m_iCurrentPermutationIndex;
-
-	public:
 
 		//------------------------------------------------------------------------
 		// ctor
@@ -122,5 +118,17 @@ namespace sprite{
 		// have a different interpolation (accounting for rotation matrix)
 		//------------------------------------------------------------------------
 		void Update( double dInterpolation_p );
+
+	private:
+
+		dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
+		SortMask m_renderSortKey; // used to sort on the render queue
+
+		DrawableCbuffer m_renderData;
+		BindVSDrawableCBuffer m_VSDrawableCbufferBinder;
+
+		UINT64 m_currentPermutation;// used to pick the right permutation
+		UINT m_iCurrentPermutationIndex;
+
 	};
 }

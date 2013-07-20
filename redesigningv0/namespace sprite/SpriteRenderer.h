@@ -100,7 +100,7 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		void Raster( ID3D11DeviceContext * pContext_p ){
 
-			dx::commandbuffer cmds;
+			render::RenderCommands cmds;
 			m_queue.CreateCommandBuffer( cmds , false);
 			ExecuteRenderCommands(cmds, pContext_p);
 		}
@@ -122,14 +122,14 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// execute given commands
 		//------------------------------------------------------------------------
-		void ExecuteRenderCommands( const dx::commandbuffer & cmds_p, ID3D11DeviceContext * pContext_p ){
+		void ExecuteRenderCommands( const render::RenderCommands & cmds_p, ID3D11DeviceContext * pContext_p ){
 
-			for(	dx::commandbuffer::const_iterator it = cmds_p.begin(),
+			for(	render::RenderCommands::const_iterator it = cmds_p.begin(),
 					itEnd = cmds_p.end();
 					it != itEnd;
 					++it ){
 
-				(*it).get()->Execute(pContext_p);
+				(*it)->Execute(pContext_p);
 			}
 		}
 	};

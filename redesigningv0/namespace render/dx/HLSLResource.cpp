@@ -49,9 +49,8 @@ void dx::ShaderResource::LoadShaderProgram( dx::E_BIND type_p, dx::Device * pDev
 		// set permutation
 
 		m_permutations[iPermutationIndex_p].m_optionsBitMask = iPermutationMask_p;
-
-		m_permutations[iPermutationIndex_p].m_pPipeState.reset( new State );
-		m_permutations[iPermutationIndex_p].m_pPipeState->AddBinderCommand( std::make_shared<BindVSVertexShader>(pVS) );
+		static BindVSVertexShader s_bindVS(pVS); // TODO: cache
+		m_permutations[iPermutationIndex_p].m_pipeState.AddBinderCommand( &s_bindVS );
 
 						}break;
 	case E_PixelShader:{
@@ -63,12 +62,13 @@ void dx::ShaderResource::LoadShaderProgram( dx::E_BIND type_p, dx::Device * pDev
 		xsDesc.desc.szProgramName = szXS_p;
 
 		ID3D11PixelShader * pPS;
-		pDevice_p->m_pCachePS->Acquire(xsDesc, pPS);
+		pDevice_p->m_pCachePS->Acquire( xsDesc, pPS );
 
 		// set permutation
 
 		m_permutations[iPermutationIndex_p].m_optionsBitMask = iPermutationMask_p;
-		m_permutations[iPermutationIndex_p].m_pPipeState->AddBinderCommand( std::make_shared<BindPSPixelShader>(pPS) );
+		static BindPSPixelShader s_bindPS(pPS);  // TODO: cache
+		m_permutations[iPermutationIndex_p].m_pipeState.AddBinderCommand( &s_bindPS );
 
 					   }break;
 	}

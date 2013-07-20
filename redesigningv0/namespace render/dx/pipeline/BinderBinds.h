@@ -320,20 +320,30 @@ public:
 //------------------------------------------------------------------------
 class BindRSViewPort: public Binder{
 
-	D3D11_VIEWPORT & m_viewPort;
-
 public:
 
+	//------------------------------------------------------------------------
+	// ctor
+	//------------------------------------------------------------------------
 	BindRSViewPort( D3D11_VIEWPORT & vp_p )
 		:
 	Binder( RS_ViewPort, E_RS_ViewPort ),
-	m_viewPort(vp_p){}
+	m_viewPort(vp_p)
+	{}
 
+
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 
 		pDeviceContext_p->RSSetViewports(1, &m_viewPort);
 	}
+
 private:
+
+	D3D11_VIEWPORT & m_viewPort;
+
 	BindRSViewPort & operator = ( const BindRSViewPort & other_p );
 };
 //========================================================================
@@ -379,18 +389,42 @@ public:
 //------------------------------------------------------------------------
 class BindOMRenderTargetDepthStencil: public Binder{
 
-	ID3D11RenderTargetView * m_pRTV;
-	ID3D11DepthStencilView * m_pDSV;
-
 public:
-	BindOMRenderTargetDepthStencil(ID3D11RenderTargetView * pRTV_p, ID3D11DepthStencilView * pDSV_p)
-		:
-	Binder(OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil),
-	m_pRTV(pRTV_p), m_pDSV(pDSV_p){}
 
+	//------------------------------------------------------------------------
+	// ctors
+	//------------------------------------------------------------------------
+	BindOMRenderTargetDepthStencil( ID3D11RenderTargetView * pRTV_p, ID3D11DepthStencilView * pDSV_p )
+		:
+	Binder( OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil ),
+	m_pRTV(pRTV_p), m_pDSV(pDSV_p)
+	{}
+
+	BindOMRenderTargetDepthStencil()
+		:
+	Binder( OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil )
+	{}
+
+	//------------------------------------------------------------------------
+	// delayed construction
+	//------------------------------------------------------------------------
+	void Initialize( ID3D11RenderTargetView * pRTV_p, ID3D11DepthStencilView * pDSV_p ){
+
+		m_pRTV = pRTV_p;
+		m_pDSV = pDSV_p;
+	}
+
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 
 		pDeviceContext_p->OMSetRenderTargets( 1, &m_pRTV, m_pDSV );
 	}
+
+private:
+
+	ID3D11RenderTargetView * m_pRTV;
+	ID3D11DepthStencilView * m_pDSV;
 };
 }

@@ -42,7 +42,4 @@ namespace dx{
 
 		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ) = 0;
 	};
-
-	typedef std::vector<std::shared_ptr<Command>> commandbuffer;
-
 }

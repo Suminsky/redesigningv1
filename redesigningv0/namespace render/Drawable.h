@@ -1,3 +1,4 @@
+#pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
 	created:	2013/02/15
@@ -14,31 +15,21 @@
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-#pragma once
-
 // system/standard headers
 
-//#include <boost/smart_ptr.hpp>
-
 // private headers
-
-//#include "namespace dx/type wrappers/BufferResource.h"
-
-#include "dx/pipeline/Binder.h"
+#include "dx/pipeline/State.h"
 #include "dx/pipeline/DrawCall.h"
 
 namespace render{
 
-#pragma once
+	class DrawablesQueue;
+
+	typedef std::vector<dx::State*> StatesPtrsVec;
 
 	class Drawable{
 
-	public:
-
-		dx::StateGroup m_pipeStatesGroup;					// binder commands
-		dx::shared_DrawCall_ptr m_pDrawCall;				// draw
-
-		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
+		friend DrawablesQueue;
 
 	public:
 
@@ -49,18 +40,65 @@ namespace render{
 		virtual ~Drawable(){};
 
 		//------------------------------------------------------------------------
+		// add a new state to the drawable
+		//------------------------------------------------------------------------
+		void AddPipelineState( dx::State * pState_p ){
+
+			m_pipeStateGroup.push_back( pState_p );
+		}
+
+		//------------------------------------------------------------------------
+		// aux created for text render, that way you can have a tmp drawable
+		// that can have some states used, and the last ones replaced every every time.
+		// 
+		//------------------------------------------------------------------------
+		void PopLastPipelineState(){
+
+			m_pipeStateGroup.pop_back();
+		}
+
+		//------------------------------------------------------------------------
+		// add a group of states to the drawable
+		//------------------------------------------------------------------------
+		void AddPipelineStateGroup( const StatesPtrsVec & pipeStateGroup_p ){
+
+			m_pipeStateGroup.insert( m_pipeStateGroup.cend(), pipeStateGroup_p.cbegin(), pipeStateGroup_p.cend() );
+		}
+
+		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		UINT64 GetKey()const{
-			return m_sortKey;
-		}
-		dx::StateGroup* GetPipeStateGroup(){
+		UINT64 GetSortKey() const{ return m_sortKey; }
 
-			return &m_pipeStatesGroup;
+		//------------------------------------------------------------------------
+		// setters
+		//------------------------------------------------------------------------
+		void SetPipelineStateGroup( const StatesPtrsVec & pipeStateGroup_p ){
+
+			m_pipeStateGroup = pipeStateGroup_p; // copy all states from the given state group
 		}
-		dx::shared_DrawCall_ptr GetDrawCall() const{
-			return m_pDrawCall;
+		void SetDrawCall( dx::DrawCall * pDrawCall_p ){
+
+			m_pDrawCall = pDrawCall_p;
+		}
+		void SetSortKey( UINT64 llSortKey_p ){
+
+			m_sortKey = llSortKey_p;
 		}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Clear(){
+
+			m_pipeStateGroup.clear();
+		}
+
+	private: // TODO
+
+		StatesPtrsVec m_pipeStateGroup;			// states w binder commands
+		dx::DrawCall * m_pDrawCall;				// draw
+
+		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
 	};
 }

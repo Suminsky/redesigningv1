@@ -31,13 +31,13 @@ void Device::InitDevice( /*in: */ IDXGIAdapter1 *pAdapter_p, const BOOL bSingleT
 	m_pFactory = pFactory_p;
 }
 
-void Device::ExecutePipelineCommands( const commandbuffer & commandList_p )
+void Device::ExecutePipelineCommands( const render::RenderCommands & commandList_p )
 {
-	commandbuffer::const_iterator end = commandList_p.end();
+	 render::RenderCommands::const_iterator end = commandList_p.end();
 
-	for( commandbuffer::const_iterator it = commandList_p.begin();
-		it != end;
-		++it ){
+	for(  render::RenderCommands::const_iterator it = commandList_p.begin();
+			it != end;
+			++it ){
 
 			(*it)->Execute( m_pContext );
 	}

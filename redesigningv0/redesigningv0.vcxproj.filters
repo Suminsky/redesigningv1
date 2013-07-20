@@ -270,6 +270,9 @@
     <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace render\dx\pipeline\State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -486,6 +489,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace render\dx\pipeline\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

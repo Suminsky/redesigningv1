@@ -65,7 +65,7 @@ namespace sprite{
 		// Get the texture by name, if name is not found, it adds a new texture
 		// to the cache
 		//------------------------------------------------------------------------
-		dx::BindPSShaderResourceView & Get( const char* szTexture_p );
+		dx::BindPSShaderResourceView & Get( const char* szTexture_p, int * pIndexID_p = nullptr );
 
 		//------------------------------------------------------------------------
 		// get texture by index

@@ -45,23 +45,37 @@ namespace sprite{
 		D3D11_VIEWPORT		m_viewPort;			// the viewport rectangle on the render target
 		//UINT			m_RenderTargetID;		// the render target the camera will output to
 	
-		dx::State m_pipeState; //binds viewport, render target, 	
+		dx::State m_pipeState; //binds viewport, render target
+		BindVSCameraCBuffer m_bindVSCameraCbuffer;
+
+
+		//TODO put those on a cache
+		dx::BindRSViewPort m_bindViewPort;
+		dx::BindOMRenderTargetDepthStencil m_bindOMRTVDS;
+		
 
 	private:
 
 		CameraCbuffer  m_renderData;
 
 	public:
+
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Camera(){
-
+		Camera()
+			:
+		m_bindViewPort(m_viewPort)
+		{
 			// initializes projection and view to identity
 
 			m_mProjection = m_mView = DirectX::XMMatrixIdentity();
 		}
-		Camera( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p ){
+
+		Camera( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p )
+			:
+		m_bindViewPort(m_viewPort)
+		{
 
 			// initializes projection and view to identity
 

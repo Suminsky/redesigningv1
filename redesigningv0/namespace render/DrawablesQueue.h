@@ -31,6 +31,8 @@ namespace render{
 #pragma warning( push )
 #pragma warning( disable : 4351 ) // array on initialization list now default initialized, VS specific
 
+	typedef std::vector<dx::Command*> RenderCommands;
+
 	//------------------------------------------------------------------------
 	// Receives the Drawables objects, sorts them and creates a command list.
 	//------------------------------------------------------------------------
@@ -61,11 +63,18 @@ namespace render{
 		//------------------------------------------------------------------------
 		// Used by drawables to put themselves on the queue
 		//------------------------------------------------------------------------
-		void Submit( Drawable * pDrawable_p ){
+		void Submit( Drawable & drawable_p ){
 
-			m_drawables.push_back((*pDrawable_p));
+			m_drawables.push_back( drawable_p );
 
-			Entry newEntry = {pDrawable_p->GetKey(), ((int)m_drawables.size())-1};
+			Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
+			m_sortqueue.push_back(newEntry);
+		}
+		void Submit( Drawable && drawable_p ){
+
+			m_drawables.emplace_back( std::move(drawable_p) );
+
+			Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
 			m_sortqueue.push_back(newEntry);
 		}
 
@@ -90,7 +99,7 @@ namespace render{
 		// sort the drawables and put its commands in the list, removing
 		// redundant binds
 		//------------------------------------------------------------------------
-		void CreateCommandBuffer( dx::commandbuffer & commandList_p, bool bClearStateCache_p );
+		void CreateCommandBuffer( RenderCommands & commandList_p, bool bClearStateCache_p );
 	};
 
 #pragma warning( pop ) 

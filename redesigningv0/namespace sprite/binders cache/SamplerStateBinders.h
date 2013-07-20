@@ -30,17 +30,15 @@ namespace sprite{
 
 	enum E_SAMPLERTYPE{
 
-		E_NONE = 0,
-		E_LINEAR,
-		E_MAX_SAMPLER
+		E_SAMPLER_NONE = 0,
+		E_SAMPLER_LINEAR,
+		E_SAMPLER_MAX
 	};
 
 	//========================================================================
 	// cache samplers state commands : # slot 0
 	//========================================================================
 	class SamplerStateBinders{
-
-		dx::BindPSSampler m_cache[E_MAX_SAMPLER];
 
 	public:
 		
@@ -64,6 +62,10 @@ namespace sprite{
 		dx::BindPSSampler & GetSamplerBind( E_SAMPLERTYPE eBlend_p ){
 
 			return m_cache[eBlend_p];
-		}	
+		}
+
+	private:
+
+		dx::BindPSSampler m_cache[E_SAMPLER_MAX];
 	};
 }

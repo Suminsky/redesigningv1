@@ -28,14 +28,8 @@
 namespace sprite{
 
 	//========================================================================
-	// Specialized layout cbuffer
-	//sprite data-----	//n	floats	//bytes	//align
-	//float2 res;			//2			8		0-7
-	//float4 uvRect;		//4			16		8-23
-	//matrix mWorld;		//16		64		24-87
-	//						___			___		______
-	//						24			88		0-87
-	//----------------
+	// On HLSL, data is aligned by "float4", each data that doesnt fit into
+	// a float4 jumps to the next one
 	//========================================================================
 #pragma warning(push)
 #pragma warning(disable:4324) // padding due forced align
@@ -43,11 +37,13 @@ namespace sprite{
 	struct DrawableCbuffer{
 		
 		static const UINT s_SIZE = 112;
-		__declspec(align(16))DirectX::XMFLOAT2 m_res;
-		__declspec(align(16))DirectX::XMFLOAT4 m_uvRect;
-		__declspec(align(16))DirectX::XMMATRIX m_mWorld;	// a.k.a render mWorld
-		__declspec(align(16))DirectX::XMFLOAT4 m_color;
-		__declspec(align(16))DirectX::XMFLOAT2 m_padding;
+
+		DirectX::XMFLOAT2 m_res;
+		DirectX::XMFLOAT2 m_padding;
+		DirectX::XMFLOAT4 m_uvRect;
+		DirectX::XMMATRIX m_mWorld;	// a.k.a render mWorld
+		DirectX::XMFLOAT4 m_color;
+		
 
 		bool m_bUpdate;	// set to true to update the ID3D11Buffer
 						// IMPORTANT: this NEED to be placed after the above data, because this class itself is the one
@@ -65,7 +61,13 @@ namespace sprite{
 						// Updating always have the counter side of if an object have a unique ID3D11Buffer, it will update needlessly.
 						// Well, I`m already checking if the current bound ID3D11Buffer is the one to be bound, I can just use that and:
 						// -if its the same buffer, update regardless of this bool;
-						// -if its other buffer, update in accord to the bool;
+						// -if its other buffer, update in accord to the bool; - WRONG (see errata 2)
+						// ERRATA 2:
+						// if its other buffer, it may set the new buffer without the renderable data, but with another one
+						// in it. Say current buffer bound is different, and current object buffer is shared among others.
+						// If object didnt change its data, the update flag will be false, but the current data in the buffer
+						// can be of any object! - solving this with another static for the data
+						// 
 						// 
 						// IMPORTANT 2:
 						// delegating to the bind cmd means that it will only be updated if the buffer/binder command is not
@@ -76,17 +78,32 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		DrawableCbuffer():m_bUpdate(true){}
+		DrawableCbuffer()
+			:
+		m_bUpdate(true)
+		{}
+
 		DrawableCbuffer( float width_p, float height_p, float uvOffsetU_p, float uvOffsetV_p, DirectX::CXMMATRIX mWorld_p );
 
 		//------------------------------------------------------------------------
 		// Test if buffer data was modified since last update call, than updates it,
 		// or not.
 		//------------------------------------------------------------------------
-		void Update( ID3D11DeviceContext * pContext_p, ID3D11Buffer *& pConstantBuffer_p ){
+		void UpdateIfDirt( ID3D11DeviceContext * pContext_p, ID3D11Buffer *& pConstantBuffer_p ){
 			
-			if( m_bUpdate ){
-				pContext_p->UpdateSubresource( pConstantBuffer_p, 0, NULL, this, 0, 0 );
+			// need 2 flags, a dirt per object (did I changed since last time), and a dirt for the
+			// buffer (the shared buffer), (its my data on the buffer?)
+			
+			// TODO: first fullscreen switch doesnt improve performance!!! second and consecutives rise 1000 FPS
+							//havy text // normal // normal FS
+			if( m_bUpdate ){//1336 //2350 //3090	// same for map and updatesubresource
+	
+				D3D11_MAPPED_SUBRESOURCE mapped;// = {0};
+				pContext_p->Map( pConstantBuffer_p, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
+				memcpy( mapped.pData, this, s_SIZE );
+				pContext_p->Unmap( pConstantBuffer_p, 0 );
+
+				//pContext_p->UpdateSubresource( pConstantBuffer_p, 0, NULL, this, 0, 0 );
 				m_bUpdate = false;
 			}
 		}
@@ -101,24 +118,17 @@ namespace sprite{
 	// bind command specialized for drawable cbuffer
 	//========================================================================
 	class BindVSDrawableCBuffer: public dx::Binder{
-	private:
-		UINT m_iStartSlot;
-	public:
-		ID3D11Buffer *m_pConstantBuffer;
-		shared_DrawableCbuffer_ptr m_pConstantBufferData;
-	private:
-		static ID3D11Buffer *s_pConstantBufferBound;	// test: using to check if this buffer need to be bound
 
 	public:
 
 		//------------------------------------------------------------------------
-		// 
+		// ctors
 		//------------------------------------------------------------------------
-		BindVSDrawableCBuffer( ID3D11Buffer *pConstantBuffers_p,  const shared_DrawableCbuffer_ptr & pConstBufferData_p )
+		BindVSDrawableCBuffer( ID3D11Buffer *pConstantBuffers_p,  DrawableCbuffer * pConstBufferData_p )
 			:
 		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
-				m_iStartSlot( 0 ), m_pConstantBuffer( pConstantBuffers_p ),
-				m_pConstantBufferData(pConstBufferData_p)
+		m_iStartSlot( 0 ),
+		m_pConstantBuffer( pConstantBuffers_p ), m_pConstantBufferData(pConstBufferData_p)
 		{}
 
 		BindVSDrawableCBuffer()
@@ -128,15 +138,47 @@ namespace sprite{
 		{}
 
 		//------------------------------------------------------------------------
+		// delayed construction
+		//------------------------------------------------------------------------
+		void Initialize( ID3D11Buffer *pConstantBuffers_p,  DrawableCbuffer * pConstBufferData_p ){
+
+			m_pConstantBuffer = pConstantBuffers_p;
+			m_pConstantBufferData = pConstBufferData_p;
+		}
+
+		//------------------------------------------------------------------------
 		// Updates data to the buffer before binding it.
+		// 
+		// NOTE: if another binder command class binds the same buffer interface,
+		// this binder can consider the buffer unbound and rebind it.
+		// 
+		// If another binder bind a different one, this class may not bind, just
+		// update. Thats why its REQUIRED to have only one binder class for each
+		// slot.
 		//------------------------------------------------------------------------
 		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 
 			if( m_pConstantBuffer != s_pConstantBufferBound ){
 
-				// update if data is dirt
+				// update if data is dirt - dirt on the buffer
 
-				m_pConstantBufferData->Update( pDeviceContext_p, m_pConstantBuffer );
+				if( s_pConstantBufferDataBound != m_pConstantBufferData ){
+				
+					D3D11_MAPPED_SUBRESOURCE mapped;// = {0};
+					pDeviceContext_p->Map( m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
+					memcpy( mapped.pData, m_pConstantBufferData, m_pConstantBufferData->s_SIZE );
+					pDeviceContext_p->Unmap( m_pConstantBuffer, 0 );
+
+					//pDeviceContext_p->UpdateSubresource( m_pConstantBuffer, 0, NULL, m_pConstantBufferData, 0, 0 );
+
+					s_pConstantBufferDataBound = m_pConstantBufferData;
+				}
+				else{
+
+					// update if data is dirt - dirt on the object
+					
+					m_pConstantBufferData->UpdateIfDirt( pDeviceContext_p, m_pConstantBuffer );
+				}
 
 				// bind buffer
 
@@ -149,9 +191,26 @@ namespace sprite{
 
 				// force update
 
-				pDeviceContext_p->UpdateSubresource( m_pConstantBuffer, 0, NULL, m_pConstantBufferData.get(), 0, 0 );
+				D3D11_MAPPED_SUBRESOURCE mapped;// = {0};
+				pDeviceContext_p->Map( m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
+				memcpy( mapped.pData, m_pConstantBufferData, m_pConstantBufferData->s_SIZE );
+				pDeviceContext_p->Unmap( m_pConstantBuffer, 0 );
+
+				//pDeviceContext_p->UpdateSubresource( m_pConstantBuffer, 0, NULL, m_pConstantBufferData, 0, 0 );
 			}
 		}
+
+	private:
+
+		UINT m_iStartSlot;
+
+		ID3D11Buffer * m_pConstantBuffer;
+		DrawableCbuffer * m_pConstantBufferData;
+
+		static ID3D11Buffer *s_pConstantBufferBound;	// test: using to check if this buffer need to be bound
+		static DrawableCbuffer *s_pConstantBufferDataBound;
 	};
+
+
 	typedef std::shared_ptr<BindVSDrawableCBuffer> shared_BindVSDrawableCBuffer_ptr;
 }

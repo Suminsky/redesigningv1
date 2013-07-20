@@ -16,4 +16,5 @@ sprite::DrawableCbuffer::DrawableCbuffer( float width_p, float height_p, float u
 // 
 //========================================================================
 
-ID3D11Buffer * BindVSDrawableCBuffer::s_pConstantBufferBound = NULL;
+ID3D11Buffer * BindVSDrawableCBuffer::s_pConstantBufferBound = nullptr;
+DrawableCbuffer * BindVSDrawableCBuffer::s_pConstantBufferDataBound = nullptr;

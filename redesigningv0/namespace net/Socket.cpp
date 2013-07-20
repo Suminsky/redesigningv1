@@ -194,8 +194,8 @@ bool net::Socket_UDP_NonBlocking_IPv4::SendTo( const Address_HostOrder_IPv4 & re
 		assert( result != WSAETIMEDOUT ); // conection droped
 		assert( result != WSAEOPNOTSUPP ); // stream OOB stuff
 		assert( result != WSAEAFNOSUPPORT ); // invalid family
-		assert( result != WSAEACCES ); // socket options does not permit (BROADCAST)
-		assert( result != WSAEADDRNOTAVAIL ); // invalid address
+		//assert( result != WSAEACCES ); // socket options does not permit (BROADCAST)
+		//assert( result != WSAEADDRNOTAVAIL ); // invalid address
 		assert( result != WSAESHUTDOWN ); // socket was shutdown()
 		assert( result != WSAENOTSOCK );
 		assert( result != WSAENETRESET ); // connection has been broken
@@ -214,6 +214,8 @@ bool net::Socket_UDP_NonBlocking_IPv4::SendTo( const Address_HostOrder_IPv4 & re
 				// "The remote host was unable to deliver a previously sent UDP
 				// datagram and responded with a "Port Unreachable" ICMP packet.
 				// The application should close the socket as it is no longer usable.
+			case WSAEACCES:
+			case WSAEADDRNOTAVAIL:	*peError_p = E_ERROR_ADDRESSINVALID;				break;
 			case WSAEHOSTUNREACH:	*peError_p = E_ERROR_REMOTEUNREACHABLE;				break;	// cant reach to right now
 			case WSAENETUNREACH:	*peError_p = E_ERROR_NETWORKNOTREACHABLE;			break;	// network cant be reached by this host right now
 			case WSAENETDOWN:		*peError_p = E_ERROR_SHITGOTFUCKED;					break;

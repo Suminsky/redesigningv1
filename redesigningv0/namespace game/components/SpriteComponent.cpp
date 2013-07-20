@@ -15,9 +15,9 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 										const shared_MovableComponent_ptr & pMovable_p )
 {
 	m_pMovableRef = pMovable_p;
-	m_sortKey.intRepresentation = 0LL;
+	m_sortKey.Zero();
 
-	m_TextureID= m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
+	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
 	m_pSpriteRendererRef = pSpriteRenderer_p;
 	m_iShaderPermutation = 0;
 
@@ -34,9 +34,9 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 	BufferResource::CreationParams cbufferParams;
 	ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
 	cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
-	cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
 	cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbufferParams.desc.bufferDesc.CPUAccessFlags = 0;
+	cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
 	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
 	cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
@@ -44,12 +44,17 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
 
 	// initialize pipe state for this sprite
+	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
+	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
-	m_pipeState.AddBinderCommand( make_shared<BindVSDrawableCBuffer>(pBuffer, shared_DrawableCbuffer_ptr(&m_renderData, &NoOp<DrawableCbuffer>)) );
+	int iTextureID;
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_texs.Get(szTexture_p, &iTextureID) );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers.GetSamplerBind(sampler_p) );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends.GetBlendBind(blendType_p) );
 
-	m_pipeState.AddBinderCommand( shared_Binder_ptr(&pSpriteRenderer_p->m_texs.Get(szTexture_p), &NoOp<Binder>  ));
-	m_pipeState.AddBinderCommand( shared_Binder_ptr(&pSpriteRenderer_p->m_samplers.GetSamplerBind(sampler_p), &NoOp<Binder>  ));
-	m_pipeState.AddBinderCommand( shared_Binder_ptr(&pSpriteRenderer_p->m_blends.GetBlendBind(blendType_p), &NoOp<Binder>  ));
+	m_TextureID = iTextureID;
+	m_sortKey.textureID = m_TextureID;
+	m_sortKey.transparency = blendType_p;
 }
 
 void game::SpriteComponent::OnDraw( double dInterpolation_p )

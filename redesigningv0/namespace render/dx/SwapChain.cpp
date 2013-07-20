@@ -10,8 +10,8 @@
 void dx::SwapChain::CreateRTVFromBackBuffer( ID3D11Device * pDevice_p )
 {
 
-	// TODO
-	// what if I call it out of nowhere, I think current m_pBackBufferRTV will leak
+	if( m_pBackBufferRTV )
+		m_pBackBufferRTV->Release();
 
 	// get swc bbuff
 
@@ -20,14 +20,16 @@ void dx::SwapChain::CreateRTVFromBackBuffer( ID3D11Device * pDevice_p )
 
 	assert( pBBuffTexture );
 
-	DBG(
-		D3D11_TEXTURE2D_DESC bbuffTex2DDesc;
-	pBBuffTexture->GetDesc( &bbuffTex2DDesc );
-	)
+	//DBG(
+	//D3D11_TEXTURE2D_DESC bbuffTex2DDesc;
+	//pBBuffTexture->GetDesc( &bbuffTex2DDesc );
+	//m_BackBufferDisplayMode.Width = bbuffTex2DDesc.Width;
+	//m_BackBufferDisplayMode.Height = bbuffTex2DDesc.Height;
+	//)
 
-		// create a rt view using the swc output params:
+	// create a rt view using the swc output params:
 
-		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 	rtvDesc.Format = m_BackBufferDisplayMode.Format;
 	rtvDesc.Texture2D.MipSlice = 0;
 	rtvDesc.ViewDimension = (m_nMSAA > 1 )?D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
@@ -49,8 +51,10 @@ void dx::SwapChain::Resize( UINT width_p, UINT height_p, ID3D11Device * pDevice_
 
 	// needs to release references first
 
-	if( m_pBackBufferRTV )
+	if( m_pBackBufferRTV ){
 		m_pBackBufferRTV->Release();
+		m_pBackBufferRTV = nullptr;
+	}
 
 	HRESULT hr = m_pSwapChain->ResizeBuffers( m_nBuffers, width_p, height_p, DXGI_FORMAT_UNKNOWN/*m_BackBufferDisplayMode.Format*/, m_iFlags );
 	if( FAILED(hr) ){
@@ -59,21 +63,25 @@ void dx::SwapChain::Resize( UINT width_p, UINT height_p, ID3D11Device * pDevice_
 		throw std::exception("dxgi failed to resize");
 	}
 
-	m_BackBufferDisplayMode.Width = width_p;
-	m_BackBufferDisplayMode.Height = height_p;
-
 	// recreate the references
 	CreateRTVFromBackBuffer( pDevice_p );
+
+	DXGI_SWAP_CHAIN_DESC desc;
+	m_pSwapChain->GetDesc( &desc );
+	m_BackBufferDisplayMode = desc.BufferDesc;
 }
 
-void dx::SwapChain::CreateTheSwapChain( /*in: */ ID3D11Device *pDevice_p, IDXGIFactory1 *pFactory_p, const HWND hWnd_p,/*reqired */ const BOOL bChangeResolutionWhenResizingInFullscreen_p, /*in / holded: */ const BOOL bWindowed_p, const UINT nMSAA_p, const UINT iMSAAqlty_p, const DXGI_MODE_DESC OutputMode_p,/*used also to check MSAA for the format */ const UINT nBuffer_p, IDXGIOutput *pOutput_p /*not used only holded */ )
+void dx::SwapChain::CreateTheSwapChain( /*in: */ ID3D11Device *pDevice_p, IDXGIFactory1 *pFactory_p, const HWND hWnd_p,
+	/*reqired */ const BOOL bChangeResolutionToMatchCliRectWhenGoingFullscreen_p, /*in / holded: */ const BOOL bWindowed_p,
+	const UINT nMSAA_p, const UINT iMSAAqlty_p, const DXGI_MODE_DESC OutputMode_p,
+	/*used also to check MSAA for the format */ const UINT nBuffer_p, IDXGIOutput *pOutput_p /*not used only holded */ )
 {
 	//create swap chain with the display mode returned when requesting for given features:
 	DXGI_SWAP_CHAIN_DESC swDesc;
 	swDesc.BufferDesc = m_BackBufferDisplayMode = OutputMode_p;
 	swDesc.BufferCount = m_nBuffers = nBuffer_p;//n of buffers(including front, accordingly to the sdk)
 	swDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swDesc.Flags = m_iFlags = bChangeResolutionWhenResizingInFullscreen_p ? DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH : NULL;
+	swDesc.Flags = m_iFlags = bChangeResolutionToMatchCliRectWhenGoingFullscreen_p ? DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH : NULL;
 	swDesc.OutputWindow = hWnd_p;
 	swDesc.SampleDesc.Count = m_nMSAA = nMSAA_p;
 	swDesc.SampleDesc.Quality = m_iMSAAQuality = iMSAAqlty_p;
@@ -94,7 +102,7 @@ void dx::SwapChain::CreateTheSwapChain( /*in: */ ID3D11Device *pDevice_p, IDXGIF
 	}
 
 	m_pOutput = pOutput_p;
-	//donne(pFactory_p);
+	//donne(pFactory_p);	
 
 	//denny dxgi to ctrl the hWnd alt+enter(I think only DXGI_MWA_NO_WINDOW_CHANGES have effect ) :
 	//	NOTE: prnt screen is only denied when in dx fs( also with DXGI_MWA_NO_WINDOW_CHANGES )
@@ -129,6 +137,16 @@ bool dx::SwapChain::SwitchFullscreenMode()
 
 		m_bWindowed = true;
 	}
+
+	// update output, since it may change
+
+	DXGI_SWAP_CHAIN_DESC desc;
+	m_pSwapChain->GetDesc( &desc );
+	m_BackBufferDisplayMode = desc.BufferDesc;
+
+	// NOTE!!!!
+	// even if mode switch is true, and even if the mode changed, the description does not
+	// change regarding the scaling!!!
 
 	return true;
 

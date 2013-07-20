@@ -66,19 +66,31 @@ namespace sprite{
 	//========================================================================
 	class BindVSCameraCBuffer: public dx::Binder{
 
-		UINT m_iStartSlot;
-		ID3D11Buffer *m_pConstantBuffer;
-		shared_CameraCbuffer_ptr m_pConstantBufferData;
-
-		static ID3D11Buffer * s_pConstantBufferBound;
-
 	public:
 
+		//------------------------------------------------------------------------
+		// ctors
+		//------------------------------------------------------------------------
 		BindVSCameraCBuffer( ID3D11Buffer *pConstantBuffers_p,  const shared_CameraCbuffer_ptr & pConstBufferData_p )
 			:
 		Binder( 1LL << dx::E_VS_CBuffer1 , dx::E_VS_CBuffer1 ),
-			m_iStartSlot( 1 ), m_pConstantBuffer( pConstantBuffers_p ),
-			m_pConstantBufferData(pConstBufferData_p){}
+		m_iStartSlot( 1 ), m_pConstantBuffer( pConstantBuffers_p ),
+		m_pConstantBufferData(pConstBufferData_p)
+		{}
+		BindVSCameraCBuffer()
+			:
+		Binder( 1LL << dx::E_VS_CBuffer1 , dx::E_VS_CBuffer1 ),
+		m_iStartSlot( 1 )
+		{}
+
+		//------------------------------------------------------------------------
+		// delayed construction
+		//------------------------------------------------------------------------
+		void Initialize( ID3D11Buffer *pConstantBuffers_p,  const shared_CameraCbuffer_ptr & pConstBufferData_p ){
+
+			m_pConstantBuffer = pConstantBuffers_p;
+			m_pConstantBufferData = pConstBufferData_p;
+		}
 
 		//------------------------------------------------------------------------
 		// Updates data to the buffer before binding it.
@@ -99,5 +111,13 @@ namespace sprite{
 				pDeviceContext_p->UpdateSubresource( m_pConstantBuffer, 0, NULL, m_pConstantBufferData.get(), 0, 0 );
 			}
 		}
+
+	private:
+
+		UINT			m_iStartSlot;
+		ID3D11Buffer *	m_pConstantBuffer;
+		shared_CameraCbuffer_ptr m_pConstantBufferData;
+
+		static ID3D11Buffer * s_pConstantBufferBound;
 	};
 }

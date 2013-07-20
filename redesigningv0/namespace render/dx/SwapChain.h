@@ -9,6 +9,7 @@
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
 	purpose:	A object that can be draw to a render target, in a single draw call, that is.
+				NOTE: Resize target do not change swap chain scaling.
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */

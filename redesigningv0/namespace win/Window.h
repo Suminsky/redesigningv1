@@ -120,6 +120,26 @@ namespace win{
 	protected:
 		virtual LRESULT CALLBACK WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p ) = 0;
 
+		//------------------------------------------------------------------------
+		// call this when the HWND changes to automatically set the rects
+		//------------------------------------------------------------------------
+	public:	void UpdateRects(){
+
+			RECT newRect;
+			::GetWindowRect( m_hWnd, &newRect );
+			m_rect.FromRECT( newRect );
+
+			::GetClientRect( m_hWnd, &newRect );
+			m_cliRect.FromRECT( newRect );
+
+			// NOTE: cli rect returned never contains x, y, its always 0
+			POINT cliPos = {0};
+			ClientToScreen( m_hWnd, &cliPos );
+			//
+			m_cliRect.x = cliPos.x;
+			m_cliRect.y = cliPos.y;		
+		}
+
 	public:
 
 		//------------------------------------------------------------------------
@@ -133,17 +153,11 @@ namespace win{
 		bool MoveTo( int ClientX_p, int ClientY_p );
 
 		//------------------------------------------------------------------------
-		// call this when the HWND changes to automatically set the rects
+		// change monitor resolution
 		//------------------------------------------------------------------------
-		void UpdateRects(){
+		bool ChangeResolution( UINT W_p, UINT H_p );
+		bool ResetMonitorResolution();
 
-			RECT newRect;
-			::GetWindowRect( m_hWnd, &newRect );
-			m_rect.FromRECT( newRect );
-
-			::GetClientRect( m_hWnd, &newRect );
-			m_cliRect.FromRECT( newRect );
-		}
 		//------------------------------------------------------------------------
 		// Updates the window style
 		//------------------------------------------------------------------------

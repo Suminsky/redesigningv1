@@ -52,7 +52,8 @@ namespace text{
 
 			// get texture
 
-			m_textureSRVBinder.reset( &textureCache_p.Get(fontDesc_p.szTextureFilename), &gen::NoOp<dx::Binder>  );
+			m_pTextureSRVBinder = &textureCache_p.Get(fontDesc_p.szTextureFilename, &m_iTextureID);
+			m_pipeState.AddBinderCommand( m_pTextureSRVBinder );
 		}
 		bool InitFromFile( const char * szFontDescFilename_p, sprite::TextureBinders & textureCache_p ){
 
@@ -89,9 +90,11 @@ namespace text{
 				return m_notSupportedGlyph;
 			 }
 		}
-		dx::shared_Binder_ptr & GetTextureBinder(){ return m_textureSRVBinder; }
-		int GetTextureWidth()const{return m_iTextureW;}
-		int GetTextureHeight()const{return m_iTextureH;}
+		dx::Binder *& GetTextureBinder(){ return m_pTextureSRVBinder; }
+		dx::State & GetPipeState(){ return m_pipeState; }
+		int GetTextureWidth()  const{ return m_iTextureW; }
+		int GetTextureHeight() const{ return m_iTextureH; }
+		int GetTextureID() const {return m_iTextureID;}
 
 
 	private:
@@ -101,7 +104,10 @@ namespace text{
 		int m_iTextureW, m_iTextureH;
 		GlyphRect m_notSupportedGlyph;
 
-		dx::shared_Binder_ptr m_textureSRVBinder;
+		dx::Binder * m_pTextureSRVBinder;
+		dx::State	m_pipeState;
+		int m_iTextureID;
+
 		GlyphMap m_glyphUVs;
 	};
 

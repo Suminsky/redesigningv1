@@ -93,6 +93,7 @@ bool win::Window::Create( Rect & cliRect_p, /* desired client rect */ const TCHA
 
 bool win::Window::Resize( int ClientW_p, int ClientH_p )
 {
+
 	// get rect to accommodate client area
 
 	Rect newClientRect_p( m_cliRect );
@@ -106,6 +107,7 @@ bool win::Window::Resize( int ClientW_p, int ClientH_p )
 
 	Rect NewRect(adjustRect);
 
+	// cant understand why, but SetWindowPos works on client pos xy, and window size wh
 
 	if( !SetWindowPos(	m_hWnd,
 		NULL,
@@ -177,6 +179,72 @@ bool win::Window::ChangeStyle( DWORD dwWS_p, DWORD dwWSEX_p )
 	}
 
 	m_dwWSEX = dwWSEX_p;
+
+	//UpdateRects(); 
+	// NOTE!!!!
+	// important, the cli rect may change due change of style (like the popup style, the cli enlarges to the win rect), but the
+	// rect arent updated here cause it stills returns the old values
+	
+	//UpdateWindow( m_hWnd ); // DOES NOT SOLVE
+	//SetVisibility(true); // DOES NOT SOLVE
+	//Restore(); //DOES NOT SOLVE
+	//UpdateRects();
+	// require user to resize manually?
+	
+	Resize( m_cliRect.w, m_cliRect.h );
+
+	return true;
+}
+
+bool Window::ChangeResolution( UINT W_p, UINT H_p )
+{
+	//get display current settings:
+
+	DEVMODE devMode; ZeroMemory( &devMode, sizeof(DEVMODE) );
+	devMode.dmSize = sizeof( DEVMODE );
+	TESTBOOLNULL( EnumDisplaySettings( NULL, ENUM_CURRENT_SETTINGS, &devMode ) );
+
+	//only do it if wanted res different from current:
+	if( devMode.dmPelsWidth == W_p && devMode.dmPelsHeight == H_p )
+		return true;
+
+	//set wanted resolution(current client area resolution..or esle):
+
+	devMode.dmPelsWidth = W_p;
+	devMode.dmPelsHeight = H_p;
+
+	//set what data to update:
+
+	devMode.dmFields = DM_PELSWIDTH|DM_PELSHEIGHT;
+	LONG err = ChangeDisplaySettings( &devMode, CDS_FULLSCREEN );
+
+	if( err != DISP_CHANGE_SUCCESSFUL ){
+
+		switch( err ){
+		DBG(
+		case DISP_CHANGE_BADFLAGS:
+		case DISP_CHANGE_BADPARAM:
+			assert(0);
+			break;
+		)
+		case DISP_CHANGE_BADMODE://i.e.: resolution/freqency not supported
+		case DISP_CHANGE_FAILED://device failed the specific mode(???)
+		case DISP_CHANGE_BADDUALVIEW:
+			return false;
+		}		
+	}
+
+	return true;
+}
+bool Window::ResetMonitorResolution(){
+
+	//Change back monitor resolution:
+	//***(NULL, 0 ) returns to default mode AND send a WM_DISPLAYCHANGE
+	//(consequently a WM_SIZE)
+	
+	if( ChangeDisplaySettings( NULL, 0 ) != DISP_CHANGE_SUCCESSFUL ){
+		return false;
+	}
 
 	return true;
 }
