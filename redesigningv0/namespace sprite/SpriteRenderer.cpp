@@ -10,7 +10,7 @@ void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 	static render::Drawable drawInst;
 	drawInst.Clear();
 
-	drawInst.SetSortKey( pSprite_p->m_renderSortKey.intRepresentation() );
+	drawInst.SetSortKey( pSprite_p->m_renderSortKey.intRepresentation );
 	// shader
 	drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pipeState );
 	// vb
@@ -30,7 +30,7 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
 	static render::Drawable drawInst;
 	drawInst.Clear();
 
-	drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation() );
+	drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
 	// shader
 	drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
 	// vb
@@ -53,7 +53,7 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent *pSprite_p, Camera *p
 	static render::Drawable s_drawInst;
 	s_drawInst.Clear();
 
-	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation() );
+	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
 	// shader
 	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
 	// vb

@@ -63,11 +63,11 @@ void text::TextRenderer::RenderText( const WCHAR szText_p[], DirectX::XMFLOAT4 p
 
 	render::Drawable drawable;
 	sprite::SortMask sorMask = {0};
-	sorMask.layer = 3;
-	sorMask.textureID = m_fonts[iFontID_p].GetTextureID();
-	sorMask.transparency = sprite::E_BLEND_ALPHA_BLENDED;
+	sorMask.bitfield.layer = 3;
+	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
+	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
 
-	drawable.SetSortKey( sorMask.intRepresentation() );
+	drawable.SetSortKey( sorMask.intRepresentation );
 	drawable.SetDrawCall( m_pTextDrawCall );
 
 	drawable.SetPipelineStateGroup( m_textRenderStates ); // common data (vertex, IA, etc)
@@ -143,10 +143,10 @@ void text::TextRenderer::DrawText( const WCHAR szText_p[], DirectX::XMFLOAT4 pos
 	float fPosOffsetY = 0.0f;
 
 	sprite::SortMask sorMask = {0};
-	sorMask.layer = 3;
-	sorMask.textureID = m_fonts[iFontID_p].GetTextureID();
-	sorMask.transparency = sprite::E_BLEND_ALPHA_BLENDED;
-	__int64 llsortKey = sorMask.intRepresentation();
+	sorMask.bitfield.layer = 3;
+	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
+	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
+	//__int64 llsortKey = sorMask.intRepresentation;
 
 	int itGlyph = 0;
 	while( szText_p[itChar] != 0x0000 ){
@@ -205,7 +205,7 @@ void text::TextRenderer::DrawText( const WCHAR szText_p[], DirectX::XMFLOAT4 pos
 		pDrawableText_p[itGlyph].renderData.state.AddBinderCommand( &pDrawableText_p[itGlyph].renderData.bindDrawableCbuffer );
 
 
-		pDrawableText_p[itGlyph].drawable.SetSortKey( llsortKey );
+		pDrawableText_p[itGlyph].drawable.SetSortKey( sorMask.intRepresentation );
 		pDrawableText_p[itGlyph].drawable.SetDrawCall( m_pTextDrawCall );
 
 		pDrawableText_p[itGlyph].drawable.SetPipelineStateGroup( m_textRenderStates ); // common data (vertex, IA, etc)

@@ -15,7 +15,7 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 										const shared_MovableComponent_ptr & pMovable_p )
 {
 	m_pMovableRef = pMovable_p;
-	m_sortKey.Zero();
+	m_sortKey.intRepresentation = 0LL;
 
 	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
 	m_pSpriteRendererRef = pSpriteRenderer_p;
@@ -53,8 +53,8 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends.GetBlendBind(blendType_p) );
 
 	m_TextureID = iTextureID;
-	m_sortKey.textureID = m_TextureID;
-	m_sortKey.transparency = blendType_p;
+	m_sortKey.bitfield.textureID = m_TextureID;
+	m_sortKey.bitfield.transparency = blendType_p;
 }
 
 void game::SpriteComponent::OnDraw( double dInterpolation_p )

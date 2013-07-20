@@ -38,40 +38,18 @@ namespace sprite{
 	// Used to sort the draw calls
 	// This level of the rendering cant worry about this more specific stuff!
 	//------------------------------------------------------------------------
-	struct SortMask{
+	union SortMask{
+		struct{
 
-		unsigned short textureID	: 15;
-		unsigned short shaderID		: 15;
-		unsigned int Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
-		unsigned char transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
-		unsigned char viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
-		unsigned char viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
-		unsigned char layer			: 2;	// 4 layers: game, HUD, full screen effect...
-
-		__int64 intRepresentation(){
-
-			return   __int64(layer		& 0x03)	<< (64 -2) 
-				| __int64(viewport		& 0x07)	<< (64 -2 -3)
-				| __int64(viewportLayer & 0x07)	<< (64 -2 -3 -3)
-				| __int64(transparency  & 0x03)	<< (64 -2 -3 -3 -2)
-				| __int64(Zdepth		& 0x00ffffff)	<< (64 -2 -3 -3 -2 -24)
-				| __int64(shaderID		& 0x7fff)	<< (64 -2 -3 -3 -2 -24 -15)
-				| __int64(textureID		& 0x7fff)	<< (64 -2 -3 -3 -2 -24 -15 -15);
-		}
-		void FromInt( __int64 int_p ){
-
-			layer			= ((int_p & 0xC000000000000000) >> (64 -2) );
-			viewport		= ((int_p & 0x3800000000000000) >> (64 -2 -3) );
-			viewportLayer	= ((int_p & 0x0700000000000000) >> (64 -2 -3 -3) );
-			transparency	= ((int_p & 0x00C0000000000000) >> (64 -2 -3 -3 -2) );
-			Zdepth			= ((int_p & 0x003FFFFFC0000000) >> (64 -2 -3 -3 -2 -24) );
-			shaderID		= ((int_p & 0x000000003FFF8000) >> (64 -2 -3 -3 -2 -24 -15) );
-			textureID		= ((int_p & 0x0000000000007FFF) >> (64 -2 -3 -3 -2 -24 -15 -15) );
-		}
-
-		void Zero(){
-			memset( this, 0, sizeof(SortMask));
-		}
+			unsigned __int64 textureID		: 15;
+			unsigned __int64 shaderID		: 15;
+			unsigned __int64 Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+			unsigned __int64 transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
+			unsigned __int64 viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
+			unsigned __int64 viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
+			unsigned __int64 layer			: 2;	// 4 layers: game, HUD, full screen effect...
+		}bitfield;
+		__int64 intRepresentation;
 	};
 
 	class SpriteRenderer;
