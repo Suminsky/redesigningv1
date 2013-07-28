@@ -71,10 +71,10 @@ namespace game{
 		//------------------------------------------------------------------------
 		// get id
 		//------------------------------------------------------------------------
-		ObjectID ID() const{
+		/*ObjectID ID() const{
 
 			return m_ID;
-		}
+		}*/
 
 		//------------------------------------------------------------------------
 		// get component by id (the id is the index on the object)
@@ -90,14 +90,14 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddComponent( shared_Component_ptr && pComponent_p ){
 
-			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
+			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size();
 			pComponent_p->m_pObjectOwner = this;
 
 			m_components.push_back( std::move(pComponent_p) );	
 		}
 		void AddComponent( const shared_Component_ptr & pComponent_p ){
 
-			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size()-1;
+			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size();
 			pComponent_p->m_pObjectOwner = this;
 
 			m_components.push_back( pComponent_p );	
@@ -110,9 +110,10 @@ namespace game{
 		}
 
 		//------------------------------------------------------------------------
-		// 
+		// getters
 		//------------------------------------------------------------------------
-		Layer * GetLayerOwner(){ return m_pLayerOwner; }
+		Layer * GetLayerOwner() const { return m_pLayerOwner; }
+		OBJECT_LAYERINDEX GetLayerIndex() const { return m_currentLayerIndex; }
 
 	protected:
 
@@ -120,7 +121,7 @@ namespace game{
 
 	private:
 
-		ObjectID m_ID;
+		//ObjectID m_ID;
 		OBJECT_LAYERINDEX m_currentLayerIndex;
 		ObjectComponents m_components;
 	};

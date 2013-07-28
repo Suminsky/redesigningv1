@@ -67,10 +67,9 @@ namespace game{
 			m_objects.push_back(object_p);
 		}
 		//
-		void RmeoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
+		void RemoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
 
 			m_removedObjects.push_back( objectCurrentIndex_p );
-			//m_objects[objectCurrentIndex_p]->m_currentLayerIndex = INVALID_OBJECTINDEX;
 		}
 
 		//------------------------------------------------------------------------
@@ -105,14 +104,12 @@ namespace game{
 
 			// update game::Objects
 
-			for( LayerObjects::const_iterator it = m_objects.begin(), itEnd = m_objects.end();
-				 it != itEnd;
-				 ++it ){
+			for( int it = 0, itEnd = (int)m_objects.size(); it != itEnd; ++it ){
 
-					 if( (*it)->m_bActive ){
+				if( m_objects[it]->m_bActive ){
 						 
-						 (*it)->Update( m_timer.GetTime(), m_timer.GetDelta() );
-					 }
+					m_objects[it]->Update( m_timer.GetTime(), m_timer.GetDelta() );
+				}
 			}
 
 			VLateUpdate( m_timer.GetTime(), m_timer.GetDelta() );
@@ -143,13 +140,6 @@ namespace game{
 
 			unsigned int nDestroyed = (unsigned int)m_removedObjects.size(); // cache
 			unsigned int nObjects = (unsigned int)m_objects.size();
-
-			//if( nDestroyed == nObjects ){
-
-			//	m_objects.clear();
-			//	m_removedObjects.clear();
-			//	return;
-			//}
 
 			for( unsigned int it = 0, itLast = nObjects - 1; it < nDestroyed; ++it ){
 

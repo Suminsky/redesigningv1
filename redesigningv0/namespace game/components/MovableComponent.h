@@ -82,6 +82,15 @@ namespace game{
 
 			return  DirectX::XMMatrixAffineTransformation2D(vScale, DirectX::g_XMZero, 0.0f, vPos );
 		}
+		//DirectX::XMMATRIX ComputeFromParentWorldMatrix( DirectX::CXMMATRIX mParentWorld_p ){
+
+		//	// UNTESTED
+
+		//	return DirectX::XMMatrixMultiply(
+		//		DirectX::XMMatrixAffineTransformation(m_vCurrentScale, DirectX::g_XMZero, m_vCurrentOrientation, m_vCurrentPosition ),
+		//		mParentWorld_p
+		//	);
+		//}
 
 		//------------------------------------------------------------------------
 		// XMVECTOR need to be aligned by 16

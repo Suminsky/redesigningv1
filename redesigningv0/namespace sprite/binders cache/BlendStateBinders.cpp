@@ -10,14 +10,14 @@ void sprite::BlendStateBinders::Init( dx::Device * pDevice_p )
 	// alpha blend:
 	//final rgb:
 	//alpha blending = (src.rgb * src.a) + (dest.rgb * (1-dest.a))
-	params.desc.blendDesc.RenderTarget[0].BlendOp				= D3D11_BLEND_OP_ADD;
-	params.desc.blendDesc.RenderTarget[0].SrcBlend				= D3D11_BLEND_SRC_ALPHA;
+	params.desc.blendDesc.RenderTarget[0].BlendOp			= D3D11_BLEND_OP_ADD;
+	params.desc.blendDesc.RenderTarget[0].SrcBlend			= D3D11_BLEND_SRC_ALPHA;
 	params.desc.blendDesc.RenderTarget[0].DestBlend			= D3D11_BLEND_INV_SRC_ALPHA;
 	//final alpha:
 	//alpha blending = (src.a * 1) + (dest.a * 1)
-	params.desc.blendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+	params.desc.blendDesc.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP_ADD;
 	params.desc.blendDesc.RenderTarget[0].SrcBlendAlpha		= D3D11_BLEND_ONE;
-	params.desc.blendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_ONE;
+	params.desc.blendDesc.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND_ONE;
 
 	params.desc.blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; // witch component can be write
 
@@ -28,15 +28,15 @@ void sprite::BlendStateBinders::Init( dx::Device * pDevice_p )
 
 	// additive blend:
 	//final rgb:
-	//alpha blending = (src.rgb * src.a) + (dest.rgb * (1-dest.a))
-	params.desc.blendDesc.RenderTarget[0].BlendOp				= D3D11_BLEND_OP_ADD;
-	params.desc.blendDesc.RenderTarget[0].SrcBlend				= D3D11_BLEND_SRC_COLOR;
-	params.desc.blendDesc.RenderTarget[0].DestBlend			= D3D11_BLEND_DEST_COLOR;
+	//alpha blending = (src.rgb * src.a) + (dest.rgb * 1)
+	params.desc.blendDesc.RenderTarget[0].BlendOp			= D3D11_BLEND_OP_ADD;
+	params.desc.blendDesc.RenderTarget[0].SrcBlend			= D3D11_BLEND_SRC_ALPHA;
+	params.desc.blendDesc.RenderTarget[0].DestBlend			= D3D11_BLEND_ONE;
 	//final alpha:
 	//alpha blending = (src.a * 1) + (dest.a * 1)
-	params.desc.blendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+	params.desc.blendDesc.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP_ADD;
 	params.desc.blendDesc.RenderTarget[0].SrcBlendAlpha		= D3D11_BLEND_ONE;
-	params.desc.blendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_ONE;
+	params.desc.blendDesc.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND_ONE;
 
 	params.desc.blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; // witch component can be write
 

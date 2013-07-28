@@ -26,7 +26,7 @@ namespace text{
 
 	class BmpFont{
 
-		typedef std::map<WCHAR, GlyphRect> GlyphMap;
+		typedef std::map<wchar_t, GlyphRect> GlyphMap;
 
 	public:
 
@@ -44,6 +44,12 @@ namespace text{
 			m_fNewLineMinHeight = fontDesc_p.fNewLineMinHeight;
 			m_iTextureW = fontDesc_p.iTextureWidth;
 			m_iTextureH = fontDesc_p.iTextureHeight;
+
+			// TODO:
+			m_notSupportedGlyph.Width = (float)m_iTextureW;
+			m_notSupportedGlyph.Height = (float)m_iTextureH;
+			m_notSupportedGlyph.X = 0.0f;
+			m_notSupportedGlyph.Y = 0.0f;
 
 			for( int it = 0; it < fontDesc_p.nCharacteres; ++it ){
 
@@ -77,7 +83,7 @@ namespace text{
 		//------------------------------------------------------------------------
 		float GetSpaceWidth()const{ return m_fSpaceWidth; }
 		float GetMinNewLineHeight()const{ return m_fNewLineMinHeight; }
-		GlyphRect GetGlyphUV( WCHAR id )const{
+		GlyphRect GetGlyphUV( const wchar_t id )const{
 
 			 GlyphMap::const_iterator element = m_glyphUVs.find( id );
 			 if( element != m_glyphUVs.end() ){

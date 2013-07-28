@@ -273,6 +273,12 @@
     <ClInclude Include="namespace render\dx\pipeline\State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace gen\Delegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace gen\Tweening.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">

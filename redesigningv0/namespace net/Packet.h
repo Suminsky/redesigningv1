@@ -19,11 +19,26 @@
 
 namespace net{
 
+	template<int TOTALSIZE, int HEADERSIZE>
 	class Packet{
+
+		enum{
+
+			E_TOTAL_SIZE = TOTALSIZE,
+			E_HEADER_SIZE = HEADERSIZE,
+			E_DATA_SIZE = E_TOTAL_SIZE - E_HEADER_SIZE,
+			E_DATA_OFFSET = E_HEADER_SIZE
+		};
+
+		// header
+		// user data
 
 	public:
 
 	private:
+
+		int m_iHeaderSize;
+		unsigned char m_data[TOTALSIZE];
 
 	};
 

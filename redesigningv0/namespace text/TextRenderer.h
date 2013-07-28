@@ -28,7 +28,7 @@ namespace text{
 	};
 
 	//------------------------------------------------------------------------
-	// holds data commom to all glyphs
+	// holds data common to all glyphs
 	//------------------------------------------------------------------------
 	struct GlyphRenderData{
 		
@@ -37,11 +37,10 @@ namespace text{
 		
 		dx::State state;
 	};
-
 	struct DrawableGlyph{
 
-		render::Drawable drawable;
 		GlyphRenderData renderData; // data used by the drawable
+		render::Drawable drawable;
 	};
 
 	//========================================================================
@@ -57,8 +56,9 @@ namespace text{
 
 		struct GlyphRenderBuffer{ // due a bug on std, vector wont align data, this is fixed on vs2012
 
-			GlyphRenderData m_renderDatas[E_MAXGLYPHS];
 			int m_currentIndex;
+			GlyphRenderData m_renderDatas[E_MAXGLYPHS];
+			
 
 			//------------------------------------------------------------------------
 			// 
@@ -67,19 +67,6 @@ namespace text{
 
 				m_currentIndex = 0;
 			}
-
-			/*void push_back( const GlyphRenderData & data_p ){
-
-				assert( m_currentIndex < E_MAXGLYPHS );
-
-				m_renderDatas[m_currentIndex] = data_p;
-				m_currentIndex ++;
-			}*/
-
-			/*int CurrentIndex(){
-
-				return m_currentIndex;
-			}*/
 
 			//------------------------------------------------------------------------
 			// 
@@ -141,7 +128,7 @@ namespace text{
 		// SLOW, this creates the drawables and submit then to the drawablesqueue.
 		// MAX of E_MAXGLYPHS, as render data is buffered in this object.
 		//------------------------------------------------------------------------
-		void RenderText( const WCHAR szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p = 0 );
+		void RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p = 0 );
 
 
 		//------------------------------------------------------------------------
@@ -149,7 +136,7 @@ namespace text{
 		// nDrawables have both max glyphs to create, and return number of glyphs
 		// used.
 		//------------------------------------------------------------------------
-		void DrawText(  const WCHAR szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
+		void DrawText(  const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
 						DrawableGlyph * pDrawableText_p, int & nDrawables_p );
 
 	private:
@@ -169,7 +156,7 @@ namespace text{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		static UINT CountWString( const WCHAR * szString_p )
+		static UINT CountWString( const wchar_t * szString_p )
 		{
 			int counter = 0;
 

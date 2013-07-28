@@ -120,9 +120,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
@@ -137,6 +138,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -171,6 +173,8 @@
     <ClInclude Include="namespace game\TaskMachine.h" />
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
+    <ClInclude Include="namespace gen\Delegate.h" />
+    <ClInclude Include="namespace gen\Tweening.h" />
     <ClInclude Include="namespace input\Mapper.h" />
     <ClInclude Include="namespace net\Address.h" />
     <ClInclude Include="namespace net\net.h" />

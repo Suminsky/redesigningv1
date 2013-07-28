@@ -29,7 +29,9 @@ namespace net{
 		E_CONFIG_TIMEOUTMSEC = 10000
 	};
 
-	//template< int NSIZE >
+	//------------------------------------------------------------------------
+	// 
+	//------------------------------------------------------------------------
 	struct DataBuffer{
 
 		int currentUsed;
@@ -277,6 +279,8 @@ namespace net{
 				if( remoteAddress == m_remoteAddress ){
 
 					m_dTimeSinceLastReceiving = 0.0;
+
+					// TODO: heart beats should not be treated as user data
 					return;
 				}
 				else{
@@ -308,6 +312,34 @@ namespace net{
 		// 
 		//------------------------------------------------------------------------
 		E_STATE GetState(){ return m_eState; }
+
+		//------------------------------------------------------------------------
+		// new - testing
+		//------------------------------------------------------------------------
+		bool DataReceived()const{
+
+			return m_bufferedRemoteDataReceived.currentUsed != 0;
+		}
+		DataBuffer & GetReceivedData(){
+
+			return m_bufferedRemoteDataReceived;
+		}
+
+
+		bool SendData( unsigned char * pDataBuff_p, int iSize_p ){
+
+			// returns false if buffer is full(no space for the new data)
+			// this means data on the buffer is not being sent as fast as user
+			// is filling (or not being sent at all)
+
+			if( m_bufferedUserDataTosend.currentUsed + iSize_p > E_CONFIG_DATABUFFERSIZE ){
+				
+				return false;
+			}
+
+			m_bufferedUserDataTosend.Queue( pDataBuff_p, iSize_p );
+			return true;
+		}
 
 	private:
 

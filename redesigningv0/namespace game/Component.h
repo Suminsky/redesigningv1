@@ -41,19 +41,20 @@ namespace game{
 		//------------------------------------------------------------------------
 		// get id
 		//------------------------------------------------------------------------
-		ComponentID ID(){
+		/*ComponentID ID(){
 
 			return m_ID;
-		}
+		}*/
 
 		//------------------------------------------------------------------------
 		// get owner object
 		//------------------------------------------------------------------------
-		OBJECT_LAYERINDEX GetOwner();
+		Object *  GetObjectOwner(){ return m_pObjectOwner; }
+		COMPONENT_OBJECTINDEX GetObjectIndex() const { return m_currentObjectIndex; }
 
 	protected:
 
-		ComponentID m_ID;
+		//ComponentID m_ID;
 		Object * m_pObjectOwner;
 
 	private:

@@ -60,7 +60,6 @@ namespace game{
 			pNewLayer_p->VOnInit();
 
 			m_layers.push_back( pNewLayer_p );
-			//m_addedLayers.push_back( pNewLayer_p );
 		}
 		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
 
@@ -71,17 +70,13 @@ namespace game{
 			pNewLayer_p->VOnInit();
 			
 			m_layers.push_back( std::move(pNewLayer_p) );
-			//m_addedLayers.push_back( std::move(pNewLayer_p) );
 		}
 
 		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
 
 			// cant destroy here, since it happens only in the end of the frame, its possible
 			// the layer will still update this frame
-			
-			//m_layers[layerCurrentIndex_p]->VOnDestroy();
-			//m_layers[layerCurrentIndex_p]->m_currentStateIndex = INVALID_LAYERINDEX;
-			//m_layers[layerCurrentIndex_p]->m_pStateOwner = nullptr;
+
 			m_removedLayers.push_back(layerCurrentIndex_p);
 		}
 
@@ -89,15 +84,14 @@ namespace game{
 
 		StateLayers m_layers;
 		LayerIndexes m_removedLayers;
-		//StateLayers m_addedLayers;
 
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
 		virtual void VOnInit(){}
-		virtual void VOnUpdate(double, double){} // called before layers update
-		virtual void VLateUpdate(double, double){} // called after layers update
-		virtual void VOnDraw(){}				 // called after layers draw
+		virtual void VOnUpdate(double, double){}	// called before layers update
+		virtual void VLateUpdate(double, double){}	// called after layers update
+		virtual void VOnDraw(){}					// called after layers draw
 		virtual void VOnDestroy(){}
 
 		virtual void VOnResize(){}
@@ -113,14 +107,6 @@ namespace game{
 
 			// traverse layers and update them, if active
 
-			/*for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
-					it != itEnd; ++ it ){
-			
-					if( (*it)->m_bActive ){
-
-						(*it)->Update( m_timer.GetDelta() );
-					}
-			}*/
 			for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
 				if( m_layers[it]->m_bActive ){
@@ -128,7 +114,6 @@ namespace game{
 					m_layers[it]->Update( m_timer.GetDelta() );
 				}
 			}
-
 
 			VLateUpdate( m_timer.GetTime(), m_timer.GetDelta() );
 
@@ -147,16 +132,10 @@ namespace game{
 
 			VOnResize();
 
-			/*for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
-				it != itEnd; ++ it ){
-
-					(*it)->VOnResize( W_p, H_p );
-			}*/
 			for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
-					m_layers[it]->VOnResize( W_p, H_p );
+				m_layers[it]->VOnResize( W_p, H_p );
 			}
-
 		}
 
 		//------------------------------------------------------------------------
@@ -164,11 +143,6 @@ namespace game{
 		//------------------------------------------------------------------------
 		void Destroy(){
 
-			/*for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
-				it != itEnd; ++ it ){
-
-					(*it)->VOnDestroy();
-			}*/
 			for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
 				m_layers[it]->VOnDestroy();
@@ -180,15 +154,6 @@ namespace game{
 		// traverse layer and call draw
 		//------------------------------------------------------------------------
 		void Draw( const double dInterpolation_p ){
-
-			/*for( StateLayers::const_iterator it = m_layers.cbegin(), itEnd = m_layers.cend();
-				it != itEnd; ++ it ){
-
-					if( (*it)->m_bActive ){
-
-						(*it)->VOnDraw( dInterpolation_p );
-					}
-			}*/
 
 			for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
@@ -211,13 +176,6 @@ namespace game{
 			unsigned int nDestroyed = (unsigned int)m_removedLayers.size(); // cache
 			unsigned int nLayers = (unsigned int)m_layers.size();
 
-			/*if( nDestroyed == nLayers ){
-
-				m_layers.clear();
-				m_removedLayers.clear();
-				return;
-			}*/
-
 			for( unsigned int it = 0, itLast = nLayers - 1; it < nDestroyed; ++it ){
 
 				m_layers[m_removedLayers[it]]->VOnDestroy();
@@ -237,6 +195,7 @@ namespace game{
 			}
 
 			// "trim"
+
 			m_layers.resize(nLayers - nDestroyed);
 
 			m_removedLayers.clear();

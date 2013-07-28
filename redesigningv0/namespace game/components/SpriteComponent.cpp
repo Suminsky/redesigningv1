@@ -21,7 +21,15 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 	m_pSpriteRendererRef = pSpriteRenderer_p;
 	m_iShaderPermutation = 0;
 
-	m_renderData.m_mWorld = XMMatrixIdentity();
+	if(  shared_MovableComponent_ptr pMovable = m_pMovableRef.lock() ){
+
+		m_renderData.m_mWorld = pMovable->ComputeRenderWorldMatrix( 1.0f );
+	}
+	else{
+
+		m_renderData.m_mWorld = XMMatrixIdentity();
+	}
+	
 
 	m_renderData.m_res.x = fWidth_p;
 	m_renderData.m_res.y = fHeight_p;
@@ -42,6 +50,7 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 
 	ID3D11Buffer * pBuffer = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	//pDevice_p->GetDevice()->CreateBuffer( &cbufferParams.desc.bufferDesc, nullptr, &pBuffer );
 
 	// initialize pipe state for this sprite
 	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
@@ -71,12 +80,8 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 			// send to GPU?
 			m_renderData.m_bUpdate = true;
 		}
-		//DBG(m_renderData.m_bUpdate = true;)
-		//m_pipeState.m_binds
-
-		//---
 	}
-	//m_renderData.m_bUpdate = true;
+
 	m_pSpriteRendererRef->Render(this);
 }
 void game::SpriteComponent::OnDraw( double dInterpolation_p, Camera * pCamera_p )

@@ -41,7 +41,7 @@ void text::TextRenderer::Initialize( dx::Device * pDevice_p, sprite::SpriteRende
 }
 
 
-void text::TextRenderer::RenderText( const WCHAR szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p /*= 0 */ )
+void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p /*= 0 */ )
 {
 	if( szText_p[0] == 0 ) return;
 	//
@@ -133,21 +133,20 @@ void text::TextRenderer::RenderText( const WCHAR szText_p[], DirectX::XMFLOAT4 p
 	}
 }
 
-void text::TextRenderer::DrawText( const WCHAR szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
+void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
 									DrawableGlyph * pDrawableText_p, int & nDrawables_p )
 {
-	if( szText_p[0] == 0 ) return;
-
-	UINT itChar = 0;
-	float fPosOffsetX = 0.0f;
-	float fPosOffsetY = 0.0f;
+	if( szText_p[0] == 0x0000 ) return;
 
 	sprite::SortMask sorMask = {0};
 	sorMask.bitfield.layer = 3;
 	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
 	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
-	//__int64 llsortKey = sorMask.intRepresentation;
 
+	float fPosOffsetX = 0.0f;
+	float fPosOffsetY = 0.0f;
+
+	int itChar = 0;
 	int itGlyph = 0;
 	while( szText_p[itChar] != 0x0000 ){
 

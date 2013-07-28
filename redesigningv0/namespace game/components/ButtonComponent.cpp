@@ -3,7 +3,10 @@
 using namespace game;
 using namespace DirectX;
 
-game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
+game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p,
+										XMFLOAT4 uvHover_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */,
+										gen::Delegate callBack_p )
+										: m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
 
@@ -17,8 +20,13 @@ game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_
 	m_borderGap.y = hBorder_p;
 
 	m_eState = E_STATE_NORMAL;
+
+	m_OnClickCallback = callBack_p;
 }
-game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, XMFLOAT4 uvHover_p, XMFLOAT4 uvPressed_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */ ) : m_pSpriteCompoRef(pSpriteCompo_p)
+game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p,
+										XMFLOAT4 uvHover_p, XMFLOAT4 uvPressed_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */,
+										gen::Delegate callBack_p )
+										: m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
 
@@ -32,6 +40,8 @@ game::ButtonComponent::ButtonComponent( int iID_p, const shared_SpriteComponent_
 	m_borderGap.y = hBorder_p;
 
 	m_eState = E_STATE_NORMAL;
+
+	m_OnClickCallback = callBack_p;
 }
 
 bool game::ButtonComponent::GetPointCollision( XMFLOAT2 mouseXY_p )
@@ -53,4 +63,10 @@ bool game::ButtonComponent::GetPointCollision( XMFLOAT2 mouseXY_p )
 	}
 
 	return false;
+}
+
+void game::ButtonComponent::OnClickCallback()
+{
+	if( m_OnClickCallback )
+		m_OnClickCallback();
 }

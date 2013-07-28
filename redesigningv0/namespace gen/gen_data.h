@@ -7,31 +7,13 @@
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
 	purpose:	
+				NOTE:	external linkage function must be templated or inlined in order to
+						appear in multiple modules without link error (already defined)
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #pragma once
-
-//========================================================================
-// member func pointer syntax example to remember..
-//========================================================================
-//private:
-//
-//	Color3 (RayTracer::*m_rayTracedColorFunction)(int, int);					// "delegate" that computes the traced color
-//	Color3 (RayTracer::*m_illuminationMethodFunction)(int, const HitData &);	// "delegate" that computes color at hit point
-//
-//	m_rayTracedColorFunction = &RayTracer::TraceCloserRayHit;					// assignment
-//	m_illuminationMethodFunction = &RayTracer::PhongAtIntersectionPoint;
-//
-// Color3 c = (this->*m_rayTracedColorFunction)(x, y);							// use
-// returnColor = ((this->*m_illuminationMethodFunction)(itCandidateShape, candidatehit));
-// 
-// typedefing function/member function pointer:
-// 
-// int (*FuncPtr)(int); // simple func pointer declaration, FuncPtr is a variable
-// typedef int (*FuncPtr)(int); // FuncPtr now a type
-// typedef int (MyClass::*MyTypedef)( int); // MyTypedef is a type
 
 namespace gen{
 
@@ -98,75 +80,55 @@ namespace gen{
 		}
 	};
 
+
 	//========================================================================
-	// TWEENING functions
+	// string stuff
 	//========================================================================
-	template< typename Time = float, typename Value = float >
-	struct Tweening{
+#define GEN_MAXSTRINGSIZE 2048
+	inline unsigned int CountString( const char* szString_p )
+	{
+		int counter = 0;
 
-		enum E_EASING{
-			E_IN,
-			E_OUT,
-			E_INOUT,
-			E_OUTIN
-		};
-
-		//------------------------------------------------------------------------
-		// linear interpolation
-		//------------------------------------------------------------------------
-		static Value Linear( Time elapsed_p, Time duration_p, Value A_p = (Value)0.0f, Value B_p = (Value)1.0f ){
-
-			if( elapsed_p > duration_p ) return B_p;
-
-			// change in position, relative difference between start and end, directional distance
-			// times
-			// percentage, amount to be traversed
-			// plus offset, plus from where it started
-
-			return (B_p-A_p) * (elapsed_p/duration_p) + A_p; 
+		while( szString_p[counter] != 0x00 ){
+			++counter;
+			if( counter > GEN_MAXSTRINGSIZE )
+				break;
 		}
 
-		//------------------------------------------------------------------------
-		// Quadratic interpolation
-		// t^2
-		//------------------------------------------------------------------------
-		static Value InQuadratic( Time elapsed_p, Time duration_p, Value A_p = (Value)0.0f, Value B_p = (Value)1.0f ){
+		return counter;
+	}
+	inline unsigned int CountWString( const wchar_t * szString_p )
+	{
+		int counter = 0;
 
-			if( elapsed_p > duration_p ) return B_p;
+		while( szString_p[counter] != 0x0000 ){
 
-			elapsed_p/= duration_p;
-
-			return (B_p-A_p) * (elapsed_p*elapsed_p) + A_p; 
+			++counter;
+			if( counter > GEN_MAXSTRINGSIZE )
+				break;
 		}
-		static Value OutQuadratic( Time elapsed_p, Time duration_p, Value A_p = (Value)0.0f, Value B_p = (Value)1.0f ){
 
-			if( elapsed_p > duration_p ) return B_p;
+		return counter;
+	}
+	inline bool CompareStringBLB( const char* string1_p, const char* string2_p)
+	{
+		int it = 0;
 
-			// t * (t-2)
-
-			elapsed_p/= duration_p;
-
-			return -(B_p-A_p) * (elapsed_p * (elapsed_p -(Time)2.0f) ) + A_p; 
-		}
-		static Value InOutQuadratic( Time elapsed_p, Time duration_p, Value A_p = (Value)0.0f, Value B_p = (Value)1.0f ){
-
-			if( elapsed_p > duration_p ) return B_p;
-
-			elapsed_p /= duration_p;
-
-			if( elapsed_p < (Time)0.5f){
-
-				return ( ( (B_p-A_p) * (elapsed_p*elapsed_p) ) / (Time)2.0f ) + A_p;
-
+		while( string1_p[it] == string2_p[it] )
+		{
+			if( string1_p[it] == 0x00 )
+			{
+				return true;
 			}
 			else{
-
-				return ((-(B_p-A_p) * (elapsed_p * (elapsed_p -(Time)2.0f) )) / (Time)2.0f) + A_p;
-
-				// TODO: check if works, I changed
+				++it;
+				if( it > GEN_MAXSTRINGSIZE )
+					break;
 			}
 		}
-	};
+
+		return false;
+	}
 
 
 	//========================================================================
@@ -190,3 +152,6 @@ namespace gen{
 
 	}
 }
+
+#include "Tweening.h"
+#include "Delegate.h"

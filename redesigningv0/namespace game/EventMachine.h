@@ -55,14 +55,14 @@ namespace game{
 
 			EventQueue events = std::move( m_events );
 			m_events.clear();	// second the standard, you may use moved containers for no 'precondition needed' operations, like clear().
-			// so it became reusable after clear...but that means the bitch will have to reallocate memory again, same
-			// penalty as copying instead of moving..TODO (what about creating static instead of tmp, and swapping them?)
+								// so it became reusable after clear...but that means the bitch will have to reallocate memory again, same
+								// penalty as copying instead of moving..TODO (what about creating static instead of tmp, and swapping them?)
 
 			// traverse all current events
 
 			for(	EventQueue::iterator itEvent = events.begin(), itEventEnd = events.end();
-				itEvent !=  itEventEnd;
-				++ itEvent ){
+					itEvent !=  itEventEnd;
+					++ itEvent ){
 
 					// get handlers registered for current event type
 
@@ -75,8 +75,8 @@ namespace game{
 					// dispatch event to handlers
 
 					for(	EventHandlers::iterator itHandler = handlers.begin(), itHandlersEnd = handlers.end();
-						itHandler != itHandlersEnd;
-						++ itHandler ){
+							itHandler != itHandlersEnd;
+							++ itHandler ){
 
 							(*itHandler)->VOnEvent( *itEvent ); // TODO: consider "consuming" event if VOnEvent returns false
 
@@ -116,8 +116,8 @@ namespace game{
 			// dispatch event to handlers
 
 			for(	EventHandlers::iterator itHandler = handlers.begin(), itHandlersEnd = handlers.end();
-				itHandler != itHandlersEnd;
-				++ itHandler ){
+					itHandler != itHandlersEnd;
+					++ itHandler ){
 
 					(*itHandler)->VOnEvent( immEvent );
 			}

@@ -96,6 +96,7 @@ namespace game{
 	struct MorpherUnion{ // previously EvilBlob
 
 		unsigned char m_data[SIZE];
+		static const int s_SIZE = SIZE;
 
 		//------------------------------------------------------------------------
 		// 

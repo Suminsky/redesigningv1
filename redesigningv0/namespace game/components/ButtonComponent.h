@@ -16,6 +16,7 @@
 
 // private includes
 #include "SpriteComponent.h"
+#include "../../namespace gen/gen_data.h"
 
 namespace game{
 
@@ -32,8 +33,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
-		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
+		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, gen::Delegate callBack_p = gen::Delegate() );
+		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, gen::Delegate callBack_p = gen::Delegate() );
 
 		void SetHoverImage(){
 
@@ -63,6 +64,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		int GetID() const { return m_ID; }
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void OnClickCallback();
+
 		private:
 
 		shared_SpriteComponent_ptr m_pSpriteCompoRef;
@@ -70,6 +76,9 @@ namespace game{
 		DirectX::XMFLOAT2 m_borderGap;	// used to make the "collision box" smaller
 		E_STATE m_eState;
 		int m_ID;
+
+		gen::Delegate m_OnClickCallback;
+												
 	};
 
 	typedef std::shared_ptr<ButtonComponent> shared_ButtonComponent_ptr;
