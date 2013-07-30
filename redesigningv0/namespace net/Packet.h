@@ -13,35 +13,76 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-#include <memory>
 
 // private includes
 
 namespace net{
 
-	template<int TOTALSIZE, int HEADERSIZE>
+	template<int HEADERID, int SIZE>
 	class Packet{
-
-		enum{
-
-			E_TOTAL_SIZE = TOTALSIZE,
-			E_HEADER_SIZE = HEADERSIZE,
-			E_DATA_SIZE = E_TOTAL_SIZE - E_HEADER_SIZE,
-			E_DATA_OFFSET = E_HEADER_SIZE
-		};
-
-		// header
-		// user data
 
 	public:
 
+		struct Header{
+
+			int iID;
+			int iChannel,;
+			int iSendingSequence;
+			int iReceivedSequence;
+		};
+
+		enum{
+
+			E_HEADER_ID = HEADERID,
+			E_TOTAL_SIZE = SIZE,
+			E_HEADER_SIZE = sizeof(Header),
+			E_DATA_SIZE = E_TOTAL_SIZE - E_HEADER_SIZE,
+			E_DATA_OFFSET = E_HEADER_SIZE
+		};		
+
+		Packet(){
+
+			m_nCurrentUsedBytes = E_HEADER_SIZE;
+
+			Header header;
+			header.iID = E_HEADER_ID;
+			header.iChannel = 0;
+			header.iSendingSequence = 0;
+			header.iReceivedSequence = 0;
+
+			SetChunkAs<Header>( 0, header );
+		}
+
+		void UpdateHeader( int Seq, int AckSeq ){
+
+		}
+
 	private:
 
-		int m_iHeaderSize;
-		unsigned char m_data[TOTALSIZE];
+		unsigned int m_nCurrentUsedBytes;
+		unsigned char m_data[E_TOTAL_SIZE];
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		TYPE GetChunkAs( unsigned int iByteOffset_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= E_TOTAL_SIZE );
+
+			return   *((TYPE*) (&(m_data[iByteOffset_p])) ); // retornar como referencia?
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		void SetChunkAs( unsigned int iByteOffset_p, const TYPE & newData_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= E_TOTAL_SIZE );
+
+			*((TYPE*) (&(m_data[iByteOffset_p])) ) = newData_p;
+		}
 
 	};
-
-	typedef std::shared_ptr<Packet> shared_Packet_ptr;
-	typedef std::weak_ptr<Packet> weak_Packet_ptr;
 }

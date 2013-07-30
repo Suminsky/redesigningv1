@@ -55,6 +55,26 @@ namespace net{
 		}
 	};
 
+	struct SequenceInfo{
+
+		int m_iSequenceSend;
+		int m_iSequenceReceived;
+
+		int m_iSequenceReliableSend;
+		int m_iSequenceReliableReceived;
+		int m_iSequenceReliableAcknowledgedReceived;
+
+		SequenceInfo( int iInitial_p ){
+
+			m_iSequenceSend =
+			m_iSequenceReceived =
+
+			m_iSequenceReliableSend =
+			m_iSequenceReliableReceived =
+			m_iSequenceReliableAcknowledgedReceived = iInitial_p;
+		}
+	};
+
 	//template< int NBUFFERSSIZE = 256 >
 	class P2PConnection{
 
@@ -81,7 +101,8 @@ namespace net{
 		m_fSendFrequencySec(1.0f/E_CONFIG_SENDFREQUENCYPERSEC),
 		m_remoteAddress(0,0),
 		m_timeoutSec(E_CONFIG_TIMEOUTMSEC/1000),
-		m_eLastSocketError(Socket_UDP_NonBlocking_IPv4::E_ERROR_NONE)
+		m_eLastSocketError(Socket_UDP_NonBlocking_IPv4::E_ERROR_NONE),
+		m_sequences(0)
 		{}
 
 		//------------------------------------------------------------------------
@@ -113,6 +134,7 @@ namespace net{
 			m_remoteAddress = remoteAddress_p;
 			static const char s_char[] = {"wanna connect"};
 			m_bufferedUserDataTosend.Set( (unsigned char*)s_char, sizeof(s_char));
+			m_bufferedReliableDataToSend.currentUsed = 0;
 			m_eState = E_STATE_ATEMPTINGCONNECTION;
 		}
 		void ReConnect(){ // same thing, but uses the already settled address
@@ -225,43 +247,54 @@ namespace net{
 
 			if( m_dTimeSinceLastSending >= m_fSendFrequencySec ){
 
-				//m_dTimeSinceLastSending -= m_fSendFrequencySec;
-
 				// check if theres user data to send, if theres not, send a heart beat to maintain connection
 
-				if( !m_bufferedUserDataTosend.currentUsed ){
+				if( !m_bufferedUserDataTosend.currentUsed
+					&&
+					!m_bufferedReliableDataToSend.currentUsed ){
 
 					static const char s_char[] = {"heart beat"};
 					m_bufferedUserDataTosend.Set( (unsigned char*)s_char, sizeof(s_char));
 				}
 
-				if( m_socketRef.SendTo(m_remoteAddress, m_bufferedUserDataTosend.data, m_bufferedUserDataTosend.currentUsed, &eError ) ){
+				if( m_bufferedUserDataTosend.currentUsed ){
 
-					m_dTimeSinceLastSending -= m_fSendFrequencySec;
-					m_bufferedUserDataTosend.currentUsed = 0;
-				}
-				else{
+					if( m_socketRef.SendTo( m_remoteAddress, m_bufferedUserDataTosend.data, m_bufferedUserDataTosend.currentUsed, &eError ) ){
 
-					if( eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_WOULDBLOCK ){
-
-						m_eLastSocketError = eError;
-
-						switch( eError ){
-						case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTEUNREACHABLE:
-							m_eState = E_STATE_DISCONNECTED;
-							return;
-						case Socket_UDP_NonBlocking_IPv4::E_ERROR_NETWORKNOTREACHABLE:
-						case Socket_UDP_NonBlocking_IPv4::E_ERROR_NOIDEA:
-							m_dTimeSinceLastReceiving  -= m_fSendFrequencySec;
-							return; // keep trying
-						case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTECANTREACHHOST:
-						default:
-							m_eState = E_STATE_CRITICALERROR;
-							return;
-						}
+						m_dTimeSinceLastSending -= m_fSendFrequencySec;
+						m_bufferedUserDataTosend.currentUsed = 0;
 					}
-				} // error handling
-				
+				}
+				if( m_bufferedReliableDataToSend.currentUsed ){
+
+					if( m_socketRef.SendTo( m_remoteAddress, m_bufferedReliableDataToSend.data, m_bufferedReliableDataToSend.currentUsed, &eError ) ){
+
+						m_dTimeSinceLastSending -= m_fSendFrequencySec;
+						m_bufferedReliableDataToSend.currentUsed = 0;
+					}
+				}
+
+				// error handling
+				if( eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_NONE
+					&&
+					eError != Socket_UDP_NonBlocking_IPv4::E_ERROR_WOULDBLOCK ){
+
+					m_eLastSocketError = eError;
+
+					switch( eError ){
+					case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTEUNREACHABLE:
+						m_eState = E_STATE_DISCONNECTED;
+						return;
+					case Socket_UDP_NonBlocking_IPv4::E_ERROR_NETWORKNOTREACHABLE:
+					case Socket_UDP_NonBlocking_IPv4::E_ERROR_NOIDEA:
+						m_dTimeSinceLastReceiving  -= m_fSendFrequencySec;
+						return; // keep trying
+					case Socket_UDP_NonBlocking_IPv4::E_ERROR_REMOTECANTREACHHOST:
+					default:
+						m_eState = E_STATE_CRITICALERROR;
+						return;
+					}
+				}
 			}// send frequency
 
 			//---
@@ -340,6 +373,16 @@ namespace net{
 			m_bufferedUserDataTosend.Queue( pDataBuff_p, iSize_p );
 			return true;
 		}
+		bool SendReliableData( unsigned char * pDataBuff_p, int iSize_p ){
+
+			if( m_bufferedReliableDataToSend.currentUsed + iSize_p > E_CONFIG_DATABUFFERSIZE ){
+
+				return false;
+			}
+
+			m_bufferedReliableDataToSend.Queue( pDataBuff_p, iSize_p );
+			return true;
+		}
 
 	private:
 
@@ -355,6 +398,9 @@ namespace net{
 
 		DataBuffer m_bufferedUserDataTosend;
 		DataBuffer m_bufferedRemoteDataReceived;
+		DataBuffer m_bufferedReliableDataToSend;
+
+		SequenceInfo m_sequences;
 
 		//------------------------------------------------------------------------
 		// avoid warning
