@@ -19,6 +19,7 @@
 
 // private includes
 #include "EventHandler.h"
+#include "../namespace gen/gen_macros.h"
 
 
 namespace game{

@@ -20,11 +20,15 @@
 
 namespace game{
 
+	template< typename DELEGATE_PARAM = int >
 	class ButtonComponent: public Component{
 	
 	public:
 
+		typedef gen::Delegate1Param<DELEGATE_PARAM> Delegate1Param;
+
 		enum E_STATE{
+
 			E_STATE_NORMAL = 0,
 			E_STATE_HOVER,
 			E_STATE_PRESSED
@@ -33,8 +37,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, gen::Delegate callBack_p = gen::Delegate() );
-		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, gen::Delegate callBack_p = gen::Delegate() );
+		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param() );
+		ButtonComponent( int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param() );
 
 		void SetHoverImage(){
 
@@ -67,7 +71,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void OnClickCallback();
+		void OnClickCallback( const DELEGATE_PARAM & param_p );
 
 		private:
 
@@ -77,9 +81,11 @@ namespace game{
 		E_STATE m_eState;
 		int m_ID;
 
-		gen::Delegate m_OnClickCallback;
+		Delegate1Param m_OnClickCallback;
 												
 	};
 
-	typedef std::shared_ptr<ButtonComponent> shared_ButtonComponent_ptr;
+	typedef std::shared_ptr<ButtonComponent<>> shared_ButtonComponent_ptr;
 }
+
+#include "ButtonComponent.inl"

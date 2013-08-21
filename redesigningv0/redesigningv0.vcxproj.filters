@@ -288,6 +288,21 @@
     <ClInclude Include="Mentle\InGame\InGameEventData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace game\tasks\OnUpdateDelegateTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\InGame\StatusBarLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\components\ButtonComponent.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\InGame\MentleCardDesc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace text\TextParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -513,6 +528,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\MentleLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\tasks\OnUpdateDelegateTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\StatusBarLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\MentleCardDesc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace text\TextParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

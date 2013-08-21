@@ -1,6 +1,7 @@
 #include "TextRenderer.h"
 
 using namespace text;
+using namespace DirectX;
 
 void text::TextRenderer::Initialize( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p )
 {
@@ -55,7 +56,7 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	glyphCBuffer.m_color.z = 
 	glyphCBuffer.m_color.w = 1.0f;
 
-	glyphCBuffer.m_mWorld = DirectX::XMMatrixIdentity();
+	glyphCBuffer.m_mWorld = XMMatrixIdentity();
 
 	UINT itChar = 0;
 	float fPosOffsetX = 0.0f;
@@ -110,12 +111,22 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 		pos.x += fPosOffsetX;
 		pos.y += fPosOffsetY;
 
-		glyphCBuffer.m_mWorld.r[3] = DirectX::XMLoadFloat4( &pos );
+		glyphCBuffer.m_mWorld.r[3] = XMLoadFloat4( &pos );
+
+		// to int
+		// to int (makes worse)
+		/*glyphCBuffer.m_mWorld.r[3] = XMVectorSet(
+		(float)((int)(XMVectorGetX(glyphCBuffer.m_mWorld.r[3])+0.5f)),
+		(float)((int)(XMVectorGetY(glyphCBuffer.m_mWorld.r[3])+0.5f)),
+		(float)((int)(XMVectorGetZ(glyphCBuffer.m_mWorld.r[3])+0.0f)),
+		1.0f
+		);*/
+
 
 		fPosOffsetX += halfWidth + 1.0f;
 
 		// uv
-		glyphCBuffer.m_uvRect = DirectX::XMFLOAT4( uv.X, uv.Y, uv.Width, uv.Height );
+		glyphCBuffer.m_uvRect = XMFLOAT4( uv.X, uv.Y, uv.Width, uv.Height );
 
 		// glyph state ( bind cbuffer and texture ) should remain, so add to buffer here
 
@@ -172,7 +183,7 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 		pDrawableText_p[itGlyph].renderData.cbufferData.m_color.y = 
 		pDrawableText_p[itGlyph].renderData.cbufferData.m_color.z = 
 		pDrawableText_p[itGlyph].renderData.cbufferData.m_color.w = 1.0f;
-		pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld = DirectX::XMMatrixIdentity();
+		pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld = XMMatrixIdentity();
 
 		// set data specific to each glyph
 
@@ -185,19 +196,26 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 		float halfWidth = pDrawableText_p[itGlyph].renderData.cbufferData.m_res.x * 0.5f;
 
 		// pos
-		DirectX::XMFLOAT4 pos = pos_p;
+		XMFLOAT4 pos = pos_p;
 
 		fPosOffsetX += halfWidth;
 
 		pos.x += fPosOffsetX;
 		pos.y += fPosOffsetY;
 
-		pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3] = DirectX::XMLoadFloat4( &pos );
+		pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3] = XMLoadFloat4( &pos );
+		//// to int (makes worse)
+		//pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3] = XMVectorSet(
+		//	(float)((int)(XMVectorGetX(pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3])+0.5f)),
+		//	(float)((int)(XMVectorGetY(pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3])+0.5f)),
+		//	(float)((int)(XMVectorGetZ(pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3])+0.5f)),
+		//	1.0f
+		//	);
 
 		fPosOffsetX += halfWidth + 1.0f;
 
 		// uv
-		pDrawableText_p[itGlyph].renderData.cbufferData.m_uvRect = DirectX::XMFLOAT4( uv.X, uv.Y, uv.Width, uv.Height );
+		pDrawableText_p[itGlyph].renderData.cbufferData.m_uvRect = XMFLOAT4( uv.X, uv.Y, uv.Width, uv.Height );
 
 		//
 		pDrawableText_p[itGlyph].renderData.bindDrawableCbuffer.Initialize( m_pGlyphBufferInterface, &pDrawableText_p[itGlyph].renderData.cbufferData );

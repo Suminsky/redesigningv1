@@ -154,8 +154,10 @@
     <ClInclude Include="Mentle\InGame\InGameEventData.h" />
     <ClInclude Include="Mentle\InGame\InputMapper.h" />
     <ClInclude Include="Mentle\InGame\MentleCardComponent.h" />
+    <ClInclude Include="Mentle\InGame\MentleCardDesc.h" />
     <ClInclude Include="Mentle\InGame\MentleLogic.h" />
     <ClInclude Include="Mentle\InGame\NetworkHandler.h" />
+    <ClInclude Include="Mentle\InGame\StatusBarLayer.h" />
     <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
     <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
@@ -164,6 +166,7 @@
     <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
+    <ClInclude Include="namespace game\components\ButtonComponent.inl" />
     <ClInclude Include="namespace game\components\MovableComponent.h" />
     <ClInclude Include="namespace game\components\SpriteComponent.h" />
     <ClInclude Include="namespace game\Event.h" />
@@ -175,6 +178,7 @@
     <ClInclude Include="namespace game\Task.h" />
     <ClInclude Include="namespace game\TaskMachine.h" />
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />
+    <ClInclude Include="namespace game\tasks\OnUpdateDelegateTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace gen\Delegate.h" />
     <ClInclude Include="namespace gen\Tweening.h" />
@@ -239,6 +243,7 @@
     <ClInclude Include="namespace game\State.h" />
     <ClInclude Include="namespace game\StateMachine.h" />
     <ClInclude Include="namespace game\tasks\FadeTask.h" />
+    <ClInclude Include="namespace text\TextParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
@@ -246,8 +251,10 @@
     <ClCompile Include="Mentle\InGame\InGame.cpp" />
     <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
     <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />
+    <ClCompile Include="Mentle\InGame\MentleCardDesc.cpp" />
     <ClCompile Include="Mentle\InGame\MentleLogic.cpp" />
     <ClCompile Include="Mentle\InGame\NetworkHandler.cpp" />
+    <ClCompile Include="Mentle\InGame\StatusBarLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
@@ -263,6 +270,7 @@
     <ClCompile Include="namespace game\Task.cpp" />
     <ClCompile Include="namespace game\TaskMAchine.cpp" />
     <ClCompile Include="namespace game\tasks\AlarmTask.cpp" />
+    <ClCompile Include="namespace game\tasks\OnUpdateDelegateTask.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
     <ClCompile Include="namespace net\Address.cpp" />
     <ClCompile Include="namespace net\net.cpp" />
@@ -318,6 +326,7 @@
     <ClCompile Include="namespace sprite\binders cache\SamplerStateBinders.cpp" />
     <ClCompile Include="namespace game\State.cpp" />
     <ClCompile Include="namespace game\StateMachine.cpp" />
+    <ClCompile Include="namespace text\TextParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico" />

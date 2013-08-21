@@ -77,6 +77,14 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 
 			m_renderData.m_mWorld = mNewWorld;
 
+			// to int makes worse, perhaps I should decentralize (vb? viewport?)
+			/*m_renderData.m_mWorld.r[3] = XMVectorSet(
+				(float)((int)(XMVectorGetX(m_renderData.m_mWorld.r[3])+0.5f)),
+				(float)((int)(XMVectorGetY(m_renderData.m_mWorld.r[3])+0.5f)),
+				(float)((int)(XMVectorGetZ(m_renderData.m_mWorld.r[3])+0.5f)),
+				1.0f
+				);*/
+
 			// send to GPU?
 			m_renderData.m_bUpdate = true;
 		}
@@ -94,6 +102,14 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p, Camera * pCamera_p 
 		if( memcmp( &m_renderData.m_mWorld, &mNewWorld, sizeof(XMMATRIX)) ){
 
 			m_renderData.m_mWorld = mNewWorld;
+
+			// to int
+			/*m_renderData.m_mWorld.r[3] = XMVectorSet(
+				(float)((int)(XMVectorGetX(m_renderData.m_mWorld.r[3])+0.5f)),
+				(float)((int)(XMVectorGetY(m_renderData.m_mWorld.r[3])+0.5f)),
+				(float)((int)(XMVectorGetZ(m_renderData.m_mWorld.r[3])+0.5f)),
+				1.0f
+				);*/
 
 			// send to GPU?
 			m_renderData.m_bUpdate = true;

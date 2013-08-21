@@ -15,6 +15,9 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #pragma once
 
+#include <assert.h>
+#include <string> // memcpy
+
 namespace gen{
 
 	//========================================================================
@@ -110,7 +113,7 @@ namespace gen{
 
 		return counter;
 	}
-	inline bool CompareStringBLB( const char* string1_p, const char* string2_p)
+	inline bool CompareString( const char* string1_p, const char* string2_p)
 	{
 		int it = 0;
 
@@ -143,14 +146,116 @@ namespace gen{
 
 			pElementsPicked_p[it] = pElementsAvailable_p[randIndex];
 
-			// discard card picked by swapping it to last element
+			// discard picked by swapping it to last element
 
-			int tmp = pElementsAvailable_p[--nElementsRemaining]; // last element wont be on the range anymore
-			pElementsAvailable_p[nElementsRemaining] = pElementsAvailable_p[randIndex];
-			pElementsAvailable_p[randIndex] = tmp;		
+			pElementsAvailable_p[randIndex] = pElementsAvailable_p[nElementsRemaining--];
+		}
+	}
+
+	//========================================================================
+	// that thing really works
+	//========================================================================
+	template<int SIZE>
+	struct MorpherUnion{
+
+		unsigned char m_data[SIZE];
+		static const int s_SIZE = SIZE;
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		TYPE GetChunkAs( unsigned int iByteOffset_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= SIZE );
+
+			return   *((TYPE*) (&(m_data[iByteOffset_p])) );
 		}
 
-	}
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		void SetChunkAs( unsigned int iByteOffset_p, TYPE newData_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= SIZE );
+
+			*((TYPE*) (&(m_data[iByteOffset_p])) ) = newData_p;
+		}
+
+		/*
+		testingBlob testingB;
+			testingB.a = 'a';
+			testingB.banana = 435;
+			testingB.floating = 23.2f;
+
+		MorpherUnion<sizeof(int)*2 + sizeof(testingBlob)> blobTest;
+
+		blobTest.SetChunkAs<int>( 0, 35 );
+		blobTest.SetChunkAs<int>( sizeof(int), 402 );
+		blobTest.SetChunkAs<testingBlob>( sizeof(int)*2, testingB);
+
+		int test = blobTest.GetChunkAs<int>(0);
+		test = blobTest.GetChunkAs<int>(sizeof(int));
+
+		testingBlob testStruct = blobTest.GetChunkAs<testingBlob>(sizeof(int)*2);
+
+		test = testStruct.banana;
+		*/
+	};
+
+	struct DataBuffer{
+
+		unsigned int m_size;
+		unsigned char *m_data;
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		TYPE GetChunkAs( unsigned int iByteOffset_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= m_size );
+
+			return   *((TYPE*) (&(m_data[iByteOffset_p])) );
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		void SetChunkAs( unsigned int iByteOffset_p, TYPE newData_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= m_size );
+
+			*((TYPE*) (&(m_data[iByteOffset_p])) ) = newData_p;
+		}
+	};
+
+	struct DataStream{
+
+		unsigned int m_size;
+		unsigned char *m_data;
+		unsigned int m_currentByteIndex;
+
+		void Set( unsigned char * pData, unsigned int iSize ){
+
+			assert( iSize <= m_size );
+
+			memcpy( m_data, pData, iSize );
+
+			m_currentByteIndex = iSize;
+		}
+
+		void Queue( unsigned char * pData, unsigned int iSize ){
+
+			assert( m_currentByteIndex + iSize <= m_size );
+
+			memcpy( &m_data[m_currentByteIndex], pData, iSize );
+
+			m_currentByteIndex += iSize;
+		}
+	};
 }
 
 #include "Tweening.h"

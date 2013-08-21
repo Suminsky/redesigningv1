@@ -18,7 +18,7 @@ bool net::Socket_UDP_NonBlocking_IPv4::Init( unsigned short usPort_p, E_ERROR * 
 		SOCKADDR_IN address;
 		address.sin_family = AF_INET;
 		address.sin_addr.s_addr = htonl( INADDR_ANY );	// binds to all available addresses on this host
-		address.sin_port = htons( usPort_p );    
+		address.sin_port = htons( usPort_p );  
 
 		if( bind( m_socket, (sockaddr *) &address, sizeof(SOCKADDR_IN) ) == NO_ERROR ){
 

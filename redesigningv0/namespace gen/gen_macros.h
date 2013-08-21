@@ -65,7 +65,11 @@
 // creation versions
 //------------------------------------------------------------------------
 #define MAKE_SHARED_ALIGN16(s_ptr, type, ctor)\
-	s_ptr ( new type ctor );
+	s_ptr = std::move(std::shared_ptr<type>(new type ctor))
+//s_ptr ( new type ctor ); // tem como pegar o tipo por macro?
+// this way works only if you instantiate locally (type + name), the mess Im
+// using now works both with type + name and name only..
+	
 #else
 
 #define ALLIGN16ONLY

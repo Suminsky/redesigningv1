@@ -36,6 +36,8 @@ namespace game{
 							m_vCurrentScale,
 							m_vCurrentOrientation;
 
+		//MovableComponent * m_pParent; TODO: scene system, which update the trafos, a trafo
+
 		//------------------------------------------------------------------------
 		// ctor
 		// initializes to "none"/"identity"

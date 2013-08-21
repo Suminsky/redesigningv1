@@ -31,7 +31,7 @@ void Game::FixedStepLoop(){
 
 		m_stateControl.Update( m_dFixedTimeStep );
 
-		win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
+		//win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
 	}
 
 	// compute the interpolation factor based on the remaining timing
@@ -47,8 +47,8 @@ void Game::FixedStepLoop(){
 
 
 
-	win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
-	win::UniqueFileLogger()<<m_timer.GetDeltaMilliseconds()<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<m_timer.GetDeltaMilliseconds()<<SZ_NEWLINE;
 
 	m_stateControl.ResolveStateChange();
 }

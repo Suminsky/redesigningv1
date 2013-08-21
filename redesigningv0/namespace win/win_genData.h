@@ -4,9 +4,69 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <Windows.h>
+#include "win_macros.h"
 #include "../namespace gen/gen_data.h"
 
 namespace win{
+
+	inline bool OpenFile( const char * szFilename_p, gen::DataStream & buffer_p  )
+	{
+		HANDLE hFile = CreateFileA( szFilename_p,
+									GENERIC_READ, 0, NULL, OPEN_EXISTING,
+									FILE_FLAG_SEQUENTIAL_SCAN|FILE_ATTRIBUTE_NORMAL,
+									NULL );
+
+		if( hFile == INVALID_HANDLE_VALUE ){
+
+			return false;
+		}
+
+		DWORD dwBytesRead = 0;
+
+		LARGE_INTEGER size;
+		TESTBOOLNULL(GetFileSizeEx( hFile, &size ));
+
+		buffer_p.m_data = new BYTE[(size_t)size.QuadPart];
+		buffer_p.m_size = (int)size.QuadPart;
+
+		TESTBOOLNULL(ReadFile( hFile, (LPVOID)buffer_p.m_data, buffer_p.m_size, &dwBytesRead, NULL ));
+
+		TESTBOOLNULL(CloseHandle( hFile));
+
+		buffer_p.m_currentByteIndex = 0;
+
+		return true;
+	}
+
+	inline static bool SaveToFile( const char * szFilename_p,  gen::DataStream & buffer_p  ){
+
+		HANDLE hFile = CreateFileA( szFilename_p, GENERIC_WRITE, 0,
+									NULL, OPEN_ALWAYS,
+									FILE_FLAG_SEQUENTIAL_SCAN|FILE_ATTRIBUTE_NORMAL,
+									NULL );
+
+		if( hFile == INVALID_HANDLE_VALUE ){
+
+			return false;
+		}
+		if( GetLastError() == ERROR_ALREADY_EXISTS ){
+
+			// so "delete"(truncate its size, the file pointer of the handle is used) it:
+			TESTBOOLNULL(SetEndOfFile( hFile ));
+		}
+
+		OVERLAPPED fileOffset;
+		fileOffset.Offset = fileOffset.OffsetHigh = 0xFFFFFFFF; // == append data
+		fileOffset.hEvent = NULL;
+		fileOffset.Internal = fileOffset.InternalHigh = NULL;
+
+		DWORD nBytesWritten = 0;
+
+		TESTBOOLNULL(WriteFile( hFile, (LPCVOID)buffer_p.m_data, buffer_p.m_size, (LPDWORD)&nBytesWritten, &fileOffset ));
+		TESTBOOLNULL(CloseHandle( hFile ));
+
+		return true;
+	}
 
 	//------------------------------------------------------------------------
 	// Rect by pos and res (to avoid the misuse of RECT)

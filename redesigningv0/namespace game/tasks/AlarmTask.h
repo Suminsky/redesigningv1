@@ -71,7 +71,4 @@ namespace game{
 		Event<EVENT_DATA> m_event;
 
 	};
-
-	//typedef std::shared_ptr<AlarmTask> shared_AlarmTask_ptr;
-	//typedef std::weak_ptr<AlarmTask> weak_AlarmTask_ptr;
 }

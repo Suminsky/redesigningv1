@@ -6,7 +6,7 @@
 	file:		SpriteComponent.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	testing
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

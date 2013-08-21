@@ -20,6 +20,7 @@ namespace gen{
 
 	//========================================================================
 	// no param delegate
+	// returns void
 	//========================================================================
 	class Delegate{
 
@@ -99,6 +100,7 @@ namespace gen{
 	//========================================================================
 	// delegate with binds/holds a param at creation, always calling it with
 	// that pre bound param..untested
+	// returns void
 	//========================================================================
 	template< typename PARAM >
 	class Delegate1BoundParam{
@@ -180,6 +182,7 @@ namespace gen{
 
 	//========================================================================
 	// delegate which takes one param from the invoker..untested
+	// returns void
 	//========================================================================
 	template< typename PARAM >
 	class Delegate1Param{
@@ -254,6 +257,167 @@ namespace gen{
 
 		void * m_pCallerInstance;
 		void (*m_pFuncMemberFuncInvoker)( void*, PARAM );
+	};
+
+
+	//========================================================================
+	// delegate which takes 2 params from the invoker..untested
+	// returns void
+	//========================================================================
+	template< typename PARAM, typename PARAM2 >
+	class Delegate2Param{
+
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		Delegate2Param()
+			:
+		m_pCallerInstance(nullptr),
+		m_pFuncMemberFuncInvoker(nullptr){}
+
+		~Delegate2Param(){}
+
+		//------------------------------------------------------------------------
+		// Sugar for creating a delegate at once
+		//------------------------------------------------------------------------
+		template< class InstanceClass, void (InstanceClass::*Method)(PARAM, PARAM2) >
+		static Delegate2Param Build( InstanceClass * pInstance_p ){
+
+			Delegate2Param newDelegate;
+			newDelegate.Set<InstanceClass, Method>( pInstance_p );
+
+			return newDelegate;
+		}
+
+		//------------------------------------------------------------------------
+		// holds obj instance and generates static templated invoker func,
+		// holding its address on the func ptr.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, void (InstanceClass::*Method)(PARAM, PARAM2) >
+		void Set( InstanceClass * pInstance_p ){
+
+			m_pCallerInstance = pInstance_p;
+			m_pFuncMemberFuncInvoker = &MemberFuncInvoker<InstanceClass, Method>;
+		}
+
+		//------------------------------------------------------------------------
+		// test if the delegate is initialized
+		//------------------------------------------------------------------------
+		operator bool() const{
+
+			return m_pFuncMemberFuncInvoker != nullptr;
+		}
+
+		//------------------------------------------------------------------------
+		// Delegate callers, explicit and function calling syntax
+		//------------------------------------------------------------------------
+		void Execute( PARAM param_p, PARAM2 param2_p ) const{
+
+			(*m_pFuncMemberFuncInvoker)( m_pCallerInstance, param_p, param2_p );
+		}
+		void operator()( PARAM param_p, PARAM2 param2_p ) const{
+
+			(*m_pFuncMemberFuncInvoker)( m_pCallerInstance, param_p, param2_p );
+		}
+
+	private:
+
+		//------------------------------------------------------------------------
+		// this func main objective is have the same signature of the func ptr
+		// holded by this class, the second objective is be templated so it
+		// can "generate" any func matching the template args given.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, void (InstanceClass::*Method)(PARAM, PARAM2) >
+		static void MemberFuncInvoker( void * pInstanceCaller_p, PARAM param_p, PARAM2 param2_p ){
+
+			( ((InstanceClass*)pInstanceCaller_p)->*(Method) )( param_p, param2_p );
+		}
+
+		void * m_pCallerInstance;
+		void (*m_pFuncMemberFuncInvoker)( void*, PARAM, PARAM2 );
+	};
+
+
+
+	//========================================================================
+	// delegate which takes 2 params from the invoker..untested
+	// returns bool
+	//========================================================================
+	template< typename RETURN, typename PARAM, typename PARAM2 >
+	class DelegateR2Param{
+
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		DelegateR2Param()
+			:
+		m_pCallerInstance(nullptr),
+			m_pFuncMemberFuncInvoker(nullptr){}
+
+		~DelegateR2Param(){}
+
+		//------------------------------------------------------------------------
+		// Sugar for creating a delegate at once
+		//------------------------------------------------------------------------
+		template< class InstanceClass, RETURN (InstanceClass::*Method)(PARAM, PARAM2) >
+		static DelegateR2Param Build( InstanceClass * pInstance_p ){
+
+			DelegateR2Param newDelegate;
+			newDelegate.Set<InstanceClass, Method>( pInstance_p );
+
+			return newDelegate;
+		}
+
+		//------------------------------------------------------------------------
+		// holds obj instance and generates static templated invoker func,
+		// holding its address on the func ptr.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, RETURN (InstanceClass::*Method)(PARAM, PARAM2) >
+		void Set( InstanceClass * pInstance_p ){
+
+			m_pCallerInstance = pInstance_p;
+			m_pFuncMemberFuncInvoker = &MemberFuncInvoker<InstanceClass, Method>;
+		}
+
+		//------------------------------------------------------------------------
+		// test if the delegate is initialized
+		//------------------------------------------------------------------------
+		operator bool() const{
+
+			return m_pFuncMemberFuncInvoker != nullptr;
+		}
+
+		//------------------------------------------------------------------------
+		// Delegate callers, explicit and function calling syntax
+		//------------------------------------------------------------------------
+		RETURN Execute( PARAM param_p, PARAM2 param2_p ) const{
+
+			return (*m_pFuncMemberFuncInvoker)( m_pCallerInstance, param_p, param2_p );
+		}
+		RETURN operator()( PARAM param_p, PARAM2 param2_p ) const{
+
+			return (*m_pFuncMemberFuncInvoker)( m_pCallerInstance, param_p, param2_p );
+		}
+
+	private:
+
+		//------------------------------------------------------------------------
+		// this func main objective is have the same signature of the func ptr
+		// holded by this class, the second objective is be templated so it
+		// can "generate" any func matching the template args given.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, RETURN (InstanceClass::*Method)(PARAM, PARAM2) >
+		static RETURN MemberFuncInvoker( void * pInstanceCaller_p, PARAM param_p, PARAM2 param2_p ){
+
+			return ( ((InstanceClass*)pInstanceCaller_p)->*(Method) )( param_p, param2_p );
+		}
+
+		void * m_pCallerInstance;
+		RETURN (*m_pFuncMemberFuncInvoker)( void*, PARAM, PARAM2 );
 	};
 }
 
