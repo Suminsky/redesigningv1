@@ -23,19 +23,22 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 
 	if(  shared_MovableComponent_ptr pMovable = m_pMovableRef.lock() ){
 
+		pMovable->Step(); // set previous as current, otherwise the sprite will interpolate from 0 to current,
+							// while it shoud start at its given initial position
 		m_renderData.m_mWorld = pMovable->ComputeRenderWorldMatrix( 1.0f );
 	}
 	else{
 
 		m_renderData.m_mWorld = XMMatrixIdentity();
-	}
-	
+	}	
 
 	m_renderData.m_res.x = fWidth_p;
 	m_renderData.m_res.y = fHeight_p;
 	m_renderData.m_uvRect = uvRect_p;
 	m_renderData.m_bUpdate = true;
 	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
+
+	m_previousColor = m_currentColor = m_renderData.m_color;
 
 	// creates a ID3DBuffer for the vs constant buffer
 
@@ -68,7 +71,11 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 
 void game::SpriteComponent::OnDraw( double dInterpolation_p )
 {
-	// interpolate
+	// interpolate position
+	// TODO: if sprites are sharing the movable, all of them will interpolate it again
+	// need to have a system to care about the movable, and it should execute before the sprite
+	// system(also TODO)
+	
 	if( shared_MovableComponent_ptr pMovable = m_pMovableRef.lock() ){
 
 		XMMATRIX && mNewWorld = pMovable->ComputeRenderWorldMatrix( (float)dInterpolation_p );
@@ -77,17 +84,37 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 
 			m_renderData.m_mWorld = mNewWorld;
 
-			// to int makes worse, perhaps I should decentralize (vb? viewport?)
-			/*m_renderData.m_mWorld.r[3] = XMVectorSet(
-				(float)((int)(XMVectorGetX(m_renderData.m_mWorld.r[3])+0.5f)),
-				(float)((int)(XMVectorGetY(m_renderData.m_mWorld.r[3])+0.5f)),
-				(float)((int)(XMVectorGetZ(m_renderData.m_mWorld.r[3])+0.5f)),
-				1.0f
-				);*/
-
 			// send to GPU?
 			m_renderData.m_bUpdate = true;
 		}
+	}
+
+	// TODO: the sprite should update the previous color only before the user code is updated,
+	// otherwise previous and current will always be the same when it gets here.
+	// since this previous update is being doing on the sprite::VOnUpdate, it hapens after
+	// Layer::VOnUpdate, it can be solved by putting user on later update (shit hack).
+	// The correct solution is remove components VOnUpdate for once, create a System for
+	// sprite components, the system should care when things should be done.
+
+	// interpolate color
+
+	if( m_previousColor.x != m_currentColor.x
+		||
+		m_previousColor.y != m_currentColor.y
+		||
+		m_previousColor.z != m_currentColor.z
+		||
+		m_previousColor.w != m_currentColor.w ){
+
+		XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
+		XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
+
+		colorCurrent = XMVectorLerp( colorPrevious, colorCurrent, (float)dInterpolation_p );
+
+		XMStoreFloat4( &m_renderData.m_color, colorCurrent );
+
+		// send to GPU?
+		m_renderData.m_bUpdate = true;
 	}
 
 	m_pSpriteRendererRef->Render(this);
@@ -103,22 +130,33 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p, Camera * pCamera_p 
 
 			m_renderData.m_mWorld = mNewWorld;
 
-			// to int
-			/*m_renderData.m_mWorld.r[3] = XMVectorSet(
-				(float)((int)(XMVectorGetX(m_renderData.m_mWorld.r[3])+0.5f)),
-				(float)((int)(XMVectorGetY(m_renderData.m_mWorld.r[3])+0.5f)),
-				(float)((int)(XMVectorGetZ(m_renderData.m_mWorld.r[3])+0.5f)),
-				1.0f
-				);*/
-
 			// send to GPU?
 			m_renderData.m_bUpdate = true;
 		}
-		//DBG(m_renderData.m_bUpdate = true;)
-		//m_pipeState.m_binds
 
 		//---
 	}
+
+	// interpolate color
+	if( m_previousColor.x != m_currentColor.x
+		||
+		m_previousColor.y != m_currentColor.y
+		||
+		m_previousColor.z != m_currentColor.z
+		||
+		m_previousColor.w != m_currentColor.w ){
+
+			XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
+			XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
+
+			colorCurrent = XMVectorLerp( colorPrevious, colorCurrent, (float)dInterpolation_p );
+
+			XMStoreFloat4( &m_renderData.m_color, colorCurrent );
+
+			// send to GPU?
+			m_renderData.m_bUpdate = true;
+	}
+
 	//m_renderData.m_bUpdate = true;
 	m_pSpriteRendererRef->Render(this, pCamera_p);
 }

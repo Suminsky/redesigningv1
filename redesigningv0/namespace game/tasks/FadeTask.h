@@ -6,7 +6,7 @@
 	file:		FadeTask.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	this is actually a float interpolation task, needs a better name (TODO)
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

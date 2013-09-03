@@ -88,7 +88,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void AddEvent( EventType type_p, EVENT_DATA data_p = 0 ){
+		void AddEvent( EventType type_p, EVENT_DATA data_p = EVENT_DATA() ){
 
 			// TODO: use real emplace_back on vs2012
 			m_events.emplace_back( Event(type_p, data_p) );
@@ -172,14 +172,16 @@ namespace game{
 			EventHandlers & handlers = m_register[eventType_p];
 			assert( !handlers.empty());
 
-			EventHandlers::const_iterator itHandlersEnd = handlers.cend();
+			EventHandlers::iterator itHandlersEnd = handlers.end();
 
-			EventHandlers::const_iterator itHandler = std::find( handlers.cbegin(), itHandlersEnd, pHandler_p );
+			EventHandlers::iterator itHandler = std::find( handlers.begin(), itHandlersEnd, pHandler_p );
 			assert( itHandler != itHandlersEnd );
 
 			// swap it with last element
 
-			std::swap( itHandler, --itHandlersEnd );
+			//std::swap( itHandler, --itHandlersEnd ); // stupid bug
+			--itHandlersEnd;
+			*itHandler = *itHandlersEnd;
 
 			// remove it
 

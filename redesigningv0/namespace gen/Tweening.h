@@ -68,20 +68,19 @@ namespace gen{
 		}
 		static Value InOutQuadratic( Time elapsed_p, Time duration_p, Value A_p = (Value)0.0f, Value B_p = (Value)1.0f ){
 
+
 			if( elapsed_p > duration_p ) return B_p;
 
-			elapsed_p /= duration_p;
+			elapsed_p /= duration_p/2.0f;
 
-			if( elapsed_p < (Time)0.5f){
+			if( elapsed_p < (Time)1.0f){
 
-				return ( ( (B_p-A_p) * (elapsed_p*elapsed_p) ) / (Time)2.0f ) + A_p;
+				return ( (B_p-A_p) / (Time)2.0f * (elapsed_p*elapsed_p) ) + A_p;
 
 			}
 			else{
 
-				return ((-(B_p-A_p) * (elapsed_p * (elapsed_p -(Time)2.0f) )) / (Time)2.0f) + A_p;
-
-				// TODO: check if works, I changed
+				return -(B_p-A_p) / (Time)2.0f * ( (--elapsed_p)*(elapsed_p-2) - 1 ) + A_p;
 			}
 		}
 	};

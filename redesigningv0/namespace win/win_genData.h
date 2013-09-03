@@ -9,6 +9,9 @@
 
 namespace win{
 
+	//------------------------------------------------------------------------
+	// this allocates mem!
+	//------------------------------------------------------------------------
 	inline bool OpenFile( const char * szFilename_p, gen::DataStream & buffer_p  )
 	{
 		HANDLE hFile = CreateFileA( szFilename_p,

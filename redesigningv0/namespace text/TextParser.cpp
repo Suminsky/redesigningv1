@@ -76,6 +76,100 @@ void Parser::RemoveSectionsBetween( DataStream & buffer_p, char cOpen_p, char cC
 
 	return;
 }
+void Parser::RemoveUnquotedSectionsBetween( DataStream & buffer_p, char cOpen_p, char cClose_p, char cQuote )
+{
+	unsigned int iByteIndex = 0;
+	int iCommentStartPos = -1;
+	bool bIgnoringDueQuote = false;
+
+	while( iByteIndex < buffer_p.m_size ){
+
+		if( !bIgnoringDueQuote ){			
+
+			// if still not found any comment
+
+			if( iCommentStartPos == -1 ){
+
+				// first check for quote before comment
+
+				if( buffer_p.m_data[iByteIndex] == cQuote ){
+
+					bIgnoringDueQuote = true;
+				}
+
+				else if( buffer_p.m_data[iByteIndex] == cOpen_p){
+
+					// found comment start
+
+					iCommentStartPos = iByteIndex;
+				}
+			}
+			else{
+
+				// if looking for the end of the comment
+
+				if( buffer_p.m_data[iByteIndex] == cClose_p){
+
+					int iCommentEndPos = iByteIndex;
+
+					// from after comment to EOF, copy it over the start of the comment
+
+					int iSizeAfterComment =  buffer_p.m_size - iCommentEndPos;
+
+					memcpy(		&buffer_p.m_data[iCommentStartPos],
+						&buffer_p.m_data[iCommentEndPos+1],
+						iSizeAfterComment	);
+
+					// "trim" data size
+
+					int iCommentSize = (iCommentEndPos+1) - iCommentStartPos;
+					buffer_p.m_size -= iCommentSize;
+
+					// account current pos to the choped part
+
+					iByteIndex = iByteIndex - iCommentSize; // iByteIndex += 1; -> on \r, not \n
+
+					// start looking for comments again
+
+					iCommentStartPos = -1;
+				}
+			}
+
+		}
+		else{
+
+			if( buffer_p.m_data[iByteIndex] == cQuote ){
+
+				// check if quote inside quote
+
+				if( buffer_p.m_data[iByteIndex-1] == '\\'){// \
+
+					// than ignore this quote
+
+					++iByteIndex;
+					continue;
+				}
+
+				bIgnoringDueQuote = false;
+			}
+		}
+
+
+		++iByteIndex;
+	}
+
+	if( iCommentStartPos != -1 ){
+
+		// chop off the comment at the EOF
+
+		buffer_p.m_size -= (buffer_p.m_size - iCommentStartPos);
+	}
+
+	//ReplaceCharsBy( "\n", '!', buffer_p );
+	//ReplaceCharsBy( "\r", '?', buffer_p );
+
+	return;
+}
 
 void Parser::ReplaceCharsBy( const char * szChars_p, char cReplacement_p, DataStream & buffer_p   )
 {
@@ -243,166 +337,189 @@ void GfigElement::ParseGfigFile( DataStream & buffer_p, GfigElement & parsed_p )
 
 	// remove comments
 
-	Parser::RemoveSectionsBetween( buffer_p, '#', '\n' );
+	//Parser::RemoveSectionsBetween( buffer_p, '#', '\n' );
+
+	Parser::RemoveUnquotedSectionsBetween( buffer_p, '#', '\n', '"' );
 
 	// enter recursion
 
 	ParseCleanGfigFile( buffer_p, parsed_p );
 }
 
-void GfigElement::ParseCleanGfigFile( DataStream & buffer, GfigElement & parsed_p /*, int nOpenBracketsAbove_p = 0*/ )
+void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parsed_p /*, int nOpenBracketsAbove_p = 0*/ )
 {
-	//unsigned int iByteIndex = buffer.m_currentByteIndex;
+	//unsigned int iByteIndex = buffer_p.m_currentByteIndex;
 
 	int iOpenBracketPos = -1;
 	int iEqualsPos = -1;
+	bool bIgnoringDueQuote = false;
 
-	while( buffer.m_currentByteIndex < buffer.m_size ){
+	while( buffer_p.m_currentByteIndex < buffer_p.m_size ){
 
-		if( buffer.m_data[buffer.m_currentByteIndex] == '[' ){
+		if( buffer_p.m_data[buffer_p.m_currentByteIndex] == '"' ){
 
-			// check if theres already an open bracket
-
-			if( iOpenBracketPos != -1 ){
-
-				if( iEqualsPos != -1 ){
-
-					// if theres an equals pending
-
-					// all data between equals and open bracket
-					// must be set as value
-
-					unsigned int nCharsBetweenEqualsAndOpenBracket = (buffer.m_currentByteIndex - iEqualsPos) -1;
-
-					if( nCharsBetweenEqualsAndOpenBracket ){
-
-						// discard spaces on both ends, remove possible quotes
-
-						DataStream bufferTmp = buffer;
-						bufferTmp.m_currentByteIndex = iEqualsPos + 1; // after equals
-						bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenEqualsAndOpenBracket; // amount after bracket
-
-						ParseAssign( bufferTmp, parsed_p.m_value );
-					}
-
-					iEqualsPos = -1;
-				}
-				else if( parsed_p.m_name.empty() ){
-
-				// if didnt got a name yet
-				// get all data between this open bracket and the previous one
-
-					unsigned int nCharsBetweenOpenBrackets = (buffer.m_currentByteIndex - iOpenBracketPos) -1;
-
-					if( nCharsBetweenOpenBrackets ){
-
-						// discard spaces on both ends
-						DataStream bufferTmp = buffer;
-						bufferTmp.m_currentByteIndex = iOpenBracketPos + 1;
-						bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenOpenBrackets;
-
-						ParseAssign( bufferTmp, parsed_p.m_name );
-					}
-				}
-
-				// this new open bracket is a new element
-
-				GfigElement subElement;
-
-				//++nOpenBracketsAbove_p;
-
-				ParseCleanGfigFile( buffer, subElement /*, nOpenBracketsAbove_p*/ );
-
-				//--nOpenBracketsAbove_p;
-
-				subElement.m_indexOnParent = (int)parsed_p.m_subElements.size();
-				parsed_p.m_subElements.emplace_back( std::move(subElement) ); // VS 2012 have bugfree emplaceback(TODO)
-			}
-			else{
-
-				// hold new open bracket
-					
-				iOpenBracketPos = buffer.m_currentByteIndex;
-			}
-		}
-		else if( buffer.m_data[buffer.m_currentByteIndex] == '=' ){
-
-			// assure theres an open bracket
-
-			if( iOpenBracketPos != -1 ){
-
-				iEqualsPos = buffer.m_currentByteIndex;
-
-				// all data between open bracket and equals must be set as name
-				// note that here is not needed to test if name is empty, cause
-				// there cant be a name already set between '[' and '=', that
-				// would require 2 or more equals..
+			if( bIgnoringDueQuote ){
 				
-				unsigned int nCharsBetweenOpenBracketAndEquals = (iEqualsPos - iOpenBracketPos) -1;
+				// check if quote inside quote
+				
+				if( buffer_p.m_data[buffer_p.m_currentByteIndex-1] == '\\'){// \
 
-				if( nCharsBetweenOpenBracketAndEquals ){
+					// than ignore this quote
 
-					// discard spaces on both ends
-					DataStream bufferTmp = buffer;
-					bufferTmp.m_currentByteIndex = iOpenBracketPos + 1;
-					bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenOpenBracketAndEquals;
-					
-					ParseAssign( bufferTmp, parsed_p.m_name );
-				}				
-			}
-		}
-		else if( buffer.m_data[buffer.m_currentByteIndex] == ']' ){
-
-			// assure there an open bracket
-
-			if( iOpenBracketPos != -1 ){
-
-				int iCloseBracketPos = buffer.m_currentByteIndex;
-
-				if( iEqualsPos != -1 ){
-
-					// if theres an equals pending
-
-					// all data between equals and end bracket
-					// must be set as value
-					
-					unsigned int nCharsBetweenEqualsAndEndBracket = (iCloseBracketPos - iEqualsPos) -1;
-
-					if( nCharsBetweenEqualsAndEndBracket ){
-
-						// discard spaces on both ends
-						DataStream bufferTmp = buffer;
-						bufferTmp.m_currentByteIndex = iEqualsPos + 1;
-						bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenEqualsAndEndBracket;
-						
-						ParseAssign( bufferTmp, parsed_p.m_value );
-					}
-
-					iEqualsPos = -1;
+					++buffer_p.m_currentByteIndex;
+					continue;
 				}
-				else{
+			}
+				
+			bIgnoringDueQuote = !bIgnoringDueQuote;
+		}
 
-					if( parsed_p.m_name.empty() ){
+		if( !bIgnoringDueQuote ){
 
-						unsigned int nCharsBetweenBrackets = (iCloseBracketPos - iOpenBracketPos) -1; // [#,4,5], 5-4 = 1, -1 = 0
+			if( buffer_p.m_data[buffer_p.m_currentByteIndex] == '[' ){
 
-						if( nCharsBetweenBrackets ){
+				// check if theres already an open bracket
+
+				if( iOpenBracketPos != -1 ){
+
+					if( iEqualsPos != -1 ){
+
+						// if theres an equals pending
+
+						// all data between equals and open bracket
+						// must be set as value
+
+						unsigned int nCharsBetweenEqualsAndOpenBracket = (buffer_p.m_currentByteIndex - iEqualsPos) -1;
+
+						if( nCharsBetweenEqualsAndOpenBracket ){
+
+							// discard spaces on both ends, remove possible quotes
+
+							DataStream bufferTmp = buffer_p;
+							bufferTmp.m_currentByteIndex = iEqualsPos + 1; // after equals
+							bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenEqualsAndOpenBracket; // amount after bracket
+
+							ParseAssign( bufferTmp, parsed_p.m_value );
+						}
+
+						iEqualsPos = -1;
+					}
+					else if( parsed_p.m_name.empty() ){
+
+					// if didnt got a name yet
+					// get all data between this open bracket and the previous one
+
+						unsigned int nCharsBetweenOpenBrackets = (buffer_p.m_currentByteIndex - iOpenBracketPos) -1;
+
+						if( nCharsBetweenOpenBrackets ){
 
 							// discard spaces on both ends
-							DataStream bufferTmp = buffer;
+							DataStream bufferTmp = buffer_p;
 							bufferTmp.m_currentByteIndex = iOpenBracketPos + 1;
-							bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenBrackets;
+							bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenOpenBrackets;
 
 							ParseAssign( bufferTmp, parsed_p.m_name );
 						}
 					}
-				}
 
-				return;
+					// this new open bracket is a new element
+
+					GfigElement subElement;
+
+					//++nOpenBracketsAbove_p;
+
+					ParseCleanGfigFile( buffer_p, subElement /*, nOpenBracketsAbove_p*/ );
+
+					//--nOpenBracketsAbove_p;
+
+					subElement.m_indexOnParent = (int)parsed_p.m_subElements.size();
+					parsed_p.m_subElements.emplace_back( std::move(subElement) ); // VS 2012 have bugfree emplaceback(TODO)
+				}
+				else{
+
+					// hold new open bracket
+					
+					iOpenBracketPos = buffer_p.m_currentByteIndex;
+				}
+			}
+			else if( buffer_p.m_data[buffer_p.m_currentByteIndex] == '=' ){
+
+				// assure theres an open bracket
+
+				if( iOpenBracketPos != -1 ){
+
+					iEqualsPos = buffer_p.m_currentByteIndex;
+
+					// all data between open bracket and equals must be set as name
+					// note that here is not needed to test if name is empty, cause
+					// there cant be a name already set between '[' and '=', that
+					// would require 2 or more equals..
+				
+					unsigned int nCharsBetweenOpenBracketAndEquals = (iEqualsPos - iOpenBracketPos) -1;
+
+					if( nCharsBetweenOpenBracketAndEquals ){
+
+						// discard spaces on both ends
+						DataStream bufferTmp = buffer_p;
+						bufferTmp.m_currentByteIndex = iOpenBracketPos + 1;
+						bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenOpenBracketAndEquals;
+					
+						ParseAssign( bufferTmp, parsed_p.m_name );
+					}				
+				}
+			}
+			else if( buffer_p.m_data[buffer_p.m_currentByteIndex] == ']' ){
+
+				// assure there an open bracket
+
+				if( iOpenBracketPos != -1 ){
+
+					int iCloseBracketPos = buffer_p.m_currentByteIndex;
+
+					if( iEqualsPos != -1 ){
+
+						// if theres an equals pending
+
+						// all data between equals and end bracket
+						// must be set as value
+					
+						unsigned int nCharsBetweenEqualsAndEndBracket = (iCloseBracketPos - iEqualsPos) -1;
+
+						if( nCharsBetweenEqualsAndEndBracket ){
+
+							// discard spaces on both ends
+							DataStream bufferTmp = buffer_p;
+							bufferTmp.m_currentByteIndex = iEqualsPos + 1;
+							bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenEqualsAndEndBracket;
+						
+							ParseAssign( bufferTmp, parsed_p.m_value );
+						}
+
+						iEqualsPos = -1;
+					}
+					else{
+
+						if( parsed_p.m_name.empty() ){
+
+							unsigned int nCharsBetweenBrackets = (iCloseBracketPos - iOpenBracketPos) -1; // [#,4,5], 5-4 = 1, -1 = 0
+
+							if( nCharsBetweenBrackets ){
+
+								// discard spaces on both ends
+								DataStream bufferTmp = buffer_p;
+								bufferTmp.m_currentByteIndex = iOpenBracketPos + 1;
+								bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenBrackets;
+
+								ParseAssign( bufferTmp, parsed_p.m_name );
+							}
+						}
+					}
+
+					return;
+				}
 			}
 		}
-
-		++buffer.m_currentByteIndex;
+		++buffer_p.m_currentByteIndex;
 	}
 }
 
@@ -445,3 +562,23 @@ bool GfigElement::GetSubElement( const char * szName_p, GfigElement *& pElement_
 
 	return false;
 }
+
+
+//if( buffer_p.m_data[buffer_p.m_currentByteIndex] == '"' ){
+//
+//	if( bIgnoringDueQuote ){
+//
+//		// check if quote inside quote
+//
+//		if( buffer_p.m_data[buffer_p.m_currentByteIndex-1] != '\\'){// \
+//
+//			bIgnoringDueQuote = false;
+//		}
+//
+//		// else keep ignoring
+//
+//	}else{
+//
+//		bIgnoringDueQuote = true;
+//	}
+//}

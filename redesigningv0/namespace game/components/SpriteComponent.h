@@ -67,12 +67,14 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		virtual void VOnUpdate( double, double ){
+		void UpdatePreviousData(){
 
 			if( game::shared_MovableComponent_ptr ptr = m_pMovableRef.lock() ){
 
 				ptr->Step();
 			}
+
+			m_previousColor = m_currentColor;
 		}
 
 		//------------------------------------------------------------------------
@@ -98,6 +100,9 @@ namespace game{
 
 		int m_TextureID, m_BlendModeID, m_FilterModeID, m_ShaderID;
 		int m_iShaderPermutation;
+
+		DirectX::XMFLOAT4 m_currentColor;
+		DirectX::XMFLOAT4 m_previousColor;
 
 		dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
 		sprite::DrawableCbuffer m_renderData;

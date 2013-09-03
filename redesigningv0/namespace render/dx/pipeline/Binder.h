@@ -112,11 +112,11 @@ namespace dx{
 	static const UINT64 IA_VertexBuffer3 = 1LL << 4;
 	static const UINT64 IA_VertexBuffer4 = 1LL << 5;
 
-	static const UINT64 IA_IndexBuffer = 1LL << 6;
-	static const UINT64 IA_PrimitiveTopology = 1LL << 7;
+	static const UINT64 IA_IndexBuffer			= 1LL << 6;
+	static const UINT64 IA_PrimitiveTopology	= 1LL << 7;
 
 	static const UINT64 VS_VertexShader = 1LL << 8;
-	static const UINT64 PS_PixelShader = 1LL << 9;
+	static const UINT64 PS_PixelShader	= 1LL << 9;
 
 	static const UINT64 VS_CBuffer0 = 1LL << 10;	// Each shader stage allows up to 15 shader-static constant buffers; each buffer can hold up to 4096 static constants.
 	static const UINT64 VS_CBuffer1 = 1LL << 11;

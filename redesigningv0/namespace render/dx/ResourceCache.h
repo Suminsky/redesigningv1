@@ -133,7 +133,6 @@ namespace dx{
 
 			m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
 
-
 			// update slot info:
 			m_slotsInfo[m_iCurrentIndex].nUseCount = 1;
 			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;

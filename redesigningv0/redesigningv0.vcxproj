@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
     <ClInclude Include="Mentle\InGame\CardsLayer.h" />
+    <ClInclude Include="Mentle\InGame\EnergyBarLayer.h" />
     <ClInclude Include="Mentle\InGame\InGame.h" />
     <ClInclude Include="Mentle\InGame\InGameEventData.h" />
     <ClInclude Include="Mentle\InGame\InputMapper.h" />
@@ -248,6 +249,7 @@
   <ItemGroup>
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
     <ClCompile Include="Mentle\InGame\CardsLayer.cpp" />
+    <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp" />
     <ClCompile Include="Mentle\InGame\InGame.cpp" />
     <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
     <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />

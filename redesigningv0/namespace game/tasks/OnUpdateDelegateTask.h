@@ -51,6 +51,11 @@ namespace game{
 			m_pChainedTask = pChainedTask_p;
 		}
 
+		void Stop(){
+
+			Destroy();
+		}
+
 	private:
 
 		//------------------------------------------------------------------------

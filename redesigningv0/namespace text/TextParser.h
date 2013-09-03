@@ -36,8 +36,13 @@ namespace text{
 		// i.e. remove comments
 		// cOpen = #
 		// cClose = \n
+		// open and close are also removed
+		// 
+		// made to support quotes, so open close inside "  "
+		// are ignored.
 		//------------------------------------------------------------------------
 		static void RemoveSectionsBetween( gen::DataStream & buffer_p, char cOpen_p, char cClose_p );
+		static void RemoveUnquotedSectionsBetween( gen::DataStream & buffer_p, char cOpen_p, char cClose_p, char cQuote = '"' );
 		
 		//------------------------------------------------------------------------
 		// use this to replace all chars (szChars) on buffer by cReplacement
