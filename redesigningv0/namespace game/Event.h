@@ -40,7 +40,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Set( EventType type_p, DATA data_p = 0 ){
+		void Set( EventType type_p, DATA data_p = DATA() ){
 
 			m_type = type_p;
 			m_data = data_p;

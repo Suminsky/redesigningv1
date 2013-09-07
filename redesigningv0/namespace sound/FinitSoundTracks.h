@@ -14,7 +14,7 @@
 				since voices can be reused.
 				Not recommended for looping audio, as it will be override at some point.
 
-				TODO: check if I really need all that start and stop think..also why stop
+				TODO: check if I really need all that start and stop thing..also why stop
 				with operation set dont work..
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
@@ -207,6 +207,56 @@ namespace sound{
 			return true;
 		}
 
+		//------------------------------------------------------------------------
+		// vol ctrl
+		//------------------------------------------------------------------------
+		bool SetVolume( float fVol_p, UINT32 iOperationSet_p = 1 ){
+
+			HRESULT hr = S_OK;
+
+			for( int it = 0; it < NTRACKS; ++it ){
+
+				hr = m_pVoices[it]->SetVolume( fVol_p, iOperationSet_p );
+
+				if( hr == S_OK ) continue;
+
+				assert( hr != XAUDIO2_E_INVALID_CALL );
+				assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+				assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+				// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+				assert ( hr == XAUDIO2_E_DEVICE_INVALIDATED
+					||
+					hr == ERROR_NOT_FOUND );
+
+				return false;
+			}
+
+			return true;
+		}
+
+		float GetVolume() const {
+
+			float fVol;
+			HRESULT hr = return m_pVoices[0]->GetVolume(&fVol);
+
+			if( hr == S_OK ) return fVol;
+
+			assert( hr != XAUDIO2_E_INVALID_CALL );
+			assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+			assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+			// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+			assert ( hr == XAUDIO2_E_DEVICE_INVALIDATED
+				||
+				hr == ERROR_NOT_FOUND );
+
+			return -1.0f;
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		void DestroyTracks(){
 
 			if( m_pVoices[0] ){ // means voices are initialized

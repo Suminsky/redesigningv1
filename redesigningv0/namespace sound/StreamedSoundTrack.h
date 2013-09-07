@@ -226,6 +226,49 @@ namespace sound{
 			return false;
 		}
 
+
+		//------------------------------------------------------------------------
+		// vol ctrl
+		//------------------------------------------------------------------------
+		bool SetVolume( float fVol_p, UINT32 iOperationSet_p = 1 ){
+
+			HRESULT hr =
+
+			m_pVoice->SetVolume( fVol_p, iOperationSet_p );
+
+			if( hr == S_OK ) return true;
+
+			assert( hr != XAUDIO2_E_INVALID_CALL );
+			assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+			assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+			// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+			assert ( hr == XAUDIO2_E_DEVICE_INVALIDATED
+				||
+				hr == ERROR_NOT_FOUND );
+
+			return false;
+		}
+
+		float GetVolume() const {
+
+			float fVol;
+			HRESULT hr = return m_pVoice->GetVolume(&fVol);
+
+			if( hr == S_OK ) return fVol;
+
+			assert( hr != XAUDIO2_E_INVALID_CALL );
+			assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+			assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+			// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+			assert ( hr == XAUDIO2_E_DEVICE_INVALIDATED
+				||
+				hr == ERROR_NOT_FOUND );
+
+			return -1.0f;
+		}
+
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------

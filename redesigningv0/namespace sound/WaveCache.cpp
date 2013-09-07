@@ -1,5 +1,6 @@
 #include "WaveCache.h"
 
+
 using namespace sound;
 
 int sound::WaveCache::AddWave( const wchar_t * szWaveFileName_p )

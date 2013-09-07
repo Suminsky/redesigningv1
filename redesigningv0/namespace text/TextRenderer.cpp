@@ -31,7 +31,13 @@ void text::TextRenderer::Initialize( dx::Device * pDevice_p, sprite::SpriteRende
 
 	m_textRenderStates.push_back( &m_pSpriteRendererRef->m_defaultVertexInput );
 	m_textRenderStates.push_back( &m_pSpriteRendererRef->m_spriteShaderRes.m_permutations[0].m_pipeState );
-	m_textRenderStates.push_back( &m_pSpriteRendererRef->m_camera.m_pipeState );
+	//m_textRenderStates.push_back( &m_pSpriteRendererRef->m_camera.m_pipeState );
+
+		// NOTE: since camera is being set here, you cant add another camera later, cause the later ones are
+		// discarded on the drawables queue
+		// If u remove it, it will use last one bound(from another drawable?), thats where hodgmans cleaning
+		// states comes in..although I think it may be quite usefull, it obviously avoid hardcore bugs due
+		// misuse
 
 	m_textureState.AddBinderCommand( &m_pSpriteRendererRef->m_samplers.GetSamplerBind(sprite::E_SAMPLER_NONE) );
 	m_textureState.AddBinderCommand( &m_pSpriteRendererRef->m_blends.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED) );
@@ -42,7 +48,7 @@ void text::TextRenderer::Initialize( dx::Device * pDevice_p, sprite::SpriteRende
 }
 
 
-void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p /*= 0 */ )
+void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, sprite::Camera & camera_p, UINT iFontID_p /*= 0 */  )
 {
 	if( szText_p[0] == 0 ) return;
 	//
@@ -74,6 +80,7 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	drawable.SetPipelineStateGroup( m_textRenderStates ); // common data (vertex, IA, etc)
 	drawable.AddPipelineState( &m_textureState );
 	drawable.AddPipelineState( &m_fonts[iFontID_p].GetPipeState() );
+	drawable.AddPipelineState( &camera_p.m_pipeState );
 
 	while( szText_p[itChar] != 0x0000 ){
 
@@ -113,16 +120,6 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 
 		glyphCBuffer.m_mWorld.r[3] = XMLoadFloat4( &pos );
 
-		// to int
-		// to int (makes worse)
-		/*glyphCBuffer.m_mWorld.r[3] = XMVectorSet(
-		(float)((int)(XMVectorGetX(glyphCBuffer.m_mWorld.r[3])+0.5f)),
-		(float)((int)(XMVectorGetY(glyphCBuffer.m_mWorld.r[3])+0.5f)),
-		(float)((int)(XMVectorGetZ(glyphCBuffer.m_mWorld.r[3])+0.0f)),
-		1.0f
-		);*/
-
-
 		fPosOffsetX += halfWidth + 1.0f;
 
 		// uv
@@ -145,7 +142,7 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 }
 
 void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
-									DrawableGlyph * pDrawableText_p, int & nDrawables_p )
+									DrawableGlyph * pDrawableText_p, int & nDrawables_p, sprite::Camera & camera_p )
 {
 	if( szText_p[0] == 0x0000 ) return;
 
@@ -204,13 +201,6 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 		pos.y += fPosOffsetY;
 
 		pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3] = XMLoadFloat4( &pos );
-		//// to int (makes worse)
-		//pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3] = XMVectorSet(
-		//	(float)((int)(XMVectorGetX(pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3])+0.5f)),
-		//	(float)((int)(XMVectorGetY(pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3])+0.5f)),
-		//	(float)((int)(XMVectorGetZ(pDrawableText_p[itGlyph].renderData.cbufferData.m_mWorld.r[3])+0.5f)),
-		//	1.0f
-		//	);
 
 		fPosOffsetX += halfWidth + 1.0f;
 
@@ -221,7 +211,6 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 		pDrawableText_p[itGlyph].renderData.bindDrawableCbuffer.Initialize( m_pGlyphBufferInterface, &pDrawableText_p[itGlyph].renderData.cbufferData );
 		pDrawableText_p[itGlyph].renderData.state.AddBinderCommand( &pDrawableText_p[itGlyph].renderData.bindDrawableCbuffer );
 
-
 		pDrawableText_p[itGlyph].drawable.SetSortKey( sorMask.intRepresentation );
 		pDrawableText_p[itGlyph].drawable.SetDrawCall( m_pTextDrawCall );
 
@@ -229,6 +218,7 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 		pDrawableText_p[itGlyph].drawable.AddPipelineState( &m_textureState );
 		pDrawableText_p[itGlyph].drawable.AddPipelineState( &m_fonts[iFontID_p].GetPipeState() );
 		pDrawableText_p[itGlyph].drawable.AddPipelineState( &pDrawableText_p[itGlyph].renderData.state );
+		pDrawableText_p[itGlyph].drawable.AddPipelineState( &camera_p.m_pipeState );
 
 		++itChar;
 		++itGlyph;
@@ -236,4 +226,3 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 
 	nDrawables_p = itGlyph;
 }
-

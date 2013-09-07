@@ -48,7 +48,6 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
 
 void sprite::SpriteRenderer::Render( game::SpriteComponent *pSprite_p, Camera *pCamera_p )
 {
-	// NOTE/TODO: even the given pointer being on the stack, shared ptr still allocates for the ref ctrl..
 
 	static render::Drawable s_drawInst;
 	s_drawInst.Clear();

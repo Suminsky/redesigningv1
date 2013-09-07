@@ -128,7 +128,7 @@ namespace text{
 		// SLOW, this creates the drawables and submit then to the drawablesqueue.
 		// MAX of E_MAXGLYPHS, as render data is buffered in this object.
 		//------------------------------------------------------------------------
-		void RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p = 0 );
+		void RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, sprite::Camera & camera_p, UINT iFontID_p = 0 );
 
 
 		//------------------------------------------------------------------------
@@ -137,7 +137,8 @@ namespace text{
 		// used.
 		//------------------------------------------------------------------------
 		void DrawText(  const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
-						DrawableGlyph * pDrawableText_p, int & nDrawables_p );
+						DrawableGlyph * pDrawableText_p, int & nDrawables_p,
+						sprite::Camera & camera_p );
 
 	private:
 
