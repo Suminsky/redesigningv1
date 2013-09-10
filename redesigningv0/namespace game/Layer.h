@@ -155,7 +155,10 @@ namespace game{
 
 				std::swap( m_objects[m_removedObjects[it]], m_objects[itLast - it] ); // size - 1, size -2, size -3
 
-				m_objects[m_removedObjects[it]]->m_currentLayerIndex = m_removedObjects[it]; // update index
+				if( m_objects[m_removedObjects[it]]->m_currentLayerIndex != INVALID_OBJECTINDEX ){
+				
+					m_objects[m_removedObjects[it]]->m_currentLayerIndex = m_removedObjects[it]; // update index
+				}
 			}
 
 			// "trim"

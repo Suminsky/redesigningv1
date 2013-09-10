@@ -139,7 +139,11 @@ namespace game{
 
 				std::swap( m_tasks[m_destroyedTasks[it]], m_tasks[itLast - it] ); // size - 1, size -2, size -3
 
-				m_tasks[m_destroyedTasks[it]]->m_currentTaskIndex = m_destroyedTasks[it]; // update index
+				// ENORMOUS SERIOUS BUG: this will eventually change a task invalid index to a valid one
+				if( m_tasks[m_destroyedTasks[it]]->m_currentTaskIndex != INVALID_TASKINDEX ){
+					
+					m_tasks[m_destroyedTasks[it]]->m_currentTaskIndex = m_destroyedTasks[it]; // update index
+				}
 			}
 
 			// "trim"
