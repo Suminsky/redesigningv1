@@ -41,6 +41,23 @@ namespace gen{
 		delete [] obj;
 	}
 
+	//------------------------------------------------------------------------
+	// array 2d <-> 1d conversions
+	//------------------------------------------------------------------------
+	inline int XFromIndex( int index_p, int iW_p ){
+
+		return index_p % iW_p; // x/col repeats for every row
+		// return index - ((index_p / iW_p) * iW_p);
+	}
+	inline int YFromIndex( int index_p, int iW_p ){
+
+		return index_p / iW_p;
+	}
+	inline int indexFromXY( int x_p, int y_p, int iW_p ){
+
+		return y_p * iW_p + x_p;
+	}
+
 	//========================================================================
 	// 
 	//========================================================================
