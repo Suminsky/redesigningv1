@@ -306,9 +306,6 @@
     <ClInclude Include="Mentle\InGame\EnergyBarLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mentle\InGame\MentleActiveEffects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -549,9 +546,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\MentleActiveEffects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

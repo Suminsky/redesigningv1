@@ -154,7 +154,6 @@
     <ClInclude Include="Mentle\InGame\InGame.h" />
     <ClInclude Include="Mentle\InGame\InGameEventData.h" />
     <ClInclude Include="Mentle\InGame\InputMapper.h" />
-    <ClInclude Include="Mentle\InGame\MentleActiveEffects.h" />
     <ClInclude Include="Mentle\InGame\MentleCardComponent.h" />
     <ClInclude Include="Mentle\InGame\MentleCardDesc.h" />
     <ClInclude Include="Mentle\InGame\MentleLogic.h" />
@@ -253,7 +252,6 @@
     <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp" />
     <ClCompile Include="Mentle\InGame\InGame.cpp" />
     <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleActiveEffects.cpp" />
     <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />
     <ClCompile Include="Mentle\InGame\MentleCardDesc.cpp" />
     <ClCompile Include="Mentle\InGame\MentleLogic.cpp" />

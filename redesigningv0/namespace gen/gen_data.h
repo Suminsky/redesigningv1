@@ -154,8 +154,7 @@ namespace gen{
 	//========================================================================
 	// picking n random elements from n elements with no repeat
 	//========================================================================
-	template < int nToPick, int nElements >
-	void PickRandomElements( int * pElementsPicked_p, int * pElementsAvailable_p ){
+	inline void PickRandomElementsNoRepeat( int nToPick, int nElements, int * pElementsPicked_p, int * pElementsAvailable_p ){
 
 		for( int it = 0, nElementsRemaining = nElements; it < nToPick; ++it ){
 
@@ -165,7 +164,16 @@ namespace gen{
 
 			// discard picked by swapping it to last element
 
-			pElementsAvailable_p[randIndex] = pElementsAvailable_p[nElementsRemaining--];
+			pElementsAvailable_p[randIndex] = pElementsAvailable_p[--nElementsRemaining];
+		}
+	}
+	inline void PickRandomElementsRepeat( int nToPick, int nElements, int * pElementsPicked_p, int * pElementsAvailable_p ){
+
+		for( int it = 0, nElementsRemaining = nElements; it < nToPick; ++it ){
+
+			int randIndex = rand() % nElementsRemaining;
+
+			pElementsPicked_p[it] = pElementsAvailable_p[randIndex];
 		}
 	}
 
