@@ -75,18 +75,28 @@ namespace win{
 			m_pos.x = GET_X_LPARAM(lParam_p);
 			m_pos.y = GET_Y_LPARAM(lParam_p);
 		}
-		static void ConvertMousePosToCentralizedScreenSpace( float & x_p, float & y_p, UINT screenW_p, UINT screenH_p ){
+		static void ConvertMousePosToCentralizedClientSpace( float & x_p, float & y_p, UINT screenW_p, UINT screenH_p ){
 
-			float x = ((float)x_p / (float)screenW_p); // interpolation amount
-			float y = ((float)y_p / (float)screenH_p);
+			//float x = ((float)x_p / (float)screenW_p); // interpolation amount
+			//float y = ((float)y_p / (float)screenH_p);
 
 			float halfW = (float)screenW_p / 2.0f; // min and max
 			float halfH = (float)screenH_p / 2.0f;
 
-			x_p = x * screenW_p - halfW; //interpolation times full range + offset(min)
-			y_p = -(y * screenH_p - halfH);
-		}
+			//x_p = x * screenW_p  - halfW; //interpolation times full range + offset(min)
+			//y_p = -(Y * screenH_p  - halfH);
 
+			x_p = x_p  - halfW; //interpolation times full range + offset(min)
+			y_p = -(y_p  - halfH);
+		}
+		static void ConvertMousePosFromCentralizedClientSpace( float & x_p, float & y_p, UINT screenW_p, UINT screenH_p ){
+
+			float halfW = (float)screenW_p / 2.0f; // min and max
+			float halfH = (float)screenH_p / 2.0f;
+
+			x_p = x_p + halfW; //interpolation times full range + offset(min)
+			y_p = (-y_p + halfH);
+		}
 		//------------------------------------------------------------------------
 		// updates button states data
 		//------------------------------------------------------------------------
@@ -171,6 +181,8 @@ namespace win{
 				// See On_WM_CAPTURECHANGED
 			}
 		}
+
+
 
 		//------------------------------------------------------------------------
 		// getters

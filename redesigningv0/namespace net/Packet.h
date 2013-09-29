@@ -75,6 +75,7 @@ namespace net{
 			header.iChannel = 0;
 			header.iSendingSequence = 0;
 			header.iAckReceivedSequence = 0;
+			header.nUserDataChunks = 0;
 
 			SetChunkAs<Header>( 0, header );
 

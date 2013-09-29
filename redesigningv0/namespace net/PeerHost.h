@@ -504,26 +504,3 @@ namespace net{
 		P2PConnection & operator = ( const P2PConnection & other_p );
 	};
 }
-
-/*
- on connection attempt receiving (old, works)
-if( m_socketRef.Receive(	(int)m_bufferedRemoteDataReceived.currentUsed, remoteAddress,
-m_bufferedRemoteDataReceived.data, E_CONFIG_DATABUFFERSIZE,
-&eError ) )
-{
-
-// accept only the expected address
-
-if( remoteAddress == m_remoteAddress ){
-
-m_eState = E_STATE_CONNECTED;
-m_dTimeSinceLastReceiving = 0.0;
-
-return;
-}
-else{
-
-m_bufferedRemoteDataReceived.currentUsed = 0; // discard data received, if any
-}
-}
- */
