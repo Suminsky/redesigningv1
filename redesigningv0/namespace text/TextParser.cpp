@@ -76,7 +76,7 @@ void Parser::RemoveSectionsBetween( DataStream & buffer_p, char cOpen_p, char cC
 
 	return;
 }
-void Parser::RemoveUnquotedSectionsBetween( DataStream & buffer_p, char cOpen_p, char cClose_p, char cQuote )
+void Parser::RemoveUnquotedSectionsBetween( DataStream & buffer_p, char cOpen_p, char cClose_p, char cQuote, char cQuoteShield )
 {
 	unsigned int iByteIndex = 0;
 	int iCommentStartPos = -1;
@@ -117,8 +117,8 @@ void Parser::RemoveUnquotedSectionsBetween( DataStream & buffer_p, char cOpen_p,
 					int iSizeAfterComment =  buffer_p.m_size - iCommentEndPos;
 
 					memcpy(		&buffer_p.m_data[iCommentStartPos],
-						&buffer_p.m_data[iCommentEndPos+1],
-						iSizeAfterComment	);
+								&buffer_p.m_data[iCommentEndPos+1],
+								iSizeAfterComment	);
 
 					// "trim" data size
 
@@ -142,7 +142,9 @@ void Parser::RemoveUnquotedSectionsBetween( DataStream & buffer_p, char cOpen_p,
 
 				// check if quote inside quote
 
-				if( buffer_p.m_data[iByteIndex-1] == '\\'){// \
+				if( buffer_p.m_data[iByteIndex-1] == cQuoteShield ){// \
+
+					// NOTE: cant remove slash here, it is still used
 
 					// than ignore this quote
 
@@ -167,6 +169,57 @@ void Parser::RemoveUnquotedSectionsBetween( DataStream & buffer_p, char cOpen_p,
 
 	//ReplaceCharsBy( "\n", '!', buffer_p );
 	//ReplaceCharsBy( "\r", '?', buffer_p );
+
+	return;
+}
+void text::Parser::GetSectionBetween( gen::DataStream & buffer_p, const char cOpen_p, const char cClose_p, int & iValidStartPos, unsigned int & nValidPortion_p )
+{
+	unsigned int iByteIndex = 0;
+	iValidStartPos = -1;
+
+	while( iByteIndex < buffer_p.m_size ){
+
+		// if still not found any comment
+
+		if( buffer_p.m_data[iByteIndex] == cOpen_p){
+
+			// found comment start
+
+			iValidStartPos = iByteIndex;
+			break;
+		}
+
+		++iByteIndex;
+	}
+
+	if( iValidStartPos == -1 
+		||
+		(unsigned int)iValidStartPos == buffer_p.m_size - 1 )
+		return;
+
+	//----------------------------
+
+	// traverse backwards till valid is found
+
+	iByteIndex = buffer_p.m_size - 1; // start on last element
+	int iCommentEndPos = -1;
+
+	while( (int)iByteIndex > iValidStartPos ){
+
+		// if looking for the end of the comment
+
+		if( buffer_p.m_data[iByteIndex] == cClose_p){
+
+			iCommentEndPos = iByteIndex;
+			break;
+		}
+
+		--iByteIndex;
+	}
+
+	nValidPortion_p = (iCommentEndPos+1) - iValidStartPos;
+
+	// including delimiters!!!
 
 	return;
 }
@@ -215,7 +268,7 @@ void Parser::RemoveChars( const char * szToRemove_p, DataStream & buffer_p )
 	}
 }
 
-void Parser::GetSectionBetweenInvalids( const char * szInvalids_p, DataStream & buffer_p, int & iValidStartPos_p, unsigned int & nValidPortion_p )
+void Parser::GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, DataStream & buffer_p, int & iValidStartPos_p, unsigned int & nValidPortion_p )
 {
 	assert( buffer_p.m_currentByteIndex < buffer_p.m_size );
 
@@ -279,54 +332,96 @@ void Parser::GetSectionBetweenInvalids( const char * szInvalids_p, DataStream & 
 	nValidPortion_p = (iValidEnd - iValidStartPos_p) + 1;
 }
 
-void Parser::GetSectionBetweenDelimiter( const char cDelimiter_p, DataStream & buffer_p, int & iValidStartPos_p, unsigned int & nValidPortion_p )
+void text::Parser::ReplaceSectionBy( const char cDelimiter_p, gen::DataStream & buffer_p, const char cReplacement_p )
 {
-	assert( buffer_p.m_currentByteIndex < buffer_p.m_size );
+	int iValidStart; unsigned int nValids;
+	GetSectionBetween( buffer_p, cDelimiter_p, cDelimiter_p, iValidStart, nValids );
 
-	unsigned int iByteIndex = buffer_p.m_currentByteIndex;
+	if( iValidStart <= 0 ) return;
+	if( nValids <= 0 ) return;
 
-	// traverse till valid is found
+	// replace open delimiter by replacement
 
-	bool bInvalid = false;
-	while(	iByteIndex < buffer_p.m_size ){
+	buffer_p.m_data[ iValidStart ] = cReplacement_p;
 
-		// compare against all invalid
-		// if theres any invalid, mark as invalid..
+	// move everything backwards
 
-		if( buffer_p.m_data[iByteIndex] == cDelimiter_p ){
+	memcpy( &buffer_p.m_data[iValidStart+1],
+			&buffer_p.m_data[iValidStart+nValids],
+			buffer_p.m_size - (iValidStart+1) );
 
-			bInvalid = true;
-			break;
+	buffer_p.m_size -= nValids;
+}
+
+void text::Parser::AdjustQuotedNewLines( gen::DataStream & buffer_p, const char cForNewLineOpen_p /*= '\\'*/, const char cForNewLineClose_p /*= '\\'*/, const char cReplacement_p /*= '\n' */, const char cNewLine )
+{
+	unsigned int iByteIndex = 0;
+	int iForNewLineStartPos = -1;
+
+	while( iByteIndex < buffer_p.m_size ){
+
+		// if still not found any formatted new line
+
+		if( iForNewLineStartPos == -1 ){
+
+			if( buffer_p.m_data[iByteIndex] == cForNewLineOpen_p){
+
+				if( iByteIndex + 1 < buffer_p.m_size )
+				if(  buffer_p.m_data[iByteIndex+1] == cNewLine ){
+
+					// found formatted new line
+
+					iForNewLineStartPos = iByteIndex;
+				}	
+			}
 		}
+		else{
+
+			// if looking for the end of the formatted new line
+
+			if( buffer_p.m_data[iByteIndex] == cForNewLineClose_p){
+
+				int iCommentEndPos = iByteIndex;
+
+				// from after formatted new line to EOF, copy it over the start of the new line
+
+				int iSizeAfterComment =  buffer_p.m_size - iCommentEndPos;
+
+				memcpy(		&buffer_p.m_data[iForNewLineStartPos+1],
+							&buffer_p.m_data[iCommentEndPos+1],
+							iSizeAfterComment	);
+
+				// "trim" data size
+
+				int iCommentSize = (iCommentEndPos+1) - (iForNewLineStartPos+1);
+				buffer_p.m_size -= iCommentSize;
+
+				// account current pos to the chopped part
+
+				iByteIndex = iByteIndex - iCommentSize; // iByteIndex += 1; -> on \r, not \n
+
+				// replace
+
+				buffer_p.m_data[iForNewLineStartPos] = cReplacement_p;
+
+				// start looking for formatted new lines again
+
+				iForNewLineStartPos = -1;
+			}
+		}
+
 
 		++iByteIndex;
 	}
 
-	if( bInvalid ){
+	if( iForNewLineStartPos != -1 ){
 
-		iValidStartPos_p = -1;
-		nValidPortion_p = 0;
-		return;
+		// chop off the formatted new line at the EOF
+
+		buffer_p.m_size -= (buffer_p.m_size - iForNewLineStartPos);
 	}
 
-	iValidStartPos_p = iByteIndex;
-
-	// traverse backwards till valid is found
-
-	iByteIndex = buffer_p.m_size - 1; // start on last element
-
-	while( (int)iByteIndex > iValidStartPos_p ){
-
-		if( buffer_p.m_data[iByteIndex] == cDelimiter_p){
-
-			break;
-		}
-
-		--iByteIndex;
-	}
-
-	int iValidEnd = iByteIndex;
-	nValidPortion_p = (iValidEnd - iValidStartPos_p) + 1;
+	return;
 }
 
 //========================================================================
@@ -339,7 +434,7 @@ void GfigElement::ParseGfigFile( DataStream & buffer_p, GfigElement & parsed_p )
 
 	//Parser::RemoveSectionsBetween( buffer_p, '#', '\n' );
 
-	Parser::RemoveUnquotedSectionsBetween( buffer_p, '#', '\n', '"' );
+	Parser::RemoveUnquotedSectionsBetween( buffer_p, '#', '\n', '"', '\\' );
 
 	// enter recursion
 
@@ -363,10 +458,17 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 				// check if quote inside quote
 				
 				if( buffer_p.m_data[buffer_p.m_currentByteIndex-1] == '\\'){// \
-
+					
 					// than ignore this quote
+					
+					// remove inverse slash
 
-					++buffer_p.m_currentByteIndex;
+					memcpy( &buffer_p.m_data[buffer_p.m_currentByteIndex-1],
+							&buffer_p.m_data[buffer_p.m_currentByteIndex],
+							buffer_p.m_size - buffer_p.m_currentByteIndex );
+
+					--buffer_p.m_size;
+
 					continue;
 				}
 			}
@@ -465,6 +567,9 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 						bufferTmp.m_size = bufferTmp.m_currentByteIndex + nCharsBetweenOpenBracketAndEquals;
 					
 						ParseAssign( bufferTmp, parsed_p.m_name );
+
+						// here would be a good moment to get the quoted section and remove the babk slashes..
+						
 					}				
 				}
 			}
@@ -519,6 +624,8 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 				}
 			}
 		}
+
+
 		++buffer_p.m_currentByteIndex;
 	}
 }
@@ -531,21 +638,29 @@ void GfigElement:: ParseAssign( DataStream & buffer_p, std::string & szOut_p )
 
 	int iStart;
 	unsigned int nChars;
-	Parser::GetSectionBetweenInvalids( " \t\r\n", buffer_p, iStart, nChars );
+	Parser::GetSectionBetweenInvalidsOnTips( " \t\r\n", buffer_p, iStart, nChars );
 
 	// if quoted, remove quotes
 
 	if( buffer_p.m_data[iStart] == '"'
 		&&
-		buffer_p.m_data[ iStart + nChars -1 ] == '"'){
+		buffer_p.m_data[ iStart + nChars -1 ] == '"' ){
 
 			++iStart;
 			nChars -= 2;
 	}
 
+	// new
+	buffer_p.m_currentByteIndex = 0;//iStart;
+	buffer_p.m_data += iStart;
+	buffer_p.m_size = nChars;//buffer_p.m_currentByteIndex + nChars;
+
+	Parser::AdjustQuotedNewLines( buffer_p, '\\', '\\', '\n');
+	// new
+	
 	// assign
 
-	szOut_p.assign( (const char*)&buffer_p.m_data[iStart], nChars );
+	szOut_p.assign( (const char*)&buffer_p.m_data[buffer_p.m_currentByteIndex], buffer_p.m_size );
 }
 
 bool GfigElement::GetSubElement( const char * szName_p, GfigElement *& pElement_p )
@@ -562,23 +677,3 @@ bool GfigElement::GetSubElement( const char * szName_p, GfigElement *& pElement_
 
 	return false;
 }
-
-
-//if( buffer_p.m_data[buffer_p.m_currentByteIndex] == '"' ){
-//
-//	if( bIgnoringDueQuote ){
-//
-//		// check if quote inside quote
-//
-//		if( buffer_p.m_data[buffer_p.m_currentByteIndex-1] != '\\'){// \
-//
-//			bIgnoringDueQuote = false;
-//		}
-//
-//		// else keep ignoring
-//
-//	}else{
-//
-//		bIgnoringDueQuote = true;
-//	}
-//}

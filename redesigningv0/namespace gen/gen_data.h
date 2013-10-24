@@ -61,18 +61,18 @@ namespace gen{
 	//========================================================================
 	// 
 	//========================================================================
-	enum EHORZALIGN{
+	enum E_HORZALIGN{
 
-		EHORZALIGN_LEFT,
-		EHORZALIGN_RIGHT,
-		EHORZALIGN_CENTER
+		E_HORZALIGN_LEFT,
+		E_HORZALIGN_RIGHT,
+		E_HORZALIGN_CENTER
 	};
 
-	enum EVERTALIGN{
+	enum E_VERTALIGN{
 
-		EVERTALIGN_TOP,
-		EVERTALIGN_BOTTOM,
-		EVERTALIGN_CENTER
+		E_VERTALIGN_TOP,
+		E_VERTALIGN_BOTTOM,
+		E_VERTALIGN_CENTER
 	};
 
 
@@ -84,17 +84,17 @@ namespace gen{
 	//========================================================================
 	struct Anchor{
 
-		EHORZALIGN h;
-		EVERTALIGN v;
+		E_HORZALIGN h;
+		E_VERTALIGN v;
 
-		Anchor( EHORZALIGN h_p, EVERTALIGN v_p ): h(h_p), v(v_p){}
+		Anchor( E_HORZALIGN h_p, E_VERTALIGN v_p ): h(h_p), v(v_p){}
 
 		// facility
 
 		inline Anchor& Centralize(){
 
-			h = EHORZALIGN_CENTER;
-			v = EVERTALIGN_CENTER;
+			h = E_HORZALIGN_CENTER;
+			v = E_VERTALIGN_CENTER;
 
 			return *this;
 		}

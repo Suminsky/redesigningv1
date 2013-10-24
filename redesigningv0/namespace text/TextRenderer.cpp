@@ -99,6 +99,12 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 			++itChar;
 			continue;
 		}
+		else if( szText_p[itChar] == L'\t' ){
+
+			fPosOffsetX += (m_fonts[iFontID_p].GetSpaceWidth()*4.0f);
+			++itChar;
+			continue;
+		}
 
 		// set data specific to each glyph
 
@@ -141,7 +147,7 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	}
 }
 
-void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
+void text::TextRenderer::Draw_Text( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
 									DrawableGlyph * pDrawableText_p, int & nDrawables_p, sprite::Camera & camera_p )
 {
 	if( szText_p[0] == 0x0000 ) return;
@@ -172,6 +178,17 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 
 			fPosOffsetY -= m_fonts[iFontID_p].GetMinNewLineHeight() + 1.0f;
 			fPosOffsetX = 0.0f;
+			++itChar;
+			continue;
+		}
+		else if(szText_p[itChar] == L'\r' ){
+
+			++itChar;
+			continue;
+		}
+		else if( szText_p[itChar] == L'\t' ){
+			
+			fPosOffsetX += (m_fonts[iFontID_p].GetSpaceWidth()*4.0f);
 			++itChar;
 			continue;
 		}
@@ -225,4 +242,42 @@ void text::TextRenderer::DrawText( const wchar_t szText_p[], DirectX::XMFLOAT4 p
 	}
 
 	nDrawables_p = itGlyph;
+}
+
+int text::TextRenderer::ComputeNumberOfGlyphs( const wchar_t szText_p[] )
+{
+	int itChar = 0;
+	int itGlyph = 0;
+
+	while( szText_p[itChar] != 0x0000 ){
+
+
+		// handle spaces
+
+		if( szText_p[itChar] == L' ' ){
+
+			++itChar;
+			continue;
+		}
+		else if(szText_p[itChar] == L'\n' ){
+
+			++itChar;
+			continue;
+		}
+		else if(szText_p[itChar] == L'\r' ){
+
+			++itChar;
+			continue;
+		}
+		else if( szText_p[itChar] == L'\t' ){
+
+			++itChar;
+			continue;
+		}
+
+		++itChar;
+		++itGlyph;
+	}
+
+	return itGlyph;
 }

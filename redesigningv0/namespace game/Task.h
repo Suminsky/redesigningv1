@@ -35,7 +35,12 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		explicit Task( shared_Task_ptr pChainedTask_p = nullptr ): m_pChainedTask(pChainedTask_p), m_currentTaskIndex(INVALID_TASKINDEX){}
+		explicit Task( shared_Task_ptr pChainedTask_p = nullptr )
+			:
+			m_pChainedTask(pChainedTask_p),
+			m_currentTaskIndex(INVALID_TASKINDEX),
+			m_bDead(true){}
+
 		virtual ~Task(){}
 
 		//------------------------------------------------------------------------
@@ -43,7 +48,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		bool Running(){
 
-			return m_currentTaskIndex != INVALID_TASKINDEX;
+			//return m_currentTaskIndex != INVALID_TASKINDEX;
+			return !m_bDead;	// && m_currentTaskIndex != INVALID_TASKINDEX;
 		}
 
 	protected:
@@ -53,7 +59,7 @@ namespace game{
 		// Chain will launch the chained task in this tasks place, failed wont.
 		//------------------------------------------------------------------------
 		void Chain();
-		void Destroy();
+		void Abort();
 		
 		shared_Task_ptr m_pChainedTask; // the task to be launched after this one is over
 
@@ -61,6 +67,7 @@ namespace game{
 
 		TASKINDEX m_currentTaskIndex;
 		TaskMachine * m_pTaskMachineRef;
+		bool m_bDead;
 
 		//------------------------------------------------------------------------
 		// to be override

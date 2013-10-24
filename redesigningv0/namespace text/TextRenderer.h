@@ -41,7 +41,14 @@ namespace text{
 
 		GlyphRenderData renderData; // data used by the drawable
 		render::Drawable drawable;
+
+		void Clear(){
+			renderData.state.Reset();
+			drawable.Clear();
+		}
 	};
+
+	typedef std::vector<DrawableGlyph> DrawableText;
 
 	//========================================================================
 	// 
@@ -136,9 +143,14 @@ namespace text{
 		// nDrawables have both max glyphs to create, and return number of glyphs
 		// used.
 		//------------------------------------------------------------------------
-		void DrawText(  const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
+		void Draw_Text(  const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
 						DrawableGlyph * pDrawableText_p, int & nDrawables_p,
 						sprite::Camera & camera_p );
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		int ComputeNumberOfGlyphs( const wchar_t szText_p[] );
 
 	private:
 

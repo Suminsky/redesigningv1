@@ -51,7 +51,8 @@ namespace dx{
 		//------------------------------------------------------------------------
 		void AddBinderCommand( Binder * pBinder_p ){
 
-			assert( !(m_stateMask & pBinder_p->TypeBits()) );
+			assert( !(m_stateMask & pBinder_p->TypeBits() ) );
+			assert( pBinder_p->TypeIndex() >= 0 &&  pBinder_p->TypeIndex() < E_MAX_BINDS );
 
 			m_binds.push_back(pBinder_p);
 			m_stateMask |= pBinder_p->TypeBits();

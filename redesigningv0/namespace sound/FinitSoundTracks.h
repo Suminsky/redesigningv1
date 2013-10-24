@@ -189,7 +189,7 @@ namespace sound{
 
 				hr =
 				m_pVoices[it]->Stop( iFlags_p, iOperationSet_p );
-
+				
 				if( hr == S_OK ) continue;
 
 				assert( hr != XAUDIO2_E_INVALID_CALL );

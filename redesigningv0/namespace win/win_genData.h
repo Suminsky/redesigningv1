@@ -129,12 +129,12 @@ namespace win{
 
 			//case gen::EHORZALIGN_LEFT:
 
-			case gen::EHORZALIGN_RIGHT:
+			case gen::E_HORZALIGN_RIGHT:
 
 				x = x - xdif;
 
 				break;
-			case gen::EHORZALIGN_CENTER:
+			case gen::E_HORZALIGN_CENTER:
 
 				x = x - (int)(xdif * 0.5f);
 
@@ -147,12 +147,12 @@ namespace win{
 
 			//case gen::EVERTALIGN_TOP:
 
-			case gen::EVERTALIGN_BOTTOM:
+			case gen::E_VERTALIGN_BOTTOM:
 
 				y = y - ydif;
 
 				break;
-			case gen::EVERTALIGN_CENTER:
+			case gen::E_VERTALIGN_CENTER:
 
 				y = y - (int)(ydif * 0.5f);
 

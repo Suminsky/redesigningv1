@@ -69,6 +69,8 @@ namespace render{
 
 			Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
 			m_sortqueue.push_back(newEntry);
+
+			//assert( drawable_p.m_sortKey != 13258597302978759884 );
 		}
 		void Submit( Drawable && drawable_p ){
 
@@ -76,6 +78,8 @@ namespace render{
 
 			Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
 			m_sortqueue.push_back(newEntry);
+
+			//assert( drawable_p.m_sortKey != 13258597302978759884 );
 		}
 
 		void Prepare(){

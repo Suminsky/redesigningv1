@@ -40,14 +40,41 @@ namespace text{
 		// 
 		// made to support quotes, so open close inside "  "
 		// are ignored.
+		// quotes inside quotes must be protected by \
 		//------------------------------------------------------------------------
 		static void RemoveSectionsBetween( gen::DataStream & buffer_p, char cOpen_p, char cClose_p );
-		static void RemoveUnquotedSectionsBetween( gen::DataStream & buffer_p, char cOpen_p, char cClose_p, char cQuote = '"' );
-		
+		static void RemoveUnquotedSectionsBetween( gen::DataStream & buffer_p, char cOpen_p, char cClose_p, char cQuote = '"', char cQuoteShield = '\\' );
+
+		//------------------------------------------------------------------------
+		// same thing as above, but instead of removing returns the section pos info
+		//------------------------------------------------------------------------
+		static void GetSectionBetween( gen::DataStream & buffer_p, const char cOpen_p, const char cClose_p, int & iValidStartPos, unsigned int & nValidPortion_p );
+
+		//------------------------------------------------------------------------
+		// detects real new lines (\n) shieldened by \, than finds next \ and
+		// replace from \ to \ to a single new line.
+		// this is because text files have formatting spaces tabs, and when a new
+		// line happens all those are included, using the \ to shield one can
+		// indicate the valid portion.
+		// example:
+		//	desc = "line 1
+		//			line 2"
+		//	# is this sample, theres 2 tabs after new line
+		//	
+		//	desc = "line 1
+		//	line 2"
+		//	# in this sample, its ok, but the formatting is gone
+		//	
+		//	desc = "line1\
+		//			\line2"
+		//	# in this sample, problem is fixed.
+		//------------------------------------------------------------------------
+		static void AdjustQuotedNewLines( gen::DataStream & buffer_p, const char cForNewLineOpen_p = '\\', const char cForNewLineClose_p = '\\', const char cReplacement_p = '\n', const char cNewLine = '\r' );
+
 		//------------------------------------------------------------------------
 		// use this to replace all chars (szChars) on buffer by cReplacement
 		//------------------------------------------------------------------------
-		static void ReplaceCharsBy( const char * szChars_p, char cReplacement_p,  gen::DataStream & buffer_p   );
+		static void ReplaceCharsBy( const char * szChars_p, const char cReplacement_p,  gen::DataStream & buffer_p   );
 
 		//------------------------------------------------------------------------
 		// use this to remove the chars from the stream.
@@ -76,12 +103,15 @@ namespace text{
 		// "\n\t going home happy \t\t\n "
 		// \n\t going home happy \t\t\n 
 		//------------------------------------------------------------------------
-		static void GetSectionBetweenInvalids( const char * szInvalids_p, gen::DataStream & buffer_p, int & iValidStartPos, unsigned int & nValidPortion_p );
+		static void GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, gen::DataStream & buffer_p, int & iValidStartPos, unsigned int & nValidPortion_p );
 
 		//------------------------------------------------------------------------
-		// samething as above, but have only one invalid
+		// an entire section replaced by a char
+		// build to replace \       \  by a single new line char.
+		// \ is used on text file languages to link/continue a line on another
+		// without breaking quotes
 		//------------------------------------------------------------------------
-		static void GetSectionBetweenDelimiter( const char cDelimiter_p, gen::DataStream & buffer_p, int & iValidStartPos, unsigned int & nValidPortion_p );
+		static void ReplaceSectionBy( const char cDelimiter_p, gen::DataStream & buffer_p, const char cReplacement_p );
 	};
 
 	//========================================================================

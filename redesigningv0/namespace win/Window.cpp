@@ -97,7 +97,7 @@ bool win::Window::Resize( int ClientW_p, int ClientH_p )
 	// get rect to accommodate client area
 
 	Rect newClientRect_p( m_cliRect );
-	newClientRect_p.AnchoredResize( ClientW_p, ClientH_p, gen::Anchor(gen::EHORZALIGN_CENTER, gen::EVERTALIGN_CENTER));
+	newClientRect_p.AnchoredResize( ClientW_p, ClientH_p, gen::Anchor(gen::E_HORZALIGN_CENTER, gen::E_VERTALIGN_CENTER));
 
 	RECT adjustRect;
 	newClientRect_p.ToRECT(adjustRect);

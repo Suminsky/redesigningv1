@@ -301,8 +301,10 @@ public:
 
 	void Init( UINT iSlot_p, ID3D11SamplerState * pSamplerState_p ){
 
-		Binder::m_typeBits = 1LL << (E_PS_Sampler0+iSlot_p);
-		Binder::m_typeIndex = E_BIND(E_PS_Sampler0+iSlot_p);		
+		//Binder::m_typeBits = 1LL << (E_PS_Sampler0+iSlot_p);
+		//Binder::m_typeIndex = E_BIND(E_PS_Sampler0+iSlot_p);
+		Set( 1LL << (E_PS_Sampler0+iSlot_p), E_BIND(E_PS_Sampler0+iSlot_p));
+
 		m_iSlot = iSlot_p;
 		m_pSamplerState = pSamplerState_p;
 	}

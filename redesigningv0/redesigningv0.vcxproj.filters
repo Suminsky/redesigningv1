@@ -309,6 +309,21 @@
     <ClInclude Include="Mentle\InGame\CursorLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\InGame\AudioHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\InGame\PanelLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\InGame\TutorialLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\MatchConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\InGame\TutorialPart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -552,6 +567,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\CursorLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\AudioHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\PanelLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\TutorialLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\MatchConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\TutorialPart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

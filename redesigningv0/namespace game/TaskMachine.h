@@ -54,32 +54,67 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddTask( const shared_Task_ptr & pNewTask_p ){
 
-			assert(pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX); // prevent double insertion TODO: perhaps a warning?
+			//assert(pNewTask_p->m_currentTaskIndex == INVALID_TASKINDEX); // prevent double insertion TODO: perhaps a warning?
+			assert( pNewTask_p->m_bDead );
 
-			pNewTask_p->VOnInit();
-			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
-			pNewTask_p->m_pTaskMachineRef = this;
+			if( pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX ){
 
-			m_tasks.push_back( pNewTask_p );
+				pNewTask_p->m_bDead = false;
+				pNewTask_p->VOnInit();
+				pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
+				pNewTask_p->m_pTaskMachineRef = this;
+
+				m_tasks.push_back( pNewTask_p );
+			}
+			else{
+
+				pNewTask_p->m_bDead = false;
+				pNewTask_p->VOnInit();
+			}
 		}
 		void AddTask( shared_Task_ptr && pNewTask_p ){
 
-			assert(pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX);
-			
-			pNewTask_p->VOnInit();
-			pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
-			pNewTask_p->m_pTaskMachineRef = this;
+			//assert(pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX);
+			assert( pNewTask_p->m_bDead );
 
-			m_tasks.push_back( std::move(pNewTask_p) );
+			if( pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX ){
+
+				pNewTask_p->m_bDead = false;		
+				pNewTask_p->VOnInit();
+				pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
+				pNewTask_p->m_pTaskMachineRef = this;
+
+				m_tasks.push_back( std::move(pNewTask_p) );
+			}
+			else{
+
+				pNewTask_p->m_bDead = false;
+				pNewTask_p->VOnInit();
+			}
 		}
 
 		//------------------------------------------------------------------------
 		// The only way a task can be finished not spontaneously
+		// TODO !!!BUG!!!: a task can be aborted and added on the same frame, causing
+		// the task machine to have 2 of the same task..
+		// dunno why, but state and layer seem to solve this differently..why I did that here?
+		// PROBLEM-> so I tried the state/layer method here, and theres a problem..
+		// by not setting INVALID_TASKINDEX here, the test for Running() may return
+		// true even if the task will be deleted in the same frame. Means itDestroyed will not
+		// add the task because itDestroyed seems the task is already running.
+		// I need to change this completly:
+		// NEED:
+		// - be able to remove and add on the same frame
+		// - know if the task is removed or not, any time
+		// - remove the task at the end
 		//------------------------------------------------------------------------
 		void AbortTask( TASKINDEX taskCurrentIndex_p ){
+
+			assert( taskCurrentIndex_p != INVALID_TASKINDEX );
 	
-			m_tasks[taskCurrentIndex_p]->VOnDestroy();
-			m_tasks[taskCurrentIndex_p]->m_currentTaskIndex = INVALID_TASKINDEX;
+			//m_tasks[taskCurrentIndex_p]->VOnDestroy();
+			m_tasks[taskCurrentIndex_p]->m_bDead = true;
+			//m_tasks[taskCurrentIndex_p]->m_currentTaskIndex = INVALID_TASKINDEX;
 
 			m_destroyedTasks.push_back(taskCurrentIndex_p);
 		}
@@ -104,62 +139,81 @@ namespace game{
 			
 			m_tasks[taskCompletedIndex_p]->VOnDestroy();
 			m_tasks[taskCompletedIndex_p]->m_currentTaskIndex = INVALID_TASKINDEX;
+			m_tasks[taskCompletedIndex_p]->m_bDead = true;
 
 			m_tasks[taskCompletedIndex_p] = std::move( m_tasks[taskCompletedIndex_p]->m_pChainedTask );
 			m_tasks[taskCompletedIndex_p]->m_currentTaskIndex = taskCompletedIndex_p;
+			m_tasks[taskCompletedIndex_p]->m_bDead = false;
 			m_tasks[taskCompletedIndex_p]->m_pTaskMachineRef = this;
 			m_tasks[taskCompletedIndex_p]->VOnInit();
 		}
 
 		//------------------------------------------------------------------------
-		// 
+		// NOTE: the fuck am I doing anyway...theres a for and 3 ifs here..if I test
+		// if task is alive before update and dead after update, I can just do the
+		// swap inside the update loop..
+		// so thats 2 ifs and a possible swap and resize.
+		// against
+		// 1 if (to check if theres destroied) and a possible for and 3 ifs and 2 resizes
+		// jeez crist man..not to mention that add and remove code becomes clean
+		// the thing is, removing at the middle of the frame doesnt make many sense.
+		// a frame happens in an instant of time, things shouldnt happen while the update
+		// is going on
+		// im currently swaping everything to the end, and updating the index inside
+		// m_destryedTasks for each swap (if swaped with another destroyed)
+		// pretty fucking messy..the other option is resize and swapping the destryed to the
+		// end without caring..not sure
 		//------------------------------------------------------------------------
-		void CleanAbortedTasks(){				
+		void CleanAbortedTasks(){
 
-			// swap all destroyed tasks to the end of the vector than resizes
+			unsigned int nDestroyed =	(unsigned int)m_destroyedTasks.size(); // cache
+			unsigned int nTasks =		(unsigned int)m_tasks.size();
 
-			unsigned int nDestroyed = (unsigned int)m_destroyedTasks.size(); // cache
-			unsigned int nTasks = (unsigned int)m_tasks.size();
+			for(	unsigned int itDestroyed = 0, itLast = nTasks - 1;
+					itDestroyed < nDestroyed;
+					++itDestroyed, --itLast ){
 
-			if( nDestroyed == nTasks ){
+				if( !m_tasks[m_destroyedTasks[itDestroyed]]->m_bDead ){
 
-				m_tasks.clear();
-				m_destroyedTasks.clear();
-				return;
-			}
+					--nDestroyed;
+					continue; // untested
+				}
 
-			for( unsigned int it = 0, itLast = nTasks - 1; it < nDestroyed; ++it ){
+				
+				m_tasks[m_destroyedTasks[itDestroyed]]->Abort();
+				m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex = INVALID_TASKINDEX;
+				m_tasks[m_destroyedTasks[itDestroyed]]->m_pTaskMachineRef = nullptr;
 
-				// check if "to be removed" already at end
-
-				if( m_destroyedTasks[it] == itLast - it){
+				if( m_destroyedTasks[itDestroyed] == itLast ){
 
 					continue;
 				}
 
-				std::swap( m_tasks[m_destroyedTasks[it]], m_tasks[itLast - it] ); // size - 1, size -2, size -3
+				std::swap( m_tasks[m_destroyedTasks[itDestroyed]], m_tasks[itLast] );
 
-				// ENORMOUS SERIOUS BUG: this will eventually change a task invalid index to a valid one
-				if( m_tasks[m_destroyedTasks[it]]->m_currentTaskIndex != INVALID_TASKINDEX ){
-					
-					m_tasks[m_destroyedTasks[it]]->m_currentTaskIndex = m_destroyedTasks[it]; // update index
+				if( m_tasks[m_destroyedTasks[itDestroyed]]->m_bDead ){
+
+					// find the swaped task on the list to be destroyed, update the index
+
+					for( unsigned int itToBeDestroyed = itDestroyed; itToBeDestroyed < nDestroyed; ++itToBeDestroyed ){
+
+						if( m_destroyedTasks[itToBeDestroyed] == m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex ){
+
+							m_destroyedTasks[itToBeDestroyed] = m_destroyedTasks[itDestroyed];
+						}
+					}
+				}
+				else{
+
+					m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex = m_destroyedTasks[itDestroyed];
 				}
 			}
 
 			// "trim"
+
 			m_tasks.resize(nTasks - nDestroyed);
 
 			m_destroyedTasks.clear();
 		}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		//void RemoveTask( TASKINDEX taskCurrentIndex_p ){
-
-		//	std::swap( m_tasks[taskCurrentIndex_p], m_tasks[m_tasks.size()-1] );
-		//	m_tasks[taskCurrentIndex_p]->m_currentTaskIndex = taskCurrentIndex_p; // update index
-		//	m_tasks.pop_back();
-		//}
 	};
 }

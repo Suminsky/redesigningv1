@@ -60,6 +60,7 @@ namespace text{
 
 			m_pTextureSRVBinder = &textureCache_p.Get(fontDesc_p.szTextureFilename, &m_iTextureID);
 			m_pipeState.AddBinderCommand( m_pTextureSRVBinder );
+			BREAKHERE;
 		}
 		bool InitFromFile( const char * szFontDescFilename_p, sprite::TextureBinders & textureCache_p ){
 

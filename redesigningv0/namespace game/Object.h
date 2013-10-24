@@ -102,11 +102,12 @@ namespace game{
 
 			m_components.push_back( pComponent_p );	
 		}
-		void RemoveComponent( COMPONENT_OBJECTINDEX componentCurrentIndex_p ){
+		void RemoveComponent( COMPONENT_OBJECTINDEX /*componentCurrentIndex_p*/ ){
 
-			std::swap( m_components[componentCurrentIndex_p], m_components[m_components.size()-1] );
-			m_components[componentCurrentIndex_p]->m_currentObjectIndex = componentCurrentIndex_p; // update index
-			m_components.pop_back();
+			// TODO
+			//std::swap( m_components[componentCurrentIndex_p], m_components[m_components.size()-1] );
+			//m_components[componentCurrentIndex_p]->m_currentObjectIndex = componentCurrentIndex_p; // update index
+			//m_components.pop_back();
 		}
 
 		//------------------------------------------------------------------------

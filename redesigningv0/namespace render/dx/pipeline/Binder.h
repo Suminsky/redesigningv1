@@ -178,7 +178,7 @@ namespace dx{
 
 	class Binder: public Command{
 
-	protected:
+	//protected:
 
 		UINT64 m_typeBits;
 		E_BIND m_typeIndex;
@@ -188,9 +188,27 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Binder( UINT64 typeBits_p, E_BIND typeIndex_p): m_typeBits(typeBits_p), m_typeIndex(typeIndex_p){};
+		Binder( UINT64 typeBits_p, E_BIND typeIndex_p)
+			:
+		m_typeBits(typeBits_p),
+		m_typeIndex(typeIndex_p){
+
+			assert( m_typeIndex >= 0 && m_typeIndex < E_MAX_BINDS );
+		};
+
 		Binder(){}
 		virtual ~Binder(){};
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Set( UINT64 typeBits_p, E_BIND typeIndex_p ){
+
+			assert( typeIndex_p >= 0 && typeIndex_p < E_MAX_BINDS );
+
+			m_typeIndex = typeIndex_p;
+			m_typeBits = typeBits_p;
+		}
 
 		//------------------------------------------------------------------------
 		// What this object binds?

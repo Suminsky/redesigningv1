@@ -51,7 +51,7 @@ namespace sprite{
 		// "delayed" ctor
 		//------------------------------------------------------------------------
 		void Init( dx::Device * pDevice_p ){
-			m_cache.reserve(20);
+			m_cache.reserve(100);
 
 			m_pDevice = pDevice_p;
 		}

@@ -52,8 +52,7 @@ namespace game{
 		}
 
 		void Stop(){
-
-			Destroy();
+			if( Running() ) 	Abort();
 		}
 
 	private:

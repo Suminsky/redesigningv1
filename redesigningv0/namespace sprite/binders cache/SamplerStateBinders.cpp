@@ -10,8 +10,8 @@ void sprite::SamplerStateBinders::Init( dx::Device * pDevice_p )
 	params.desc.samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP ;
 	params.desc.samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP ;
 	params.desc.samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP ;
-	params.desc.samplerDesc.MaxAnisotropy = 16;
-	params.desc.samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	params.desc.samplerDesc.MaxAnisotropy = 1;//16;
+	params.desc.samplerDesc.MaxLOD = 0;//D3D11_FLOAT32_MAX; // TODO : not allowing mipmap cause the cards look better without!!
 
 	ID3D11SamplerState * pSampler = NULL;
 	pDevice_p->m_pCacheSamplerState->Acquire( params, pSampler );
@@ -24,8 +24,8 @@ void sprite::SamplerStateBinders::Init( dx::Device * pDevice_p )
 	params.desc.samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP ;
 	params.desc.samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP ;
 	params.desc.samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP ;
-	params.desc.samplerDesc.MaxAnisotropy = 16;
-	params.desc.samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	params.desc.samplerDesc.MaxAnisotropy = 1;//16;
+	params.desc.samplerDesc.MaxLOD = 0;//D3D11_FLOAT32_MAX; // TODO
 
 	pSampler = NULL;
 	pDevice_p->m_pCacheSamplerState->Acquire( params, pSampler );

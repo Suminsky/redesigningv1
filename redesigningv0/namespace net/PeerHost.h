@@ -7,6 +7,12 @@
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	The dude that will handle a socket. Face it as a socket with stats...for now that is // OLD, it mutated completely TODO
+				
+				Note that it receives a socket at initialization, but it cant be used as a connection with a single remote, using multiples
+				of those with a single socket (although this is the point, one socket connecting with all remotes).
+				Because when a socket receives, it discards the info from the sockets, so if you receive in one connection, and its not
+				from the remote connected, the other connections will lose it.
+				So a layer bellow is needed, which handles receiving and distributing to other P2PConnection
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -122,21 +128,24 @@ namespace net{
 
 			m_dTimeSinceLastReceiving = 0.0;
 			m_dTimeSinceLastSending = 0.0;
+
 			m_remoteAddress = remoteAddress_p;
-			//static const char s_char[] = {"wanna connect"};
-			//m_bufferedUserDataTosend.Set( (unsigned char*)s_char, sizeof(s_char));
+
 			m_bufferedRemoteDataReceived.currentUsed = 0;
+
 			m_bufferedUserDataTosend.SetChannel( E_PACKET_CHANNEL_CONNECT );
 			m_bufferedReliableDataToSend.SetChannel(E_CHANNEL_RELIABLE); // reliable are always channel 1
+
 			//m_bufferedReliableDataToSend.currentUsed = 0;
 			m_eState = E_STATE_ATEMPTINGCONNECTION;
 		}
 		void ReConnect(){ // same thing, but uses the already settled address
+
 			m_dTimeSinceLastReceiving = 0.0;
 			m_dTimeSinceLastSending = 0.0;
-			//static const char s_char[] = {"wanna reconnect"};
-			//m_bufferedUserDataTosend.Set( (unsigned char*)s_char, sizeof(s_char));
+
 			m_bufferedUserDataTosend.SetChannel( E_PACKET_CHANNEL_CONNECT );
+
 			m_eState = E_STATE_ATEMPTINGCONNECTION;
 		}
 		void Disconnect(){

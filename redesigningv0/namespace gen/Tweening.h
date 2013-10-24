@@ -23,10 +23,10 @@ namespace gen{
 	struct Tweening{
 
 		enum E_EASING{
-			E_IN,
-			E_OUT,
-			E_INOUT,
-			E_OUTIN
+			E_EASING_IN,
+			E_EASING_OUT,
+			E_EASING_INOUT,
+			E_EASING_OUTIN
 		};
 
 		//------------------------------------------------------------------------
