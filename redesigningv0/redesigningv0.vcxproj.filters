@@ -324,6 +324,9 @@
     <ClInclude Include="Mentle\InGame\TutorialPart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -582,6 +585,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\TutorialPart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

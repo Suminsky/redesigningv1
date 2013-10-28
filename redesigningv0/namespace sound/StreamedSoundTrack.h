@@ -46,7 +46,7 @@ namespace sound{
 		//------------------------------------------------------------------------
 		// Fills all buffers with data
 		//------------------------------------------------------------------------
-		bool Initialize(	IXAudio2 * pXAudio_p, wchar_t * szFilename_p,
+		bool Initialize(	IXAudio2 * pXAudio_p, const wchar_t * szFilename_p,
 							UINT32 iFlags_p = 0, float fMaxFrquenceRatio_p = XAUDIO2_DEFAULT_FREQ_RATIO,
 							IXAudio2VoiceCallback	* pCallback_p		= nullptr,
 							XAUDIO2_VOICE_SENDS		* pSendList_p		= nullptr,

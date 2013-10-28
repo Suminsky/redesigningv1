@@ -97,14 +97,14 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 	// sprite components, the system should care when things should be done.
 
 	// interpolate color
-
-	if( m_previousColor.x != m_currentColor.x
+	//XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
+	if( m_renderData.m_color.x != m_currentColor.x
 		||
-		m_previousColor.y != m_currentColor.y
+		m_renderData.m_color.y != m_currentColor.y
 		||
-		m_previousColor.z != m_currentColor.z
+		m_renderData.m_color.z != m_currentColor.z
 		||
-		m_previousColor.w != m_currentColor.w ){
+		m_renderData.m_color.w != m_currentColor.w ){
 
 		XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
 		XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
@@ -116,6 +116,8 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 		// send to GPU?
 		m_renderData.m_bUpdate = true;
 	}
+
+	//XMStoreFloat4( &m_renderData.m_color, colorCurrent );
 
 	m_pSpriteRendererRef->Render(this);
 }

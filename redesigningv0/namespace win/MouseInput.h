@@ -92,6 +92,7 @@ namespace win{
 			x_p = x_p + halfW; //interpolation times full range + offset(min)
 			y_p = (-y_p + halfH);
 		}
+
 		//------------------------------------------------------------------------
 		// updates button states data
 		//------------------------------------------------------------------------
@@ -177,6 +178,21 @@ namespace win{
 			}
 		}
 
+		//------------------------------------------------------------------------
+		// set cursor position given centralized client space coordinates
+		//------------------------------------------------------------------------
+		void SetPos_CentralizedClientSpace( float x_p, float y_p, UINT screenW_p, UINT screenH_p, HWND hWnd_p ){
+
+			ConvertMousePosFromCentralizedClientSpace( x_p, y_p, screenW_p, screenH_p );
+
+			POINT mousePoint;
+			mousePoint.x = (long)x_p;
+			mousePoint.y = (long)y_p;
+
+			ClientToScreen( hWnd_p, &mousePoint );
+
+			SetCursorPos( mousePoint.x, mousePoint.y );
+		}
 
 
 		//------------------------------------------------------------------------
