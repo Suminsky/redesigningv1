@@ -183,6 +183,7 @@
     <ClInclude Include="namespace game\Game.h" />
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
+    <ClInclude Include="namespace game\System.h" />
     <ClInclude Include="namespace game\Task.h" />
     <ClInclude Include="namespace game\TaskMachine.h" />
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />

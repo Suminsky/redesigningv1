@@ -17,11 +17,11 @@
 namespace game{
 
 	class Object;
-	typedef unsigned int COMPONENT_OBJECTINDEX;
-	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
-	typedef unsigned int ComponentID;
 
-	typedef unsigned int OBJECT_LAYERINDEX;
+	typedef unsigned int COMPONENTINDEX;
+	static const unsigned int INVALID_COMPONENTINDEX = (unsigned int)-1;
+
+	//typedef unsigned int ComponentID;
 
 	//========================================================================
 	// 
@@ -33,40 +33,32 @@ namespace game{
 	public:
 
 		//------------------------------------------------------------------------
-		// dctor
+		// ctor/dctor
 		//------------------------------------------------------------------------
-		Component():m_currentObjectIndex(INVALID_OBJECTINDEX), m_pObjectOwner(nullptr){}
+		Component()
+			:
+			m_currentComponentIndex(INVALID_COMPONENTINDEX),
+			m_pObjectOwner(nullptr),
+			m_bDead(true){}
+
 		virtual ~Component(){}
 		
-		//------------------------------------------------------------------------
-		// get id
-		//------------------------------------------------------------------------
-		/*ComponentID ID(){
-
-			return m_ID;
-		}*/
 
 		//------------------------------------------------------------------------
 		// get owner object
 		//------------------------------------------------------------------------
 		Object *  GetObjectOwner(){ return m_pObjectOwner; }
-		COMPONENT_OBJECTINDEX GetObjectIndex() const { return m_currentObjectIndex; }
 
 	protected:
 
-		//ComponentID m_ID;
 		Object * m_pObjectOwner;
 
 	private:
 
-		//------------------------------------------------------------------------
-		// to be override
-		//------------------------------------------------------------------------
-		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ){}
-		//virtual void VOnEvent( Event event_p ) = 0;
-
-		COMPONENT_OBJECTINDEX m_currentObjectIndex;
+		COMPONENTINDEX m_currentComponentIndex;
+		bool m_bDead;
 	};
 
 	typedef std::shared_ptr<Component> shared_Component_ptr;
+	typedef std::weak_ptr<Component> weak_Component_ptr;
 }

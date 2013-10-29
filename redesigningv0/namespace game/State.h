@@ -22,15 +22,12 @@
 #include "Timer.h"
 #include "Layer.h"
 
-//#define private public
-//#define protected public
-
 namespace game{
 
-	//class ALayer;
 	class StateMachine;
+
 	typedef std::vector<shared_Layer_ptr> StateLayers;
-	typedef std::vector<LAYER_STATEINDEX> LayerIndexes;
+	typedef std::vector<LAYERINDEX> LayerIndexes;
 
 	//========================================================================
 	// 
@@ -51,33 +48,62 @@ namespace game{
 		//------------------------------------------------------------------------
 		// layer stuff
 		//------------------------------------------------------------------------
-		void AddLayer( const shared_Layer_ptr & pNewLayer_p ){
-
-			assert( pNewLayer_p->m_currentStateIndex == INVALID_LAYERINDEX );
-
-			pNewLayer_p->m_pStateOwner = this;
-			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size());
-			pNewLayer_p->VOnInit();
-
-			m_layers.push_back( pNewLayer_p );
-		}
 		void AddLayer( shared_Layer_ptr && pNewLayer_p ){
 
-			assert( pNewLayer_p->m_currentStateIndex == INVALID_LAYERINDEX );
+			assert( pNewLayer_p->m_bDead );
 
-			pNewLayer_p->m_pStateOwner = this;
-			pNewLayer_p->m_currentStateIndex = (LAYER_STATEINDEX)(m_layers.size());
-			pNewLayer_p->VOnInit();
-			
-			m_layers.push_back( std::move(pNewLayer_p) );
+			pNewLayer_p->m_bDead = false;
+
+			if( pNewLayer_p->m_currentLayerIndex == INVALID_LAYERINDEX
+				||
+				pNewLayer_p->m_pStateOwner != this ){
+
+				pNewLayer_p->m_currentLayerIndex = (OBJECTINDEX)m_layers.size();
+				pNewLayer_p->m_pStateOwner = this;
+
+				pNewLayer_p->VOnInit();
+
+				m_layers.push_back( std::move(pNewLayer_p) );
+			}
+			else{
+
+				pNewLayer_p->VOnInit();
+			}			
 		}
+		void AddLayer( const shared_Layer_ptr & pNewLayer_p ){
 
-		void RemoveLayer( LAYER_STATEINDEX layerCurrentIndex_p ){
+			assert( pNewLayer_p->m_bDead );
 
-			// cant destroy here, since it happens only in the end of the frame, its possible
-			// the layer will still update this frame
+			pNewLayer_p->m_bDead = false;
 
-			m_removedLayers.push_back(layerCurrentIndex_p);
+			if( pNewLayer_p->m_currentLayerIndex == INVALID_LAYERINDEX
+				||
+				pNewLayer_p->m_pStateOwner != this ){
+
+				pNewLayer_p->m_currentLayerIndex = (OBJECTINDEX)m_layers.size();
+				pNewLayer_p->m_pStateOwner = this;
+
+				m_layers.push_back( pNewLayer_p );
+			}
+
+			pNewLayer_p->VOnInit();
+		}
+		void RemoveLayer( LAYERINDEX layerCurrentIndex_p ){
+
+			assert( layerCurrentIndex_p != INVALID_LAYERINDEX );
+			assert( !m_layers[layerCurrentIndex_p]->m_bDead );
+
+			m_layers[layerCurrentIndex_p]->m_bDead = true;
+
+			m_removedLayers.push_back( layerCurrentIndex_p );
+		}
+		void RemoveLayer(  const shared_Layer_ptr & pNewLayer_p  ){
+
+			RemoveLayer( pNewLayer_p->m_currentLayerIndex );
+		}
+		void RemoveLayer(  const Layer * pNewLayer_p  ){
+
+			RemoveLayer( pNewLayer_p->m_currentLayerIndex );
 		}
 
 	private:
@@ -150,6 +176,7 @@ namespace game{
 
 			VOnDestroy();
 		}
+
 		//------------------------------------------------------------------------
 		// traverse layer and call draw
 		//------------------------------------------------------------------------
@@ -157,7 +184,7 @@ namespace game{
 
 			for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
-				if( m_layers[it]->m_bActive ){
+				if( m_layers[it]->m_bVisible ){
 
 					m_layers[it]->VOnDraw( dInterpolation_p );
 				}
@@ -171,47 +198,57 @@ namespace game{
 		//------------------------------------------------------------------------
 		void CleanRemovedLayers(){
 
-			// swap all destroyed layers to the end of the vector, than resizes
+			unsigned int nRemoved =	(unsigned int)m_removedLayers.size(); // cache
+			unsigned int nObjects =		(unsigned int)m_layers.size();
 
-			unsigned int nDestroyed = (unsigned int)m_removedLayers.size(); // cache
-			unsigned int nLayers = (unsigned int)m_layers.size();
+			for( unsigned int itRemoved = 0, itLast = nObjects - 1;
+				itRemoved < nRemoved;
+				++itRemoved, --itLast ){
 
-			for( unsigned int it = 0, itLast = nLayers - 1; it < nDestroyed; ++it ){
+					if( !m_layers[m_removedLayers[itRemoved]]->m_bDead ){
 
-				m_layers[m_removedLayers[it]]->VOnDestroy();
-				m_layers[m_removedLayers[it]]->m_currentStateIndex = INVALID_LAYERINDEX;
-				m_layers[m_removedLayers[it]]->m_pStateOwner = nullptr;
+						--nRemoved;
+						continue; // untested
+					}
 
-				// check if "to be removed" already at end
 
-				if( m_removedLayers[it] == itLast - it){
+					m_layers[m_removedLayers[itRemoved]]->VOnDestroy();
+					m_layers[m_removedLayers[itRemoved]]->m_currentLayerIndex = INVALID_LAYERINDEX;
+					m_layers[m_removedLayers[itRemoved]]->m_pStateOwner = nullptr;
 
-					continue;
-				}
+					if( m_removedLayers[itRemoved] == itLast ){
 
-				std::swap( m_layers[m_removedLayers[it]], m_layers[itLast - it] ); // size - 1, size -2, size -3
+						continue;
+					}
 
-				if( m_layers[m_removedLayers[it]]->m_currentStateIndex != INVALID_LAYERINDEX ){
+					std::swap( m_layers[m_removedLayers[itRemoved]], m_layers[itLast] );
 
-					m_layers[m_removedLayers[it]]->m_currentStateIndex = m_removedLayers[it]; // update index
-				}
+					if( m_layers[m_removedLayers[itRemoved]]->m_bDead ){
+
+						// find the swaped task on the list to be destroyed, update the index
+
+						for( unsigned int itToBeDestroyed = itRemoved; itToBeDestroyed < nRemoved; ++itToBeDestroyed ){
+
+							if( m_removedLayers[itToBeDestroyed] == m_layers[m_removedLayers[itRemoved]]->m_currentLayerIndex ){
+
+								m_removedLayers[itToBeDestroyed] = m_removedLayers[itRemoved];
+							}
+						}
+					}
+					else{
+
+						m_layers[m_removedLayers[itRemoved]]->m_currentLayerIndex = m_removedLayers[itRemoved];
+					}
 			}
 
 			// "trim"
 
-			m_layers.resize(nLayers - nDestroyed);
+			m_layers.resize(nObjects - nRemoved);
 
 			m_removedLayers.clear();
 		}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		//void AddAddedLayers(){
-
-		//	//for( )
-		//}
 	};
 
 	typedef std::shared_ptr<State> shared_State_ptr;
+	typedef std::weak_ptr<State> weak_State_ptr;
 }

@@ -52,45 +52,42 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void AddTask( const shared_Task_ptr & pNewTask_p ){
+		void AddTask( shared_Task_ptr && pNewTask_p ){
 
-			//assert(pNewTask_p->m_currentTaskIndex == INVALID_TASKINDEX); // prevent double insertion TODO: perhaps a warning?
 			assert( pNewTask_p->m_bDead );
+
+			pNewTask_p->m_bDead = false;
 
 			if( pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX ){
 
-				pNewTask_p->m_bDead = false;
+				pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
+				pNewTask_p->m_pTaskMachineRef = this;
+
 				pNewTask_p->VOnInit();
+
+				m_tasks.push_back( std::move(pNewTask_p) );
+			}
+			else{
+				
+				pNewTask_p->VOnInit();
+			}
+		}
+		void AddTask( const shared_Task_ptr & pNewTask_p ){
+
+			assert( pNewTask_p->m_bDead );
+
+			pNewTask_p->m_bDead = false;
+
+			if( pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX ){
+
 				pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
 				pNewTask_p->m_pTaskMachineRef = this;
 
 				m_tasks.push_back( pNewTask_p );
 			}
-			else{
 
-				pNewTask_p->m_bDead = false;
-				pNewTask_p->VOnInit();
-			}
-		}
-		void AddTask( shared_Task_ptr && pNewTask_p ){
-
-			//assert(pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX);
-			assert( pNewTask_p->m_bDead );
-
-			if( pNewTask_p-> m_currentTaskIndex == INVALID_TASKINDEX ){
-
-				pNewTask_p->m_bDead = false;		
-				pNewTask_p->VOnInit();
-				pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
-				pNewTask_p->m_pTaskMachineRef = this;
-
-				m_tasks.push_back( std::move(pNewTask_p) );
-			}
-			else{
-
-				pNewTask_p->m_bDead = false;
-				pNewTask_p->VOnInit();
-			}
+			
+			pNewTask_p->VOnInit();
 		}
 
 		//------------------------------------------------------------------------
@@ -111,6 +108,7 @@ namespace game{
 		void AbortTask( TASKINDEX taskCurrentIndex_p ){
 
 			assert( taskCurrentIndex_p != INVALID_TASKINDEX );
+			assert( !m_tasks[taskCurrentIndex_p]->m_bDead ); //not sure TODO
 	
 			//m_tasks[taskCurrentIndex_p]->VOnDestroy();
 			m_tasks[taskCurrentIndex_p]->m_bDead = true;
@@ -180,7 +178,7 @@ namespace game{
 				}
 
 				
-				m_tasks[m_destroyedTasks[itDestroyed]]->Abort();
+				m_tasks[m_destroyedTasks[itDestroyed]]->VOnDestroy();
 				m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex = INVALID_TASKINDEX;
 				m_tasks[m_destroyedTasks[itDestroyed]]->m_pTaskMachineRef = nullptr;
 

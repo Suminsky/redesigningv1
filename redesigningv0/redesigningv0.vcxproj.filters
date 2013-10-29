@@ -327,6 +327,9 @@
     <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace game\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
