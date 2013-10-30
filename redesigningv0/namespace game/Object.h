@@ -26,6 +26,7 @@
 // private includes
 
 #include "Component.h"
+//#include "Message.h"
 
 namespace game{
 

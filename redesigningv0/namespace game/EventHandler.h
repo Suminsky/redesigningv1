@@ -7,6 +7,8 @@
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	The handler is supposed to register for events and override a VOnEvent method
+				NOTE: the event handler purpose is just to have a virtual funtion receiving an event..
+				it can totally be substituted by a delegate
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

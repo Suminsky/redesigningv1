@@ -98,13 +98,13 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 
 	// interpolate color
 	//XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
-	if( m_renderData.m_color.x != m_currentColor.x
+	if( m_previousColor.x != m_currentColor.x
 		||
-		m_renderData.m_color.y != m_currentColor.y
+		m_previousColor.y != m_currentColor.y
 		||
-		m_renderData.m_color.z != m_currentColor.z
+		m_previousColor.z != m_currentColor.z
 		||
-		m_renderData.m_color.w != m_currentColor.w ){
+		m_previousColor.w != m_currentColor.w  ){
 
 		XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
 		XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );

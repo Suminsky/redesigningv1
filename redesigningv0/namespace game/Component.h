@@ -17,6 +17,7 @@
 namespace game{
 
 	class Object;
+	class System;
 
 	typedef unsigned int COMPONENTINDEX;
 	static const unsigned int INVALID_COMPONENTINDEX = (unsigned int)-1;
@@ -29,6 +30,7 @@ namespace game{
 	class Component{
 
 		friend class Object;
+		friend class System;
 
 	public:
 
@@ -42,7 +44,6 @@ namespace game{
 			m_bDead(true){}
 
 		virtual ~Component(){}
-		
 
 		//------------------------------------------------------------------------
 		// get owner object

@@ -184,8 +184,13 @@ namespace gen{
 	// delegate which takes one param from the invoker..untested
 	// returns void
 	//========================================================================
+	template< typename PARAM >	class Delegate1Param;
+	template< typename PARAM >	inline bool operator == (const Delegate1Param<PARAM> & lhs, const Delegate1Param<PARAM> & rhs);
+
 	template< typename PARAM >
 	class Delegate1Param{
+
+		friend bool operator == <> (const Delegate1Param<PARAM> & lhs, const Delegate1Param<PARAM> & rhs);
 
 	public:
 
@@ -258,12 +263,27 @@ namespace gen{
 		void * m_pCallerInstance;
 		void (*m_pFuncMemberFuncInvoker)( void*, PARAM );
 	};
+	
+	//------------------------------------------------------------------------
+	// ==
+	//------------------------------------------------------------------------
+	template< typename PARAM >
+	bool operator == (const Delegate1Param<PARAM> & lhs, const Delegate1Param<PARAM> & rhs){
+
+		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
+					&&
+				lhs.m_pCallerInstance == rhs.m_pCallerInstance );
+	}
 
 
 	//========================================================================
 	// delegate which takes 2 params from the invoker..untested
 	// returns void
 	//========================================================================
+	template< typename PARAM, typename PARAM2 >	class Delegate2Param;
+	template< typename PARAM >	inline bool operator ==
+	 (const Delegate2Param< PARAM, typename PARAM2 > & lhs, const Delegate2Param< PARAM, typename PARAM2 > & rhs);
+
 	template< typename PARAM, typename PARAM2 >
 	class Delegate2Param{
 
@@ -339,10 +359,25 @@ namespace gen{
 		void (*m_pFuncMemberFuncInvoker)( void*, PARAM, PARAM2 );
 	};
 
+	//------------------------------------------------------------------------
+	// ==
+	//------------------------------------------------------------------------
+	template< typename PARAM, typename PARAM2 > >
+	bool operator == (const Delegate1Param<PARAM, PARAM2> & lhs, const Delegate1Param<PARAM, PARAM2> & rhs){
+
+		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
+					&&
+				lhs.m_pCallerInstance == rhs.m_pCallerInstance );
+	}
+
 	//========================================================================
 	// delegate which takes 2 params from the invoker..untested
 	// returns bool
 	//========================================================================
+	template< typename PARAM, typename PARAM2 >	class Delegate2Param;
+	template< typename PARAM >	inline bool operator ==
+	 (const Delegate2Param< PARAM, typename PARAM2 > & lhs, const Delegate2Param< PARAM, typename PARAM2 > & rhs);
+
 	template< typename RETURN, typename PARAM >
 	class DelegateR1Param{
 
@@ -417,6 +452,17 @@ namespace gen{
 		void * m_pCallerInstance;
 		RETURN (*m_pFuncMemberFuncInvoker)( void*, PARAM );
 	};
+
+	//------------------------------------------------------------------------
+	// ==
+	//------------------------------------------------------------------------
+	template< typename RETURN, typename PARAM2 > >
+	bool operator == (const Delegate1Param<RETURN, PARAM2> & lhs, const Delegate1Param<RETURN, PARAM2> & rhs){
+
+		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
+					&&
+				lhs.m_pCallerInstance == rhs.m_pCallerInstance );
+	}
 
 	//========================================================================
 	// delegate which takes 2 params from the invoker..untested
@@ -496,6 +542,17 @@ namespace gen{
 		void * m_pCallerInstance;
 		RETURN (*m_pFuncMemberFuncInvoker)( void*, PARAM, PARAM2 );
 	};
+
+	//------------------------------------------------------------------------
+	// ==
+	//------------------------------------------------------------------------
+	template< typename RETURN, typename PARAM, typename PARAM2 > >
+	bool operator == (const Delegate1Param<RETURN, PARAM, PARAM2> & lhs, const Delegate1Param<RETURN, PARAM, PARAM2> & rhs){
+
+		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
+					&&
+				lhs.m_pCallerInstance == rhs.m_pCallerInstance );
+	}
 }
 
 /*

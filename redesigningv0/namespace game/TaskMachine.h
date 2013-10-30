@@ -91,28 +91,14 @@ namespace game{
 		}
 
 		//------------------------------------------------------------------------
-		// The only way a task can be finished not spontaneously
-		// TODO !!!BUG!!!: a task can be aborted and added on the same frame, causing
-		// the task machine to have 2 of the same task..
-		// dunno why, but state and layer seem to solve this differently..why I did that here?
-		// PROBLEM-> so I tried the state/layer method here, and theres a problem..
-		// by not setting INVALID_TASKINDEX here, the test for Running() may return
-		// true even if the task will be deleted in the same frame. Means itDestroyed will not
-		// add the task because itDestroyed seems the task is already running.
-		// I need to change this completly:
-		// NEED:
-		// - be able to remove and add on the same frame
-		// - know if the task is removed or not, any time
-		// - remove the task at the end
+		// 
 		//------------------------------------------------------------------------
 		void AbortTask( TASKINDEX taskCurrentIndex_p ){
 
 			assert( taskCurrentIndex_p != INVALID_TASKINDEX );
 			assert( !m_tasks[taskCurrentIndex_p]->m_bDead ); //not sure TODO
 	
-			//m_tasks[taskCurrentIndex_p]->VOnDestroy();
 			m_tasks[taskCurrentIndex_p]->m_bDead = true;
-			//m_tasks[taskCurrentIndex_p]->m_currentTaskIndex = INVALID_TASKINDEX;
 
 			m_destroyedTasks.push_back(taskCurrentIndex_p);
 		}
@@ -147,19 +133,9 @@ namespace game{
 		}
 
 		//------------------------------------------------------------------------
-		// NOTE: the fuck am I doing anyway...theres a for and 3 ifs here..if I test
-		// if task is alive before update and dead after update, I can just do the
-		// swap inside the update loop..
-		// so thats 2 ifs and a possible swap and resize.
-		// against
-		// 1 if (to check if theres destroied) and a possible for and 3 ifs and 2 resizes
-		// jeez crist man..not to mention that add and remove code becomes clean
-		// the thing is, removing at the middle of the frame doesnt make many sense.
-		// a frame happens in an instant of time, things shouldnt happen while the update
-		// is going on
-		// im currently swaping everything to the end, and updating the index inside
-		// m_destryedTasks for each swap (if swaped with another destroyed)
-		// pretty fucking messy..the other option is resize and swapping the destryed to the
+		// Im currently swapping everything to the end, and updating the index inside
+		// m_destryedTasks for each swap (if swapped with another destroyed)
+		// pretty fucking messy..the other option is resize and swapping the destroyed to the
 		// end without caring..not sure
 		//------------------------------------------------------------------------
 		void CleanAbortedTasks(){
@@ -191,7 +167,7 @@ namespace game{
 
 				if( m_tasks[m_destroyedTasks[itDestroyed]]->m_bDead ){
 
-					// find the swaped task on the list to be destroyed, update the index
+					// find the swapped task on the list to be destroyed, update the index
 
 					for( unsigned int itToBeDestroyed = itDestroyed; itToBeDestroyed < nDestroyed; ++itToBeDestroyed ){
 

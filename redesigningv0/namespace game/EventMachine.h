@@ -20,6 +20,7 @@
 // private includes
 #include "EventHandler.h"
 #include "../namespace gen/gen_macros.h"
+#include "../namespace gen/Delegate.h"
 
 
 namespace game{
@@ -30,9 +31,10 @@ namespace game{
 	public:
 
 		typedef Event<EVENT_DATA> Event;
-		typedef AEventHandler<EVENT_DATA> AEventHandler;
+		//typedef AEventHandler<EVENT_DATA> AEventHandler;
+		typedef gen::Delegate1Param<const Event &> EventHandlerDelegate;
 
-		typedef std::vector<AEventHandler*> EventHandlers;
+		typedef std::vector<EventHandlerDelegate> EventHandlers;
 		typedef std::unordered_map<EventType, EventHandlers> EventHandlerRegister;
 
 		typedef std::vector<Event> EventQueue;
@@ -48,16 +50,12 @@ namespace game{
 		//------------------------------------------------------------------------
 		void DispatchEvents()
 		{
-			// move events, cause the m_events may still change inside VOnEvent, so
-			// its better to decouple them from new ones
 
 			// as it is for now...adding or removing listeners would also fuck everything up..
 			// so its for now, forbidden... e.e boss solution (TODO)
 
 			EventQueue events = std::move( m_events );
-			m_events.clear();	// second the standard, you may use moved containers for no 'precondition needed' operations, like clear().
-								// so it became reusable after clear...but that means the bitch will have to reallocate memory again, same
-								// penalty as copying instead of moving..TODO (what about creating static instead of tmp, and swapping them?)
+			m_events.clear();
 
 			// traverse all current events
 
@@ -79,7 +77,7 @@ namespace game{
 							itHandler != itHandlersEnd;
 							++ itHandler ){
 
-							(*itHandler)->VOnEvent( *itEvent ); // TODO: consider "consuming" event if VOnEvent returns false
+							(*itHandler).Execute(*itEvent ); // TODO: consider "consuming" event if OnEvent returns false
 
 					}// traverse handlers
 			}// traverse events
@@ -120,7 +118,7 @@ namespace game{
 					itHandler != itHandlersEnd;
 					++ itHandler ){
 
-					(*itHandler)->VOnEvent( immEvent );
+					(*itHandler)->OnEvent( immEvent );
 			}
 
 			return true;
@@ -129,7 +127,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// do NOT register inside OnEvent
 		//------------------------------------------------------------------------
-		void RegisterForEvent( AEventHandler * pHandler_p, EventType eventType_p )
+		void RegisterForEvent( EventHandlerDelegate pHandler_p, EventType eventType_p )
 		{
 			// get handlers for given type, if theres none, operator [] creates one,
 			// then add new handler to it
@@ -140,7 +138,7 @@ namespace game{
 
 			)
 
-			DBG(
+			//DBG(
 
 				// check for double registering
 
@@ -159,13 +157,13 @@ namespace game{
 				handlers.push_back( pHandler_p );
 			}
 
-			)
+			//)
 		}
 
 		//------------------------------------------------------------------------
 		// do NOT unregister inside OnEvent
 		//------------------------------------------------------------------------
-		void UnregisterForEvent( AEventHandler * pHandler_p, EventType eventType_p )
+		void UnregisterForEvent( const EventHandlerDelegate & pHandler_p, EventType eventType_p )
 		{
 			// find/check handlers of event
 
@@ -179,7 +177,6 @@ namespace game{
 
 			// swap it with last element
 
-			//std::swap( itHandler, --itHandlersEnd ); // stupid bug
 			--itHandlersEnd;
 			*itHandler = *itHandlersEnd;
 

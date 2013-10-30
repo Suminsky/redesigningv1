@@ -2,11 +2,11 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
 	created:	2013/10/29
-	created:	29:10:2013   10:54
-	file:		System.h
+	created:	29:10:2013   17:01
+	file:		Message.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	A message is almost like an event, but sent directly to objects.
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -16,44 +16,44 @@
 #include <memory>
 
 // private includes
-#include "Object.h"
 
 namespace game{
 
-	class Layer;
+	typedef unsigned int MessageType;
+	static const unsigned int INVALID_MESSAGETYPE = (unsigned int)-1;
 
-	typedef unsigned int SYSTEMINDEX;
-	static const unsigned int INVALID_SYSTEMINDEX = (unsigned int)-1;
-
-	class System{
-
-		friend class Layer;
+	class Message{
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		System()
+		explicit Message( MessageType type_p = INVALID_MESSAGETYPE )
 			:
-			m_pLayerOwner(nullptr){}
+			m_type(type_p)
+			{}
 
-		virtual ~System(){}
+		virtual ~Message(){}
+
+		//------------------------------------------------------------------------
+		// setters
+		//------------------------------------------------------------------------
+		void SetType( MessageType type_p ){
+
+			m_type = type_p;
+		}
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		Layer * GetLayerOwner() const { return m_pLayerOwner; }
-
-	protected:
-
-		Layer * m_pLayerOwner;
+		MessageType GetType() const { return m_type; }
 
 	private:
 
-
+		MessageType m_type;
 	};
 
-	typedef std::shared_ptr<System> shared_System_ptr;
-	typedef std::weak_ptr<System> weak_System_ptr;
+	typedef std::shared_ptr<Message> shared_Message_ptr;
+	typedef std::weak_ptr<Message> weak_Message_ptr;
 }
