@@ -56,6 +56,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		DATA GetData() const { return m_data; }
 
+		template<typename asType> asType GetDataAs()const{ return (asType)m_data; }
+
 	private:
 
 		EventType m_type;

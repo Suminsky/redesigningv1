@@ -70,7 +70,7 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// Iterators
 		//------------------------------------------------------------------------
-		BindersPtrsVec::const_iterator Begin(){	return m_binds.begin();	}
+		BindersPtrsVec::iterator Begin(){	return m_binds.begin();	}
 		BindersPtrsVec::const_iterator End(){	return m_binds.end();	}
 
 		//------------------------------------------------------------------------

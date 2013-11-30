@@ -127,17 +127,6 @@ BOOL HighPerformanceTimer::FPI::FpI( const DOUBLE &deltaMS ){
 //=======================================
 DOUBLE HighPerformanceTimer::GetDeltaSeconds()const{
 
-		/*LONGLONG freqInv = 1ULL/m_counterFrequency.QuadPart;
-	
-		LONGLONG llSec = m_nDeltaCounts/m_counterFrequency.QuadPart;
-		LONGLONG llSecInv = m_nDeltaCounts*m_counterFrequency_inverse;
-
-		DOUBLE dSec = m_nDeltaCounts/m_counterFrequency.QuadPart;
-		DOUBLE dSecInv = m_nDeltaCounts*m_counterFrequency_inverse;
-
-		DOUBLE dSecConv = (DOUBLE)m_nDeltaCounts/(DOUBLE)m_counterFrequency.QuadPart;
-		DOUBLE dSecInvConv = (DOUBLE)m_nDeltaCounts*(DOUBLE)m_counterFrequency_inverse;*/
-
 	return m_nDeltaCounts * m_counterFrequency_inverse;
 }
 VOID HighPerformanceTimer::GetDeltaSeconds( DOUBLE &sec )const{

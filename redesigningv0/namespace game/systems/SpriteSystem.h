@@ -1,9 +1,9 @@
 #pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
-	created:	2013/10/29
-	created:	29:10:2013   14:58
-	file:		ColorSystem.h
+	created:	2013/11/19
+	created:	19:11:2013   21:15
+	file:		SpriteSystem.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	
@@ -17,45 +17,43 @@
 
 // private includes
 #include "../System.h"
-#include "../components/ColorComponent.h"
 #include "../../namespace gen/Pool.h"
-
+#include "../components/SpriteComponent_.h"
 
 namespace game{
 
-	class ColorSystem: public System{
+	class SpriteSystem: public System{
 
 	public:
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		ColorSystem()
+		SpriteSystem( sprite::SpriteRenderer * pSpriteRenderer_p, sprite::Camera * pCamera_p )
 			:
-		m_poolAccess(nullptr, nullptr)
-		{}
+		m_poolAccess(nullptr, nullptr),
+		m_pSpriteRendererRef(pSpriteRenderer_p),
+		m_pCameraRef(pCamera_p){}
 
-	
 	private:
 
-		gen::Pool<ColorComponent, 256>::PoolAccess m_poolAccess;
+		gen::Pool<SpriteComponent_, 256>::PoolAccess m_poolAccess;
+		sprite::SpriteRenderer * m_pSpriteRendererRef;
+		sprite::Camera * m_pCameraRef;
 
 		//------------------------------------------------------------------------
-		// get pool
+		// 
 		//------------------------------------------------------------------------
 		void VOnInit();
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void VOnUpdate( double /*dAccum_p*/, double /*dDelta_p*/ );
+		void VOnDraw( double /*dInterpolation_p*/ );
 
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		void RecursiveUpdate( ColorComponent & currentParent_p );
 	};
 
-	typedef std::shared_ptr<ColorSystem> shared_ColorSystem_ptr;
-	typedef std::weak_ptr<ColorSystem> weak_ColorSystem_ptr;
+	typedef std::shared_ptr<SpriteSystem> shared_SpriteSystem_ptr;
+	typedef std::weak_ptr<SpriteSystem> weak_SpriteSystem_ptr;
 }
+

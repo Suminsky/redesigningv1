@@ -1,12 +1,12 @@
 #pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
-	created:	2013/10/29
-	created:	29:10:2013   17:01
-	file:		Message.h
+	created:	2013/11/22
+	created:	22:11:2013   12:20
+	file:		ObjectFactory.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	A message is almost like an event, but sent directly to objects.
+	purpose:	
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -17,43 +17,50 @@
 
 // private includes
 
+// forward dcls
+
+namespace text{
+
+	struct GfigElementA;
+}
+
 namespace game{
 
-	typedef unsigned int MessageType;
-	static const unsigned int INVALID_MESSAGETYPE = (unsigned int)-1;
+	class Object; typedef std::shared_ptr<Object> shared_Object_ptr;
+	class Layer;
 
-	class Message{
+	class AObjectFactory{
 
 	public:
 
 		//------------------------------------------------------------------------
-		// ctor/dctor
+		// ctor
 		//------------------------------------------------------------------------
-		explicit Message( MessageType type_p = INVALID_MESSAGETYPE )
+		AObjectFactory()
 			:
-			m_type(type_p)
-			{}
-
-		virtual ~Message(){}
+		m_pLayerOwner(nullptr)
+		{}
 
 		//------------------------------------------------------------------------
-		// setters
+		// 
 		//------------------------------------------------------------------------
-		void SetType( MessageType type_p ){
+		void SetLayer( Layer * pLayer_p ){
 
-			m_type = type_p;
+			m_pLayerOwner = pLayer_p;
 		}
 
 		//------------------------------------------------------------------------
-		// getters
+		// 
 		//------------------------------------------------------------------------
-		MessageType GetType() const { return m_type; }
+		virtual shared_Object_ptr VCreateObject();
+		virtual shared_Object_ptr VCreateObject( text::GfigElementA * pGfig_p );
 
 	private:
 
-		MessageType m_type;
+		Layer * m_pLayerOwner;
+
 	};
 
-	typedef std::shared_ptr<Message> shared_Message_ptr;
-	typedef std::weak_ptr<Message> weak_Message_ptr;
+	typedef std::shared_ptr<AObjectFactory> shared_AObjectFactory_ptr;
+	typedef std::weak_ptr<AObjectFactory> weak_AObjectFactory_ptr;
 }

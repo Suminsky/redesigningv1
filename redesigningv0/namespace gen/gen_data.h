@@ -31,6 +31,19 @@ namespace gen{
 		(void)0;
 	}
 
+
+	//========================================================================
+	// min max clamping
+	//========================================================================
+	inline void MinClamp( float & f_p, float min_p = 0.0f ){
+
+		if( f_p < min_p ) f_p = min_p;
+	}
+	inline void MaxClamp( float & f_p, float max_p = 1.0f ){
+
+		if( f_p > max_p ) f_p = max_p;
+	}
+
 	//========================================================================
 	// used nitially for std::shared_ptr which for some really stupid reason
 	// don't have a T[] version like unique_ptr
@@ -154,7 +167,8 @@ namespace gen{
 	//========================================================================
 	// picking n random elements from n elements with no repeat
 	//========================================================================
-	inline void PickRandomElementsNoRepeat( int nToPick, int nElements, int * pElementsPicked_p, int * pElementsAvailable_p ){
+	template < typename T >
+	inline void PickRandomElementsNoRepeat( int nToPick, int nElements, T * pElementsPicked_p, T * pElementsAvailable_p ){
 
 		for( int it = 0, nElementsRemaining = nElements; it < nToPick; ++it ){
 
@@ -167,7 +181,8 @@ namespace gen{
 			pElementsAvailable_p[randIndex] = pElementsAvailable_p[--nElementsRemaining];
 		}
 	}
-	inline void PickRandomElementsRepeat( int nToPick, int nElements, int * pElementsPicked_p, int * pElementsAvailable_p ){
+	template < typename T >
+	inline void PickRandomElementsRepeat( int nToPick, int nElements, T * pElementsPicked_p, T * pElementsAvailable_p ){
 
 		for( int it = 0, nElementsRemaining = nElements; it < nToPick; ++it ){
 
@@ -273,6 +288,31 @@ namespace gen{
 		}
 
 		void Queue( unsigned char * pData, unsigned int iSize ){
+
+			assert( m_currentByteIndex + iSize <= m_size );
+
+			memcpy( &m_data[m_currentByteIndex], pData, iSize );
+
+			m_currentByteIndex += iSize;
+		}
+	};
+
+	struct DataStreamW{
+
+		unsigned int m_size;
+		wchar_t *m_data;
+		unsigned int m_currentByteIndex;
+
+		void Set( wchar_t * pData, unsigned int iSize ){
+
+			assert( iSize <= m_size );
+
+			memcpy( m_data, pData, iSize );
+
+			m_currentByteIndex = iSize;
+		}
+
+		void Queue( wchar_t * pData, unsigned int iSize ){
 
 			assert( m_currentByteIndex + iSize <= m_size );
 

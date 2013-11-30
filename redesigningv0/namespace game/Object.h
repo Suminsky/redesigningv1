@@ -21,16 +21,18 @@
 // standard includes
 #include <assert.h>
 #include <memory>
-#include <unordered_map>
+#include <vector>
 
 // private includes
 
 #include "Component.h"
-//#include "Message.h"
+#include "EventMachine.h"
 
 namespace game{
 
+	class ObjectMachine;
 	class Layer;
+	class System;
 	class Component;
 
 	//typedef unsigned int ObjectID;
@@ -47,6 +49,7 @@ namespace game{
 	class Object{
 
 		friend class Layer;
+		friend class ObjectMachine;
 
 	public:
 
@@ -57,134 +60,76 @@ namespace game{
 			:
 			m_currentObjectIndex(INVALID_OBJECTINDEX),
 			m_pLayerOwner(nullptr),
-			m_bDead(true){}
+			m_pObjMachineOwner(nullptr),
+			m_bDettached(true){}
 
 		virtual ~Object(){}
 
 		//------------------------------------------------------------------------
 		// component stuff
 		//------------------------------------------------------------------------
-		void AddComponent( shared_Component_ptr && pComponent_p ){
+		void AttachComponent( shared_Component_ptr && pComponent_p );
+		void AttachComponent( const shared_Component_ptr & pComponent_p );
+		void DettachComponent( COMPONENTINDEX componentCurrentIndex_p );
+		void DettachComponent( const shared_Component_ptr & pComponent_p );
+		void DettachComponent( const Component * pComponent_p );
 
-			assert( pComponent_p->m_bDead );
-
-			pComponent_p->m_bDead = false;
-
-			if( pComponent_p->m_currentComponentIndex == INVALID_COMPONENTINDEX 
-				||
-				pComponent_p->m_pObjectOwner != this ){
-
-					pComponent_p->m_currentComponentIndex = (COMPONENTINDEX)m_components.size();
-					pComponent_p->m_pObjectOwner = this;
-
-					//pComponent_p->VOnInit();
-
-					m_components.push_back( std::move(pComponent_p) );
-			}
-			else{
-			
-				//pComponent_p->VOnInit();
-			}
-		}
-		void AddComponent( const shared_Component_ptr & pComponent_p ){
-
-			assert( pComponent_p->m_bDead );
-
-			pComponent_p->m_bDead = false;
-
-			if( pComponent_p->m_currentComponentIndex == INVALID_COMPONENTINDEX 
-				||
-				pComponent_p->m_pObjectOwner != this ){
-
-					pComponent_p->m_currentComponentIndex = (COMPONENTINDEX)m_components.size();
-					pComponent_p->m_pObjectOwner = this;
-
-					m_components.push_back( pComponent_p );	
-			}
-
-			//pComponent_p->VOnInit();
-		}
-		void RemoveComponent( COMPONENTINDEX componentCurrentIndex_p ){
-
-			assert( componentCurrentIndex_p != INVALID_COMPONENTINDEX );
-			assert( !m_components[componentCurrentIndex_p]->m_bDead );
-
-			m_components[componentCurrentIndex_p]->m_bDead = true;
-
-			m_removedComponents.push_back(componentCurrentIndex_p);
-		}
+		//------------------------------------------------------------------------
+		// event/message stuff
+		//------------------------------------------------------------------------
+		void RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p );
+		void UnregisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p );
+		void AddComponentEvent( EventType eveType_p, ComponentEventData eveData_p );
+		void DispatchComponentEventImmediately( EventType eveType_p, ComponentEventData eveData_p );
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
 		Layer * GetLayerOwner() const { return m_pLayerOwner; }
+		ObjectComponents & GetComponents(){	return m_components; }
+		bool IsAttached() const { return !m_bDettached; }
+
+		template< typename DerivedComponent >
+		std::weak_ptr<DerivedComponent> GetFirstOfComponent(){
+
+			for( int it = 0, iSize = (int)m_components.size();
+		         it < iSize;
+				 ++it ){
+
+				if( m_components[it]->GetType() == COMPONENT_TYPE(DerivedComponent) ){
+				
+					return std::static_pointer_cast<DerivedComponent>(m_components[it]);
+				}
+			}
+
+			return std::weak_ptr<DerivedComponent>();
+		}
 
 	protected:
 
 		Layer * m_pLayerOwner;
+		ObjectMachine * m_pObjMachineOwner;
 
 	private:
-
-		OBJECTINDEX m_currentObjectIndex;
-		bool m_bDead;
-
-		ObjectComponents m_components;
-		ComponentIndexes m_removedComponents;
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void CleanRemovedComponents(){
+		void DispatchComponentEvents();
 
-			unsigned int nRemoved =	(unsigned int)m_removedComponents.size(); // cache
-			unsigned int nComponents =		(unsigned int)m_components.size();
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void CleanRemovedComponents();
 
-			for( unsigned int itRemoved = 0, itLast = nComponents - 1;
-				 itRemoved < nRemoved;
-				 ++itRemoved, --itLast ){
 
-				if( !m_components[m_removedComponents[itRemoved]]->m_bDead ){
+		OBJECTINDEX m_currentObjectIndex;
+		bool m_bDettached;
 
-					--nRemoved;
-					continue; // untested
-				}
+		ObjectComponents m_components;
+		ComponentIndexes m_removedComponents;
 
-				//m_components[m_removedComponents[itRemoved]]->Abort();
-				m_components[m_removedComponents[itRemoved]]->m_currentComponentIndex = INVALID_COMPONENTINDEX;
-				m_components[m_removedComponents[itRemoved]]->m_pObjectOwner = nullptr;
-
-				if( m_removedComponents[itRemoved] == itLast ){
-
-					continue;
-				}
-
-				std::swap( m_components[m_removedComponents[itRemoved]], m_components[itLast] );
-
-				if( m_components[m_removedComponents[itRemoved]]->m_bDead ){
-
-					// find the swaped task on the list to be destroyed, update the index
-
-					for( unsigned int itToBeDestroyed = itRemoved; itToBeDestroyed < nRemoved; ++itToBeDestroyed ){
-
-						if( m_removedComponents[itToBeDestroyed] == m_components[m_removedComponents[itRemoved]]->m_currentComponentIndex ){
-
-							m_removedComponents[itToBeDestroyed] = m_removedComponents[itRemoved];
-						}
-					}
-				}
-				else{
-
-					m_components[m_removedComponents[itRemoved]]->m_currentComponentIndex = m_removedComponents[itRemoved];
-				}
-			}
-
-			// "trim"
-
-			m_components.resize(nComponents - nRemoved);
-
-			m_removedComponents.clear();
-		}
-
+		EventMachine<ComponentEventData> m_objectEventMachine;
 	};
 
 	typedef std::shared_ptr<Object> shared_Object_ptr;

@@ -18,6 +18,7 @@
 #include "MovableComponent.h"
 #include "../../namespace sprite/SpriteRenderer.h"
 #include "../../namespace sprite/Camera.h"
+#include "../Event.h"
 
 namespace dx{
 	class Device;
@@ -97,6 +98,8 @@ namespace game{
 		};
 
 		weak_MovableComponent_ptr m_pMovableRef;
+		DirectX::XMFLOAT4X4 m_currentTrafo;
+		DirectX::XMFLOAT4X4 m_previousTrafo;
 
 		int m_TextureID, m_BlendModeID, m_FilterModeID, m_ShaderID;
 		int m_iShaderPermutation;

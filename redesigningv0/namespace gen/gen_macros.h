@@ -21,7 +21,7 @@
 #define COMMA ,
 #define DBG(param) param
 //remember of COMMA() in the case of future problems
-#define BREAKHERE {int breakhere = 7; breakhere = breakhere;}
+#define BREAKHERE {int breakhere = 7; breakhere = breakhere; }
 #define NDBG(param)
 #else
 #define COMMA

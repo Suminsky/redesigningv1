@@ -18,8 +18,18 @@
 
 // private includes
 #include "../Component.h"
+#include "../../namespace gen/TreeNode.h"
+#include "../../namespace gen/Pool.h"
+#include "../ComponentFactory.h"
+
+namespace gen{
+	template<typename T, unsigned int SIZE>	class Pool;
+}
 
 namespace game{
+
+	class TransformSystem;
+	class TransformComponentFactory;
 
 	//========================================================================
 	// 
@@ -45,69 +55,108 @@ namespace game{
 
 			return mTrafo;
 		}
+
+		void FromMatrix( const DirectX::XMFLOAT4X4 & mTransform_p ){
+
+			DirectX::XMMATRIX mTransform = DirectX::XMLoadFloat4x4( &mTransform_p );
+
+			DirectX::XMVECTOR vPos, qRot, vScale;
+
+			assert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mTransform ) );
+
+			DirectX::XMStoreFloat4( &position, vPos );
+			DirectX::XMStoreFloat4( &qRotation, qRot );
+			DirectX::XMStoreFloat4( &scale, vScale );
+		}
+
+		void FromMatrix( const DirectX::XMMATRIX & mTransform_p ){
+
+			DirectX::XMVECTOR vPos, qRot, vScale;
+
+			assert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mTransform_p ) );
+
+			DirectX::XMStoreFloat4( &position, vPos );
+			DirectX::XMStoreFloat4( &qRotation, qRot );
+			DirectX::XMStoreFloat4( &scale, vScale );
+		}
 	};
 
 	//========================================================================
 	// 
 	//========================================================================
-	class TransformComponent: public Component{
+	class TransformComponent : public Component{
+
+		friend class TransformSystem;
+		friend class TransformComponentFactory;
+		template<typename T, unsigned int SIZE> friend class gen::Pool;
 
 	public:
 
 		Trafo m_offset;
-		Trafo m_current;
+		Trafo m_local;
+
+		//------------------------------------------------------------------------
+		// ctor
+		//------------------------------------------------------------------------
+		TransformComponent();		
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		DirectX::XMFLOAT4X4 GetLocalTransformation() const { return m_local; }
-		DirectX::XMFLOAT4X4 GetWorldTransformation() const { return m_world; }
+		DirectX::XMFLOAT4X4 GetWorld() const{ return m_world; }
+		DirectX::XMFLOAT4X4 GetFinal() const{ return m_final; }
+		DirectX::XMFLOAT4X4 GetPreviousFinal() const{ return m_previousFinal; }
+
+		//------------------------------------------------------------------------
+		// parenting stuff
+		//------------------------------------------------------------------------
+		void AddChild( TransformComponent * pTrafo_p );
+		void RemoveChild( TransformComponent * pTrafo_p );
 
 	private:
 
 		//------------------------------------------------------------------------
-		// stores offset * current
+		// stores local * parent world and offset * world
 		//------------------------------------------------------------------------
-		void UpdateLocalTransformation(){
+		void UpdateWorldAndFinalTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p );
 
-			DirectX::XMFLOAT4X4 offsetDerived = m_offset.DeriveMatrix();
-			DirectX::XMMATRIX mOffset = DirectX::XMLoadFloat4x4( &offsetDerived );
-
-			DirectX::XMFLOAT4X4 currentDerived = m_current.DeriveMatrix();
-			DirectX::XMMATRIX mCurrent = DirectX::XMLoadFloat4x4( &currentDerived );
-
-			DirectX::XMStoreFloat4x4(
-				&m_local,
-				DirectX::XMMatrixMultiply( mOffset, mCurrent )
-				);	
-		}
-
-		//------------------------------------------------------------------------
-		// stores local * parent world
-		// NOTE! should be called after UpdateLocalTransformation, otherwise it will
-		// return a possibly outdated trafo
-		//------------------------------------------------------------------------
-		void UpdateWorldTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p ){
-
-			m_previousWorld = m_world;
-
-			//
-
-			DirectX::XMMATRIX mLocal = DirectX::XMLoadFloat4x4( &m_local );
-			DirectX::XMMATRIX mParentWorld = DirectX::XMLoadFloat4x4( &mParentWorldTrafo_p );
-
-			DirectX::XMStoreFloat4x4(
-				&m_world,
-				DirectX::XMMatrixMultiply( mLocal, mParentWorld )
-				);	
-		}
-
-		DirectX::XMFLOAT4X4 m_local; // offser * current
 		DirectX::XMFLOAT4X4 m_world; // local * parent world
-		DirectX::XMFLOAT4X4 m_previousWorld;
+		DirectX::XMFLOAT4X4 m_previousFinal;
+		DirectX::XMFLOAT4X4 m_final;  // world * offset
 
+		unsigned int m_iCurrentRosterIndex;
+
+		gen::TreeNode<TransformComponent*> m_node;
 	};
 
 	typedef std::shared_ptr<TransformComponent> shared_TransformComponent_ptr;
 	typedef std::weak_ptr<TransformComponent> weak_TransformComponent_ptr;
+
+	//========================================================================
+	// 
+	//========================================================================
+	class TransformComponentFactory: public AComponentFactory{
+
+		friend class TransformSystem;
+
+	public:
+
+		gen::Pool<TransformComponent, 256> m_pool;
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		Trafo GetTrafoFromGfig( text::GfigElementA * pGFig_p );
+		DirectX::XMFLOAT4 GetXYZWFromGfig( text::GfigElementA * pGFig_p );
+
+		//------------------------------------------------------------------------
+		// to be overridden
+		//------------------------------------------------------------------------
+		virtual shared_Component_ptr VCreateComponent();
+		virtual shared_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+
+	};
+
+	typedef std::shared_ptr<TransformComponentFactory> shared_TransformComponentFactory_ptr;
+	typedef std::weak_ptr<TransformComponentFactory> weak_TransformComponentFactory_ptr;
 }

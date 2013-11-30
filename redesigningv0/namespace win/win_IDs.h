@@ -53,7 +53,11 @@ namespace win{
 #define VK_A 0x41
 #define VK_B 0x42
 #define VK_D 0x44
+#define VK_F 0x46
+#define VK_G 0x47
+#define VK_H 0x48
 #define VK_J 0x4A
+#define VK_K 0x4B
 #define VK_L 0x4C
 #define VK_S 0x53
 #define VK_V 0x56

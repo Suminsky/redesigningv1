@@ -1,9 +1,9 @@
 #pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
-	created:	2013/10/29
-	created:	29:10:2013   14:58
-	file:		ColorSystem.h
+	created:	2013/11/17
+	created:	17:11:2013   17:30
+	file:		TransformSystem.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	
@@ -17,45 +17,44 @@
 
 // private includes
 #include "../System.h"
-#include "../components/ColorComponent.h"
 #include "../../namespace gen/Pool.h"
-
+#include "../components/TransformComponent.h"
 
 namespace game{
 
-	class ColorSystem: public System{
+	class TransformSystem: public System{
 
 	public:
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		ColorSystem()
+		TransformSystem()
 			:
-		m_poolAccess(nullptr, nullptr)
-		{}
+		m_poolAccess(nullptr, nullptr){}
 
-	
 	private:
 
-		gen::Pool<ColorComponent, 256>::PoolAccess m_poolAccess;
+		gen::Pool<TransformComponent, 256>::PoolAccess m_poolAccess;
 
 		//------------------------------------------------------------------------
-		// get pool
+		// 
 		//------------------------------------------------------------------------
 		void VOnInit();
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void VOnUpdate( double /*dAccum_p*/, double /*dDelta_p*/ );
+		void VOnUpdate( double , double );
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void RecursiveUpdate( ColorComponent & currentParent_p );
+		void RecursiveUpdate( TransformComponent & currentParent_p );
+
+
 	};
 
-	typedef std::shared_ptr<ColorSystem> shared_ColorSystem_ptr;
-	typedef std::weak_ptr<ColorSystem> weak_ColorSystem_ptr;
+	typedef std::shared_ptr<TransformSystem> shared_TransformSystem_ptr;
+	typedef std::weak_ptr<TransformSystem> weak_TransformSystem_ptr;
 }

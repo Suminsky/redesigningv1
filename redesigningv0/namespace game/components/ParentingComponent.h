@@ -47,14 +47,14 @@ namespace game{
 		//------------------------------------------------------------------------
 		// removes given object from the childs
 		//------------------------------------------------------------------------
-		void DettachObject( ParentingComponent * pObject_p );
-
-		//------------------------------------------------------------------------
-		// makes this object a child on the given parent
-		//------------------------------------------------------------------------
-		void SetParent( ParentingComponent * pNewParent_p );
+		void DettachObject( ParentingComponent * pObject_p );	
 
 	private:
+
+		//------------------------------------------------------------------------
+		// set a new parent, removing this from current parent, if any
+		//------------------------------------------------------------------------
+		void SetParent( ParentingComponent * pNewParent_p );
 
 		ParentingComponent * m_pParent;
 		INDEX_ONPARENT m_indexOnParent;

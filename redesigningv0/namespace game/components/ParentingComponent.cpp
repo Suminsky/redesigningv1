@@ -30,5 +30,5 @@ void game::ParentingComponent::SetParent( ParentingComponent * pNewParent_p )
 		m_pParent->DettachObject( this );
 	}
 
-	m_pParent->AttachObject( pNewParent_p );
+	m_pParent = pNewParent_p;
 }

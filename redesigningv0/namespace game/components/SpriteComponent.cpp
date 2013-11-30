@@ -1,4 +1,7 @@
 #include "SpriteComponent.h"
+#include "../Object.h"
+#include "ColorComponent.h"
+#include "TransformComponent.h"
 
 
 using namespace std;
@@ -39,6 +42,8 @@ game::SpriteComponent::SpriteComponent(	Device * pDevice_p,
 	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
 
 	m_previousColor = m_currentColor = m_renderData.m_color;
+	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
+	m_previousTrafo = m_currentTrafo;
 
 	// creates a ID3DBuffer for the vs constant buffer
 
@@ -95,16 +100,25 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 	// Layer::VOnUpdate, it can be solved by putting user on later update (shit hack).
 	// The correct solution is remove components VOnUpdate for once, create a System for
 	// sprite components, the system should care when things should be done.
+	// 
+	// NOTE: the problem with the fade between state transitions is that the fade with alpha 1.0 is not rendered, because
+	// previous and current color are 1.0, and then the renderData->color is not updated...why both are 1.0 if theyr not
+	// yet rendered?
+	// 
+	// The thing is, alpha becames 1.0 before the task finishes, than the interpolation goes like 0.94 to 1.0, thats never
+	// 1.0, then next frame it becames 1.0 and 1.0, and it doesnt interpolate..
+	// 
+	// FIXED: on the sprite I was comparing current with previous, but I needed renderData and current!
 
 	// interpolate color
-	//XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
-	if( m_previousColor.x != m_currentColor.x
+
+	if( m_renderData.m_color.x != m_currentColor.x
 		||
-		m_previousColor.y != m_currentColor.y
+		m_renderData.m_color.y != m_currentColor.y
 		||
-		m_previousColor.z != m_currentColor.z
+		m_renderData.m_color.z != m_currentColor.z
 		||
-		m_previousColor.w != m_currentColor.w  ){
+		m_renderData.m_color.w != m_currentColor.w  ){
 
 		XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
 		XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
@@ -116,8 +130,6 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p )
 		// send to GPU?
 		m_renderData.m_bUpdate = true;
 	}
-
-	//XMStoreFloat4( &m_renderData.m_color, colorCurrent );
 
 	m_pSpriteRendererRef->Render(this);
 }
@@ -140,13 +152,13 @@ void game::SpriteComponent::OnDraw( double dInterpolation_p, Camera * pCamera_p 
 	}
 
 	// interpolate color
-	if( m_previousColor.x != m_currentColor.x
+	if( m_renderData.m_color.x != m_currentColor.x
 		||
-		m_previousColor.y != m_currentColor.y
+		m_renderData.m_color.y != m_currentColor.y
 		||
-		m_previousColor.z != m_currentColor.z
+		m_renderData.m_color.z != m_currentColor.z
 		||
-		m_previousColor.w != m_currentColor.w ){
+		m_renderData.m_color.w != m_currentColor.w ){
 
 			XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
 			XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );

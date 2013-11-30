@@ -1,9 +1,9 @@
 #pragma once
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 /*
-	created:	2013/10/29
-	created:	29:10:2013   14:58
-	file:		ColorSystem.h
+	created:	2013/11/25
+	created:	25:11:2013   20:45
+	file:		SpriteAnimationSystem.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	
@@ -17,31 +17,29 @@
 
 // private includes
 #include "../System.h"
-#include "../components/ColorComponent.h"
 #include "../../namespace gen/Pool.h"
-
+#include "../components/SpriteAnimationComponent.h"
 
 namespace game{
 
-	class ColorSystem: public System{
+	class SpriteAnimationSystem: public System{
 
 	public:
 
 		//------------------------------------------------------------------------
-		// 
+		// ctor
 		//------------------------------------------------------------------------
-		ColorSystem()
+		SpriteAnimationSystem()
 			:
-		m_poolAccess(nullptr, nullptr)
-		{}
+		  m_poolAccess(nullptr, nullptr)
+		  {}
 
-	
 	private:
 
-		gen::Pool<ColorComponent, 256>::PoolAccess m_poolAccess;
+		gen::Pool<SpriteAnimationComponent, 256>::PoolAccess m_poolAccess;
 
 		//------------------------------------------------------------------------
-		// get pool
+		// 
 		//------------------------------------------------------------------------
 		void VOnInit();
 
@@ -50,12 +48,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		void VOnUpdate( double /*dAccum_p*/, double /*dDelta_p*/ );
 
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		void RecursiveUpdate( ColorComponent & currentParent_p );
 	};
 
-	typedef std::shared_ptr<ColorSystem> shared_ColorSystem_ptr;
-	typedef std::weak_ptr<ColorSystem> weak_ColorSystem_ptr;
+	typedef std::shared_ptr<SpriteAnimationSystem> shared_SpriteAnimationSystem_ptr;
+	typedef std::weak_ptr<SpriteAnimationSystem> weak_SpriteAnimationSystem_ptr;
 }

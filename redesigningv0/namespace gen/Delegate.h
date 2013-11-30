@@ -281,11 +281,13 @@ namespace gen{
 	// returns void
 	//========================================================================
 	template< typename PARAM, typename PARAM2 >	class Delegate2Param;
-	template< typename PARAM >	inline bool operator ==
-	 (const Delegate2Param< PARAM, typename PARAM2 > & lhs, const Delegate2Param< PARAM, typename PARAM2 > & rhs);
+	template< typename PARAM, typename PARAM2 >	inline bool operator ==
+	 (const Delegate2Param< PARAM, PARAM2 > & lhs, const Delegate2Param< PARAM, PARAM2 > & rhs);
 
 	template< typename PARAM, typename PARAM2 >
 	class Delegate2Param{
+
+		friend bool operator == <> (const Delegate2Param<PARAM, PARAM2> & lhs, const Delegate2Param<PARAM, PARAM2> & rhs);
 
 	public:
 
@@ -362,8 +364,8 @@ namespace gen{
 	//------------------------------------------------------------------------
 	// ==
 	//------------------------------------------------------------------------
-	template< typename PARAM, typename PARAM2 > >
-	bool operator == (const Delegate1Param<PARAM, PARAM2> & lhs, const Delegate1Param<PARAM, PARAM2> & rhs){
+	template< typename PARAM, typename PARAM2 >
+	bool operator == (const Delegate2Param<PARAM, PARAM2> & lhs, const Delegate2Param<PARAM, PARAM2> & rhs){
 
 		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
 					&&
@@ -374,12 +376,14 @@ namespace gen{
 	// delegate which takes 2 params from the invoker..untested
 	// returns bool
 	//========================================================================
-	template< typename PARAM, typename PARAM2 >	class Delegate2Param;
-	template< typename PARAM >	inline bool operator ==
-	 (const Delegate2Param< PARAM, typename PARAM2 > & lhs, const Delegate2Param< PARAM, typename PARAM2 > & rhs);
+	template< typename RETURN, typename PARAM >	class DelegateR1Param;
+	template< typename RETURN, typename PARAM >	inline bool operator ==
+	 (const DelegateR1Param< RETURN, PARAM > & lhs, const DelegateR1Param< RETURN, PARAM > & rhs);
 
 	template< typename RETURN, typename PARAM >
 	class DelegateR1Param{
+
+		friend bool operator == <> (const DelegateR1Param<RETURN, PARAM> & lhs, const DelegateR1Param<RETURN, PARAM> & rhs);
 
 	public:
 
@@ -456,8 +460,8 @@ namespace gen{
 	//------------------------------------------------------------------------
 	// ==
 	//------------------------------------------------------------------------
-	template< typename RETURN, typename PARAM2 > >
-	bool operator == (const Delegate1Param<RETURN, PARAM2> & lhs, const Delegate1Param<RETURN, PARAM2> & rhs){
+	template< typename RETURN, typename PARAM >
+	bool operator == (const DelegateR1Param<RETURN, PARAM> & lhs, const DelegateR1Param<RETURN, PARAM> & rhs){
 
 		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
 					&&
@@ -468,8 +472,14 @@ namespace gen{
 	// delegate which takes 2 params from the invoker..untested
 	// returns bool
 	//========================================================================
+	template< typename RETURN, typename PARAM, typename PARAM2 >	class DelegateR2Param;
+	template< typename RETURN, typename PARAM, typename PARAM2 >	inline bool operator ==
+		(const DelegateR2Param< RETURN, PARAM, PARAM2 > & lhs, const DelegateR2Param< RETURN, PARAM, PARAM2 > & rhs);
+
 	template< typename RETURN, typename PARAM, typename PARAM2 >
 	class DelegateR2Param{
+
+		friend bool operator == <> (const DelegateR2Param<RETURN, PARAM, PARAM2> & lhs, const DelegateR2Param<RETURN, PARAM, PARAM2> & rhs);
 
 	public:
 
@@ -546,8 +556,8 @@ namespace gen{
 	//------------------------------------------------------------------------
 	// ==
 	//------------------------------------------------------------------------
-	template< typename RETURN, typename PARAM, typename PARAM2 > >
-	bool operator == (const Delegate1Param<RETURN, PARAM, PARAM2> & lhs, const Delegate1Param<RETURN, PARAM, PARAM2> & rhs){
+	template< typename RETURN, typename PARAM, typename PARAM2 >
+	bool operator == (const DelegateR2Param<RETURN, PARAM, PARAM2> & lhs, const DelegateR2Param<RETURN, PARAM, PARAM2> & rhs){
 
 		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
 					&&

@@ -70,7 +70,8 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 
 	render::Drawable drawable;
 	sprite::SortMask sorMask = {0};
-	sorMask.bitfield.layer = 3;
+	sorMask.bitfield.layer = 2;
+	sorMask.bitfield.viewportLayer = 3;
 	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
 	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
 
@@ -153,7 +154,9 @@ void text::TextRenderer::Draw_Text( const wchar_t szText_p[], DirectX::XMFLOAT4 
 	if( szText_p[0] == 0x0000 ) return;
 
 	sprite::SortMask sorMask = {0};
-	sorMask.bitfield.layer = 3;
+	sorMask.bitfield.layer = 2;
+	sorMask.bitfield.viewportLayer = 3;
+	//sorMask.bitfield.Zdepth = 10;
 	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
 	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
 

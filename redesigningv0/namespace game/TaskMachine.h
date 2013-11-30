@@ -36,11 +36,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		void Update( double accumTime_p, double delta_p ){
 
-			for( Tasks::iterator it = m_tasks.begin(), itEnd = m_tasks.end();
+			for( int it = 0, itEnd = (int)m_tasks.size();
 				 it != itEnd ;
 				 ++ it ){
 
-				(*it)->VOnUpdate( accumTime_p, delta_p );
+				m_tasks[it]->VOnUpdate( accumTime_p, delta_p );
 			}
 
 			//check if theres destroyed tasks, clean then off
@@ -67,10 +67,10 @@ namespace game{
 
 				m_tasks.push_back( std::move(pNewTask_p) );
 			}
-			else{
+			/*else{
 				
 				pNewTask_p->VOnInit();
-			}
+			}*/
 		}
 		void AddTask( const shared_Task_ptr & pNewTask_p ){
 
@@ -83,11 +83,13 @@ namespace game{
 				pNewTask_p->m_currentTaskIndex = TASKINDEX(m_tasks.size());
 				pNewTask_p->m_pTaskMachineRef = this;
 
+				pNewTask_p->VOnInit();
+
 				m_tasks.push_back( pNewTask_p );
 			}
 
 			
-			pNewTask_p->VOnInit();
+			//pNewTask_p->VOnInit();
 		}
 
 		//------------------------------------------------------------------------

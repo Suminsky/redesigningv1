@@ -79,7 +79,7 @@ namespace net{
 			E_STATE_CRITICALERROR
 		};
 
-		enum{
+		enum E_CHANNEL{
 
 			E_CHANNEL_UNRELIABLE = 0,
 			E_CHANNEL_RELIABLE = 1,
@@ -109,6 +109,7 @@ namespace net{
 
 			switch( m_eState ){
 			case E_STATE_OFF:
+			case E_STATE_DISCONNECTED:
 				break;
 			case E_STATE_ATEMPTINGCONNECTION:
 				OnAttemptingConnection( dDelta_p );
@@ -134,9 +135,8 @@ namespace net{
 			m_bufferedRemoteDataReceived.currentUsed = 0;
 
 			m_bufferedUserDataTosend.SetChannel( E_PACKET_CHANNEL_CONNECT );
-			m_bufferedReliableDataToSend.SetChannel(E_CHANNEL_RELIABLE); // reliable are always channel 1
+			m_bufferedReliableDataToSend.SetChannel(E_CHANNEL_RELIABLE);
 
-			//m_bufferedReliableDataToSend.currentUsed = 0;
 			m_eState = E_STATE_ATEMPTINGCONNECTION;
 		}
 		void ReConnect(){ // same thing, but uses the already settled address
@@ -144,11 +144,16 @@ namespace net{
 			m_dTimeSinceLastReceiving = 0.0;
 			m_dTimeSinceLastSending = 0.0;
 
+			m_bufferedRemoteDataReceived.currentUsed = 0;
+
 			m_bufferedUserDataTosend.SetChannel( E_PACKET_CHANNEL_CONNECT );
+			// m_bufferedReliableDataToSend do never change its channel
 
 			m_eState = E_STATE_ATEMPTINGCONNECTION;
 		}
 		void Disconnect(){
+
+			// TODO: send disconnect packet?
 
 			m_eState = E_STATE_DISCONNECTED;
 			m_dTimeSinceLastReceiving = 0.0;
@@ -181,7 +186,7 @@ namespace net{
 			// this means data on the buffer is not being sent as fast as user
 			// is filling (or not being sent at all)
 
-			if( m_bufferedUserDataTosend.GetCurrentUsedBytes() + iSize_p > E_CONFIG_DATABUFFERSIZE ){
+			if( m_bufferedUserDataTosend.GetCurrentUsedBytes() + iSize_p + E_PACKET_USERDATA_HEADER_SIZE > E_CONFIG_DATABUFFERSIZE ){
 				
 				return false;
 			}
@@ -192,9 +197,10 @@ namespace net{
 		bool SendReliableData( unsigned char * pDataBuff_p, int iSize_p ){
 
 			// NOTE: can only send ONE reliable packet until ack is received
+
 			if( m_bufferedReliableDataToSend.GetCurrentUsedDataBytes() ) return false;
 
-			if( m_bufferedReliableDataToSend.GetCurrentUsedBytes() + iSize_p > E_CONFIG_DATABUFFERSIZE ){
+			if( m_bufferedReliableDataToSend.GetCurrentUsedBytes() + iSize_p + E_PACKET_USERDATA_HEADER_SIZE  > E_CONFIG_DATABUFFERSIZE ){
 
 				return false;
 			}
@@ -346,7 +352,7 @@ namespace net{
 
 					if( m_socketRef.SendTo( m_remoteAddress, m_bufferedUserDataTosend.GetData(), m_bufferedUserDataTosend.GetCurrentUsedBytes(), &eError ) ){
 
-						m_dTimeSinceLastSending = 0.0; //-= m_fSendFrequencySec;
+						m_dTimeSinceLastSending = 0.0;
 						m_bufferedUserDataTosend.ClearUserData();
 					}
 				}
@@ -355,16 +361,16 @@ namespace net{
 
 				if( m_bufferedReliableDataToSend.GetCurrentUsedDataBytes() ){
 
-					// cant increment reliable seq here, it is sent till ack is received, it "have" to keep its seq cause its the same packet
+					// cant increment reliable seq here, it is sent till ack is received, it MUST keep its seq cause its the same packet
 
 					m_bufferedReliableDataToSend.UpdateHeader( m_sequences.m_iSequenceReliableSend, m_sequences.m_iSequenceLastReliableReceived );
 
 					if( m_socketRef.SendTo( m_remoteAddress, m_bufferedReliableDataToSend.GetData(), m_bufferedReliableDataToSend.GetCurrentUsedBytes(), &eError ) ){
 
-						m_dTimeSinceLastSending = 0.0; //-= m_fSendFrequencySec;
-						//m_bufferedReliableDataToSend.ClearUserData(); only clears when ack is received
-						win::UniqueFileLogger()<<"net: enviando reliable"<<SZ_NEWLINE;
-						win::UniqueFileLogger().FlushToFile();
+						m_dTimeSinceLastSending = 0.0;
+						// m_bufferedReliableDataToSend.ClearUserData(); only clears when ack is received
+						//win::UniqueFileLogger()<<"net: enviando reliable"<<SZ_NEWLINE;
+						//win::UniqueFileLogger().FlushToFile();
 					}
 				}
 
@@ -427,6 +433,11 @@ namespace net{
 
 								m_sequences.m_iSequenceReceived = header.iSendingSequence;
 
+								// TODO: what if the buffer is full?
+
+								if( m_bufferedRemoteDataReceived.currentUsed + m_lastReceivedPacket.GetReceivedUserDataBytes() > E_CONFIG_DATABUFFERSIZE )
+									return;
+
 								m_bufferedRemoteDataReceived.Queue( m_lastReceivedPacket.GetUserData(), m_lastReceivedPacket.GetReceivedUserDataBytes() );
 							}
 
@@ -437,6 +448,11 @@ namespace net{
 							if( header.iSendingSequence > m_sequences.m_iSequenceLastReliableReceived ){
 
 								m_sequences.m_iSequenceLastReliableReceived = header.iSendingSequence;
+
+								// TODO: what if the buffer is full?
+
+								if( m_bufferedRemoteDataReceived.currentUsed + m_lastReceivedPacket.GetReceivedUserDataBytes() > E_CONFIG_DATABUFFERSIZE )
+									return;
 
 								m_bufferedRemoteDataReceived.Queue( m_lastReceivedPacket.GetUserData(), m_lastReceivedPacket.GetReceivedUserDataBytes() );
 							}
@@ -456,17 +472,12 @@ namespace net{
 							m_bufferedReliableDataToSend.ClearUserData();
 							++m_sequences.m_iSequenceReliableSend;
 
-							win::UniqueFileLogger()<<"net:ack de reliable"<<SZ_NEWLINE;
-							win::UniqueFileLogger().FlushToFile();
+							//win::UniqueFileLogger()<<"net:ack de reliable"<<SZ_NEWLINE;
+							//win::UniqueFileLogger().FlushToFile();
 						}
 					}
 
 					return;
-				}
-				else{
-
-					BREAKHERE;
-					//m_bufferedRemoteDataReceived.currentUsed = 0; // discard data received, if any
 				}
 			}
 			else{

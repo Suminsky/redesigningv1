@@ -13,16 +13,25 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 #include <memory>
+#include "ComponentTypes.h"
 
 namespace game{
 
+	// froward dcls
+
 	class Object;
 	class System;
+	class AComponentFactory;
+
+	// new types
 
 	typedef unsigned int COMPONENTINDEX;
 	static const unsigned int INVALID_COMPONENTINDEX = (unsigned int)-1;
 
-	//typedef unsigned int ComponentID;
+	typedef unsigned int COMPONENTTYPE;
+	static const unsigned int INVALID_COMPONENTTYPE = (unsigned int)-1;
+
+	typedef void* ComponentEventData; // event data used on the object event machine
 
 	//========================================================================
 	// 
@@ -31,6 +40,7 @@ namespace game{
 
 		friend class Object;
 		friend class System;
+		friend class AComponentFactory;
 
 	public:
 
@@ -39,25 +49,40 @@ namespace game{
 		//------------------------------------------------------------------------
 		Component()
 			:
-			m_currentComponentIndex(INVALID_COMPONENTINDEX),
+			m_type(INVALID_COMPONENTTYPE),
+			m_currentComponentObjectIndex(INVALID_COMPONENTINDEX),
 			m_pObjectOwner(nullptr),
-			m_bDead(true){}
+			m_bDetached(true){}
 
 		virtual ~Component(){}
 
 		//------------------------------------------------------------------------
-		// get owner object
+		// 
+		//------------------------------------------------------------------------
+		bool IsAttached() const { return !m_bDetached; }
+
+		//------------------------------------------------------------------------
+		// getters
 		//------------------------------------------------------------------------
 		Object *  GetObjectOwner(){ return m_pObjectOwner; }
+		COMPONENTTYPE GetType() const { return m_type; }
 
 	protected:
 
 		Object * m_pObjectOwner;
+		COMPONENTTYPE m_type;
 
 	private:
 
-		COMPONENTINDEX m_currentComponentIndex;
-		bool m_bDead;
+		//------------------------------------------------------------------------
+		// to be overridden
+		//------------------------------------------------------------------------
+		virtual void VOnAttach();
+		virtual void VOnDetach();
+
+		COMPONENTINDEX m_currentComponentObjectIndex;
+
+		bool m_bDetached;
 	};
 
 	typedef std::shared_ptr<Component> shared_Component_ptr;

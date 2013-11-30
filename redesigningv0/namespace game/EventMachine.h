@@ -15,10 +15,11 @@
 // standard includes
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 
 // private includes
-#include "EventHandler.h"
+#include "Event.h"
 #include "../namespace gen/gen_macros.h"
 #include "../namespace gen/Delegate.h"
 
@@ -31,7 +32,6 @@ namespace game{
 	public:
 
 		typedef Event<EVENT_DATA> Event;
-		//typedef AEventHandler<EVENT_DATA> AEventHandler;
 		typedef gen::Delegate1Param<const Event &> EventHandlerDelegate;
 
 		typedef std::vector<EventHandlerDelegate> EventHandlers;
@@ -118,7 +118,7 @@ namespace game{
 					itHandler != itHandlersEnd;
 					++ itHandler ){
 
-					(*itHandler)->OnEvent( immEvent );
+					(*itHandler).Execute( immEvent );
 			}
 
 			return true;
@@ -127,7 +127,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// do NOT register inside OnEvent
 		//------------------------------------------------------------------------
-		void RegisterForEvent( EventHandlerDelegate pHandler_p, EventType eventType_p )
+		void RegisterForEvent( const EventHandlerDelegate & pHandler_p, EventType eventType_p )
 		{
 			// get handlers for given type, if theres none, operator [] creates one,
 			// then add new handler to it
@@ -138,7 +138,7 @@ namespace game{
 
 			)
 
-			//DBG(
+			DBG(
 
 				// check for double registering
 
@@ -157,7 +157,7 @@ namespace game{
 				handlers.push_back( pHandler_p );
 			}
 
-			//)
+			)
 		}
 
 		//------------------------------------------------------------------------

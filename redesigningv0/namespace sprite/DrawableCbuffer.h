@@ -81,7 +81,10 @@ namespace sprite{
 		DrawableCbuffer()
 			:
 		m_bUpdate(true)
-		{}
+		{
+
+			m_padding.x = m_padding.y = 0.0f;
+		}
 
 		DrawableCbuffer( float width_p, float height_p, float uvOffsetU_p, float uvOffsetV_p, DirectX::CXMMATRIX mWorld_p );
 
