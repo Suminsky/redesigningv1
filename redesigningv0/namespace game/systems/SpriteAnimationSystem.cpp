@@ -27,6 +27,8 @@ void game::SpriteAnimationSystem::VOnUpdate( double /*dAccum_p*/, double dDelta_
 
 			if( animCompo.m_previousFrame != animCompo.m_currentFrame ){
 
+				animCompo.m_previousFrame = animCompo.m_currentFrame;
+
 				if( animCompo.IsAttached() )
 					animCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(SpriteAnimationComponent), &animCompo );
 			}

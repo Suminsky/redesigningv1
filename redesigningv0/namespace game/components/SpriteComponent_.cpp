@@ -191,8 +191,6 @@ void SpriteComponent_::OnDraw( double dInterpolation_p, Camera * /*pCamera_p*/ )
 			// send to GPU?
 			m_renderData.m_bUpdate = true;
 	}
-
-	//m_pSpriteRendererRef->Render(this, pCamera_p);
 }
 
 void SpriteComponent_::VOnAttach()
@@ -224,9 +222,10 @@ void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & e
 void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEventData> & event_p )
 {
 	TransformComponent * pTrafo = event_p.GetDataAs<TransformComponent*>();
-
+	
 	m_previousTrafo = pTrafo->GetPreviousFinal();
 	m_currentTrafo = pTrafo->GetFinal();
+	if( pTrafo->GonnaSnap() ) m_previousTrafo = m_currentTrafo;
 }
 
 void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData> & event_p )
@@ -240,7 +239,7 @@ void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData
 	m_renderData.m_uvRect = spriteFrame.uvRect;
 	m_renderData.m_padding.x = spriteFrame.xOffset;
 	m_renderData.m_padding.y = spriteFrame.yOffset;
-	//m_renderData.
+	m_renderData.m_bUpdate = true;
 
 	(*(++m_pipeState.Begin())) = pAnim->GetSprite().pBindPSSRV;
 	m_TextureID = pAnim->GetSprite().iID;

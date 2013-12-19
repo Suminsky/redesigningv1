@@ -50,12 +50,12 @@ void game::SpriteAnimationComponent::Update( animTimeUnit delta_p )
 
 			if( OnFrameWrap( currentClip ) ){
 
-				return;
+				break;
 			}
 		}
 	}
 
-	m_previousFrame = m_currentFrame;
+	//m_previousFrame = m_currentFrame;
 	m_currentFrame = currentClip.GetCurrentFrame();
 }
 
@@ -83,8 +83,9 @@ bool game::SpriteAnimationComponent::OnFrameWrap( AnimationClip & currentClip )
 
 		Stop();
 		unsigned int itLastFrame = (unsigned int)currentClip.configData.vFrames.size() -1;
-		m_previousFrame = m_currentFrame;
-		m_currentFrame = currentClip.configData.vFrames[itLastFrame];
+		//m_previousFrame = m_currentFrame;
+		currentClip.stateData.itCurrentFrame = itLastFrame;
+		//m_currentFrame = currentClip.configData.vFrames[itLastFrame];
 
 		return true;
 								  }break;
@@ -92,8 +93,8 @@ bool game::SpriteAnimationComponent::OnFrameWrap( AnimationClip & currentClip )
 	case E_ANIMWRAPMODE_CLAMFIRST:
 
 		Stop();
-		m_previousFrame = m_currentFrame;
-		m_currentFrame = currentClip.GetCurrentFrame();
+		//m_previousFrame = m_currentFrame;
+		//m_currentFrame = currentClip.GetCurrentFrame();
 		return true;
 		break;
 	}
@@ -145,7 +146,7 @@ void game::SpriteAnimationComponent::SetSpriteFrame( frame frame_p, bool bPauseC
 		Stop();
 	}
 
-	m_previousFrame = m_currentFrame;
+	//m_previousFrame = m_currentFrame;
 	m_currentFrame = frame_p;
 }
 

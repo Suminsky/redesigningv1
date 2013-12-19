@@ -3,6 +3,7 @@
 
 using namespace game;
 
+
 void game::State::AddLayer( shared_Layer_ptr && pNewLayer_p )
 {
 	assert( pNewLayer_p->m_bDead );

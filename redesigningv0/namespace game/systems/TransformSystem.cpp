@@ -34,6 +34,8 @@ void game::TransformSystem::VOnUpdate( double , double )
 			if( transformCompo.IsAttached() )
 				transformCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &transformCompo );
 
+			transformCompo.m_bSnap = false;
+
 			// recurse on childes
 
 			RecursiveUpdate( transformCompo );

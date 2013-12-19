@@ -98,7 +98,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		TransformComponent();		
+		TransformComponent();
 
 		//------------------------------------------------------------------------
 		// getters
@@ -112,6 +112,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddChild( TransformComponent * pTrafo_p );
 		void RemoveChild( TransformComponent * pTrafo_p );
+		void Snap(){
+
+			m_bSnap = true;
+		}
+		bool GonnaSnap()const{return m_bSnap;}
 
 	private:
 
@@ -123,6 +128,8 @@ namespace game{
 		DirectX::XMFLOAT4X4 m_world; // local * parent world
 		DirectX::XMFLOAT4X4 m_previousFinal;
 		DirectX::XMFLOAT4X4 m_final;  // world * offset
+
+		bool m_bSnap; // hack
 
 		unsigned int m_iCurrentRosterIndex;
 

@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Mentle\InGame\AudioHandler.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
+    <ClInclude Include="Mentle\InGame\CardFXCtrl.h" />
     <ClInclude Include="Mentle\InGame\CardsLayer.h" />
     <ClInclude Include="Mentle\InGame\CursorLayer.h" />
     <ClInclude Include="Mentle\InGame\EnergyBarLayer.h" />
@@ -273,6 +274,7 @@
   <ItemGroup>
     <ClCompile Include="Mentle\InGame\AudioHandler.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
+    <ClCompile Include="Mentle\InGame\CardFXCtrl.cpp" />
     <ClCompile Include="Mentle\InGame\CardsLayer.cpp" />
     <ClCompile Include="Mentle\InGame\CursorLayer.cpp" />
     <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp" />

@@ -375,6 +375,9 @@
     <ClInclude Include="namespace game\systems\SpriteAnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\InGame\CardFXCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -684,6 +687,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\systems\SpriteAnimationSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\CardFXCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

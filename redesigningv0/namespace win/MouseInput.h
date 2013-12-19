@@ -47,7 +47,7 @@ namespace win{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		MouseInput(): m_fScrollDelta(0.0f), m_bCaptured(false){}
+		MouseInput(): m_iWheelPrevAmount(0), m_iWheelAmount(0), m_iWheelDelta(0), m_bCaptured(false){}
 
 		//------------------------------------------------------------------------
 		// call per frame
@@ -65,7 +65,10 @@ namespace win{
 			m_pressedButtons.Reset();
 			m_releasedButtons.Reset();
 
-			m_fScrollDelta = 0.0f;
+			m_iWheelDelta = m_iWheelAmount - m_iWheelPrevAmount;
+			m_iWheelPrevAmount = m_iWheelAmount;
+			
+			//m_fWheelDelta = 0.0f;
 		}
 
 		//------------------------------------------------------------------------
@@ -132,7 +135,8 @@ namespace win{
 		//------------------------------------------------------------------------
 		void OnWM_MOUSEWHEEL( WPARAM wParam_p ){
 
-			m_fScrollDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam_p)/(float)WHEEL_DELTA;
+			m_iWheelAmount += GET_WHEEL_DELTA_WPARAM(wParam_p);
+			//m_fWheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam_p)/(float)WHEEL_DELTA;
 		}
 
 		//------------------------------------------------------------------------
@@ -203,7 +207,8 @@ namespace win{
 		Buttons GetReleasedButtons()const{return m_releasedButtons;}
 		Pos GetPos()const{return m_pos;}
 		Pos GetDelta()const{return m_deltaPos;}
-		float GetWheelNormalizedAmount()const{return m_fScrollDelta;}
+		float GetWheelNormalizedAmount()const{return (float)m_iWheelAmount/(float)WHEEL_DELTA;}
+		float GetWheelNormalizedDelta()const{ return (float)m_iWheelDelta/(float)WHEEL_DELTA; }
 		bool IsCaptured()const{return m_bCaptured;}
 
 	private:
@@ -212,7 +217,8 @@ namespace win{
 		Buttons m_downButtons;
 		Buttons m_pressedButtons;
 		Buttons m_releasedButtons;
-		float m_fScrollDelta;
+		int m_iWheelDelta;
+		int m_iWheelPrevAmount, m_iWheelAmount;
 		bool m_bCaptured;
 	};
 }

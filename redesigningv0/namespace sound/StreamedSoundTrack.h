@@ -16,6 +16,7 @@
 
 // private includes
 #include "SourceReader.h"
+#include "../namespace win/win_macros.h"
 
 // standard includes
 #include "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\xaudio2.h" // ta dando pau se coloca antes do SourceReader.h
@@ -145,7 +146,7 @@ namespace sound{
 						break;
 					}
 					else{
-						//MessageBox(0, "Music sample size bigger than supported buffer..STUCK", "sound error", MB_E );
+						MessageBox(0, "Music sample size bigger than supported buffer..STUCK", "sound error", MB_E );
 						continue;
 					}
 				}
