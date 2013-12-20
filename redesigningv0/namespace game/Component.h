@@ -14,6 +14,7 @@
 
 #include <memory>
 #include "ComponentTypes.h"
+#include "../namespace gen/Pool.h"
 
 namespace game{
 
@@ -42,6 +43,8 @@ namespace game{
 		friend class System;
 		friend class AComponentFactory;
 
+		DCL_POOLELEMENT();
+
 	public:
 
 		//------------------------------------------------------------------------
@@ -49,10 +52,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		Component()
 			:
-			m_type(INVALID_COMPONENTTYPE),
-			m_currentComponentObjectIndex(INVALID_COMPONENTINDEX),
-			m_pObjectOwner(nullptr),
-			m_bDetached(true){}
+		m_iCurrentRosterIndex((unsigned int)-1),
+		m_type(INVALID_COMPONENTTYPE),
+		m_currentComponentObjectIndex(INVALID_COMPONENTINDEX),
+		m_pObjectOwner(nullptr),
+		m_bDetached(true){}
 
 		virtual ~Component(){}
 

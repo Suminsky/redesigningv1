@@ -24,7 +24,7 @@
 #include "../ComponentFactory.h"
 
 namespace gen{
-	template<typename T, unsigned int SIZE>	class Pool;
+	template<typename T>	class Pool;
 }
 namespace game{
 
@@ -38,7 +38,6 @@ namespace game{
 
 		friend class ColorSystem;
 		friend class ColorComponentFactory;
-		template<typename T, unsigned int SIZE> friend class gen::Pool;
 
 	public:
 
@@ -82,8 +81,6 @@ namespace game{
 		DirectX::XMFLOAT4 m_finalColor;
 		DirectX::XMFLOAT4 m_previousFinalColor;
 
-		unsigned int m_iCurrentRosterIndex;
-
 		gen::TreeNode<ColorComponent*> m_node;
 	};
 
@@ -99,9 +96,18 @@ namespace game{
 
 		friend class ColorSystem;
 
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor
+		//------------------------------------------------------------------------
+		ColorComponentFactory(unsigned int maxComponents_p)
+			:
+		m_pool(maxComponents_p){}
+
 	private:
 
-		gen::Pool<ColorComponent, 256> m_pool;
+		gen::Pool<ColorComponent> m_pool;
 
 		//------------------------------------------------------------------------
 		// 

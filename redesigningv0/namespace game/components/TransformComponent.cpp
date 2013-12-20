@@ -8,7 +8,6 @@ using namespace text;
 
 game::TransformComponent::TransformComponent()
 {
-	m_iCurrentRosterIndex = (unsigned int)-1;
 	m_type = COMPONENT_TYPE(TransformComponent);
 
 	m_offset.position = m_local.position =		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);

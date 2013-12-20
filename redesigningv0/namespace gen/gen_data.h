@@ -28,7 +28,7 @@ namespace gen{
 	static void NoOp(T* obj)
 	{
 		obj = obj;
-		(void)0;
+		//(void)0;
 	}
 
 

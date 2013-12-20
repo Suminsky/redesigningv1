@@ -24,7 +24,7 @@
 #include "../../namespace sprite/binders cache/TextureBinders.h"
 
 namespace gen{
-	template<typename T, unsigned int SIZE>	class Pool;
+	template<typename T>	class Pool;
 }
 namespace sprite{
 
@@ -120,7 +120,6 @@ namespace game{
 
 		friend class SpriteAnimationSystem;
 		friend class SpriteAnimationComponentFactory;
-		template<typename T, unsigned int SIZE> friend class gen::Pool;
 
 	public:
 
@@ -178,8 +177,6 @@ namespace game{
 		std::vector<SpriteFrame>					m_vFrames;
 		std::vector<AnimationClip>					m_vClips;
 		std::vector<TextureID_Binder_Pair>			m_vSprites;
-
-		unsigned int m_iCurrentRosterIndex;
 	};
 
 	typedef std::shared_ptr<SpriteAnimationComponent> shared_SpriteAnimationComponent_ptr;
@@ -194,13 +191,13 @@ namespace game{
 
 	public:
 
-		gen::Pool<SpriteAnimationComponent, 256>	  m_pool;
+		gen::Pool<SpriteAnimationComponent>	  m_pool;
 		sprite::SpriteRenderer						* m_pSpriteRenderer;
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		SpriteAnimationComponentFactory( sprite::SpriteRenderer * pSpriteRenderer_p );
+		SpriteAnimationComponentFactory( unsigned int maxComponents_p, sprite::SpriteRenderer * pSpriteRenderer_p );
 
 		//------------------------------------------------------------------------
 		// 

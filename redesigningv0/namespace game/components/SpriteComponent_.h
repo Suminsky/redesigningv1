@@ -27,7 +27,7 @@
 #include "../../namespace sprite/Camera.h"
 
 namespace gen{
-	template<typename T, unsigned int SIZE>	class Pool;
+	template<typename T>	class Pool;
 }
 
 namespace game{
@@ -98,8 +98,6 @@ namespace game{
 		sprite::DrawableCbuffer m_renderData;
 		sprite::BindVSDrawableCBuffer m_VSDrawableCbufferBinder;
 
-		unsigned int m_iCurrentRosterIndex;
-
 		ALLIGN16ONLY;
 	};
 
@@ -118,12 +116,13 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		SpriteComponent_Factory( dx::Device * pDevice_p, sprite::SpriteRenderer * pSpriteRenderer_p )
+		SpriteComponent_Factory( unsigned int maxComponents_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 			:
+		m_pool(maxComponents_p),
 		m_pDeviceRef_p(pDevice_p), m_pRendererRef(pSpriteRenderer_p)
 		{}
 
-		gen::Pool<SpriteComponent_, 256> m_pool;
+		gen::Pool<SpriteComponent_> m_pool;
 		dx::Device * m_pDeviceRef_p;
 		sprite::SpriteRenderer * m_pRendererRef;
 

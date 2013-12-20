@@ -23,7 +23,7 @@
 #include "../ComponentFactory.h"
 
 namespace gen{
-	template<typename T, unsigned int SIZE>	class Pool;
+	template<typename T>	class Pool;
 }
 
 namespace game{
@@ -86,12 +86,8 @@ namespace game{
 	//========================================================================
 	class TransformComponent : public Component{
 
-		//DCL_POOLELEMENT();
-
 		friend class TransformSystem;
 		friend class TransformComponentFactory;
-		//template<typename T, unsigned int SIZE> friend class gen::Pool;
-		DCL_POOLELEMENT();
 
 	public:
 
@@ -151,7 +147,14 @@ namespace game{
 
 	public:
 
-		gen::Pool<TransformComponent, 256> m_pool;
+		//------------------------------------------------------------------------
+		// ctor
+		//------------------------------------------------------------------------
+		TransformComponentFactory(unsigned int maxComponents_p)
+			:
+		m_pool(maxComponents_p){}
+
+		gen::Pool<TransformComponent> m_pool;
 
 		//------------------------------------------------------------------------
 		// 

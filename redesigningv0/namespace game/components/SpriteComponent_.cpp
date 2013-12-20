@@ -15,7 +15,6 @@ using namespace text;
 
 game::SpriteComponent_::SpriteComponent_()
 {
-	m_iCurrentRosterIndex = (unsigned int)-1;
 	m_type = COMPONENT_TYPE(SpriteComponent_);
 }
 
@@ -24,7 +23,6 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	E_BLENDTYPE blendType_p, E_SAMPLERTYPE sampler_p,
 	SpriteRenderer * pSpriteRenderer_p )
 {
-	m_iCurrentRosterIndex = (unsigned int)-1;
 	m_type = COMPONENT_TYPE(SpriteComponent_);
 
 	m_sortKey.intRepresentation = 0LL;

@@ -16,27 +16,14 @@
 // standard includes
 
 // private includes
+#include "Delegate.h"
 
 namespace gen{
 
 	//========================================================================
 	// 
 	//========================================================================
-	class RefCounting{
-
-	private:
-		unsigned int m_iRefCount;
-
-	public:
-
-		RefCounting():m_iRefCount(0){}
-
-		void AddRef(){ ++m_iRefCount; }
-		unsigned int ReleaseRef(){ return --m_iRefCount; }
-	};
-
-
-	template< typename T, unsigned int SIZE >
+	template< typename T >
 	class Pool{
 
 		// NOTE: T needs to have a member of type unsigned int called m_iCurrentRosterIndex, assessable
@@ -55,7 +42,18 @@ namespace gen{
 			//------------------------------------------------------------------------
 			// ctor
 			//------------------------------------------------------------------------
-			Roster(){ ResetRoster(); }
+			Roster( uint size_p )
+				:
+			m_size(size_p){
+
+				m_elements = new RosterElement[size_p];
+
+				ResetRoster(); 
+			}
+			~Roster(){
+
+				delete [] m_elements;
+			}
 
 			//------------------------------------------------------------------------
 			// set the initial indexes that should be in order
@@ -64,15 +62,19 @@ namespace gen{
 
 				m_iFreeIndexesStart = 0;
 
-				for( uint it = 0; it < SIZE; ++it ){
+				for( uint it = 0; it < m_size; ++it ){
 
 					m_elements[it].iPoolIndex = it;
 					m_elements[it].nTimesFree = 0;
 				}
 			}
 
+			
 			uint m_iFreeIndexesStart;
-			RosterElement m_elements[SIZE];			
+			RosterElement * m_elements;
+
+		private:
+			uint m_size;
 		};
 
 	public:
@@ -87,9 +89,9 @@ namespace gen{
 			//------------------------------------------------------------------------
 			// ctor
 			//------------------------------------------------------------------------
-			PoolAccessor( T pPool_p[], Roster * pRoster_p )
+			PoolAccessor( T * pPool_p, Roster * pRoster_p )
 				:
-			m_pPoolRef((T(*)[SIZE])pPool_p),
+			m_pPoolRef(pPool_p),
 			m_pRosterRef(pRoster_p)
 			{}
 
@@ -100,7 +102,7 @@ namespace gen{
 
 				assert( it_p < m_pRosterRef->m_iFreeIndexesStart );
 
-				return &(*m_pPoolRef)[ m_pRosterRef->m_elements[it_p].iPoolIndex ];
+				return &m_pPoolRef[ m_pRosterRef->m_elements[it_p].iPoolIndex ];
 			}
 
 			//------------------------------------------------------------------------
@@ -110,7 +112,7 @@ namespace gen{
 
 		private:
 
-			T (*m_pPoolRef)[SIZE];
+			T * m_pPoolRef;
 			Roster * m_pRosterRef;
 
 			//------------------------------------------------------------------------
@@ -120,114 +122,24 @@ namespace gen{
 		};
 
 		//------------------------------------------------------------------------
-		// shared intrusive pool pointer
-		//------------------------------------------------------------------------
-		class pool_ptr{
-
-			T * pData; // must have a RefCounting (and be accessible to pool_ptr), use the helper macro DCL_POOLELEMENT
-			Pool * pPoolRef;
-
-		public:
-
-			//------------------------------------------------------------------------
-			// ctor
-			//------------------------------------------------------------------------
-			pool_ptr( const Pool & pool_p )
-				:
-			pPoolRef(&pool_p), pData(nullptr){}
-
-			//------------------------------------------------------------------------
-			// cpy ctor
-			//------------------------------------------------------------------------
-			pool_ptr( const pool_ptr & other_p ){
-
-				pData = other_p.pData;
-				pPoolRef = other_p.pPoolRef;
-
-				pData->m_refCount.AddRef();
-			}
-
-			//------------------------------------------------------------------------
-			// dctor
-			//------------------------------------------------------------------------
-			~pool_ptr(){
-
-				if( pData ){
-
-					if( !pData->m_refCount->ReleaseRef() ){
-
-						pPoolRef->Free( pData );
-					}
-				}
-			}
-
-			//------------------------------------------------------------------------
-			// 
-			//------------------------------------------------------------------------
-			void New(){
-
-				assert( !pData );
-
-				pData = pPoolRef->Allocate();
-				pData->m_refCount->AddRef();
-			}
-			void Release(){
-
-				assert( pData );
-
-				if( !pData->m_refCount->ReleaseRef() ){
-
-					pPoolRef->Free( pData );
-				}
-
-				pData = nullptr;
-			}
-
-			//------------------------------------------------------------------------
-			// 
-			//------------------------------------------------------------------------
-			T* Get(){
-
-				return pData;
-			}
-
-			//------------------------------------------------------------------------
-			// assignment
-			//------------------------------------------------------------------------
-			pool_ptr & operator = ( const pool_ptr & other_p ){
-
-				// release if already holding data
-
-				if( pData ){
-
-					if( !pData->m_refCount->ReleaseRef() ){
-
-						pPoolRef->Free( pData );
-					}
-				}
-
-				// assert from same pool? TODO
-
-				pData = other_p.pData;
-				pPoolRef = other_p.pPoolRef;
-
-				pData->m_refCount.AddRef();
-
-				return *this;
-			}
-		};
-
-		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		Pool(){
+		Pool( uint size_p )
+			:
+		m_roster(size_p), m_size(size_p){
 
-			for( uint it = 0; it < SIZE;++it ){
+			m_pool = new T[m_size];
+
+			for( uint it = 0; it < m_size;++it ){
 
 				m_pool[it].m_iCurrentRosterIndex = it;
 			}
 
 			// NOTE: a reset pool method would need to default initialize each member
+		}
+		~Pool(){
+
+			delete [] m_pool;
 		}
 
 		//------------------------------------------------------------------------
@@ -235,7 +147,7 @@ namespace gen{
 		//------------------------------------------------------------------------
 		T* Allocate(){
 
-			assert( m_roster.m_iFreeIndexesStart < SIZE );
+			assert( m_roster.m_iFreeIndexesStart < m_size );
 
 			return &m_pool[m_roster.m_elements[m_roster.m_iFreeIndexesStart++].iPoolIndex];
 		}
@@ -282,14 +194,127 @@ namespace gen{
 
 	private:
 		
+		uint m_size;
 		Roster m_roster;
-		T m_pool[SIZE];
+		T * m_pool;
 	};
 
-#define DCL_POOLELEMENT()\
-	template<typename T, unsigned int SIZE> friend class gen::Pool;\
-	template<typename T, unsigned int SIZE> friend class gen::Pool<T, SIZE>::pool_ptr;\
-	RefCounting m_refCount;\
-	unsigned int m_iCurrentRosterIndex
+	//========================================================================
+	// 
+	//========================================================================
+	class RefCounting{
 
+	private:
+		unsigned int m_iRefCount;
+
+	public:
+
+		RefCounting():m_iRefCount(0){}
+
+		void AddRef(){ ++m_iRefCount; }
+		unsigned int ReleaseRef(){ return --m_iRefCount; }
+	};
+
+	//========================================================================
+	// shared intrusive pool pointer
+	//========================================================================
+	template< typename T >
+	class pool_ptr{
+
+		T * pData; // must have a RefCounting (and be accessible to pool_ptr), use the helper macro DCL_POOLELEMENT
+		Delegate1Param<const T*> deleter;
+
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor
+		//------------------------------------------------------------------------
+		pool_ptr()
+			:
+		pData(nullptr){}
+
+		//------------------------------------------------------------------------
+		// cpy ctor
+		//------------------------------------------------------------------------
+		pool_ptr( const pool_ptr & other_p ){
+
+			pData = other_p.pData;
+			deleter = other_p.deleter;
+
+			pData->m_refCount.AddRef();
+		}
+
+		//------------------------------------------------------------------------
+		// dctor
+		//------------------------------------------------------------------------
+		~pool_ptr(){
+
+			if( pData ){
+
+				if( !pData->m_refCount->ReleaseRef() ){
+
+					deleter( pData );
+				}
+			}
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void New( Pool<T> * pPool_p ){
+
+			assert( !pData );
+
+			pData = pPool_p->Allocate();
+			deleter.Set<Pool<T>, Pool<T>::Free>( Pool );
+
+			pData->m_refCount->AddRef();
+		}
+		void Release(){
+
+			assert( pData );
+
+			if( !pData->m_refCount->ReleaseRef() ){
+
+				deleter( pData );
+			}
+
+			pData = nullptr;
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		T* Get(){
+
+			return pData;
+		}
+
+		//------------------------------------------------------------------------
+		// assignment
+		//------------------------------------------------------------------------
+		pool_ptr & operator = ( const pool_ptr & other_p ){
+
+			// release if already holding data
+
+			if( pData ){
+
+				if( !pData->m_refCount->ReleaseRef() ){
+
+					deleter( pData );
+				}
+			}
+
+			pData = other_p.pData;
+			pData->m_refCount.AddRef();
+
+			return *this;
+		}
+	};
 }
+
+#define DCL_POOLELEMENT()\
+	template<typename T> friend class gen::Pool;\
+	template<typename T> friend class gen::pool_ptr;\
+	gen::RefCounting	m_refCount;\
+	unsigned int		m_iCurrentRosterIndex

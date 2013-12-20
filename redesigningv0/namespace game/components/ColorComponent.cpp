@@ -7,7 +7,6 @@ using namespace text;
 
 game::ColorComponent::ColorComponent()
 {
-	m_iCurrentRosterIndex = (unsigned int)-1;
 	m_type = COMPONENT_TYPE(ColorComponent);
 
 	m_worldColor = m_previousFinalColor = m_offsetColor = m_localColor = DirectX::XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );

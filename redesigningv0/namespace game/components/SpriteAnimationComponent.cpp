@@ -10,7 +10,6 @@ using namespace text;
 
 game::SpriteAnimationComponent::SpriteAnimationComponent()
 {
-	m_iCurrentRosterIndex = (unsigned int)-1;
 	m_type = COMPONENT_TYPE(SpriteAnimationComponent);
 
 	m_iPreviousClip = m_iCurrentClip = 0;
@@ -160,8 +159,9 @@ void game::SpriteAnimationComponent::SetClipFrame( unsigned int frameIndex_p )
 //========================================================================
 // 
 //========================================================================
-game::SpriteAnimationComponentFactory::SpriteAnimationComponentFactory( sprite::SpriteRenderer * pSpriteRenderer_p )
+game::SpriteAnimationComponentFactory::SpriteAnimationComponentFactory( unsigned int maxComponents_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 	:
+m_pool(maxComponents_p),
 m_pSpriteRenderer(pSpriteRenderer_p)
 {
 
