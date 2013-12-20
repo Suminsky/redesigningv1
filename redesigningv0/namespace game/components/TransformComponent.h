@@ -86,9 +86,12 @@ namespace game{
 	//========================================================================
 	class TransformComponent : public Component{
 
+		//DCL_POOLELEMENT();
+
 		friend class TransformSystem;
 		friend class TransformComponentFactory;
-		template<typename T, unsigned int SIZE> friend class gen::Pool;
+		//template<typename T, unsigned int SIZE> friend class gen::Pool;
+		DCL_POOLELEMENT();
 
 	public:
 
@@ -131,7 +134,7 @@ namespace game{
 
 		bool m_bSnap; // hack
 
-		unsigned int m_iCurrentRosterIndex;
+		//unsigned int m_iCurrentRosterIndex;
 
 		gen::TreeNode<TransformComponent*> m_node;
 	};

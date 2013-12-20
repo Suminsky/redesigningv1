@@ -19,6 +19,22 @@
 
 namespace gen{
 
+	//========================================================================
+	// 
+	//========================================================================
+	class RefCounting{
+
+	private:
+		unsigned int m_iRefCount;
+
+	public:
+
+		RefCounting():m_iRefCount(0){}
+
+		void AddRef(){ ++m_iRefCount; }
+		unsigned int ReleaseRef(){ return --m_iRefCount; }
+	};
+
 
 	template< typename T, unsigned int SIZE >
 	class Pool{
@@ -28,9 +44,6 @@ namespace gen{
 
 		typedef unsigned int uint;
 
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
 		struct Roster{
 
 			struct RosterElement{
@@ -64,20 +77,17 @@ namespace gen{
 
 	public:
 
-		class PoolAccess;
-		friend class PoolAccess;
-
 		//------------------------------------------------------------------------
-		// 
+		// sorta like an iterator..but it doesnt hold a "current"
 		//------------------------------------------------------------------------
-		class PoolAccess{
+		class PoolAccessor{
 
 		public:
 
 			//------------------------------------------------------------------------
 			// ctor
 			//------------------------------------------------------------------------
-			PoolAccess( T pPool_p[], Roster * pRoster_p )
+			PoolAccessor( T pPool_p[], Roster * pRoster_p )
 				:
 			m_pPoolRef((T(*)[SIZE])pPool_p),
 			m_pRosterRef(pRoster_p)
@@ -106,7 +116,105 @@ namespace gen{
 			//------------------------------------------------------------------------
 			// prevents warning
 			//------------------------------------------------------------------------
-			//void operator = (const PoolAccess &);
+			//void operator = (const PoolAccessor &);
+		};
+
+		//------------------------------------------------------------------------
+		// shared intrusive pool pointer
+		//------------------------------------------------------------------------
+		class pool_ptr{
+
+			T * pData; // must have a RefCounting (and be accessible to pool_ptr), use the helper macro DCL_POOLELEMENT
+			Pool * pPoolRef;
+
+		public:
+
+			//------------------------------------------------------------------------
+			// ctor
+			//------------------------------------------------------------------------
+			pool_ptr( const Pool & pool_p )
+				:
+			pPoolRef(&pool_p), pData(nullptr){}
+
+			//------------------------------------------------------------------------
+			// cpy ctor
+			//------------------------------------------------------------------------
+			pool_ptr( const pool_ptr & other_p ){
+
+				pData = other_p.pData;
+				pPoolRef = other_p.pPoolRef;
+
+				pData->m_refCount.AddRef();
+			}
+
+			//------------------------------------------------------------------------
+			// dctor
+			//------------------------------------------------------------------------
+			~pool_ptr(){
+
+				if( pData ){
+
+					if( !pData->m_refCount->ReleaseRef() ){
+
+						pPoolRef->Free( pData );
+					}
+				}
+			}
+
+			//------------------------------------------------------------------------
+			// 
+			//------------------------------------------------------------------------
+			void New(){
+
+				assert( !pData );
+
+				pData = pPoolRef->Allocate();
+				pData->m_refCount->AddRef();
+			}
+			void Release(){
+
+				assert( pData );
+
+				if( !pData->m_refCount->ReleaseRef() ){
+
+					pPoolRef->Free( pData );
+				}
+
+				pData = nullptr;
+			}
+
+			//------------------------------------------------------------------------
+			// 
+			//------------------------------------------------------------------------
+			T* Get(){
+
+				return pData;
+			}
+
+			//------------------------------------------------------------------------
+			// assignment
+			//------------------------------------------------------------------------
+			pool_ptr & operator = ( const pool_ptr & other_p ){
+
+				// release if already holding data
+
+				if( pData ){
+
+					if( !pData->m_refCount->ReleaseRef() ){
+
+						pPoolRef->Free( pData );
+					}
+				}
+
+				// assert from same pool? TODO
+
+				pData = other_p.pData;
+				pPoolRef = other_p.pPoolRef;
+
+				pData->m_refCount.AddRef();
+
+				return *this;
+			}
 		};
 
 		//------------------------------------------------------------------------
@@ -167,9 +275,9 @@ namespace gen{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		PoolAccess GetAccess(){
+		inline PoolAccessor GetAccess(){
 
-			return PoolAccess(m_pool, &m_roster);
+			return PoolAccessor(m_pool, &m_roster);
 		}
 
 	private:
@@ -177,4 +285,11 @@ namespace gen{
 		Roster m_roster;
 		T m_pool[SIZE];
 	};
+
+#define DCL_POOLELEMENT()\
+	template<typename T, unsigned int SIZE> friend class gen::Pool;\
+	template<typename T, unsigned int SIZE> friend class gen::Pool<T, SIZE>::pool_ptr;\
+	RefCounting m_refCount;\
+	unsigned int m_iCurrentRosterIndex
+
 }

@@ -35,7 +35,7 @@ namespace game{
 
 	private:
 
-		gen::Pool<TransformComponent, 256>::PoolAccess m_poolAccess;
+		gen::Pool<TransformComponent, 256>::PoolAccessor m_poolAccess;
 
 		//------------------------------------------------------------------------
 		// 

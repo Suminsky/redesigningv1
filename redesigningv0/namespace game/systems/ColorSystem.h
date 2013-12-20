@@ -38,7 +38,7 @@ namespace game{
 	
 	private:
 
-		gen::Pool<ColorComponent, 256>::PoolAccess m_poolAccess;
+		gen::Pool<ColorComponent, 256>::PoolAccessor m_poolAccess;
 
 		//------------------------------------------------------------------------
 		// get pool

@@ -36,7 +36,7 @@ namespace game{
 
 	private:
 
-		gen::Pool<SpriteAnimationComponent, 256>::PoolAccess m_poolAccess;
+		gen::Pool<SpriteAnimationComponent, 256>::PoolAccessor m_poolAccess;
 
 		//------------------------------------------------------------------------
 		// 

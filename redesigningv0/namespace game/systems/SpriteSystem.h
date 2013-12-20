@@ -37,7 +37,7 @@ namespace game{
 
 	private:
 
-		gen::Pool<SpriteComponent_, 256>::PoolAccess m_poolAccess;
+		gen::Pool<SpriteComponent_, 256>::PoolAccessor m_poolAccess;
 		sprite::SpriteRenderer * m_pSpriteRendererRef;
 		sprite::Camera * m_pCameraRef;
 
