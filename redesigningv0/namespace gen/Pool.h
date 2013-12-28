@@ -14,6 +14,7 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
+#include <assert.h>
 
 // private includes
 #include "Delegate.h"
@@ -176,7 +177,34 @@ namespace gen{
 
 			// "pop"
 
-			--m_iFreeIndexesStart;
+			--m_roster.m_iFreeIndexesStart;
+		}
+		//------------------------------------------------------------------------
+		// hackish solution for having the same type for the delegate on
+		// pool_ptr
+		//------------------------------------------------------------------------
+		void Free( const void* pT_p ){
+
+			uint iRosterIndex_p = ((T*)pT_p)->m_iCurrentRosterIndex;
+			assert( iRosterIndex_p < m_roster.m_iFreeIndexesStart );
+
+
+			uint iRosterIndexLastAllocated = m_roster.m_iFreeIndexesStart-1;
+
+			// swap given rooster element with last allocated element, update pool element roster index
+
+			Roster::RosterElement lastAllocated = m_roster.m_elements[iRosterIndexLastAllocated];
+
+			m_roster.m_elements[iRosterIndexLastAllocated] = m_roster.m_elements[iRosterIndex_p];
+			++m_roster.m_elements[iRosterIndexLastAllocated].nTimesFree;
+			m_pool[m_roster.m_elements[iRosterIndexLastAllocated].iPoolIndex].m_iCurrentRosterIndex = iRosterIndexLastAllocated;
+
+			m_roster.m_elements[iRosterIndex_p] = lastAllocated;
+			m_pool[m_roster.m_elements[iRosterIndex_p].iPoolIndex].m_iCurrentRosterIndex = iRosterIndex_p;
+
+			// "pop"
+
+			--m_roster.m_iFreeIndexesStart;
 		}
 
 		//------------------------------------------------------------------------
@@ -221,17 +249,42 @@ namespace gen{
 	template< typename T >
 	class pool_ptr{
 
+		template<typename U> friend class pool_ptr;
+
 		T * pData; // must have a RefCounting (and be accessible to pool_ptr), use the helper macro DCL_POOLELEMENT
-		Delegate1Param<const T*> deleter;
+		Delegate1Param<const void*> deleter;
 
 	public:
 
 		//------------------------------------------------------------------------
-		// ctor
+		// def ctor
 		//------------------------------------------------------------------------
 		pool_ptr()
 			:
 		pData(nullptr){}
+
+		//------------------------------------------------------------------------
+		// new up ctor
+		//------------------------------------------------------------------------
+		explicit pool_ptr( Pool<T> * pPool_p ){
+
+			pData = pPool_p->Allocate();
+			deleter.Set<Pool<T>, &Pool<T>::Free>( pPool_p );
+
+			pData->m_refCount.AddRef();
+		}
+
+		//------------------------------------------------------------------------
+		// generalized new up ctor
+		//------------------------------------------------------------------------
+		template< typename U >
+		pool_ptr( Pool<U> & pool_p ){
+
+			pData = (T*)pool_p.Allocate();
+			deleter.Set<Pool<U>, &Pool<U>::Free>( &pool_p );
+
+			pData->m_refCount.AddRef();
+		}
 
 		//------------------------------------------------------------------------
 		// cpy ctor
@@ -239,6 +292,17 @@ namespace gen{
 		pool_ptr( const pool_ptr & other_p ){
 
 			pData = other_p.pData;
+			deleter = other_p.deleter;
+
+			pData->m_refCount.AddRef();
+		}
+		//------------------------------------------------------------------------
+		// generalized cpy ctor
+		//------------------------------------------------------------------------
+		template< typename U >		
+		pool_ptr( const pool_ptr<U> & other_p ){
+
+			pData = (T*)other_p.Get();
 			deleter = other_p.deleter;
 
 			pData->m_refCount.AddRef();
@@ -251,43 +315,11 @@ namespace gen{
 
 			if( pData ){
 
-				if( !pData->m_refCount->ReleaseRef() ){
+				if( !pData->m_refCount.ReleaseRef() ){
 
 					deleter( pData );
 				}
 			}
-		}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		void New( Pool<T> * pPool_p ){
-
-			assert( !pData );
-
-			pData = pPool_p->Allocate();
-			deleter.Set<Pool<T>, Pool<T>::Free>( Pool );
-
-			pData->m_refCount->AddRef();
-		}
-		void Release(){
-
-			assert( pData );
-
-			if( !pData->m_refCount->ReleaseRef() ){
-
-				deleter( pData );
-			}
-
-			pData = nullptr;
-		}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		T* Get(){
-
-			return pData;
 		}
 
 		//------------------------------------------------------------------------
@@ -299,16 +331,81 @@ namespace gen{
 
 			if( pData ){
 
-				if( !pData->m_refCount->ReleaseRef() ){
+				if( !pData->m_refCount.ReleaseRef() ){
 
 					deleter( pData );
 				}
 			}
 
 			pData = other_p.pData;
+			deleter = other_p.deleter;
+
 			pData->m_refCount.AddRef();
 
 			return *this;
+		}
+		//------------------------------------------------------------------------
+		// generalized assignment
+		//------------------------------------------------------------------------	
+		template< typename U >
+		pool_ptr & operator = ( const pool_ptr<U> & other_p ){
+
+			// release if already holding data
+
+			if( pData ){
+
+				if( !pData->m_refCount.ReleaseRef() ){
+
+					deleter( pData );
+				}
+			}
+
+			pData = (T*)other_p.Get();
+			deleter = other_p.deleter;
+
+			pData->m_refCount.AddRef();
+
+			return *this;
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void New( Pool<T> * pPool_p ){
+
+			assert( !pData );
+
+			pData = pPool_p->Allocate();
+			deleter.Set<Pool<T>, &Pool<T>::Free>( pPool_p );
+
+			pData->m_refCount.AddRef();
+		}
+		void Release(){
+
+			assert( pData );
+
+			if( !pData->m_refCount.ReleaseRef() ){
+
+				deleter( pData );
+			}
+
+			pData = nullptr;
+		}
+
+		//------------------------------------------------------------------------
+		// getters
+		//------------------------------------------------------------------------
+		T* Get(){ return pData;	}
+		T* Get()const{ return pData;	}
+		T* operator ->(){ return pData; }
+		T* operator ->() const { return pData; }
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		operator bool() const{
+
+			return pData != nullptr;
 		}
 	};
 }

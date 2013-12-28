@@ -3,7 +3,7 @@
 using namespace game;
 
 template< typename DerivedComponent >
-void game::ComponentFactories::RegisterFactory( const shared_AComponentFactory_ptr & pFactory_p )
+void game::ComponentFactory::RegisterFactory( const shared_AComponentFactory_ptr & pFactory_p )
 {
 	assert( m_registry.emplace( std::make_pair( COMPONENT_TYPE(DerivedComponent), pFactory_p) ).second );
 	assert( m_nameToType.emplace( std::make_pair( COMPONENT_NAME(DerivedComponent), COMPONENT_TYPE(DerivedComponent) ) ).second );
@@ -13,7 +13,7 @@ void game::ComponentFactories::RegisterFactory( const shared_AComponentFactory_p
 }
 
 template< typename DerivedComponent >
-std::shared_ptr<DerivedComponent> game::ComponentFactories::CreateComponent()
+gen::pool_ptr<DerivedComponent> game::ComponentFactory::CreateComponent()
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 
@@ -21,11 +21,11 @@ std::shared_ptr<DerivedComponent> game::ComponentFactories::CreateComponent()
 
 	shared_AComponentFactory_ptr & pFactory = itFound->second;
 
-	return  static_pointer_cast<DerivedComponent>(pFactory->VCreateComponent());
+	return  pFactory->VCreateComponent();
 }
 
 template< typename DerivedComponent >
-std::shared_ptr<DerivedComponent> game::ComponentFactories::CreateComponent( text::GfigElementA * pGFig_p )
+gen::pool_ptr<DerivedComponent> game::ComponentFactory::CreateComponent( text::GfigElementA * pGFig_p )
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 
@@ -33,11 +33,11 @@ std::shared_ptr<DerivedComponent> game::ComponentFactories::CreateComponent( tex
 
 	shared_AComponentFactory_ptr & pFactory = itFound->second;
 
-	return static_pointer_cast<DerivedComponent>(pFactory->VCreateComponent( pGFig_p ));
+	return pFactory->VCreateComponent( pGFig_p );
 }
 
 template< typename DerivedComponent >
-shared_AComponentFactory_ptr game::ComponentFactories::GetComponentFactory()
+shared_AComponentFactory_ptr game::ComponentFactory::GetComponentFactory()
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 

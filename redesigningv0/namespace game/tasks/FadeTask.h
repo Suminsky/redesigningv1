@@ -37,9 +37,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Set( float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
-		void Set( float * fValueToFade_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
-		void Set( const shared_Task_ptr & pChainedTask_p, float & fValueToFade_p, float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set(	float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set(	float * fValueToFade_p,
+					float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
+		void Set(	const shared_Task_ptr & pChainedTask_p, float & fValueToFade_p,
+					float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
 
 	private:
 

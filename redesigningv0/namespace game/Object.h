@@ -40,7 +40,7 @@ namespace game{
 	typedef unsigned int OBJECTINDEX;
 	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
 	
-	typedef std::vector<shared_Component_ptr> ObjectComponents;
+	typedef std::vector<pool_Component_ptr> ObjectComponents;
 	typedef std::vector<COMPONENTINDEX> ComponentIndexes;
 
 	//========================================================================
@@ -63,15 +63,17 @@ namespace game{
 			m_pObjMachineOwner(nullptr),
 			m_bDettached(true){}
 
-		virtual ~Object(){}
+		virtual ~Object(){
+			BREAKHERE;
+		}
 
 		//------------------------------------------------------------------------
 		// component stuff
 		//------------------------------------------------------------------------
-		void AttachComponent( shared_Component_ptr && pComponent_p );
-		void AttachComponent( const shared_Component_ptr & pComponent_p );
+		void AttachComponent( pool_Component_ptr && pComponent_p );
+		void AttachComponent( const pool_Component_ptr & pComponent_p );
 		void DettachComponent( COMPONENTINDEX componentCurrentIndex_p );
-		void DettachComponent( const shared_Component_ptr & pComponent_p );
+		void DettachComponent( const pool_Component_ptr & pComponent_p );
 		void DettachComponent( const Component * pComponent_p );
 
 		//------------------------------------------------------------------------
@@ -89,8 +91,9 @@ namespace game{
 		ObjectComponents & GetComponents(){	return m_components; }
 		bool IsAttached() const { return !m_bDettached; }
 
+		// TODO: this method used to return WEAK ptr
 		template< typename DerivedComponent >
-		std::weak_ptr<DerivedComponent> GetFirstOfComponent(){
+		gen::pool_ptr<DerivedComponent> GetFirstOfComponent(){
 
 			for( int it = 0, iSize = (int)m_components.size();
 		         it < iSize;
@@ -98,11 +101,11 @@ namespace game{
 
 				if( m_components[it]->GetType() == COMPONENT_TYPE(DerivedComponent) ){
 				
-					return std::static_pointer_cast<DerivedComponent>(m_components[it]);
+					return m_components[it];
 				}
 			}
 
-			return std::weak_ptr<DerivedComponent>();
+			return gen::pool_ptr<DerivedComponent>();
 		}
 
 	protected:

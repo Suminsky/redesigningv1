@@ -6,7 +6,7 @@ using namespace game;
 void game::ColorSystem::VOnInit()
 {
 	shared_ColorComponentFactory_ptr pColorFactory = std::static_pointer_cast<ColorComponentFactory>(
-		m_pSysMachineOwner->GetLayer()->m_componentFactories.GetComponentFactory<ColorComponent>()
+		m_pSysMachineOwner->GetLayer()->m_componentFactory.GetComponentFactory<ColorComponent>()
 		);
 
 	m_poolAccess = pColorFactory->m_pool.GetAccess();

@@ -40,7 +40,7 @@ namespace game{
 		DirectX::XMFLOAT4 qRotation;
 		DirectX::XMFLOAT4 scale;
 
-		DirectX::XMFLOAT4X4 DeriveMatrix(){
+		DirectX::XMFLOAT4X4 DeriveMatrix_f4x4(){
 
 			DirectX::XMFLOAT4X4 mTrafo;
 
@@ -54,6 +54,16 @@ namespace game{
 			);
 
 			return mTrafo;
+		}
+		DirectX::XMMATRIX DeriveMatrix(){
+
+			return
+
+			DirectX::XMMatrixAffineTransformation(	DirectX::XMLoadFloat4(&scale),
+													DirectX::g_XMZero,
+													DirectX::XMLoadFloat4(&qRotation),
+													DirectX::XMLoadFloat4(&position)
+													);
 		}
 
 		void FromMatrix( const DirectX::XMFLOAT4X4 & mTransform_p ){
@@ -111,18 +121,16 @@ namespace game{
 		//------------------------------------------------------------------------
 		void AddChild( TransformComponent * pTrafo_p );
 		void RemoveChild( TransformComponent * pTrafo_p );
-		void Snap(){
-
-			m_bSnap = true;
-		}
-		bool GonnaSnap()const{return m_bSnap;}
-
-	private:
+		void Snap(){ m_bSnap = true; }
+		bool GonnaSnap()const{ return m_bSnap; }
 
 		//------------------------------------------------------------------------
 		// stores local * parent world and offset * world
 		//------------------------------------------------------------------------
 		void UpdateWorldAndFinalTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p );
+		void UpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p );
+
+	private:
 
 		DirectX::XMFLOAT4X4 m_world; // local * parent world
 		DirectX::XMFLOAT4X4 m_previousFinal;
@@ -135,6 +143,7 @@ namespace game{
 		gen::TreeNode<TransformComponent*> m_node;
 	};
 
+	typedef gen::pool_ptr<TransformComponent> pool_TransformCompo_ptr;
 	typedef std::shared_ptr<TransformComponent> shared_TransformComponent_ptr;
 	typedef std::weak_ptr<TransformComponent> weak_TransformComponent_ptr;
 
@@ -165,8 +174,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		virtual shared_Component_ptr VCreateComponent();
-		virtual shared_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		virtual pool_Component_ptr VCreateComponent();
+		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 
 	};
 

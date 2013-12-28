@@ -14,6 +14,8 @@ game::TransformComponent::TransformComponent()
 	m_offset.qRotation = m_local.qRotation =	XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_offset.scale = m_local.scale =			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
+	m_bSnap = true;
+
 	UpdateWorldAndFinalTransformation( m_local.DeriveMatrix() );
 
 	m_node.SetData(this);
@@ -25,11 +27,8 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMFLOAT4
 
 	// create matrices
 
-	XMFLOAT4X4 local = m_local.DeriveMatrix();
-	XMMATRIX mLocal = XMLoadFloat4x4( &local );
-
-	XMFLOAT4X4 offset = m_offset.DeriveMatrix();
-	XMMATRIX mOffset = XMLoadFloat4x4( &offset );
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
 
 	XMMATRIX mParentWorld = XMLoadFloat4x4( &mParentWorldTrafo_p );
 
@@ -41,6 +40,28 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMFLOAT4
 	// final
 
 	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
+
+	// TODO: move snapping to here
+}
+void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMMATRIX & mParentWorldTrafo_p )
+{
+	m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	// world
+
+	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorldTrafo_p );
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+
+	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
+
+	// TODO: move snapping to here
 }
 
 void game::TransformComponent::AddChild( TransformComponent * pTrafo_p )
@@ -56,14 +77,15 @@ void game::TransformComponent::RemoveChild( TransformComponent * pTrafo_p )
 //========================================================================
 // 
 //========================================================================
-game::shared_Component_ptr game::TransformComponentFactory::VCreateComponent()
+game::pool_Component_ptr game::TransformComponentFactory::VCreateComponent()
 {
-	return MAKE_STACK_SHAREDPTR( TransformComponent, m_pool.Allocate() );
+	return pool_Component_ptr(m_pool);
 }
 
-shared_Component_ptr TransformComponentFactory::VCreateComponent( GfigElementA * pGFig_p )
+pool_Component_ptr TransformComponentFactory::VCreateComponent( GfigElementA * pGFig_p )
 {
-	TransformComponent * pTransform = m_pool.Allocate();
+	//TransformComponent * pTransform = m_pool.Allocate();
+	gen::pool_ptr<TransformComponent> pTransform( m_pool );
 
 	GfigElementA * pParam = nullptr;
 
@@ -82,13 +104,18 @@ shared_Component_ptr TransformComponentFactory::VCreateComponent( GfigElementA *
 		pTransform->m_local = GetTrafoFromGfig( pGFig_p );
 	}	
 
-	XMFLOAT4X4 moffset = pTransform->m_offset.DeriveMatrix(); XMFLOAT4X4 mlocal = pTransform->m_local.DeriveMatrix();
-	XMMATRIX mFinal = XMMatrixMultiply( XMLoadFloat4x4(&moffset), XMLoadFloat4x4(&mlocal) );
+	//XMFLOAT4X4 moffset = pTransform->m_offset.DeriveMatrix(); XMFLOAT4X4 mlocal = pTransform->m_local.DeriveMatrix();
+	XMMATRIX mFinal = XMMatrixMultiply( pTransform->m_offset.DeriveMatrix(), pTransform->m_local.DeriveMatrix() );
 
 	XMStoreFloat4x4( &pTransform->m_final, mFinal );
 	pTransform->m_previousFinal = pTransform->m_final;
 
-	return MAKE_STACK_SHAREDPTR( TransformComponent, pTransform );
+	//return MAKE_STACK_SHAREDPTR( TransformComponent, pTransform );
+	/*pool_Component_ptr ptr;
+	ptr = pTransform;
+	return ptr;*/
+
+	return pTransform;
 }
 
 Trafo TransformComponentFactory::GetTrafoFromGfig( GfigElementA * pGFig_p )

@@ -52,10 +52,10 @@ namespace game{
 		bool m_bActive; bool m_bVisible;
 		Timer<double> m_timer;
 
-		ObjectMachine m_objects;
+		
 		SystemMachine m_systems;
-		ComponentFactories m_componentFactories;
-
+		ComponentFactory m_componentFactory;
+		ObjectMachine m_objects;
 
 		//------------------------------------------------------------------------
 		// ctor/dctor

@@ -4,7 +4,7 @@ using namespace game;
 using namespace DirectX;
 
 template< typename DELEGATE_PARAM >
-game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p,
+game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p,
 															XMFLOAT4 uvHover_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */,
 															Delegate1Param callBack_p )
 	: m_pSpriteCompoRef(pSpriteCompo_p)
@@ -26,12 +26,56 @@ game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const share
 }
 
 template< typename DELEGATE_PARAM >
-game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const shared_SpriteComponent_ptr & pSpriteCompo_p,
+game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p,
 															XMFLOAT4 uvHover_p, XMFLOAT4 uvPressed_p, float wBorder_p /*= 0.0f*/, float hBorder_p /*= 0.0f */,
 															Delegate1Param callBack_p )
 	: m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
+
+	m_ID = iID_p;
+
+	m_uv_Normal = pSpriteCompo_p->m_renderData.m_uvRect;
+	m_uv_Hover = uvHover_p;
+	m_uv_Pressed = uvPressed_p;
+
+	m_borderGap.x = wBorder_p;
+	m_borderGap.y = hBorder_p;
+
+	m_eState = E_STATE_NORMAL;
+
+	m_OnClickCallback = callBack_p;
+}
+template< typename DELEGATE_PARAM >
+void game::ButtonComponent< DELEGATE_PARAM >::Init(	int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p,
+													DirectX::XMFLOAT4 uvHover_p, float wBorder_p, float hBorder_p,
+													Delegate1Param callBack_p ){
+
+	assert(pSpriteCompo_p);
+
+	 m_pSpriteCompoRef = pSpriteCompo_p;
+
+	m_ID = iID_p;
+
+	m_uv_Normal = pSpriteCompo_p->m_renderData.m_uvRect;
+	m_uv_Hover = uvHover_p;
+	m_uv_Pressed = uvHover_p;
+
+	m_borderGap.x = wBorder_p;
+	m_borderGap.y = hBorder_p;
+
+	m_eState = E_STATE_NORMAL;
+
+	m_OnClickCallback = callBack_p;
+}
+template< typename DELEGATE_PARAM >
+void game::ButtonComponent< DELEGATE_PARAM >::Init(	int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p,
+													DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p, float hBorder_p,
+													Delegate1Param callBack_p){
+
+	assert(pSpriteCompo_p);
+
+	 m_pSpriteCompoRef = pSpriteCompo_p;
 
 	m_ID = iID_p;
 

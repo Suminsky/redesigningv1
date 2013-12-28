@@ -29,9 +29,10 @@ void game::ColorComponent::UpdateWorldAndFinalColor( const DirectX::XMFLOAT4 & p
 //========================================================================
 // 
 //========================================================================
-game::shared_Component_ptr game::ColorComponentFactory::VCreateComponent( text::GfigElementA * pGFig_p )
+game::pool_Component_ptr game::ColorComponentFactory::VCreateComponent( text::GfigElementA * pGFig_p )
 {
-	ColorComponent * pColor = m_pool.Allocate();
+	//ColorComponent * pColor = m_pool.Allocate();
+	pool_ColorCompo_ptr pColor(m_pool);
 
 	text::GfigElementA * pParam = nullptr;
 
@@ -55,7 +56,7 @@ game::shared_Component_ptr game::ColorComponentFactory::VCreateComponent( text::
 	XMStoreFloat4( &pColor->m_finalColor, vFinal );
 	pColor->m_previousFinalColor = pColor->m_finalColor;
 
-	return MAKE_STACK_SHAREDPTR( ColorComponent, pColor );
+	return pColor;//MAKE_STACK_SHAREDPTR( ColorComponent, pColor );
 }
 
 XMFLOAT4 ColorComponentFactory::GetRGBAFromGfig( GfigElementA * pGFig_p )

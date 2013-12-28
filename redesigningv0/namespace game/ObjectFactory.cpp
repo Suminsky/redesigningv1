@@ -20,7 +20,7 @@ shared_Object_ptr AObjectFactory::VCreateObject( text::GfigElementA * pGfig_p ){
 
 		text::GfigElementA & gfigComponent = pGfig_p->m_subElements[it];
 
-		shared_Component_ptr pCompo = m_pLayerOwner->m_componentFactories.CreateComponent( gfigComponent.m_name.c_str(), &gfigComponent );
+		pool_Component_ptr pCompo = m_pLayerOwner->m_componentFactory.CreateComponent( gfigComponent.m_name.c_str(), &gfigComponent );
 		if( pCompo ){
 
 			pObj->AttachComponent( std::move(pCompo) );

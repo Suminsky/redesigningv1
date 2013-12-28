@@ -22,22 +22,24 @@
 #include "../namespace gen/gen_macros.h"
 
 namespace text{
-
 	struct GfigElementA;
+}
+namespace gen{
+	template<typename T> class pool_ptr;
 }
 
 
 namespace game{
 
-	class Component; typedef std::shared_ptr<Component> shared_Component_ptr;
-	class ComponentFactories;
+	class Component; typedef gen::pool_ptr<Component> pool_Component_ptr;
+	class ComponentFactory;
 
 	//========================================================================
 	// 
 	//========================================================================
 	class AComponentFactory{
 
-		friend class ComponentFactories;
+		friend class ComponentFactory;
 
 	public:
 
@@ -46,8 +48,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		virtual shared_Component_ptr VCreateComponent() = 0;
-		virtual shared_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
+		virtual pool_Component_ptr VCreateComponent() = 0;
+		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
 	};
 
 	typedef std::shared_ptr<AComponentFactory> shared_AComponentFactory_ptr;
@@ -60,20 +62,22 @@ namespace game{
 	typedef std::map<int, shared_AComponentFactory_ptr> ComponentFactoryRegistry;
 	typedef std::map<std::string, int> ComponentNameToTypeMap;
 
-	class ComponentFactories{
+	class ComponentFactory{
 
 	public:
+
+		~ComponentFactory(){}
 
 		//------------------------------------------------------------------------
 		// creators
 		//------------------------------------------------------------------------
-		shared_Component_ptr CreateComponent( int iType_p );
-		shared_Component_ptr CreateComponent( const char * szComponent_p );
-		shared_Component_ptr CreateComponent( int iType_p, text::GfigElementA * pGFig_p );
-		shared_Component_ptr CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p );
+		pool_Component_ptr CreateComponent( int iType_p );
+		pool_Component_ptr CreateComponent( const char * szComponent_p );
+		pool_Component_ptr CreateComponent( int iType_p, text::GfigElementA * pGFig_p );
+		pool_Component_ptr CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p );
 
-		template< typename DerivedComponent > std::shared_ptr<DerivedComponent> CreateComponent();
-		template< typename DerivedComponent > std::shared_ptr<DerivedComponent> CreateComponent( text::GfigElementA * pGFig_p );
+		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent();
+		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent( text::GfigElementA * pGFig_p );
 
 		//------------------------------------------------------------------------
 		// registers

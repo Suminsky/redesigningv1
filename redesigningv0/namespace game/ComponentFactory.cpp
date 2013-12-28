@@ -1,4 +1,5 @@
 #include "ComponentFactory.h"
+#include "Component.h"
 
 using namespace game;
 
@@ -6,7 +7,7 @@ using namespace game;
 // 
 //========================================================================
 
-shared_Component_ptr ComponentFactories::CreateComponent( int iType_p )
+pool_Component_ptr ComponentFactory::CreateComponent( int iType_p )
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find(iType_p);
 
@@ -17,7 +18,7 @@ shared_Component_ptr ComponentFactories::CreateComponent( int iType_p )
 	return pFactory->VCreateComponent();
 }
 
-game::shared_Component_ptr game::ComponentFactories::CreateComponent( const char * szComponent_p )
+game::pool_Component_ptr game::ComponentFactory::CreateComponent( const char * szComponent_p )
 {
 	ComponentNameToTypeMap::iterator itFound = m_nameToType.find(szComponent_p);
 
@@ -27,11 +28,11 @@ game::shared_Component_ptr game::ComponentFactories::CreateComponent( const char
 	}
 	else{
 
-		return shared_Component_ptr();
+		return pool_Component_ptr();
 	}
 }
 
-shared_Component_ptr game::ComponentFactories::CreateComponent( int iType_p, text::GfigElementA * pGFig_p )
+pool_Component_ptr game::ComponentFactory::CreateComponent( int iType_p, text::GfigElementA * pGFig_p )
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( iType_p );
 
@@ -42,7 +43,7 @@ shared_Component_ptr game::ComponentFactories::CreateComponent( int iType_p, tex
 	return pFactory->VCreateComponent( pGFig_p );
 }
 
-game::shared_Component_ptr game::ComponentFactories::CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p )
+game::pool_Component_ptr game::ComponentFactory::CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p )
 {
 	ComponentNameToTypeMap::iterator itFound = m_nameToType.find(szComponent_p);
 
@@ -52,11 +53,11 @@ game::shared_Component_ptr game::ComponentFactories::CreateComponent( const char
 	}
 	else{
 
-		return shared_Component_ptr();
+		return pool_Component_ptr();
 	}
 }
 
-shared_AComponentFactory_ptr game::ComponentFactories::GetComponentFactory( int iType_p )
+shared_AComponentFactory_ptr game::ComponentFactory::GetComponentFactory( int iType_p )
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( iType_p );
 

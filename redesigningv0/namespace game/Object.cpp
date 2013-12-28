@@ -3,7 +3,7 @@
 
 using namespace game;
 
-void game::Object::AttachComponent( shared_Component_ptr && pComponent_p )
+void game::Object::AttachComponent( pool_Component_ptr && pComponent_p )
 {
 	assert( pComponent_p->m_bDetached );
 
@@ -24,7 +24,7 @@ void game::Object::AttachComponent( shared_Component_ptr && pComponent_p )
 	}
 }
 
-void game::Object::AttachComponent( const shared_Component_ptr & pComponent_p )
+void game::Object::AttachComponent( const pool_Component_ptr & pComponent_p )
 {
 	assert( pComponent_p->m_bDetached );
 
@@ -55,7 +55,7 @@ void game::Object::DettachComponent( COMPONENTINDEX componentCurrentIndex_p )
 	m_removedComponents.push_back(componentCurrentIndex_p);
 }
 
-void game::Object::DettachComponent( const shared_Component_ptr & pComponent_p )
+void game::Object::DettachComponent( const pool_Component_ptr & pComponent_p )
 {
 	DettachComponent(pComponent_p->m_currentComponentObjectIndex);
 }

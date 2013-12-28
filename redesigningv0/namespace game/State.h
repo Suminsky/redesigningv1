@@ -24,9 +24,7 @@
 
 namespace game{
 
-	//class Layer; typedef std::shared_ptr<Layer> shared_Layer_ptr;
 	class StateMachine;
-	//typedef unsigned int LAYERINDEX;
 
 	typedef std::vector<shared_Layer_ptr> StateLayers;
 	typedef std::vector<LAYERINDEX> LayerIndexes;
@@ -45,7 +43,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		virtual ~State(){}
+		virtual ~State();
 
 		//------------------------------------------------------------------------
 		// layer stuff
@@ -90,13 +88,13 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
-		virtual void VOnInit(){}
-		virtual void VOnUpdate(double, double){}	// called before layers update
-		virtual void VLateUpdate(double, double){}	// called after layers update
-		virtual void VOnDraw(){}					// called after layers draw
-		virtual void VOnDestroy(){}
+		virtual void VOnInit();
+		virtual void VOnUpdate(double, double);	// called before layers update
+		virtual void VLateUpdate(double, double);	// called after layers update
+		virtual void VOnDraw();					// called after layers draw
+		virtual void VOnDestroy();
 
-		virtual void VOnResize(){}
+		virtual void VOnResize();
 	};
 
 	typedef std::shared_ptr<State> shared_State_ptr;

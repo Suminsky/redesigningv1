@@ -7,7 +7,7 @@ using namespace DirectX;
 void game::TransformSystem::VOnInit()
 {
 	shared_TransformComponentFactory_ptr pTrafoFactory = std::static_pointer_cast<TransformComponentFactory>(
-		m_pSysMachineOwner->GetLayer()->m_componentFactories.GetComponentFactory<TransformComponent>()
+		m_pSysMachineOwner->GetLayer()->m_componentFactory.GetComponentFactory<TransformComponent>()
 		);
 
 	m_poolAccess = pTrafoFactory->m_pool.GetAccess();
@@ -50,12 +50,16 @@ void game::TransformSystem::RecursiveUpdate( TransformComponent & currentParent_
 
 			TransformComponent & childTransform = (*currentParent_p.m_node.GetChild(itChild)->GetData());
 
-			// compute final color
+			// compute final trafo
 
 			childTransform.UpdateWorldAndFinalTransformation(currentParent_p.GetWorld());
 
 			if( childTransform.IsAttached() )
 				childTransform.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &childTransform );
+
+			childTransform.m_bSnap = false;
+
+			// recurse on childes
 
 			RecursiveUpdate( childTransform );
 	}

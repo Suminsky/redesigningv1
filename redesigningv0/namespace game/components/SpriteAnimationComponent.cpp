@@ -167,22 +167,24 @@ m_pSpriteRenderer(pSpriteRenderer_p)
 
 }
 
-game::shared_Component_ptr game::SpriteAnimationComponentFactory::VCreateComponent( GfigElementA * pGFig_p )
+game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCreateComponent( GfigElementA * pGFig_p )
 {
-	SpriteAnimationComponent * pAnimCompo = m_pool.Allocate();
+	//SpriteAnimationComponent * pAnimCompo = m_pool.Allocate();
+	pool_SpriteAnimCompo_ptr pAnimCompo( m_pool );
 
 	GfigElementA * pGFigParam = nullptr;
 
 	assert( pGFig_p->GetSubElement( "sprites", pGFigParam ) );
-	LoadSpritesFromGFig( pGFigParam, pAnimCompo );
+	LoadSpritesFromGFig( pGFigParam, pAnimCompo.Get() );
 
 	assert( pGFig_p->GetSubElement( "frames", pGFigParam ) );
-	LoadFramesFromGFig( pGFigParam, pAnimCompo );
+	LoadFramesFromGFig( pGFigParam, pAnimCompo.Get() );
 
 	assert( pGFig_p->GetSubElement( "clips", pGFigParam ) );
-	LoadClipsFromGFig( pGFigParam, pAnimCompo );
+	LoadClipsFromGFig( pGFigParam, pAnimCompo.Get() );
 
-	return  MAKE_STACK_SHAREDPTR( SpriteAnimationComponent, pAnimCompo );
+	//return  MAKE_STACK_SHAREDPTR( SpriteAnimationComponent, pAnimCompo );
+	return pAnimCompo;
 }
 
 void game::SpriteAnimationComponentFactory::LoadSpritesFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p )

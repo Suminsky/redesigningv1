@@ -84,7 +84,7 @@ namespace game{
 		gen::TreeNode<ColorComponent*> m_node;
 	};
 
-
+	typedef gen::pool_ptr<ColorComponent> pool_ColorCompo_ptr;
 	typedef std::shared_ptr<ColorComponent> shared_ColorComponent_ptr;
 	typedef std::weak_ptr<ColorComponent> weak_ColorComponent_ptr;
 
@@ -117,12 +117,12 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		virtual shared_Component_ptr VCreateComponent(){
+		virtual pool_Component_ptr VCreateComponent(){
 
-			return MAKE_STACK_SHAREDPTR( ColorComponent, m_pool.Allocate() );
+			return pool_Component_ptr(m_pool);
 
 		}
-		virtual shared_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 
 	};
 

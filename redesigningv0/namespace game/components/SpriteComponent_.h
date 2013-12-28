@@ -26,10 +26,6 @@
 #include "../../namespace sprite/SpriteRenderer.h"
 #include "../../namespace sprite/Camera.h"
 
-namespace gen{
-	template<typename T>	class Pool;
-}
-
 namespace game{
 
 	class SpriteComponent_: public Component{
@@ -85,6 +81,8 @@ namespace game{
 
 	public:
 
+		void SetColor( DirectX::XMFLOAT4 color_p );
+
 		DirectX::XMFLOAT4X4 m_currentTrafo;
 		DirectX::XMFLOAT4X4 m_previousTrafo;
 
@@ -101,6 +99,7 @@ namespace game{
 		ALLIGN16ONLY;
 	};
 
+	typedef gen::pool_ptr<SpriteComponent_> pool_SpriteCompo__ptr;
 	typedef std::shared_ptr<SpriteComponent_> shared_SpriteComponent__ptr;
 	typedef std::weak_ptr<SpriteComponent_> weak_SpriteComponent__ptr;
 
@@ -136,11 +135,15 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		virtual shared_Component_ptr VCreateComponent(){
+		virtual pool_Component_ptr VCreateComponent(){
 
-			return MAKE_STACK_SHAREDPTR( SpriteComponent_, m_pool.Allocate() );
+			/*pool_Component_ptr test;
+			gen::pool_ptr<SpriteComponent_> spriteP( &m_pool );
+			test = spriteP;*/
+
+			 return pool_Component_ptr(m_pool);
 		}
-		virtual shared_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 
 	};
 

@@ -4,6 +4,45 @@
 using namespace game;
 
 
+game::State::~State()
+{
+
+}
+
+void game::State::VOnInit()
+{
+
+}
+
+void game::State::VOnUpdate( double, double )
+{
+
+}
+
+void game::State::VLateUpdate( double, double )
+{
+
+}
+
+void game::State::VOnDraw()
+{
+
+}
+
+void game::State::VOnDestroy()
+{
+
+}
+
+void game::State::VOnResize()
+{
+
+}
+
+//========================================================================
+// layer stuff
+//========================================================================
+
 void game::State::AddLayer( shared_Layer_ptr && pNewLayer_p )
 {
 	assert( pNewLayer_p->m_bDead );

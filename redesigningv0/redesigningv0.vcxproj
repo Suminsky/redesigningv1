@@ -142,7 +142,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>false</Profile>
@@ -151,21 +151,21 @@
   <ItemGroup>
     <ClInclude Include="Mentle\InGame\AudioHandler.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
-    <ClInclude Include="Mentle\InGame\CardFXCtrl.h" />
-    <ClInclude Include="Mentle\InGame\CardsLayer.h" />
+    <ClInclude Include="mentle\ingame\cardfxctrl.h" />
+    <ClInclude Include="mentle\ingame\cardslayer.h" />
     <ClInclude Include="Mentle\InGame\CursorLayer.h" />
     <ClInclude Include="Mentle\InGame\EnergyBarLayer.h" />
     <ClInclude Include="Mentle\InGame\InGame.h" />
     <ClInclude Include="Mentle\InGame\InGameEventData.h" />
     <ClInclude Include="Mentle\InGame\InputMapper.h" />
-    <ClInclude Include="Mentle\InGame\MentleCardComponent.h" />
-    <ClInclude Include="Mentle\InGame\MentleCardDesc.h" />
+    <ClInclude Include="mentle\ingame\mentlecardcomponent.h" />
+    <ClInclude Include="mentle\ingame\mentlecarddesc.h" />
     <ClInclude Include="Mentle\InGame\MentleLogic.h" />
     <ClInclude Include="Mentle\InGame\NetworkHandler.h" />
-    <ClInclude Include="Mentle\InGame\PanelLayer.h" />
+    <ClInclude Include="mentle\ingame\panellayer.h" />
     <ClInclude Include="Mentle\InGame\StatusBarLayer.h" />
-    <ClInclude Include="Mentle\InGame\TutorialLayer.h" />
-    <ClInclude Include="Mentle\InGame\TutorialPart.h" />
+    <ClInclude Include="mentle\ingame\tutoriallayer.h" />
+    <ClInclude Include="mentle\ingame\tutorialpart.h" />
     <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
     <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
@@ -173,7 +173,6 @@
     <ClInclude Include="Mentle\MatchConfig.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
-    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\ComponentFactory.h" />
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
@@ -295,7 +294,6 @@
     <ClCompile Include="Mentle\MatchConfig.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenu.cpp" />
-    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\ComponentFactory.cpp" />
     <ClCompile Include="namespace game\components\ButtonComponent.cpp" />

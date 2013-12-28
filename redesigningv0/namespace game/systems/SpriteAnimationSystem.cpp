@@ -6,7 +6,7 @@ using namespace game;
 void game::SpriteAnimationSystem::VOnInit()
 {
 	shared_SpriteAnimationComponentFactory_ptr pFactory = std::static_pointer_cast<SpriteAnimationComponentFactory>(
-		m_pSysMachineOwner->GetLayer()->m_componentFactories.GetComponentFactory<SpriteAnimationComponent>()
+		m_pSysMachineOwner->GetLayer()->m_componentFactory.GetComponentFactory<SpriteAnimationComponent>()
 		);
 
 	m_poolAccess = pFactory->m_pool.GetAccess();

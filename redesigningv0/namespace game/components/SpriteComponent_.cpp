@@ -91,23 +91,22 @@ void SpriteComponent_::OnDraw( double dInterpolation_p )
 		vPos = XMLoadFloat4( &mCurrent.position );
 		qRot = XMLoadFloat4( &mCurrent.qRotation );
 		vScale = XMLoadFloat4( &mCurrent.scale );
+		//
 		vPrevPos = XMLoadFloat4( &mPrevious.position );
-		vPrevScale = XMLoadFloat4( &mPrevious.scale );
 		qPrevRot = XMLoadFloat4( &mPrevious.qRotation );
+		vPrevScale = XMLoadFloat4( &mPrevious.scale );
 
 		// interpolate independent components
 
 		XMVECTOR vFactor = XMVectorReplicate( (float)dInterpolation_p); // do only once
 
 		XMVECTOR vlPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
-		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
 		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
+		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
 
 		// compose matrix again
 
-		XMMATRIX && mNewWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
-
-		m_renderData.m_mWorld = mNewWorld;
+		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
 
 		// send to GPU?
 		m_renderData.m_bUpdate = true;
@@ -151,6 +150,7 @@ void SpriteComponent_::OnDraw( double dInterpolation_p, Camera * /*pCamera_p*/ )
 		vPos = XMLoadFloat4( &mCurrent.position );
 		qRot = XMLoadFloat4( &mCurrent.qRotation );
 		vScale = XMLoadFloat4( &mCurrent.scale );
+
 		vPrevPos = XMLoadFloat4( &mPrevious.position );
 		vPrevScale = XMLoadFloat4( &mPrevious.scale );
 		qPrevRot = XMLoadFloat4( &mPrevious.qRotation );
@@ -162,9 +162,7 @@ void SpriteComponent_::OnDraw( double dInterpolation_p, Camera * /*pCamera_p*/ )
 		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
 		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
 
-		XMMATRIX && mNewWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
-
-		m_renderData.m_mWorld = mNewWorld;
+		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
 
 		// send to GPU?
 		m_renderData.m_bUpdate = true;
@@ -244,6 +242,11 @@ void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData
 	m_sortKey.bitfield.textureID = m_TextureID;
 }
 
+void game::SpriteComponent_::SetColor( DirectX::XMFLOAT4 color_p )
+{
+	m_previousColor = m_currentColor = color_p;
+}
+
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
 	m_sortKey.intRepresentation = 0LL;
@@ -279,6 +282,7 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 	//pDevice_p->GetDevice()->CreateBuffer( &cbufferParams.desc.bufferDesc, nullptr, &pBuffer );
 
 	// initialize pipe state for this sprite
+	m_pipeState.Reset();
 	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
@@ -294,9 +298,10 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 //========================================================================
 // 
 //========================================================================
-shared_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA * pGFig_p )
+pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA * pGFig_p )
 {
-	SpriteComponent_ * pSprite = m_pool.Allocate();
+	//SpriteComponent_ * pSprite = m_pool.Allocate();
+	pool_SpriteCompo__ptr pSprite( m_pool );
 
 	float w, h;
 	XMFLOAT4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
@@ -327,7 +332,8 @@ shared_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElemen
 
 	pSprite->Init( m_pDeviceRef_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, m_pRendererRef );
 
-	return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );
+	//return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );
+	return pSprite;
 }
 
 DirectX::XMFLOAT4 game::SpriteComponent_Factory::GetXYWH( text::GfigElementA * pGFig_p )

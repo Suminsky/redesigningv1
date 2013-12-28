@@ -179,6 +179,7 @@ namespace game{
 		std::vector<TextureID_Binder_Pair>			m_vSprites;
 	};
 
+	typedef gen::pool_ptr<SpriteAnimationComponent> pool_SpriteAnimCompo_ptr;
 	typedef std::shared_ptr<SpriteAnimationComponent> shared_SpriteAnimationComponent_ptr;
 	typedef std::weak_ptr<SpriteAnimationComponent> weak_SpriteAnimationComponent_ptr;
 
@@ -212,8 +213,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		shared_Component_ptr VCreateComponent(){ assert(0); return shared_Component_ptr();} //TODO
-		shared_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		pool_Component_ptr VCreateComponent(){ assert(0); return pool_Component_ptr();} //TODO
+		pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 	};
 
 	typedef std::shared_ptr<SpriteAnimationComponentFactory> shared_SpriteAnimationComponentFactory_ptr;

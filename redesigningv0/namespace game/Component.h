@@ -89,6 +89,7 @@ namespace game{
 		bool m_bDetached;
 	};
 
+	typedef gen::pool_ptr<Component> pool_Component_ptr;
 	typedef std::shared_ptr<Component> shared_Component_ptr;
 	typedef std::weak_ptr<Component> weak_Component_ptr;
 }
