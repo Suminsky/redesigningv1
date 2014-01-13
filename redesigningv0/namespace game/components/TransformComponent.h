@@ -123,6 +123,7 @@ namespace game{
 		void RemoveChild( TransformComponent * pTrafo_p );
 		void Snap(){ m_bSnap = true; }
 		bool GonnaSnap()const{ return m_bSnap; }
+		TransformComponent * GetParent();
 
 		//------------------------------------------------------------------------
 		// stores local * parent world and offset * world

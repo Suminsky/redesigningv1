@@ -74,6 +74,11 @@ void game::TransformComponent::RemoveChild( TransformComponent * pTrafo_p )
 	m_node.RemoveNode( &pTrafo_p->m_node );
 }
 
+TransformComponent * game::TransformComponent::GetParent()
+{
+	return m_node.GetParent()->GetData();
+}
+
 //========================================================================
 // 
 //========================================================================
