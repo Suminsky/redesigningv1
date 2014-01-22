@@ -173,6 +173,7 @@
     <ClInclude Include="Mentle\MatchConfig.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
+    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\ComponentFactory.h" />
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="Mentle\MatchConfig.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\MainMenu\MainMenu.cpp" />
+    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\ComponentFactory.cpp" />
     <ClCompile Include="namespace game\components\ButtonComponent.cpp" />

@@ -375,6 +375,9 @@
     <ClInclude Include="Mentle\InGame\StatusBarLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -684,6 +687,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\StatusBarLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
