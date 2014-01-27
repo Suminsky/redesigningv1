@@ -3,10 +3,10 @@
 /*
 	created:	2013/04/14
 	created:	14:4:2013   19:49
-	file:		IObjectComponent.h
+	file:		Component.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	the life items that compose a game object
+	purpose:	compose a game object
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
