@@ -37,3 +37,17 @@ void TreeNode<T>::SetParent( TreeNode * pNewParent_p )
 
 	m_pParent = pNewParent_p;
 }
+
+template< typename T>
+TreeNode<T>::~TreeNode()
+{
+	// remove all childs from this node
+
+	for( int it = 0, iSize = (int)m_vChilds.size();
+		 it < iSize;
+		 ++it ){
+
+			 m_vChilds[it]->m_pParent = nullptr;
+			 m_vChilds[it]->m_indexOnParent = INVALID_INDEX_ONPARENT;
+	}
+}

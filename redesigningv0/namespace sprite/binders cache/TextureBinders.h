@@ -50,8 +50,9 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// "delayed" ctor
 		//------------------------------------------------------------------------
-		void Init( dx::Device * pDevice_p ){
-			m_cache.reserve(100);
+		void Init( dx::Device * pDevice_p, int size_p = 100 ){
+			m_cache.reserve(size_p);
+			m_size = size_p;
 
 			m_pDevice = pDevice_p;
 		}
@@ -82,6 +83,7 @@ namespace sprite{
 
 		std::vector<dx::BindPSShaderResourceView> m_cache;
 		std::vector< std::string > m_names;
+		int m_size;
 
 		dx::Device * m_pDevice;
 

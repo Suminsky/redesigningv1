@@ -77,11 +77,14 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 
 	drawable.SetSortKey( sorMask.intRepresentation );
 	drawable.SetDrawCall( m_pTextDrawCall );
-
 	drawable.SetPipelineStateGroup( m_textRenderStates ); // common data (vertex, IA, etc)
 	drawable.AddPipelineState( &m_textureState );
 	drawable.AddPipelineState( &m_fonts[iFontID_p].GetPipeState() );
 	drawable.AddPipelineState( &camera_p.m_pipeState );
+
+// 	m_pSpriteRendererRef->BeginInstancing(  m_fonts[iFontID_p].GetTextureBinder(),
+// 		&m_pSpriteRendererRef->m_blends.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED),
+// 		&m_pSpriteRendererRef->m_samplers.GetSamplerBind(sprite::E_SAMPLER_NONE) );
 
 	while( szText_p[itChar] != 0x0000 ){
 
@@ -138,14 +141,23 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 
 		drawable.AddPipelineState( &m_glyphsRenderData[m_glyphsRenderData.m_currentIndex].state );
 
-		//m_pSpriteRendererRef->m_queue.Submit( std::move(drawable) );
 		m_pSpriteRendererRef->m_queue.Submit( drawable );
+// 		sprite::SpriteRenderer::spriteInstance instanceData;
+// 		memcpy( (void*)instanceData.color, (void*)&glyphCBuffer.m_color, sizeof(float)*4 );
+// 		instanceData.padding[0] = instanceData.padding[1] = 0.0f;
+// 		memcpy( (void*)instanceData.res, (void*)&glyphCBuffer.m_res, sizeof(float)*2 );
+// 		memcpy( (void*)instanceData.mWorld, (void*)&glyphCBuffer.m_mWorld, sizeof(float)*16 );
+// 		memcpy( (void*)instanceData.uvRect, (void*)&glyphCBuffer.m_uvRect, sizeof(float)*4 );
+
+		//m_pSpriteRendererRef->RenderInstance( instanceData, sorMask.intRepresentation );
 
 		drawable.PopLastPipelineState();
 
 		++itChar;
 		m_glyphsRenderData++;
 	}
+
+	//m_pSpriteRendererRef->FinishInstancingRender( pDevice_p, sorMask.intRepresentation );
 }
 
 void text::TextRenderer::Draw_Text( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,

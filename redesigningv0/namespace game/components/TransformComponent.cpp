@@ -21,6 +21,11 @@ game::TransformComponent::TransformComponent()
 	m_node.SetData(this);
 }
 
+game::TransformComponent::~TransformComponent()
+{
+
+}
+
 void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMFLOAT4X4 & mParentWorldTrafo_p )
 {
 	m_previousFinal = m_final;

@@ -45,6 +45,20 @@ namespace gen{
 	}
 
 	//========================================================================
+	// verify if given number is power of 2
+	//========================================================================
+	inline bool IsPowerOfTwo_zeroUnaware( int value_p ){
+
+		return ( value_p & ( value_p -1 ) ) == 0;
+	}
+	inline bool IsPowerOfTwo( int value_p ){
+
+		return  value_p
+				&&
+				( value_p & ( value_p -1 ) ) == 0;
+	}
+
+	//========================================================================
 	// used nitially for std::shared_ptr which for some really stupid reason
 	// don't have a T[] version like unique_ptr
 	//========================================================================

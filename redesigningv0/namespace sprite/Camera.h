@@ -45,7 +45,7 @@ namespace sprite{
 		D3D11_VIEWPORT		m_viewPort;			// the viewport rectangle on the render target
 		//UINT			m_RenderTargetID;		// the render target the camera will output to
 	
-		dx::State m_pipeState; //binds viewport, render target
+		dx::PipeState m_pipeState; //binds viewport, render target
 		BindVSCameraCBuffer m_bindVSCameraCbuffer;
 
 

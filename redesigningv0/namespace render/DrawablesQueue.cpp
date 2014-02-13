@@ -1,6 +1,23 @@
 #include "DrawablesQueue.h"
 #include <algorithm>
 
+
+void render::DrawablesQueue::Submit( Drawable & drawable_p )
+{
+	m_drawables.push_back( drawable_p );
+
+	Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
+	m_sortqueue.push_back(newEntry);
+}
+
+void render::DrawablesQueue::Submit( Drawable && drawable_p )
+{
+	m_drawables.emplace_back( std::move(drawable_p) );
+
+	Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
+	m_sortqueue.push_back(newEntry);
+}
+
 void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p, bool bClearStateCache_p )
 {
 	if( bClearStateCache_p){
@@ -19,7 +36,7 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 			itSorted < sortedSize;
 			++ itSorted ){
 
-		const StatesPtrsVec & stateGroup = m_drawables[m_sortqueue[itSorted].index].m_pipeStateGroup;
+		const vStatePtrs & stateGroup = m_drawables[m_sortqueue[itSorted].index].m_vStatePtrs;
 
 		// traverse pipe states
 
@@ -31,7 +48,7 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 			// traverse bind commands
 
-			const dx::BindersPtrsVec & binds = stateGroup[itStates]->m_binds;
+			const dx::vBinderPtrs & binds = stateGroup[itStates]->m_vBinderPtrs;
 			
 			for(	int itBinds = 0, bindsSize = (int)binds.size();
 					itBinds < bindsSize;
@@ -66,19 +83,31 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 	//Prepare();
 }
 
+void render::DrawablesQueue::Prepare()
+{
+	//m_drawables.clear();
+	m_drawables.resize(0);
+	m_sortqueue.clear();
+}
+
+void render::DrawablesQueue::ResetState( dx::E_BIND eBind_p )
+{
+	m_stateCache[eBind_p] = NULL;
+}
+
 
 /*
 for( sortarray::const_iterator itDrawable = m_sortqueue.begin(),
 		 itEnd = m_sortqueue.end();
 		 itDrawable != itEnd; ++itDrawable){
 
-		const StatesPtrsVec * pStateGroup = m_drawables[(*itDrawable).index].GetPipeStateGroup();
+		const vStatePtrs * pStateGroup = m_drawables[(*itDrawable).index].GetPipeStateGroup();
 
 		// traverse pipe states
 
 		UINT64 bindsSetMask = 0;
 
-		for( StatesPtrsVec::const_iterator itStates = pStateGroup->begin(),
+		for( vStatePtrs::const_iterator itStates = pStateGroup->begin(),
 			statesEnd =  pStateGroup->end();
 			itStates != statesEnd;
 			++itStates ){
@@ -86,7 +115,7 @@ for( sortarray::const_iterator itDrawable = m_sortqueue.begin(),
 			// traverse bind commands
 			
 		
-			for( dx::BindersPtrsVec::const_iterator itBinds = (*itStates)->Begin(),
+			for( dx::vBinderPtrs::const_iterator itBinds = (*itStates)->Begin(),
 				bindsEnd = (*itStates)->End();
 				itBinds != bindsEnd;
 				++itBinds ){

@@ -3,7 +3,7 @@
 /*
 	created:	2013/07/14
 	created:	14:7:2013   23:58
-	file:		State.h
+	file:		PipeState.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	A collection of bind commands.
@@ -28,9 +28,9 @@ namespace render{
 
 namespace dx{
 
-	typedef std::vector<Binder*> BindersPtrsVec;
+	typedef std::vector<Binder*> vBinderPtrs;
 	
-	class State{
+	class PipeState{
 
 		friend render::DrawablesQueue;
 	
@@ -39,12 +39,12 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		State()
+		PipeState()
 			:
 		m_stateMask(0LL)
 		{}
 
-		~State(){}
+		~PipeState(){}
 
 		//------------------------------------------------------------------------
 		// Adds a command updating the state mask
@@ -54,7 +54,7 @@ namespace dx{
 			assert( !(m_stateMask & pBinder_p->TypeBits() ) );
 			assert( pBinder_p->TypeIndex() >= 0 &&  pBinder_p->TypeIndex() < E_MAX_BINDS );
 
-			m_binds.push_back(pBinder_p);
+			m_vBinderPtrs.push_back(pBinder_p);
 			m_stateMask |= pBinder_p->TypeBits();
 		}
 
@@ -63,15 +63,15 @@ namespace dx{
 		//------------------------------------------------------------------------
 		void Reset(){
 
-			m_binds.clear();
+			m_vBinderPtrs.clear();
 			m_stateMask = 0LL;
 		}
 
 		//------------------------------------------------------------------------
 		// Iterators
 		//------------------------------------------------------------------------
-		BindersPtrsVec::iterator Begin(){	return m_binds.begin();	}
-		BindersPtrsVec::const_iterator End(){	return m_binds.end();	}
+		vBinderPtrs::iterator Begin(){	return m_vBinderPtrs.begin();	}
+		vBinderPtrs::const_iterator End(){	return m_vBinderPtrs.end();	}
 
 		//------------------------------------------------------------------------
 		// getters
@@ -80,11 +80,11 @@ namespace dx{
 
 	private:
 
-		BindersPtrsVec m_binds;
-		UINT64 m_stateMask; // mark all binds it binds
+		vBinderPtrs	m_vBinderPtrs;
+		UINT64		m_stateMask; // mark all binds it binds
 	};
 
 
-	typedef std::shared_ptr<State> shared_State_ptr;
-	typedef std::weak_ptr<State> weak_State_ptr;
+	typedef std::shared_ptr<PipeState> shared_State_ptr;
+	typedef std::weak_ptr<PipeState> weak_State_ptr;
 }

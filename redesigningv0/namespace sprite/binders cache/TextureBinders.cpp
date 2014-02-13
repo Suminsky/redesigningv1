@@ -2,6 +2,9 @@
 
 int sprite::TextureBinders::Add( const char* szTexture_p )
 {
+
+	assert( m_cache.size() < m_size );
+
 	// create texture
 
 	dx::Texture2DResource::CreationParams params;

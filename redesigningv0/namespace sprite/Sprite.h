@@ -99,7 +99,7 @@ namespace sprite{
 
 	private:
 
-		dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
+		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
 		SortMask m_renderSortKey; // used to sort on the render queue
 
 		DrawableCbuffer m_renderData;

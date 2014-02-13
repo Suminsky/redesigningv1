@@ -35,7 +35,7 @@ namespace text{
 		sprite::DrawableCbuffer cbufferData;
 		sprite::BindVSDrawableCBuffer bindDrawableCbuffer;
 		
-		dx::State state;
+		dx::PipeState state;
 	};
 	struct DrawableGlyph{
 
@@ -135,7 +135,7 @@ namespace text{
 		// SLOW, this creates the drawables and submit then to the drawablesqueue.
 		// MAX of E_MAXGLYPHS, as render data is buffered in this object.
 		//------------------------------------------------------------------------
-		void RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, sprite::Camera & camera_p, UINT iFontID_p = 0 );
+		void RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, sprite::Camera & camera_p,UINT iFontID_p = 0 );
 
 
 		//------------------------------------------------------------------------
@@ -158,9 +158,9 @@ namespace text{
 
 		GlyphRenderBuffer m_glyphsRenderData;
 
-		render::StatesPtrsVec m_textRenderStates;
+		render::vStatePtrs m_textRenderStates;
 		dx::DrawCall * m_pTextDrawCall;
-		dx::State m_textureState;
+		dx::PipeState m_textureState;
 
 		ID3D11Buffer *m_pGlyphBufferInterface;
 

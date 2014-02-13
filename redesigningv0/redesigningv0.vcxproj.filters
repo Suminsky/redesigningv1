@@ -252,9 +252,6 @@
     <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace render\dx\pipeline\State.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace gen\Delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -376,6 +373,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace render\dx\pipeline\PipeState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace mem\Allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace mem\LinearAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace render\dx\BinderCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace render\dx\BinderCache.inl">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -581,9 +593,6 @@
     <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace render\dx\pipeline\State.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace game\tasks\OnUpdateDelegateTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -690,6 +699,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace render\dx\pipeline\PipeState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace render\dx\BinderCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

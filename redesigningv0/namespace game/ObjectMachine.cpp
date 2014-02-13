@@ -82,8 +82,6 @@ void ObjectMachine::CleanRemovedObjects()
 				continue; // untested
 			}
 
-			//m_objects[m_removedObjects[itRemoved]]->Abort();
-			//InformSystemsAboutObjectRemoved( m_objects[m_removedObjects[itRemoved]]->m_currentObjectIndex );
 			m_objects[m_removedObjects[itRemoved]]->m_currentObjectIndex = INVALID_OBJECTINDEX;
 			m_objects[m_removedObjects[itRemoved]]->m_pObjMachineOwner = nullptr;
 			m_objects[m_removedObjects[itRemoved]]->m_pLayerOwner = nullptr;

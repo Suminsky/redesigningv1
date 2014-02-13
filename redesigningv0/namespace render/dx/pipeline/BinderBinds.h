@@ -33,10 +33,19 @@ class BindIAInputLayout: public Binder{
 
 public:
 
-	BindIAInputLayout(ID3D11InputLayout * pInputLayout_p)
+	explicit BindIAInputLayout(ID3D11InputLayout * pInputLayout_p)
 		:
 	Binder( IA_InputLayout, E_IA_InputLayout ),
 	m_pInputLayout(pInputLayout_p){}
+
+	BindIAInputLayout()
+		:
+	Binder( IA_InputLayout, E_IA_InputLayout ){}
+
+	void Initialize( ID3D11InputLayout * pInputLayout_p ){
+
+		m_pInputLayout = pInputLayout_p;
+	}
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 
@@ -80,6 +89,21 @@ public:
 	Binder( 1LL << (E_IA_VertexBuffer0 + iSlot_p), E_BIND(E_IA_VertexBuffer0 + iSlot_p) ),
 		m_iStartSlot(iSlot_p), m_pVertexBuffer(pVBuffer_p), m_iStride(iStride_p), m_iByteOffset(iOffset_p){}
 
+	BindIAVertexBuffer(){}
+
+	ID3D11Buffer * GetBuffer(){
+		return m_pVertexBuffer;
+	}
+
+	void Initialize( const UINT iSlot_p, ID3D11Buffer * pVBuffer_p, const UINT iStride_p, const UINT iOffset_p = 0 ){
+
+		Binder::Set( 1LL << (E_IA_VertexBuffer0 + iSlot_p), E_BIND(E_IA_VertexBuffer0 + iSlot_p) );
+		m_iStartSlot	= iSlot_p;
+		m_pVertexBuffer = pVBuffer_p;
+		m_iStride		= iStride_p;
+		m_iByteOffset	= iOffset_p;
+	}
+
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 
 		pDeviceContext_p->IASetVertexBuffers( m_iStartSlot, 1, &m_pVertexBuffer, &m_iStride, &m_iByteOffset );
@@ -98,8 +122,19 @@ public:
 
 	BindIAIndexBuffer( ID3D11Buffer * pIndexBuffer_p, const DXGI_FORMAT format_p = DXGI_FORMAT_R16_UINT, UINT iOffset_p = 0 )
 		:
-		Binder( IA_IndexBuffer, E_IA_IndexBuffer),
-		m_pIndexBuffer(pIndexBuffer_p), m_format(format_p), m_iByteOffset(iOffset_p){}
+	Binder( IA_IndexBuffer, E_IA_IndexBuffer),
+	m_pIndexBuffer(pIndexBuffer_p), m_format(format_p), m_iByteOffset(iOffset_p){}
+
+	BindIAIndexBuffer()
+		:
+	Binder( IA_IndexBuffer, E_IA_IndexBuffer){}
+
+	void Initialize( ID3D11Buffer * pIndexBuffer_p, const DXGI_FORMAT format_p = DXGI_FORMAT_R16_UINT, UINT iOffset_p = 0 ){
+
+		m_pIndexBuffer = pIndexBuffer_p;
+		m_format = format_p;
+		m_iByteOffset = iOffset_p;
+	}
 
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
@@ -119,10 +154,19 @@ class BindVSVertexShader : public Binder{
 
 public:
 
-	BindVSVertexShader( ID3D11VertexShader * pVS_p )
+	explicit BindVSVertexShader( ID3D11VertexShader * pVS_p )
 		: 
 		Binder(VS_VertexShader, E_VertexShader),
 		m_pVS(pVS_p){}
+
+	BindVSVertexShader()
+		: 
+	Binder(VS_VertexShader, E_VertexShader){}
+
+	void Initialize( ID3D11VertexShader * pVS_p ){
+
+		m_pVS = pVS_p;
+	}
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 
@@ -221,8 +265,19 @@ class BindPSPixelShader : public Binder{
 
 public:
 
-	BindPSPixelShader( ID3D11PixelShader * pPS_p ): m_pPS(pPS_p),
+	explicit BindPSPixelShader( ID3D11PixelShader * pPS_p )
+		:
+	m_pPS(pPS_p),
 	Binder(PS_PixelShader, E_PixelShader){}
+
+	BindPSPixelShader()
+		:
+	Binder(PS_PixelShader, E_PixelShader){}
+
+	void Initialize( ID3D11PixelShader * pPS_p ){
+
+		m_pPS = pPS_p;
+	}
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 

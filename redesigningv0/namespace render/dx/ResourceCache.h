@@ -134,7 +134,7 @@ namespace dx{
 			m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
 
 			// update slot info:
-			m_slotsInfo[m_iCurrentIndex].nUseCount = 1;
+			DBG(m_slotsInfo[m_iCurrentIndex].nUseCount = 1);
 			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;
 
 			// points to next element:
@@ -172,9 +172,9 @@ namespace dx{
 		{
 			assert(id_p < fixedSize);
 			assert(id_p <= m_iCurrentIndex );
-			assert(m_slotsInfo[id_p].nUseCount != 0);
+			DBG(assert(m_slotsInfo[id_p].nUseCount != 0));
 
-			++m_slotsInfo[id_p].nUseCount;
+			DBG(++m_slotsInfo[id_p].nUseCount);
 
 			return m_cache[id_p];
 		}
@@ -188,7 +188,7 @@ namespace dx{
 			{
 				if( m_slotsInfo[it].desc == params_p.desc)
 				{
-					++m_slotsInfo[it].nUseCount;
+					DBG(++m_slotsInfo[it].nUseCount);
 					return it;
 				}
 			}

@@ -10,7 +10,7 @@
 	
 	purpose:	Loads and compiles shader programs, storing all of its permutations.
 
-	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
+	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #pragma once
@@ -18,7 +18,6 @@
 // libraries needed
 
 #pragma comment( lib, "D3D11.lib")
-//#pragma comment( lib, "D3DX11.lib")
 #pragma comment( lib, "D3Dcompiler.lib")
 
 #include <INITGUID.H>	// solves IID_ID3D11ShaderReflection unresolved lnk2001
@@ -26,23 +25,13 @@
 // system/standard headers
 
 #include <D3D11.h>
-
 #include <string>
 
-//#include <boost/smart_ptr.hpp>
-
 // private includes
-
 
 #include "Device.h"
-
-//namespace std{
-//	typedef std::basic_string<TCHAR> tstring;
-//}
-
-// private includes
-
 #include "pipeline/Binder.h"
+#include "BinderCache.h"
 
 namespace dx{
 
@@ -55,7 +44,7 @@ namespace dx{
 	//------------------------------------------------------------------------
 	struct ShaderPermutation{
 
-		dx::State m_pipeState;	// collection of Bind shader PROGRAMS ONLY
+		dx::PipeState m_pipeState;	// collection of Bind shader PROGRAMS ONLY
 		UINT64 m_optionsBitMask;		// flags
 	};
 
@@ -67,30 +56,37 @@ namespace dx{
 
 		std::string m_szName;
 		std::unique_ptr<ShaderPermutation[]> m_permutations;
-
 		UINT m_nPermutations;
+
+		BinderCache< BindVSVertexShader, VSCache > m_VSCache;
+		BinderCache< BindPSPixelShader, PSCache > m_PSCache;
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ShaderResource( const char* szHLSL_p, UINT nPermutations_p )
+		ShaderResource( const char* szHLSL_p, UINT nPermutations_p, UINT nShaderPrograms_p, dx::Device * pDevice_p )
 			:
 			m_permutations( new ShaderPermutation[nPermutations_p]()),
 			m_nPermutations(nPermutations_p),
 			m_szName(szHLSL_p)
-			//,m_pipeState(new dx::State())
-			{}
+			{
+				m_VSCache.Init( nShaderPrograms_p, pDevice_p->m_pCacheVS );
+				m_PSCache.Init( nShaderPrograms_p, pDevice_p->m_pCachePS );
+			}
 		ShaderResource(){}
 		virtual ~ShaderResource(){};
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Init( const char* szHLSL_p, UINT nPermutations_p ){
+		void Init( const char* szHLSL_p, UINT nPermutations_p, UINT nShaderPrograms_p, dx::Device * pDevice_p ){
 
 			m_permutations.reset(new ShaderPermutation[nPermutations_p]);
 			m_nPermutations = nPermutations_p;
 			m_szName = szHLSL_p;
+
+			m_VSCache.Init( nShaderPrograms_p, pDevice_p->m_pCacheVS );
+			m_PSCache.Init( nShaderPrograms_p, pDevice_p->m_pCachePS );
 		}
 
 		//------------------------------------------------------------------------

@@ -178,11 +178,6 @@ namespace dx{
 
 	class Binder: public Command{
 
-	//protected:
-
-		UINT64 m_typeBits;
-		E_BIND m_typeIndex;
-
 	public:
 
 		//------------------------------------------------------------------------
@@ -195,7 +190,6 @@ namespace dx{
 
 			assert( m_typeIndex >= 0 && m_typeIndex < E_MAX_BINDS );
 		};
-
 		Binder(){}
 		virtual ~Binder(){};
 
@@ -215,6 +209,11 @@ namespace dx{
 		//------------------------------------------------------------------------
 		UINT64 TypeBits() const { return m_typeBits;	}
 		E_BIND TypeIndex() const { return m_typeIndex;	}
+
+	private:
+
+		UINT64 m_typeBits;
+		E_BIND m_typeIndex;
 	};
 
 	typedef std::shared_ptr<Binder> shared_Binder_ptr;

@@ -28,16 +28,14 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	m_sortKey.intRepresentation = 0LL;
 
 	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
-	//m_pSpriteRendererRef = pSpriteRenderer_p;
 	m_iShaderPermutation = 0;
 
 	m_renderData.m_mWorld = XMMatrixIdentity();
-
 	m_renderData.m_res.x = fWidth_p;
 	m_renderData.m_res.y = fHeight_p;
 	m_renderData.m_uvRect = uvRect_p;
-	m_renderData.m_bUpdate = true;
 	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
+	m_renderData.m_bUpdate = true;
 
 	m_previousColor = m_currentColor = m_renderData.m_color;
 	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
@@ -255,12 +253,11 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 	m_iShaderPermutation = 0;
 
 	m_renderData.m_mWorld = XMMatrixIdentity();
-
 	m_renderData.m_res.x = fWidth_p;
 	m_renderData.m_res.y = fHeight_p;
 	m_renderData.m_uvRect = uvRect_p;
-	m_renderData.m_bUpdate = true;
 	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
+	m_renderData.m_bUpdate = true;
 
 	m_previousColor = m_currentColor = m_renderData.m_color;
 	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
@@ -279,9 +276,9 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 
 	ID3D11Buffer * pBuffer = NULL;
 	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	//pDevice_p->GetDevice()->CreateBuffer( &cbufferParams.desc.bufferDesc, nullptr, &pBuffer );
 
 	// initialize pipe state for this sprite
+
 	m_pipeState.Reset();
 	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );

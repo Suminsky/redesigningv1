@@ -38,7 +38,42 @@ namespace render{
 	//------------------------------------------------------------------------
 	class DrawablesQueue{
 
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		DrawablesQueue() : m_stateCache(){};
+		virtual ~DrawablesQueue(){};
+
+		//------------------------------------------------------------------------
+		// Used by drawables to put themselves on the queue
+		//------------------------------------------------------------------------
+		void Submit( Drawable & drawable_p );
+		void Submit( Drawable && drawable_p );
+
+		//------------------------------------------------------------------------
+		// clear the queue
+		//------------------------------------------------------------------------
+		void Prepare();
+
+		//------------------------------------------------------------------------
+		// Sets the given state to NULL, effectively force a bind command to be
+		// executed even it where already cached.
+		// Used for re setting things like render targets after resizing bbuffers.
+		//------------------------------------------------------------------------
+		void ResetState( dx::E_BIND eBind_p );
+
+		//------------------------------------------------------------------------
+		// sort the drawables and put its commands in the list, removing
+		// redundant binds
+		//------------------------------------------------------------------------
+		void CreateCommandBuffer( RenderCommands & commandList_p, bool bClearStateCache_p );
+
+	private:
+
 		struct Entry{
+
 			UINT64 drawableKey; // sort key
 			int index;			// index on the drawables array
 
@@ -48,62 +83,12 @@ namespace render{
 			}
 		};
 
-		typedef std::vector<Drawable> drawablearray;
-		typedef std::vector<Entry> sortarray;
+		typedef std::vector<Drawable>	drawablearray;
+		typedef std::vector<Entry>		sortarray;
 
-		drawablearray m_drawables;
-		sortarray  m_sortqueue;
-		dx::Binder* m_stateCache[dx::E_MAX_BINDS];
-		
-	public:
-
-		DrawablesQueue() : m_stateCache(){};
-		virtual ~DrawablesQueue(){};
-
-		//------------------------------------------------------------------------
-		// Used by drawables to put themselves on the queue
-		//------------------------------------------------------------------------
-		void Submit( Drawable & drawable_p ){
-
-			m_drawables.push_back( drawable_p );
-
-			Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
-			m_sortqueue.push_back(newEntry);
-
-			//assert( drawable_p.m_sortKey != 13258597302978759884 );
-		}
-		void Submit( Drawable && drawable_p ){
-
-			m_drawables.emplace_back( std::move(drawable_p) );
-
-			Entry newEntry = {drawable_p.GetSortKey(), ((int)m_drawables.size())-1};
-			m_sortqueue.push_back(newEntry);
-
-			//assert( drawable_p.m_sortKey != 13258597302978759884 );
-		}
-
-		void Prepare(){
-
-			//m_drawables.clear();
-			m_drawables.resize(0);
-			m_sortqueue.clear();
-		}
-
-		//------------------------------------------------------------------------
-		// Sets the given state to NULL, effectively force a bind command to be
-		// executed even it where already cached.
-		// Used for re setting things like render targets after resizing bbuffers.
-		//------------------------------------------------------------------------
-		void ResetState( dx::E_BIND eBind_p ){
-
-			m_stateCache[eBind_p] = NULL;
-		}
-
-		//------------------------------------------------------------------------
-		// sort the drawables and put its commands in the list, removing
-		// redundant binds
-		//------------------------------------------------------------------------
-		void CreateCommandBuffer( RenderCommands & commandList_p, bool bClearStateCache_p );
+		drawablearray	m_drawables;
+		sortarray		m_sortqueue;
+		dx::Binder	*	m_stateCache[dx::E_MAX_BINDS];
 	};
 
 #pragma warning( pop ) 

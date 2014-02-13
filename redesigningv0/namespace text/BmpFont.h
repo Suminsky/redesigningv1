@@ -97,8 +97,8 @@ namespace text{
 				return m_notSupportedGlyph;
 			 }
 		}
-		dx::Binder *& GetTextureBinder(){ return m_pTextureSRVBinder; }
-		dx::State & GetPipeState(){ return m_pipeState; }
+		dx::BindPSShaderResourceView *& GetTextureBinder(){ return m_pTextureSRVBinder; }
+		dx::PipeState & GetPipeState(){ return m_pipeState; }
 		int GetTextureWidth()  const{ return m_iTextureW; }
 		int GetTextureHeight() const{ return m_iTextureH; }
 		int GetTextureID() const {return m_iTextureID;}
@@ -111,8 +111,8 @@ namespace text{
 		int m_iTextureW, m_iTextureH;
 		GlyphRect m_notSupportedGlyph;
 
-		dx::Binder * m_pTextureSRVBinder;
-		dx::State	m_pipeState;
+		dx::BindPSShaderResourceView * m_pTextureSRVBinder;
+		dx::PipeState	m_pipeState;
 		int m_iTextureID;
 
 		GlyphMap m_glyphUVs;

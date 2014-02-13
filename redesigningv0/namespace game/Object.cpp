@@ -19,8 +19,6 @@ void game::Object::AttachComponent( pool_Component_ptr && pComponent_p )
 			pComponent_p->VOnAttach();
 
 			m_components.push_back( std::move(pComponent_p) );
-
-			//m_pLayerOwner->InformSystemsAboutComponentAddedToObject( m_components.back());
 	}
 }
 
@@ -45,34 +43,17 @@ void game::Object::AttachComponent( const pool_Component_ptr & pComponent_p )
 	}
 }
 
-void game::Object::DettachComponent( COMPONENTINDEX componentCurrentIndex_p )
-{
-	assert( componentCurrentIndex_p != INVALID_COMPONENTINDEX );
-	assert( !m_components[componentCurrentIndex_p]->m_bDetached );
-
-	m_components[componentCurrentIndex_p]->m_bDetached = true;
-
-	m_removedComponents.push_back(componentCurrentIndex_p);
-}
-
-void game::Object::DettachComponent( const pool_Component_ptr & pComponent_p )
-{
-	DettachComponent(pComponent_p->m_currentComponentObjectIndex);
-}
-
-void game::Object::DettachComponent( const Component * pComponent_p )
-{
-	DettachComponent(pComponent_p->m_currentComponentObjectIndex);
-}
-
 void game::Object::CleanRemovedComponents()
 {
 	unsigned int nRemoved =	(unsigned int)m_removedComponents.size(); // cache
 	unsigned int nComponents =		(unsigned int)m_components.size();
 
-	for( unsigned int itRemoved = 0, itLast = nComponents - 1;
-		itRemoved < nRemoved;
-		++itRemoved, --itLast ){
+	for( unsigned int itRemoved = 0,
+		 itLast = nComponents - 1;
+
+		 itRemoved < nRemoved;
+
+		 ++itRemoved, --itLast ){
 
 			if( !m_components[m_removedComponents[itRemoved]]->m_bDetached ){
 
@@ -93,7 +74,7 @@ void game::Object::CleanRemovedComponents()
 
 			if( m_components[m_removedComponents[itRemoved]]->m_bDetached ){
 
-				// find the swaped task on the list to be destroyed, update the index
+				// find the swapped task on the list to be destroyed, update the index
 
 				for( unsigned int itToBeDestroyed = itRemoved; itToBeDestroyed < nRemoved; ++itToBeDestroyed ){
 
@@ -139,4 +120,24 @@ void game::Object::DispatchComponentEvents()
 void game::Object::DispatchComponentEventImmediately( EventType eveType_p, ComponentEventData eveData_p )
 {
 	m_objectEventMachine.DispatchEventImmetiately( eveType_p, eveData_p );
+}
+
+void game::Object::DettachComponent( COMPONENTINDEX componentCurrentIndex_p )
+{
+	assert( componentCurrentIndex_p != INVALID_COMPONENTINDEX );
+	assert( !m_components[componentCurrentIndex_p]->m_bDetached );
+
+	m_components[componentCurrentIndex_p]->m_bDetached = true;
+
+	m_removedComponents.push_back(componentCurrentIndex_p);
+}
+
+void game::Object::DettachComponent( const pool_Component_ptr & pComponent_p )
+{
+	DettachComponent(pComponent_p->m_currentComponentObjectIndex);
+}
+
+void game::Object::DettachComponent( const Component * pComponent_p )
+{
+	DettachComponent(pComponent_p->m_currentComponentObjectIndex);
 }

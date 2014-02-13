@@ -36,6 +36,7 @@ namespace gen{
 			:
 		m_indexOnParent(INVALID_INDEX_ONPARENT),
 		m_pParent(nullptr){}
+		~TreeNode();
 
 		//------------------------------------------------------------------------
 		// makes given node a child of this noe

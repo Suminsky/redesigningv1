@@ -15,37 +15,36 @@
 
 namespace dx{
 
-	typedef ResourceCache<RenderTargetView, 1>	RTVCache;
-	typedef ResourceCache<Texture2DResource, 30> Tex2DCache;
-	typedef ResourceCache<VertexShader, 1>		VSCache;
-	typedef ResourceCache<PixelShader, 1>		PSCache;
-	typedef ResourceCache<BufferResource, 5>	BufferCache;
-	typedef ResourceCache<BlendState, 2>		BlendStateCache;
-	typedef ResourceCache<ShaderResourceView, 30> ShaderResourceViewCache;
-	typedef ResourceCache<InputLayout, 1>		InputLayoutCache;
-	typedef ResourceCache<SamplerState, 3>		SamplerStateCache;
+	typedef ResourceCache<RenderTargetView,		1>	RTVCache;
+	typedef ResourceCache<Texture2DResource,	30>	Tex2DCache;
+	typedef ResourceCache<VertexShader,			2>	VSCache;
+	typedef ResourceCache<PixelShader,			2>	PSCache;
+	typedef ResourceCache<BufferResource,		6>	BufferCache;
+	typedef ResourceCache<BlendState,			2>	BlendStateCache;
+	typedef ResourceCache<ShaderResourceView,	30>	ShaderResourceViewCache;
+	typedef ResourceCache<InputLayout,			2>	InputLayoutCache;
+	typedef ResourceCache<SamplerState,			3>	SamplerStateCache;
 
 	class Device{
 
 		ID3D11Device * m_pDevice;
 		ID3D11DeviceContext * m_pContext;
 
-		//render::DrawablesQueue m_drawableQueue;
-
 		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
 
 		D3D_FEATURE_LEVEL m_featureLVLavailable;
 
 		public:
-		RTVCache * m_pCacheRTV;
-		Tex2DCache * m_pCacheTex2D;
-		VSCache * m_pCacheVS;
-		PSCache * m_pCachePS;
-		BufferCache * m_pCacheBuffer;
-		BlendStateCache * m_pCacheBlendState;
+
+		RTVCache				* m_pCacheRTV;
+		Tex2DCache				* m_pCacheTex2D;
+		VSCache					* m_pCacheVS;
+		PSCache					* m_pCachePS;
+		BufferCache				* m_pCacheBuffer;
+		BlendStateCache			* m_pCacheBlendState;
 		ShaderResourceViewCache * m_pCacheSRV;
-		InputLayoutCache * m_pCacheInputLayout;
-		SamplerStateCache * m_pCacheSamplerState;
+		InputLayoutCache		* m_pCacheInputLayout;
+		SamplerStateCache		* m_pCacheSamplerState;
 
 		private:
 
@@ -70,9 +69,11 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Device(): m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
-					m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
-					m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
+		Device()
+			:
+		m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
+		m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
+		m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
 
 			InitCaches();
 		};

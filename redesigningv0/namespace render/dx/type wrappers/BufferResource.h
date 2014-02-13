@@ -19,6 +19,8 @@
 				hig lvl class.
 
 				I think the resourceCache must have a specialization for BufferResource..
+				TODO
+				or maybe just give a szName to the buffer..why not
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

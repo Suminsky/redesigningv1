@@ -70,6 +70,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		Object *  GetObjectOwner(){ return m_pObjectOwner; }
 		COMPONENTTYPE GetType() const { return m_type; }
+		COMPONENTINDEX GetIndexOnObject() const { return m_currentComponentObjectIndex; }
 
 	protected:
 

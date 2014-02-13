@@ -107,7 +107,7 @@ namespace game{
 		DirectX::XMFLOAT4 m_currentColor;
 		DirectX::XMFLOAT4 m_previousColor;
 
-		dx::State m_pipeState;	// cbuffer, texture, blend state, sampler state
+		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
 		sprite::DrawableCbuffer m_renderData;
 		sprite::BindVSDrawableCBuffer m_VSDrawableCbufferBinder;
 

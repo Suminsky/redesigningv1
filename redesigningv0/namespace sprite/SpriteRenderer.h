@@ -49,46 +49,39 @@ namespace sprite{
 			float uv[2];
 		};
 
+		struct InstanceEntry{
+
+			UINT64 drawableKey; // sort key
+			int index;			// index on the drawables array
+
+			bool operator ()( const InstanceEntry & a, const InstanceEntry & b)const{ // used by stl sort algos
+
+				return a.drawableKey < b.drawableKey;
+			}
+		};
+
 	public:
 
-		render::DrawablesQueue m_queue;
-		Camera m_camera;
-		dx::ShaderResource m_spriteShaderRes;
-
-		dx::State m_defaultVertexInput; //vertex, index, input layout, primitive topology
-		dx::DrawIndexed m_drawIndexed;
-
-		BlendStateBinders m_blends;
-		TextureBinders m_texs;
-		SamplerStateBinders m_samplers;
+		struct spriteInstance{
+			float res[2];
+			float padding[2];
+			float uvRect[4];
+			float mWorld[16];
+			float color[4];
+		};
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		SpriteRenderer( dx::Device * pDevice_p )
-			:
-		m_spriteShaderRes("namespace sprite/SpriteV9.hlsl", 1),
-		m_blends(pDevice_p),
-		m_texs(pDevice_p),
-		m_samplers(pDevice_p),
-		m_drawIndexed(6)
-		{}
-
-		SpriteRenderer(): m_drawIndexed(6){}
+		SpriteRenderer( dx::Device * pDevice_p, int maxInstances_p = 128 );
+		SpriteRenderer();
 		virtual ~SpriteRenderer(){};
 
 		//------------------------------------------------------------------------
 		// delayed "ctor"
 		//------------------------------------------------------------------------
-		void Init( dx::Device * pDevice_p ){
+		void Init( dx::Device * pDevice_p, int maxInstances_p = 128 );
 
-			pDevice_p = pDevice_p;
-			m_spriteShaderRes.Init( "Contents/SpriteV9.hlsl", 1 );
-			m_blends.Init(pDevice_p);
-			m_texs.Init(pDevice_p);
-			m_samplers.Init(pDevice_p);
-		}
-	
 		//------------------------------------------------------------------------
 		// queue the states of a sprite
 		//------------------------------------------------------------------------
@@ -98,41 +91,69 @@ namespace sprite{
 		void Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p );
 
 		//------------------------------------------------------------------------
+		// - starts gathering instance data for late rendering
+		// - send a single instance data
+		// - creates the drawable for sending to queue, containing the instanced draw call
+		//------------------------------------------------------------------------
+		void BeginInstancing(	dx::BindPSShaderResourceView * pTextureBinder_p,
+								dx::BindOMBlendState * pBlendBinder,
+								dx::BindPSSampler * pSampleState );
+		void RenderInstance( spriteInstance & spriteData_p, UINT64 sortKey_p );
+		void RenderInstance( game::SpriteComponent_ *pSprite_p );
+		void FinishInstancingRender( dx::Device * pDevice_p, UINT64 sortKey_p );
+
+		//------------------------------------------------------------------------
 		// batch commands and executes
 		//------------------------------------------------------------------------
-		void Raster( ID3D11DeviceContext * pContext_p ){
+		void Raster( ID3D11DeviceContext * pContext_p );
 
-			render::RenderCommands cmds;
-			m_queue.CreateCommandBuffer( cmds , false);
-			ExecuteRenderCommands(cmds, pContext_p);
-		}
+		render::DrawablesQueue	m_queue;		
+
+		dx::PipeState	m_defaultVertexInput; //vertex, index, input layout, primitive topology
+		dx::DrawIndexed m_drawIndexed;
+
+		dx::PipeState				m_instancedVertexInput;
+		dx::DrawIndexedInstanced	m_drawIndexedInstanced;
+		render::Drawable			m_drawableInstances;
+
+		BlendStateBinders	m_blends;
+		TextureBinders		m_texs;
+		SamplerStateBinders	m_samplers;
+		dx::ShaderResource	m_spriteShaderRes;
+
+		Camera m_camera;
+
+	private:
+
+		// TODO: a cache class for each of those binders would be the right thing
+		dx::BindIAPrimitiveTopology m_bindPrimitiveTopo;
+		dx::BindIAInputLayout		m_bindIAInputLayout; // TODO: should be tied with vertex shaders some how
+		dx::BindIAInputLayout		m_bindIAInputLayoutInstanced;
+		dx::BindIAVertexBuffer		m_bindVB;
+		dx::BindIAIndexBuffer		m_bindIB;
+		dx::BindIAVertexBuffer		m_bindInstVB;
+
+		int m_maxInstances;
+		int m_currentInstancesUsed;
+		std::vector<spriteInstance> m_vSpriteInstances;
+		std::vector<spriteInstance> m_vSpriteInstancesTmp;
+		std::vector<InstanceEntry>	m_vInstancesSort;
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void LoadShader( dx::Device *pDevice_p, const char * szVS_p,const char * szPS_p );
-
-
-	private:
+		void LoadShader( dx::Device *pDevice_p );
 
 		//------------------------------------------------------------------------
 		// Creates a state that binds input layout, vertex and index buffer for
 		// a 1x1 quad, with 0 to 1 uv
 		//------------------------------------------------------------------------
 		void CreateDefaultVertexInputState( ID3DBlob * pShaderBytes_p, dx::Device * pDevice_p );
+		void CreateInstacedVertexInputState( ID3DBlob * pShaderBytes_p, dx::Device * pDevice_p );
 
 		//------------------------------------------------------------------------
 		// execute given commands
 		//------------------------------------------------------------------------
-		void ExecuteRenderCommands( const render::RenderCommands & cmds_p, ID3D11DeviceContext * pContext_p ){
-
-			for(	render::RenderCommands::const_iterator it = cmds_p.begin(),
-					itEnd = cmds_p.end();
-					it != itEnd;
-					++it ){
-
-				(*it)->Execute(pContext_p);
-			}
-		}
+		void ExecuteRenderCommands( const render::RenderCommands & cmds_p, ID3D11DeviceContext * pContext_p );
 	};
 }
