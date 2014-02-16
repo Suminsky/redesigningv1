@@ -219,6 +219,7 @@
     <ClInclude Include="namespace render\dx\pipeline\PipeState.h" />
     <ClInclude Include="namespace render\dx\BinderCache.h" />
     <ClInclude Include="namespace render\dx\BinderCache.inl" />
+    <ClInclude Include="namespace sprite\InstancedSprites.h" />
     <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
@@ -356,6 +357,7 @@
     </ClCompile>
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
+    <ClCompile Include="namespace sprite\InstancedSprites.cpp" />
     <ClCompile Include="namespace sprite\Movable.cpp" />
     <ClCompile Include="namespace text\BmpFont.cpp" />
     <ClCompile Include="namespace text\CreateFontTexture.cpp" />

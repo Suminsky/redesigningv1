@@ -40,9 +40,9 @@ Sprite::Sprite( dx::Device * pDevice_p,
 
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_texs.Get(szTexture_p) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers.GetSamplerBind(sampler_p) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends.GetBlendBind(blendType_p) );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p) );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
 }
 
 void sprite::Sprite::Update( double dInterpolation_p )

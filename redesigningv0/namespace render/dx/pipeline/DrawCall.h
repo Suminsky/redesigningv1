@@ -119,6 +119,13 @@ namespace dx{
 
 			m_nInstances = nInstances_p;
 		}
+		void UpdateInstanceOffset( UINT iOffset_p ){
+
+			m_iStartInstanceLocation = iOffset_p;
+		}
+
+		UINT GetInstanceOffset() const { return m_iStartInstanceLocation; }
+		UINT GetNInstances() const { return m_nInstances; }
 
 		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
 

@@ -196,7 +196,7 @@ void game::SpriteAnimationComponentFactory::LoadSpritesFromGFig( text::GfigEleme
 			 GfigElementA & spriteGFig = pGFig_p->m_subElements[it];
 
 			 TextureID_Binder_Pair spriteUsed;
-			 spriteUsed.pBindPSSRV = &m_pSpriteRenderer->m_texs.Get( spriteGFig.m_name.c_str(), &spriteUsed.iID );
+			 spriteUsed.pBindPSSRV = &m_pSpriteRenderer->m_tex2D_cache.Get( spriteGFig.m_name.c_str(), &spriteUsed.iID );
 			 compo_p->m_vSprites.push_back(spriteUsed);
 	}
 }

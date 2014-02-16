@@ -390,6 +390,9 @@
     <ClInclude Include="namespace render\dx\BinderCache.inl">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace sprite\InstancedSprites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -705,6 +708,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace render\dx\BinderCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sprite\InstancedSprites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

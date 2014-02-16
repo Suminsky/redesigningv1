@@ -39,8 +39,8 @@ void text::TextRenderer::Initialize( dx::Device * pDevice_p, sprite::SpriteRende
 		// states comes in..although I think it may be quite usefull, it obviously avoid hardcore bugs due
 		// misuse
 
-	m_textureState.AddBinderCommand( &m_pSpriteRendererRef->m_samplers.GetSamplerBind(sprite::E_SAMPLER_NONE) );
-	m_textureState.AddBinderCommand( &m_pSpriteRendererRef->m_blends.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED) );
+	m_textureState.AddBinderCommand( &m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(sprite::E_SAMPLER_NONE) );
+	m_textureState.AddBinderCommand( &m_pSpriteRendererRef->m_blends_cache.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED) );
 
 	m_pTextDrawCall = &m_pSpriteRendererRef->m_drawIndexed;
 
@@ -83,8 +83,8 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	drawable.AddPipelineState( &camera_p.m_pipeState );
 
 // 	m_pSpriteRendererRef->BeginInstancing(  m_fonts[iFontID_p].GetTextureBinder(),
-// 		&m_pSpriteRendererRef->m_blends.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED),
-// 		&m_pSpriteRendererRef->m_samplers.GetSamplerBind(sprite::E_SAMPLER_NONE) );
+// 		&m_pSpriteRendererRef->m_blends_cache.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED),
+// 		&m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(sprite::E_SAMPLER_NONE) );
 
 	while( szText_p[itChar] != 0x0000 ){
 
