@@ -49,13 +49,13 @@ namespace game{
 
 	public:
 
-		bool m_bActive; bool m_bVisible;
+		bool m_bActive;
+		bool m_bVisible;
 		Timer<double> m_timer;
 
-		
-		SystemMachine m_systems;
-		ComponentFactory m_componentFactory;
-		ObjectMachine m_objects;
+		SystemMachine		m_systems;
+		ComponentFactory	m_componentFactory;
+		ObjectMachine		m_objects;
 
 		//------------------------------------------------------------------------
 		// ctor/dctor

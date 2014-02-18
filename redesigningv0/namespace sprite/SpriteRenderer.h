@@ -42,6 +42,20 @@ namespace game{
 
 namespace sprite{
 
+	union SortMask{
+		unsigned __int64 intRepresentation;
+		struct{
+			unsigned __int64 textureID		: 15;
+			unsigned __int64 shaderID		: 15;
+			unsigned __int64 transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
+			unsigned __int64 Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+			unsigned __int64 viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
+			unsigned __int64 viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
+			unsigned __int64 layer			: 2;	// 4 layers: game, HUD, full screen effect...
+		}bitfield;
+	};
+		//TODO: depth test/write for opaques, depth test/no write for alpha blended and additive
+
 
 	class SpriteRenderer{
 

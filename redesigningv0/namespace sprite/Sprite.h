@@ -38,7 +38,7 @@ namespace sprite{
 	// Used to sort the draw calls
 	// This level of the rendering cant worry about this more specific stuff!
 	//------------------------------------------------------------------------
-	union SortMask{
+	union SortMask2{
 		struct{
 
 			unsigned __int64 textureID		: 15;
@@ -100,7 +100,7 @@ namespace sprite{
 	private:
 
 		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
-		SortMask m_renderSortKey; // used to sort on the render queue
+		SortMask2 m_renderSortKey; // used to sort on the render queue
 
 		DrawableCbuffer m_renderData;
 		BindVSDrawableCBuffer m_VSDrawableCbufferBinder;

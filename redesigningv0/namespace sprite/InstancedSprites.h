@@ -6,7 +6,8 @@
 	file:		InstancedSprites.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	TODO, blinking much more frequently than expected, dunno if NO_OVERWRITE overwriting data in use or
+				doing arithmetic shit when data warps  
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -41,6 +42,10 @@ namespace sprite{
 	// buffers data so it can map all at once
 	// makes no guarantees that data being overlapped on warping are not in use
 	// by driver/gpu, so make sure the size is big enough vs usage temporary enough
+	// TODO:
+	// slice it in static and dynamic/tmp parts, so each slice works as an
+	// circular buffer
+	// slice{ start, end, current }
 	//========================================================================
 	class InstancesVertexBuffer{
 
@@ -67,13 +72,16 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void MapInstancesToVB( dx::Device * pDevice_p );
-		void MapInstancesToVB_NoSort( dx::Device * pDevice_p );
+		void MapInstancesToVB( ID3D11DeviceContext * pDContext_p);
+		void MapInstancesToVB_NoSort( ID3D11DeviceContext * pDContext_p );
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		UINT GetCurrentVBOffset() const { return m_firstAvailable; }
+		UINT GetCurrentVBOffset() const { return m_iVBfirstAvailable; }
+		UINT GetWarpOffset() const { return 0; }
+		UINT GetCurrentNBeforeWarp() const { return m_nWarpedAt; }
+		UINT GetCurrentNBuffered() const { return m_iBufferingAt; }
 		UINT GetVBSize() const { return m_size; }
 		dx::BindIAVertexBuffer * GetBinder() { return & m_bindVB; }
 
@@ -93,14 +101,16 @@ namespace sprite{
 		dx::BindIAVertexBuffer m_bindVB;
 
 		UINT m_size;
-		UINT m_firstAvailable;
+		UINT m_iVBfirstAvailable;
+		UINT m_nWarpedAt;
+		UINT m_unwarpedOffset;
 
 		UINT m_iBufferingAt;
 		bool m_bLocked; // assures only one object buffers data per time, TODO: dbg only
 
 		std::vector<spriteInstance> m_vSpriteInstances;
 		std::vector<Entry>			m_vSortable;
-		std::vector<spriteInstance> m_vSpriteInstancesTmp;	
+		std::vector<spriteInstance> m_vSpriteInstancesTmp;
 	};
 
 	//========================================================================
@@ -142,12 +152,10 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// instance data is mapped to vb, and draw calls are update
 		//------------------------------------------------------------------------
-		void ConcludeInstancesBuffering( dx::Device * pDevice_p, UINT64 sortKey_p );
-		void ConcludeInstancesBuffering_NoSort( dx::Device * pDevice_p, UINT64 sortKey_p );
+		void ConcludeInstancesBuffering( ID3D11DeviceContext * pDContext_p, UINT64 sortKey_p );
+		void ConcludeInstancesBuffering_NoSort( ID3D11DeviceContext * pDContext_p, UINT64 sortKey_p );
 
 	private:
-
-		UINT m_nWarpedAt;
 
 		dx::PipeState			 m_pipeState;	// holds state commom to all instance, like texture, blend and sampler
 		dx::DrawIndexedInstanced m_drawCall;	// holds offsets into the instances VB
@@ -157,5 +165,9 @@ namespace sprite{
 		render::Drawable		 m_drawable_warpException;
 
 		InstancesVertexBuffer	* m_pIVBref;
+		
+		void AddInstance_Aux();
+		void ConcludeInstancesBuffering_Aux( UINT64 sortKey_p );
 	};
+
 }

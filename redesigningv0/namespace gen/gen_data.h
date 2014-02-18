@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <string> // memcpy
+#include <stdint.h>
 
 namespace gen{
 
@@ -31,6 +32,37 @@ namespace gen{
 		//(void)0;
 	}
 
+	//========================================================================
+	// rounds to the next number thats a multiple of multiple_p
+	//========================================================================
+	inline uint32_t RoundUpToNextMultiple( uint32_t n_p, uint32_t multiple_p ){
+
+		return n_p + multiple_p - 1 - (n_p - 1) % multiple_p;
+	}
+	inline uint32_t RoundUpToNextMultiple_POT( uint32_t n_p, uint32_t multiplePOT_p ){
+
+		return (n_p + multiplePOT_p - 1) & ~(multiplePOT_p - 1);
+	}
+	inline int32_t RoundUpToNextMultiple( int32_t n_p, int32_t multiple_p ){
+
+		if( n_p < 0 ){
+			// multiple_p = -multiple_p; rounds in the left direction (rounds down)
+
+			return - ((int)(RoundUpToNextMultiple( (uint32_t)-n_p, (uint32_t)multiple_p )) - multiple_p );
+		}
+
+		return RoundUpToNextMultiple( (uint32_t)n_p, (uint32_t)multiple_p );
+	}
+	inline int32_t RoundUpToNextMultiple_POT( int32_t n_p, int32_t multiplePOT_p ){
+
+		if( n_p < 0 ){
+			// multiple_p = -multiple_p; rounds in the left direction (rounds down)
+
+			return - ((int)(RoundUpToNextMultiple_POT( (uint32_t)-n_p, (uint32_t)multiplePOT_p )) - multiplePOT_p );
+		}
+
+		return RoundUpToNextMultiple_POT( (uint32_t)n_p, (uint32_t)multiplePOT_p );
+	}
 
 	//========================================================================
 	// min max clamping
@@ -205,6 +237,93 @@ namespace gen{
 			pElementsPicked_p[it] = pElementsAvailable_p[randIndex];
 		}
 	}
+
+	//========================================================================
+	// 
+	//========================================================================
+	template< typename T >
+	class CircularBuffer{
+
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		CircularBuffer()
+			:
+		m_data(nullptr){}
+
+		void Initialize( uint32_t size_p ){
+
+			if( m_data ) delete [] m_data;
+
+			m_data = new T[size_p];
+			m_currentIndex = 0;
+			m_size = size_p;
+		}
+		CircularBuffer( uint32_t size_p )
+			:
+		m_data(nullptr){
+
+			Initialize( size_p );
+		}
+		~CircularBuffer(){
+
+			if( m_data ) delete [] m_data;
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void clear(){
+
+			m_currentIndex = 0;
+		}
+
+		//------------------------------------------------------------------------
+		// accessors operators
+		//------------------------------------------------------------------------
+		T & operator[]( uint32_t index_p ){
+
+			assert( index_p < m_size );
+			return m_data[index_p];
+		}
+		T & operator() (){
+
+			return m_data[m_currentIndex];
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		uint32_t GetCurrentIndex() const { return m_currentIndex; }
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		T operator++( int ){// the int param means postfix
+
+			++m_currentIndex;
+			if( m_currentIndex == m_size )
+				m_currentIndex = 0;
+
+			return (*this)();
+		}
+		T & operator++(){
+
+			++m_currentIndex;
+			if( m_currentIndex == m_size )
+				m_currentIndex = 0;
+
+			return (*this)();
+		}
+
+	private:
+
+		uint32_t m_currentIndex;
+		T * m_data;
+		uint32_t m_size;
+	};
 
 	//========================================================================
 	// that thing really works

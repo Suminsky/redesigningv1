@@ -43,18 +43,19 @@ namespace game{
 		// struct{ :1, :3, :4, :1 } == xxxxxxxx1, xxxxx111x, x1111xxxx, 1xxxxxxxx
 		// I dont know why, and its not portable either.
 		//------------------------------------------------------------------------
-		union SortMask{
-			struct{
-				unsigned __int64 textureID		: 15;
-				unsigned __int64 shaderID		: 15;
-				unsigned __int64 transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
-				unsigned __int64 Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
-				unsigned __int64 viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
-				unsigned __int64 viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
-				unsigned __int64 layer			: 2;	// 4 layers: game, HUD, full screen effect...
-			}bitfield;
-			__int64 intRepresentation;
-		}m_sortKey;
+		//union SortMask{
+		//	struct{
+		//		unsigned __int64 textureID		: 15;
+		//		unsigned __int64 shaderID		: 15;
+		//		unsigned __int64 transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
+		//		unsigned __int64 Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+		//		unsigned __int64 viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
+		//		unsigned __int64 viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
+		//		unsigned __int64 layer			: 2;	// 4 layers: game, HUD, full screen effect...
+		//	}bitfield;
+		//	__int64 intRepresentation;
+		//}
+		sprite::SortMask m_sortKey;
 
 		//------------------------------------------------------------------------
 		// ctor

@@ -107,6 +107,7 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *
 	static render::Drawable s_drawInst;
 	s_drawInst.Clear();
 
+	pSprite_p->m_sortKey.bitfield.shaderID = 0;
 	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
 	// shader
 	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
@@ -126,13 +127,9 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *
 void sprite::SpriteRenderer::Render( InstancedSprites * pInstSprites, Camera *pCamera_p )
 {
 	static render::Drawable s_drawInst;
-	s_drawInst = pInstSprites->m_drawable;
-
-	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
-	s_drawInst.AddPipelineState( &m_instancedVertexInput );
-	s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
-
-	m_queue.Submit( s_drawInst );
+	SortMask sortKey;
+	sortKey.intRepresentation = pInstSprites->m_drawable.GetSortKey();
+	sortKey.bitfield.shaderID = 1;
 
 	if( pInstSprites->m_drawCall_warpException.GetNInstances() ){
 
@@ -141,6 +138,20 @@ void sprite::SpriteRenderer::Render( InstancedSprites * pInstSprites, Camera *pC
 		s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
 		s_drawInst.AddPipelineState( &m_instancedVertexInput );
 		s_drawInst.AddPipelineState( &m_camera.m_pipeState );
+
+		s_drawInst.SetSortKey( sortKey.intRepresentation );
+
+		m_queue.Submit( s_drawInst );
+	}
+	if( pInstSprites->m_drawCall.GetNInstances() ){
+
+		s_drawInst = pInstSprites->m_drawable;
+
+		s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
+		s_drawInst.AddPipelineState( &m_instancedVertexInput );
+		s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
+
+		s_drawInst.SetSortKey( sortKey.intRepresentation );
 
 		m_queue.Submit( s_drawInst );
 	}

@@ -18,6 +18,7 @@
 // private includes
 #include "BmpFont.h"
 #include "../namespace sprite/SpriteRenderer.h"
+#include "../namespace gen/gen_data.h"
 
 namespace text{
 
@@ -35,7 +36,7 @@ namespace text{
 		sprite::DrawableCbuffer cbufferData;
 		sprite::BindVSDrawableCBuffer bindDrawableCbuffer;
 		
-		dx::PipeState state;
+		dx::PipeState pipeState;
 	};
 	struct DrawableGlyph{
 
@@ -43,7 +44,7 @@ namespace text{
 		render::Drawable drawable;
 
 		void Clear(){
-			renderData.state.Reset();
+			renderData.pipeState.Reset();
 			drawable.Clear();
 		}
 	};
@@ -60,36 +61,7 @@ namespace text{
 		};
 
 		typedef std::vector<BmpFont> Fonts;
-
-		struct GlyphRenderBuffer{ // due a bug on std, vector wont align data, this is fixed on vs2012
-
-			int m_currentIndex;
-			GlyphRenderData m_renderDatas[E_MAXGLYPHS];
-			
-
-			//------------------------------------------------------------------------
-			// 
-			//------------------------------------------------------------------------
-			void clear(){
-
-				m_currentIndex = 0;
-			}
-
-			//------------------------------------------------------------------------
-			// 
-			//------------------------------------------------------------------------
-			GlyphRenderData & operator[]( unsigned int index_p ){
-
-				assert( index_p < E_MAXGLYPHS );
-				return m_renderDatas[index_p];
-			}
-			void operator++( int ){// the int param means postfix
-
-				++m_currentIndex;
-				if( m_currentIndex == E_MAXGLYPHS )
-					m_currentIndex = 0;
-			}
-		};
+		typedef gen::CircularBuffer<GlyphRenderData> GlyphRenderBuffer;
 
 	public:
 
@@ -102,12 +74,7 @@ namespace text{
 		{
 			Initialize( pDevice_p, spriteRenderer_p );
 		}
-
 		TextRenderer(){}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
 		void Initialize( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p );
 
 		//------------------------------------------------------------------------
@@ -137,6 +104,10 @@ namespace text{
 		//------------------------------------------------------------------------
 		void RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, sprite::Camera & camera_p,UINT iFontID_p = 0 );
 
+		void RenderText(	const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, sprite::Camera & camera_p, ID3D11DeviceContext * pDContext_p,
+							sprite::SortMask sortKey_p, UINT iFontID_p = 0, 
+							sprite::E_BLENDTYPE eBlendType_p = sprite::E_BLEND_ALPHA_BLENDED, sprite::E_SAMPLERTYPE eSamplerType_p = sprite::E_SAMPLER_NONE );
+
 
 		//------------------------------------------------------------------------
 		// Returns an array of drawable text that can be used to render text.
@@ -156,7 +127,8 @@ namespace text{
 
 		Fonts m_fonts;
 
-		GlyphRenderBuffer m_glyphsRenderData;
+		GlyphRenderBuffer m_glyphsRenderData; // TODO replace stuff entirely by instancing stuff
+		sprite::InstancedSprites m_perFrameText;
 
 		render::vStatePtrs m_textRenderStates;
 		dx::DrawCall * m_pTextDrawCall;
@@ -169,22 +141,6 @@ namespace text{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		static UINT CountWString( const wchar_t * szString_p )
-		{
-			int counter = 0;
-
-			while( szString_p[counter] != 0x0000 ){
-
-				++counter;
-				assert( counter < 2048 );
-			}
-
-			return counter;
-		}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
 		void InitializeGlyphs(){
 
 			m_glyphsRenderData.clear();
@@ -193,12 +149,12 @@ namespace text{
 				
 				// initialize bind cbuffer command
 
-				m_glyphsRenderData.m_renderDatas[it].bindDrawableCbuffer.
-				Initialize( m_pGlyphBufferInterface, &m_glyphsRenderData.m_renderDatas[it].cbufferData );
+				m_glyphsRenderData[it].bindDrawableCbuffer.
+				Initialize( m_pGlyphBufferInterface, &m_glyphsRenderData[it].cbufferData );
 
-				// initialize state with binder command
+				// initialize pipeState with binder command
 
-				m_glyphsRenderData.m_renderDatas[it].state.AddBinderCommand( &m_glyphsRenderData.m_renderDatas[it].bindDrawableCbuffer );
+				m_glyphsRenderData[it].pipeState.AddBinderCommand( &m_glyphsRenderData[it].bindDrawableCbuffer );
 			}
 		}
 	};
