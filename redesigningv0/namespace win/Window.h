@@ -75,8 +75,9 @@ namespace win{
 		//------------------------------------------------------------------------
 		// change monitor resolution
 		//------------------------------------------------------------------------
-		bool ChangeResolution( UINT W_p, UINT H_p );
-		bool ResetMonitorResolution();
+		static bool ChangeResolution( UINT W_p, UINT H_p );
+		static bool ResetMonitorResolution();
+		static bool GetCurrentScreenResolution(UINT & W_p, UINT & H_p);
 
 		//------------------------------------------------------------------------
 		// Updates the window style

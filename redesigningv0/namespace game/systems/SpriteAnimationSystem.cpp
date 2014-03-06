@@ -19,6 +19,7 @@ void game::SpriteAnimationSystem::VOnUpdate( double /*dAccum_p*/, double dDelta_
 		++itSprite ){
 
 			SpriteAnimationComponent & animCompo = (*m_poolAccess.GetAllocated( itSprite ));
+			if( !animCompo.GetObjectOwner()->IsAttached() ) continue;
 
 			if( animCompo.m_vClips[ animCompo.m_iCurrentClip ].stateData.eState == E_ANIMSTATE_PLAYING ){
 

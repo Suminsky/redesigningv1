@@ -23,7 +23,7 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 
 	// cbuffer
 
-	m_renderData.m_mViewProjection = m_mProjection = DirectX::XMMatrixOrthographicLH( (float)width_p/*/2.0f*/, (float)height_p/*/2.0f*/, 0.0f, 1.0f );
+	m_renderData.m_mViewProjection = m_mProjection = DirectX::XMMatrixOrthographicLH( (float)width_p, (float)height_p, 0.0f, 1.0f );
 
 	dx::BufferResource::CreationParams params = {0};
 	params.desc.bufferDesc.ByteWidth = CameraCbuffer::s_SIZE;

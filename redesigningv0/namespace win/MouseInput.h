@@ -60,15 +60,11 @@ namespace win{
 
 			m_prevPos = m_pos;
 
-			//m_downButtons.Reset();
-			//m_releasedButtons.Reset();
 			m_pressedButtons.Reset();
 			m_releasedButtons.Reset();
 
 			m_iWheelDelta = m_iWheelAmount - m_iWheelPrevAmount;
 			m_iWheelPrevAmount = m_iWheelAmount;
-			
-			//m_fWheelDelta = 0.0f;
 		}
 
 		//------------------------------------------------------------------------
@@ -136,7 +132,6 @@ namespace win{
 		void OnWM_MOUSEWHEEL( WPARAM wParam_p ){
 
 			m_iWheelAmount += GET_WHEEL_DELTA_WPARAM(wParam_p);
-			//m_fWheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam_p)/(float)WHEEL_DELTA;
 		}
 
 		//------------------------------------------------------------------------
@@ -222,3 +217,32 @@ namespace win{
 		bool m_bCaptured;
 	};
 }
+
+#define MOUSE_MSG_HANDLING( MouseInput_INSTANCE )\
+			case WM_MOUSEMOVE:\
+				MouseInput_INSTANCE.OnWM_MOUSEMOVE(lParam_p);\
+				return 0;\
+			case WM_MOUSEWHEEL:\
+				MouseInput_INSTANCE.OnWM_MOUSEWHEEL(wParam_p);\
+				return 0;\
+			case WM_LBUTTONDOWN:\
+				MouseInput_INSTANCE.OnWM_LBUTTONDOWN();\
+				return 0;\
+			case WM_MBUTTONDOWN:\
+				MouseInput_INSTANCE.OnWM_MBUTTONDOWN();\
+				return 0;\
+			case WM_RBUTTONDOWN:\
+				MouseInput_INSTANCE.OnWM_RBUTTONDOWN();\
+				return 0;\
+			case WM_LBUTTONUP:\
+				MouseInput_INSTANCE.OnWM_LBUTTONUP();\
+				return 0;\
+			case WM_MBUTTONUP:\
+				MouseInput_INSTANCE.OnWM_MBUTTONUP();\
+				return 0;\
+			case WM_RBUTTONUP:\
+				MouseInput_INSTANCE.OnWM_RBUTTONUP();\
+				return 0;\
+			case WM_CAPTURECHANGED:\
+				MouseInput_INSTANCE.OnWM_CAPTURECHANGED();\
+				return 0

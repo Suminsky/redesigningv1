@@ -177,19 +177,10 @@
     <ClInclude Include="Mentle\MentleWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mentle\MainMenu\MainMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace game\components\SpriteComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace game\components\ButtonComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\MainMenu\FadeLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace game\Event.h">
@@ -244,12 +235,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace text\TextRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\MainMenu\PlayOptionsLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace gen\Delegate.h">
@@ -321,60 +306,6 @@
     <ClInclude Include="namespace game\systems\SpriteAnimationSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mentle\InGame\InGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\MentleLogic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\AudioHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\InputMapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\InGameEventData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\NetworkHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\BGLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\CursorLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\panellayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\mentlecarddesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\mentlecardcomponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\cardslayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\cardfxctrl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\tutorialpart.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\ingame\tutoriallayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\EnergyBarLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\StatusBarLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace render\dx\pipeline\PipeState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -391,6 +322,39 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace sprite\InstancedSprites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\TextureTool\TextureTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace win\OpenDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sprite\SpriteAtlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace phys\AABB2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\InGame\BGLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -527,19 +491,10 @@
     <ClCompile Include="Mentle\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mentle\MainMenu\MainMenu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace game\components\SpriteComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\components\ButtonComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\EventMachine.cpp">
@@ -588,12 +543,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace text\TextRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\MainMenu\PlayOptionsLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\tasks\OnUpdateDelegateTask.cpp">
@@ -653,57 +602,6 @@
     <ClCompile Include="namespace game\systems\SpriteAnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mentle\InGame\InGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\MentleLogic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\AudioHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\InputMapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\NetworkHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\BGLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\CursorLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\PanelLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\MentleCardDesc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\CardsLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\CardFXCtrl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\TutorialLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\TutorialPart.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\StatusBarLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace render\dx\pipeline\PipeState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -711,6 +609,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace sprite\InstancedSprites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\TextureTool\TextureTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sprite\SpriteAtlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\InGame\BGLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

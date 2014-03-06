@@ -235,6 +235,13 @@ void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData
 	m_renderData.m_padding.y = spriteFrame.yOffset;
 	m_renderData.m_bUpdate = true;
 
+	if( m_bHFlip ){
+		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+	}
+	if( m_bVFlip ){
+		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+	}
+
 	(*(++m_pipeState.Begin())) = pAnim->GetSprite().pBindPSSRV;
 	m_TextureID = pAnim->GetSprite().iID;
 	m_sortKey.bitfield.textureID = m_TextureID;
@@ -245,9 +252,23 @@ void game::SpriteComponent_::SetColor( DirectX::XMFLOAT4 color_p )
 	m_previousColor = m_currentColor = color_p;
 }
 
+void game::SpriteComponent_::FlipHorz()
+{
+	m_bHFlip = !m_bHFlip;
+	gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+}
+
+void game::SpriteComponent_::FlipVertc()
+{
+	m_bVFlip = !m_bVFlip;
+	gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+}
+
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
 	m_sortKey.intRepresentation = 0LL;
+
+	m_bHFlip = m_bVFlip = false;
 
 	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
 	m_iShaderPermutation = 0;
@@ -304,6 +325,7 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 	XMFLOAT4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	sprite::E_BLENDTYPE eBlend = E_BLEND_NONE_DEFAULT;
 	sprite::E_SAMPLERTYPE eSampler = E_SAMPLER_NONE;
+	float xOffset = 0.0f; float yOffset = 0.0f;
 
 	GfigElementA * pParam = nullptr;
 
@@ -311,6 +333,15 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 	w = (float)atof( pParam->m_value.c_str() );
 	assert( pGFig_p->GetSubElement( "h", pParam ) );
 	h = (float)atof( pParam->m_value.c_str() );
+
+	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
+
+		xOffset = (float)atof( pParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "yoff", pParam ) ){
+
+		yOffset = (float)atof( pParam->m_value.c_str() );
+	}
 
 	if( pGFig_p->GetSubElement( "uvRect", pParam ) ){
 
@@ -328,7 +359,8 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 	assert( pGFig_p->GetSubElement( "texture", pParam ) );
 
 	pSprite->Init( m_pDeviceRef_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, m_pRendererRef );
-
+	pSprite->m_renderData.m_padding.x = xOffset;
+	pSprite->m_renderData.m_padding.y = yOffset;
 	//return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );
 	return pSprite;
 }
@@ -381,4 +413,72 @@ sprite::E_SAMPLERTYPE game::SpriteComponent_Factory::GetSamplerType( text::GfigE
 	}
 
 	return eSampler;
+}
+
+void game::SpriteComponent_Factory::CreateSprite( SpriteComponent_ & sprite_p, text::GfigElementA * pGFig_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pRendererRef )
+{
+	float w, h;
+	XMFLOAT4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
+	sprite::E_BLENDTYPE eBlend = E_BLEND_NONE_DEFAULT;
+	sprite::E_SAMPLERTYPE eSampler = E_SAMPLER_NONE;
+	float xOffset = 0.0f; float yOffset = 0.0f;
+
+	GfigElementA * pParam = nullptr;
+
+	assert( pGFig_p->GetSubElement( "w", pParam ) );
+	w = (float)atof( pParam->m_value.c_str() );
+	assert( pGFig_p->GetSubElement( "h", pParam ) );
+	h = (float)atof( pParam->m_value.c_str() );
+
+	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
+
+		xOffset = (float)atof( pParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "yoff", pParam ) ){
+
+		yOffset = (float)atof( pParam->m_value.c_str() );
+	}
+
+	if( pGFig_p->GetSubElement( "uvRect", pParam ) ){
+
+		uvRect = GetXYWH( pParam );
+	}
+	if( pGFig_p->GetSubElement( "blend", pParam ) ){
+
+		eBlend = GetBlendType( pParam );
+	}
+	if( pGFig_p->GetSubElement( "sampler", pParam ) ){
+
+		eSampler = GetSamplerType( pParam );
+	}
+
+	assert( pGFig_p->GetSubElement( "texture", pParam ) );
+
+	sprite_p.Init( pDevice_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, pRendererRef );
+	sprite_p.m_renderData.m_padding.x = xOffset;
+	sprite_p.m_renderData.m_padding.y = yOffset;
+}
+
+void game::SpriteComponent_Factory::LoadInstanceData( spriteInstance & inst_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pParam = nullptr;
+
+	assert( pGFig_p->GetSubElement( "w", pParam ) );
+	inst_p.res[0] = (float)atof( pParam->m_value.c_str() );
+	assert( pGFig_p->GetSubElement( "h", pParam ) );
+	inst_p.res[1] = (float)atof( pParam->m_value.c_str() );
+
+	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
+
+		inst_p.padding[0] = (float)atof( pParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "yoff", pParam ) ){
+
+		inst_p.padding[1] = (float)atof( pParam->m_value.c_str() );
+	}
+
+	if( pGFig_p->GetSubElement( "uvRect", pParam ) ){
+
+		(*((XMFLOAT4*)inst_p.uvRect)) = GetXYWH( pParam );
+	}
 }

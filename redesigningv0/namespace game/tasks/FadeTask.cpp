@@ -19,18 +19,13 @@ void game::FadeTask::VOnUpdate( double, double delta )
 {
 	m_elapsed += delta;
 
-	float alpha = gen::Tweening<>::Linear( (float)m_elapsed, m_fTimeToComplete, m_from, m_to );
+	*m_pfFadingReference = gen::Tweening<>::Linear( (float)m_elapsed, m_fTimeToComplete, m_from, m_to );
 
 	if( m_elapsed >=  m_fTimeToComplete ){
 
-		*m_pfFadingReference = m_to;
-
 		Chain();
 	}
-	else{
 
-		*m_pfFadingReference = alpha;
-	}
 }
 
 void game::FadeTask::Set( float fTimeToComplete_p /*= 1.0f*/, float from /*= 1.0f*/, float to /*= 0.0f */ )

@@ -196,6 +196,22 @@ bool win::Window::ChangeStyle( DWORD dwWS_p, DWORD dwWSEX_p )
 	return true;
 }
 
+bool win::Window::GetCurrentScreenResolution( UINT & W_p, UINT & H_p )
+{
+	//get display current settings:
+
+	DEVMODE devMode; ZeroMemory( &devMode, sizeof(DEVMODE) );
+	devMode.dmSize = sizeof( DEVMODE );
+	TESTBOOLNULL( EnumDisplaySettings( NULL, ENUM_CURRENT_SETTINGS, &devMode ) );
+
+	//set wanted resolution(current client area resolution..or esle):
+
+	W_p = devMode.dmPelsWidth;
+	H_p = devMode.dmPelsHeight;
+
+	return true;
+}
+
 bool Window::ChangeResolution( UINT W_p, UINT H_p )
 {
 	//get display current settings:

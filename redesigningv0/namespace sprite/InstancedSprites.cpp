@@ -41,10 +41,10 @@ void sprite::InstancesVertexBuffer::BufferNewInstance( const spriteInstance & sp
 
 void sprite::InstancesVertexBuffer::BufferNewInstance( const spriteInstance & spriteData_p )
 {
+	assert( m_iBufferingAt < m_size );
 	m_vSpriteInstances[m_iBufferingAt] = spriteData_p;
 
 	++m_iBufferingAt;
-	assert( m_iBufferingAt < m_size );
 
 	if( m_iVBfirstAvailable + m_iBufferingAt == m_size ){
 
@@ -125,6 +125,20 @@ sprite::InstancedSprites::InstancedSprites()
 m_drawCall(6),
 m_drawCall_warpException(6)
 {
+	m_drawable.AddPipelineState( &m_pipeState );
+	m_drawable.SetDrawCall( &m_drawCall );
+
+	m_drawable_warpException.AddPipelineState( &m_pipeState );
+	m_drawable_warpException.SetDrawCall( &m_drawCall_warpException );
+}
+
+sprite::InstancedSprites::InstancedSprites( InstancedSprites & /*other_p*/ )
+	:
+m_drawCall(6),
+m_drawCall_warpException(6)
+{
+	// DBG
+
 	m_drawable.AddPipelineState( &m_pipeState );
 	m_drawable.SetDrawCall( &m_drawCall );
 

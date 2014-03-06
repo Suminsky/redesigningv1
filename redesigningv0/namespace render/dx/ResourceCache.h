@@ -91,60 +91,17 @@ namespace dx{
 			//memset( m_slotsInfo, 0, fixedSize*sizeof(SlotInfo));	// (leaks due std stuff on the descs)
 		}
 
-	private:
-
 		//------------------------------------------------------------------------
-		// Receives a CreationParams for the current template type.
-		// Returns ID and resource data
+		// Releases all non null pointers in the cache.
 		//------------------------------------------------------------------------
-		UINT  CreateResource( const typename T::CreationParams & params_p, typename T::pRes & pResource_p  )
+		virtual ~ResourceCache()
 		{
-
-			if( m_iCurrentIndex == fixedSize)
+			for( UINT it = 0; it < fixedSize; it++ )
 			{
-				throw std::exception("render:dx resource cache limit achieved");
+				if( m_cache[it] != NULL )
+					m_cache[it]->Release();
 			}
-
-			pResource_p = m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
-
-
-			// update slot info:
-			DBG(m_slotsInfo[m_iCurrentIndex].nUseCount = 1;);
-			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;
-
-			// points to next element:
-			++m_iCurrentIndex;
-
-			// return new element index/ID:
-			return (m_iCurrentIndex-1);
 		}
-
-		//------------------------------------------------------------------------
-		// Receives a CreationParams for the current template type.
-		// Returns ID only.
-		//------------------------------------------------------------------------
-		UINT  CreateResource( const typename T::CreationParams & params_p )
-		{
-
-			if( m_iCurrentIndex == fixedSize)
-			{
-				throw std::exception("render:dx resource cache limit achieved");
-			}
-
-			m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
-
-			// update slot info:
-			DBG(m_slotsInfo[m_iCurrentIndex].nUseCount = 1);
-			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;
-
-			// points to next element:
-			++m_iCurrentIndex;
-
-			// return new element index/ID:
-			return (m_iCurrentIndex-1);
-		}
-
-	public:
 
 		//------------------------------------------------------------------------
 		// Acquire by desc, if not found (cache miss), creates one
@@ -200,20 +157,60 @@ namespace dx{
 		UINT Clone(const typename T::CreationParams & params_p ){
 
 			// cache miss:
-			
+
 		}
 
+	private:
 
 		//------------------------------------------------------------------------
-		// Releases all non null pointers in the cache.
+		// Receives a CreationParams for the current template type.
+		// Returns ID and resource data
 		//------------------------------------------------------------------------
-		virtual ~ResourceCache()
+		UINT  CreateResource( const typename T::CreationParams & params_p, typename T::pRes & pResource_p  )
 		{
-			for( UINT it = 0; it < fixedSize; it++ )
+
+			if( m_iCurrentIndex == fixedSize)
 			{
-				if( m_cache[it] != NULL )
-					m_cache[it]->Release();
+				throw std::exception("render:dx resource cache limit achieved");
 			}
+
+			pResource_p = m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
+
+
+			// update slot info:
+			DBG(m_slotsInfo[m_iCurrentIndex].nUseCount = 1;);
+			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;
+
+			// points to next element:
+			++m_iCurrentIndex;
+
+			// return new element index/ID:
+			return (m_iCurrentIndex-1);
+		}
+
+		//------------------------------------------------------------------------
+		// Receives a CreationParams for the current template type.
+		// Returns ID only.
+		//------------------------------------------------------------------------
+		UINT  CreateResource( const typename T::CreationParams & params_p )
+		{
+
+			if( m_iCurrentIndex == fixedSize)
+			{
+				throw std::exception("render:dx resource cache limit achieved");
+			}
+
+			m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
+
+			// update slot info:
+			DBG(m_slotsInfo[m_iCurrentIndex].nUseCount = 1);
+			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;
+
+			// points to next element:
+			++m_iCurrentIndex;
+
+			// return new element index/ID:
+			return (m_iCurrentIndex-1);
 		}
 	};
 

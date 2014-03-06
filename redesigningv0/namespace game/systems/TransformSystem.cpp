@@ -20,6 +20,7 @@ void game::TransformSystem::VOnUpdate( double , double )
 		++itColor ){
 
 			TransformComponent & transformCompo = (*m_poolAccess.GetAllocated( itColor ));
+			if( !transformCompo.GetObjectOwner()->IsAttached() ) continue;
 
 			// ignore if not root trafo
 

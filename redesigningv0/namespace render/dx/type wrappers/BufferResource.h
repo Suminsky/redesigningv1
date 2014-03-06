@@ -34,7 +34,7 @@
 #pragma comment( lib, "D3DX11.lib")
 
 // system/standard headers
-
+#include <string>
 #include <D3Dcommon.h>
 #include <D3D11.h>
 #include <D3DX11core.h>	//including because of D3DERR_INVALIDCALL
@@ -66,12 +66,17 @@ namespace dx{
 		//------------------------------------------------------------------------
 		struct Description{
 
+			//std::string szName;
 			D3D11_BUFFER_DESC bufferDesc;
 
 			//------------------------------------------------------------------------
 			// compares
 			//------------------------------------------------------------------------
 			bool operator == ( const Description & anotherDesc_p ){
+
+				//if( !szName.empty() )
+				//	return szName == anotherDesc_p.szName;
+				//else
 
 				return (
 							bufferDesc.BindFlags == anotherDesc_p.bufferDesc.BindFlags

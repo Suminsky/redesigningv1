@@ -84,7 +84,8 @@ void ObjectMachine::CleanRemovedObjects()
 
 			m_objects[m_removedObjects[itRemoved]]->m_currentObjectIndex = INVALID_OBJECTINDEX;
 			m_objects[m_removedObjects[itRemoved]]->m_pObjMachineOwner = nullptr;
-			m_objects[m_removedObjects[itRemoved]]->m_pLayerOwner = nullptr;
+			//m_objects[m_removedObjects[itRemoved]]->m_pLayerOwner = nullptr;
+			// it may be usefull have the layer even after dettached, and I dont think its dangerous..TODO
 
 			if( m_removedObjects[itRemoved] == itLast ){
 
@@ -95,7 +96,7 @@ void ObjectMachine::CleanRemovedObjects()
 
 			if( m_objects[m_removedObjects[itRemoved]]->m_bDettached ){
 
-				// find the swapped task on the list to be destroyed, update the index
+				// find the swapped obj on the list to be destroyed, update the index
 
 				for( unsigned int itToBeDestroyed = itRemoved; itToBeDestroyed < nRemoved; ++itToBeDestroyed ){
 

@@ -157,12 +157,22 @@ namespace sprite{
 
 	private:
 
+		//------------------------------------------------------------------------
+		// deny
+		//------------------------------------------------------------------------
+		InstancedSprites( InstancedSprites & other_p );
+
 		dx::PipeState			 m_pipeState;	// holds state commom to all instance, like texture, blend and sampler
 		dx::DrawIndexedInstanced m_drawCall;	// holds offsets into the instances VB
 		dx::DrawIndexedInstanced m_drawCall_warpException;
 
 		render::Drawable		 m_drawable; // pointers to above structures, plus pipestates from spriteRenderer (shader, IA, camera..)
 		render::Drawable		 m_drawable_warpException;
+
+		// NOTE: Drawables hold pointers to DrawCalls, not draw calls itself, so
+		// it will draw only one start/conclude per frame, the last one, cause it
+		// will overwrite..need to hold it till calling raster/render
+		// TODO
 
 		InstancesVertexBuffer	* m_pIVBref;
 		

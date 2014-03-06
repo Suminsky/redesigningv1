@@ -68,6 +68,9 @@ namespace game{
 		void OnDraw( double dInterpolation_p );
 		void OnDraw( double dInterpolation_p, sprite::Camera * pCamera_p );
 
+		void FlipHorz();
+		void FlipVertc();
+
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
@@ -89,6 +92,8 @@ namespace game{
 
 		int m_TextureID, m_BlendModeID, m_FilterModeID, m_ShaderID;
 		int m_iShaderPermutation;
+
+		bool m_bHFlip, m_bVFlip;
 
 		DirectX::XMFLOAT4 m_currentColor;
 		DirectX::XMFLOAT4 m_previousColor;
@@ -145,6 +150,8 @@ namespace game{
 			 return pool_Component_ptr(m_pool);
 		}
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		static void CreateSprite( SpriteComponent_ & sprite_p, text::GfigElementA * pGFig_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pRendererRef );
+		static void LoadInstanceData( sprite::spriteInstance & inst_p, text::GfigElementA * pGFig_p );
 
 	};
 

@@ -289,6 +289,7 @@ void Parser::GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, DataStr
 			if( buffer_p.m_data[iByteIndex] == szInvalids_p[itInv] ){
 				
 				bInvalid = true;
+				break;
 			}
 		}
 
@@ -319,7 +320,8 @@ void Parser::GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, DataStr
 
 			if( buffer_p.m_data[iByteIndex] == szInvalids_p[itInv] ){
 
-				bInvalid = true;
+				bInvalid = true; //todo: insert break
+				break;
 			}
 		}
 
@@ -355,6 +357,9 @@ void text::Parser::ReplaceSectionBy( const char cDelimiter_p, gen::DataStream & 
 
 void text::Parser::AdjustQuotedNewLines( gen::DataStream & buffer_p, const char cForNewLineOpen_p /*= '\\'*/, const char cForNewLineClose_p /*= '\\'*/, const char cReplacement_p /*= '\n' */, const char cNewLine )
 {
+	// TODO, detect if newlines are only \n or \r\n,
+	// currently assuming \r\n
+
 	unsigned int iByteIndex = 0;
 	int iForNewLineStartPos = -1;
 
@@ -422,6 +427,21 @@ void text::Parser::AdjustQuotedNewLines( gen::DataStream & buffer_p, const char 
 	}
 
 	return;
+}
+
+bool text::Parser::NeedQuotes( const char cFirst_p, const char cLast_p, const char * szInvalids_p )
+{
+	// traverse invalids string
+	for( int it = 0; szInvalids_p[it]; ++it ){
+
+		//check if first or last char is invalid
+		if( cFirst_p == szInvalids_p[it] )
+			return true;
+		if( cLast_p == szInvalids_p[it] )
+			return true;
+	}
+
+	return false;
 }
 
 //========================================================================
@@ -676,4 +696,90 @@ bool GfigElementA::GetSubElement( const char * szName_p, GfigElementA *& pElemen
 	}
 
 	return false;
+}
+
+void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::string & header_p,
+										gen::DataStream & buffer_p, const char cNewLine, const char cTab ){
+
+	
+	header_p += '\n';
+
+	// create formated string
+
+	SaveGfigToFile( gfig_p, header_p, 0, cNewLine, cTab );
+
+	// allocate bigger buffer if needed
+
+	int size = (int)header_p.size();
+
+	if( buffer_p.m_currentByteIndex + size >= buffer_p.m_size ){
+
+		DataStream newBuffer_p;
+		newBuffer_p.m_data = new unsigned char[size];
+		newBuffer_p.m_size = size;
+		newBuffer_p.Set( buffer_p.m_data, buffer_p.m_size );
+		if( buffer_p.m_size ) delete [] buffer_p.m_data;
+		buffer_p = newBuffer_p;
+	}
+
+	// copy data to buffer
+
+	memcpy( (void*)buffer_p.m_data, (void*)header_p.data(), sizeof(char)*size );
+}
+
+void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::string & formated_p, int currentTabIndentation_p, const char cNewLine, const char cTab ){
+
+	const char szQuotedName[] = { '[', '"', 0 };
+	const char szQUotedValue[] = { '=', '"', 0 };
+
+	// save element header
+	// variations:
+	// [name = value]\n
+	// [name = value\n\t
+	// [name]\n
+	// [name\n\t
+
+	formated_p += cNewLine;
+	for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
+		formated_p += cTab;
+
+	if( Parser::NeedQuotes(  gfig_p.m_name[0], gfig_p.m_name[(int)gfig_p.m_name.size()-1], " \n\t\r" ) ){
+
+		formated_p += szQuotedName + gfig_p.m_name + '"';
+	}
+	else 
+	formated_p += '[' + gfig_p.m_name; // [name
+
+	if( !gfig_p.m_value.empty() ){
+
+		if( Parser::NeedQuotes(  gfig_p.m_value[0], gfig_p.m_value[(int)gfig_p.m_value.size()-1], " \n\t\r" ) ){
+
+			formated_p += szQUotedValue + gfig_p.m_value + '"';
+		}
+		else 
+		formated_p += " = " + gfig_p.m_value; // [name = value
+	}
+
+	int nChildElements = (int)gfig_p.m_subElements.size();
+	if( nChildElements != 0 ){
+
+		++currentTabIndentation_p;
+
+		for( int itChild = 0; itChild < nChildElements; ++ itChild ){
+
+			SaveGfigToFile( gfig_p.m_subElements[itChild], formated_p, currentTabIndentation_p, cNewLine, cTab );
+		}
+
+		--currentTabIndentation_p;
+
+		formated_p += cNewLine;
+		for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
+			formated_p += cTab;
+
+		formated_p += ']';
+	}
+	else{
+
+		formated_p += ']'; // [name]\n or  [name = value]\n
+	}
 }

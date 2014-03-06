@@ -7,8 +7,6 @@
 #include "../namespace game/components/SpriteComponent_.h"
 #include <algorithm>
 
-
-
 sprite::SpriteRenderer::SpriteRenderer( dx::Device * pDevice_p, int maxInstances_p )
 	:
 	m_spriteShaderRes("namespace sprite/InstancedSpriteV10.hlsl", 1, 2, pDevice_p ),

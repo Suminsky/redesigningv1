@@ -91,7 +91,7 @@ namespace game{
 		virtual void VOnInit();
 		virtual void VOnUpdate(double, double);	// called before layers update
 		virtual void VLateUpdate(double, double);	// called after layers update
-		virtual void VOnDraw();					// called after layers draw
+		virtual void VOnDraw();					// called after layers draw (why I took interp param off?)
 		virtual void VOnDestroy();
 
 		virtual void VOnResize();

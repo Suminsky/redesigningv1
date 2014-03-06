@@ -22,6 +22,7 @@ void game::ColorSystem::VOnUpdate( double /*dAccum_p*/, double /*dDelta_p*/ )
 		++itColor ){
 
 			ColorComponent & colorCompo = (*m_poolAccess.GetAllocated( itColor ));
+			if( !colorCompo.GetObjectOwner()->IsAttached() ) continue;
 
 			// ignore if not root color
 

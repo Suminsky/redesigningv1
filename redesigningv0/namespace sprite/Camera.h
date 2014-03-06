@@ -10,6 +10,7 @@
 	
 	purpose:	TODO: create a default camera that holds common RTV (the back buffer), common viewport (full screen one), and cameras that get
 				their bind commands from it
+				TODO: RS states also here
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */

@@ -108,6 +108,8 @@
       <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <StringPooling>true</StringPooling>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -137,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -149,31 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Mentle\InGame\AudioHandler.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
-    <ClInclude Include="mentle\ingame\cardfxctrl.h" />
-    <ClInclude Include="mentle\ingame\cardslayer.h" />
-    <ClInclude Include="Mentle\InGame\CursorLayer.h" />
-    <ClInclude Include="Mentle\InGame\EnergyBarLayer.h" />
-    <ClInclude Include="Mentle\InGame\InGame.h" />
-    <ClInclude Include="Mentle\InGame\InGameEventData.h" />
-    <ClInclude Include="Mentle\InGame\InputMapper.h" />
-    <ClInclude Include="mentle\ingame\mentlecardcomponent.h" />
-    <ClInclude Include="mentle\ingame\mentlecarddesc.h" />
-    <ClInclude Include="Mentle\InGame\MentleLogic.h" />
-    <ClInclude Include="Mentle\InGame\NetworkHandler.h" />
-    <ClInclude Include="mentle\ingame\panellayer.h" />
-    <ClInclude Include="Mentle\InGame\StatusBarLayer.h" />
-    <ClInclude Include="mentle\ingame\tutoriallayer.h" />
-    <ClInclude Include="mentle\ingame\tutorialpart.h" />
-    <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
-    <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h" />
-    <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
-    <ClInclude Include="Mentle\MainMenu\PlayOptionsLayer.h" />
     <ClInclude Include="Mentle\MatchConfig.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
-    <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
-    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
+    <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\ComponentFactory.h" />
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
@@ -216,10 +203,12 @@
     <ClInclude Include="namespace net\Packet.h" />
     <ClInclude Include="namespace net\PeerHost.h" />
     <ClInclude Include="namespace net\Socket.h" />
+    <ClInclude Include="namespace phys\AABB2D.h" />
     <ClInclude Include="namespace render\dx\pipeline\PipeState.h" />
     <ClInclude Include="namespace render\dx\BinderCache.h" />
     <ClInclude Include="namespace render\dx\BinderCache.inl" />
     <ClInclude Include="namespace sprite\InstancedSprites.h" />
+    <ClInclude Include="namespace sprite\SpriteAtlas.h" />
     <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
@@ -253,6 +242,7 @@
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
     <ClInclude Include="namespace win\MouseInput.h" />
+    <ClInclude Include="namespace win\OpenDialog.h" />
     <ClInclude Include="namespace win\Window.h" />
     <ClInclude Include="namespace win\win_genData.h" />
     <ClInclude Include="namespace win\win_IDs.h" />
@@ -277,30 +267,16 @@
     <ClInclude Include="namespace text\TextParser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Mentle\InGame\AudioHandler.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\CardFXCtrl.cpp" />
-    <ClCompile Include="Mentle\InGame\CardsLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\CursorLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\InGame.cpp" />
-    <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleCardDesc.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleLogic.cpp" />
-    <ClCompile Include="Mentle\InGame\NetworkHandler.cpp" />
-    <ClCompile Include="Mentle\InGame\PanelLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\StatusBarLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\TutorialLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\TutorialPart.cpp" />
-    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
-    <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp" />
-    <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
-    <ClCompile Include="Mentle\MainMenu\PlayOptionsLayer.cpp" />
     <ClCompile Include="Mentle\MatchConfig.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
-    <ClCompile Include="Mentle\MainMenu\MainMenu.cpp" />
-    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
+    <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\ComponentFactory.cpp" />
     <ClCompile Include="namespace game\components\ButtonComponent.cpp" />
@@ -359,6 +335,7 @@
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
     <ClCompile Include="namespace sprite\InstancedSprites.cpp" />
     <ClCompile Include="namespace sprite\Movable.cpp" />
+    <ClCompile Include="namespace sprite\SpriteAtlas.cpp" />
     <ClCompile Include="namespace text\BmpFont.cpp" />
     <ClCompile Include="namespace text\CreateFontTexture.cpp" />
     <ClCompile Include="namespace text\TextParserW.cpp" />

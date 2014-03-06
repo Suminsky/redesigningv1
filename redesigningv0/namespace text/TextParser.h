@@ -112,6 +112,8 @@ namespace text{
 		static void GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, gen::DataStream & buffer_p, int & iValidStartPos, unsigned int & nValidPortion_p );
 		static void GetSectionBetweenInvalidsOnTipsW( const wchar_t * szInvalids_p, gen::DataStreamW & buffer_p, int & iValidStartPos, unsigned int & nValidPortion_p );
 
+		inline static bool NeedQuotes( const char cFirst_p, const char cLast_p, const char * szInvalids_p );
+		
 		//------------------------------------------------------------------------
 		// an entire section replaced by a char
 		// build to replace \       \  by a single new line char.
@@ -146,6 +148,10 @@ namespace text{
 		int m_indexOnParent;
 		std::vector<GfigElementA> m_subElements;
 
+		GfigElementA(){}
+		GfigElementA( const char * szName_p ) : m_name( szName_p ){}
+		GfigElementA( const char * szName_p, const char * szValue_p ) : m_name( szName_p ), m_value( szValue_p ){}
+
 		bool GetSubElement( const char * szName_p, GfigElementA *& pElement_p );
 		bool GetSubElement( std::string szName_p, GfigElementA *& pElement_p  );
 
@@ -155,6 +161,14 @@ namespace text{
 		//------------------------------------------------------------------------
 		static void ParseGfigFile( gen::DataStream & buffer_p, GfigElementA & parsed_p );
 
+		//------------------------------------------------------------------------
+		// expand gfig into a buffer that can be parsed by ParseGfigFile
+		// invalidates buffer_p, cause it may(mostly will) reallocate it
+		//------------------------------------------------------------------------
+		static void SaveGfigToFile( const GfigElementA & gfig_p, std::string & header_p, gen::DataStream & buffer_p, const char cNewLine = '\n', const char cTab = '\t' );
+		
+		
+
 	private:
 
 		//------------------------------------------------------------------------
@@ -162,6 +176,8 @@ namespace text{
 		// to do it
 		//------------------------------------------------------------------------
 		static void ParseCleanGfigFile( gen::DataStream & buffer, GfigElementA & parsed_p );
+
+		static void SaveGfigToFile( const GfigElementA & gfig_p, std::string & formated_p, int currentTabIndentation_p = 0, const char cNewLine = '\n', const char cTab = '\t' );
 
 		//------------------------------------------------------------------------
 		// removes spaces from ends, remove quotes if any
@@ -178,6 +194,10 @@ namespace text{
 		std::wstring m_value;
 		int m_indexOnParent;
 		std::vector<GfigElementW> m_subElements;
+
+		GfigElementW(){}
+		GfigElementW( const wchar_t * szName_p ) : m_name( szName_p ){}
+		GfigElementW( const wchar_t * szName_p, const wchar_t * szValue_p ) : m_name( szName_p ), m_value( szValue_p ){}
 
 		bool GetSubElement( const wchar_t * szName_p, GfigElementW *& pElement_p );
 		bool GetSubElement( std::wstring szName_p, GfigElementW *& pElement_p  );

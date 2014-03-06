@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <string> // memcpy
 #include <stdint.h>
+#include <math.h>
 
 namespace gen{
 
@@ -26,10 +27,20 @@ namespace gen{
 	// with stack allocated data
 	//========================================================================
 	template <class T>
-	static void NoOp(T* obj)
+	inline void NoOp(T* obj)
 	{
 		obj = obj;
 		//(void)0;
+	}
+
+	//========================================================================
+	// used nitially for std::shared_ptr which for some really stupid reason
+	// don't have a T[] version like unique_ptr
+	//========================================================================
+	template <class T>
+	inline void ArrayDeleter(T* obj){
+
+		delete [] obj;
 	}
 
 	//========================================================================
@@ -64,6 +75,46 @@ namespace gen{
 		return RoundUpToNextMultiple_POT( (uint32_t)n_p, (uint32_t)multiplePOT_p );
 	}
 
+
+	namespace Math2DUtil{
+
+		#define gen_PI       3.14159265358979323846
+
+		inline void VectorFromAngleD( float & x, float & y, float degree_p ){
+			//orientationVector( cosAngle, sinAngle )
+			float rad = degree_p * 180.0f / (float)gen_PI;
+
+			x = cos( rad );
+			y = sin( rad );
+		}
+		inline void VectorFromAngleR( float & x, float & y, float rad_p ){
+
+			x = cos( rad_p );
+			y = sin( rad_p );
+		}
+
+		inline float AngleFromDirectionVectorR( float x, float y ){
+
+			return atan2( y, x );
+		}
+		inline float AngleFromDirectionVectorD( float x, float y ){
+
+			return atan2( y, x ) * 180.0f / (float)gen_PI;
+		}
+	}
+
+
+	//========================================================================
+	// 
+	//========================================================================
+	inline float ConvertValueFromRangeToNewRange( float value_p, float start_p, float end_p, float newStart_p, float newEnd_p ){
+
+		// eliminate the offset, get the % (piece) on the total range, multiply by the total new range, and add
+		// the new offset
+
+		return (value_p - start_p) / (end_p - start_p) * (newEnd_p - newStart_p) + newStart_p;
+	}
+
 	//========================================================================
 	// min max clamping
 	//========================================================================
@@ -91,13 +142,17 @@ namespace gen{
 	}
 
 	//========================================================================
-	// used nitially for std::shared_ptr which for some really stupid reason
-	// don't have a T[] version like unique_ptr
+	// uvRect should be x, y, w, h
 	//========================================================================
-	template <class T>
-	static void ArrayDeleter(T* obj){
+	inline void FlipUVRectHorz( float uv_p[4] ){
 
-		delete [] obj;
+		uv_p[0] += uv_p[2];
+		uv_p[2] = -uv_p[2];
+	}
+	inline void FlipUVRectVertc( float uv_p[4] ){
+
+		uv_p[1] += uv_p[3];
+		uv_p[3] = -uv_p[3];
 	}
 
 	//------------------------------------------------------------------------
@@ -161,52 +216,114 @@ namespace gen{
 
 
 	//========================================================================
+	// heap stuff
+	//========================================================================
+	namespace binaryHeapUtil{
+
+		// untested, this is from old code (old code works..)
+		// prefer std::make_heap, pop_heap, push_heap
+
+		inline int ParentNode( uint32_t index_p ){
+
+			return int ((index_p - 1)/2.0f);
+		}
+		inline int LeftChildNode( uint32_t index_p ){
+
+			return index_p*2 + 1;
+		}
+		inline int RightChildNode( uint32_t index_p ){
+
+			return index_p*2 + 2;
+		}
+		template< typename T >
+		inline void BubbleNodeUp( uint32_t index_p, T array_p[], uint32_t size_p ){
+
+			uint32_t lastIndex = size_p-1;
+			while( index_p < lastIndex ){
+
+				// step 1: check if childs have higher value
+
+				int biggerchild = LeftChildNode(index_p);	// start as left child
+				if( biggerchild > lastIndex ) return;		// no childs, finish
+
+				int rightchildID = biggerchild + 1;
+
+				if( rightchildID <= lastIndex ){			// if theres a right child
+
+					//then biger child is updated to right child, if right>biger
+
+					if( array_p[rightchildID] > array_p[biggerchild] )
+						biggerchild = rightchildID;
+				}
+
+				//if childs bigger than father, swap:
+
+				if( array_p[biggerchild] > array_p[biggerchild] ){
+
+					// swap
+					T tmp = array_p[biggerchild];
+					array_p[biggerchild] = array_p[index_p];
+					array_p[index_p] = tmp;
+
+					index_p = biggerchild; // next step the father will be the swapped child (bubbling down)	
+				}
+				else return; // if father is bigger, then startID to down is ordered
+			}
+		}
+
+	}
+
+	//========================================================================
 	// string stuff
 	//========================================================================
+	namespace stringUtil{
+
 #define GEN_MAXSTRINGSIZE 2048
-	inline unsigned int CountString( const char* szString_p )
-	{
-		int counter = 0;
 
-		while( szString_p[counter] != 0x00 ){
-			++counter;
-			if( counter > GEN_MAXSTRINGSIZE )
-				break;
-		}
-
-		return counter;
-	}
-	inline unsigned int CountWString( const wchar_t * szString_p )
-	{
-		int counter = 0;
-
-		while( szString_p[counter] != 0x0000 ){
-
-			++counter;
-			if( counter > GEN_MAXSTRINGSIZE )
-				break;
-		}
-
-		return counter;
-	}
-	inline bool CompareString( const char* string1_p, const char* string2_p)
-	{
-		int it = 0;
-
-		while( string1_p[it] == string2_p[it] )
+		inline uint32_t CountString( const char* szString_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
 		{
-			if( string1_p[it] == 0x00 )
-			{
-				return true;
-			}
-			else{
-				++it;
-				if( it > GEN_MAXSTRINGSIZE )
+			uint32_t counter = 0;
+
+			while( szString_p[counter] != 0x00 ){
+				++counter;
+				if( counter > nMaxSize_p )
 					break;
 			}
-		}
 
-		return false;
+			return counter;
+		}
+		inline uint32_t CountWString( const wchar_t * szString_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
+		{
+			uint32_t counter = 0;
+
+			while( szString_p[counter] != 0x0000 ){
+
+				++counter;
+				if( counter > nMaxSize_p )
+					break;
+			}
+
+			return counter;
+		}
+		inline bool CompareString( const char* string1_p, const char* string2_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
+		{
+			uint32_t it = 0;
+
+			while( string1_p[it] == string2_p[it] )
+			{
+				if( string1_p[it] == 0x00 )
+				{
+					return true;
+				}
+				else{
+					++it;
+					if( it > nMaxSize_p )
+						break;
+				}
+			}
+
+			return false;
+		}
 	}
 
 
