@@ -30,6 +30,12 @@
 #define NDBG(param) param
 #endif
 
+#ifdef _DEBUG
+#define keepAssert(x) assert(x)
+#else
+#define keepAssert(x) x
+#endif // _DEBUG
+
 #ifdef IDIOTSPROOFOFF
 #define IDIOTSPROOF(p)
 #else

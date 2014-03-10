@@ -104,7 +104,7 @@ namespace dx{
 			}
 			else
 			{
-				/*D3DX11_IMAGE_INFO imgInfo;
+				D3DX11_IMAGE_INFO imgInfo;
 				D3DX11_IMAGE_LOAD_INFO loadInfo;
 
 				D3DX11GetImageInfoFromFileA(params_p.desc.szFilename.c_str(), NULL, &imgInfo, nullptr);
@@ -120,10 +120,10 @@ namespace dx{
 				loadInfo.Format = imgInfo.Format;
 				loadInfo.Filter = D3DX11_FILTER_NONE;
 				loadInfo.MipFilter = D3DX11_FILTER_NONE;
-				loadInfo.pSrcInfo = &imgInfo;*/
+				loadInfo.pSrcInfo = &imgInfo;
 
 				if( FAILED(
-				D3DX11CreateTextureFromFileA( pDeviceRef_p, params_p.desc.szFilename.c_str(), NULL, NULL, (ID3D11Resource**)&pTex2D, NULL )
+				D3DX11CreateTextureFromFileA( pDeviceRef_p, params_p.desc.szFilename.c_str(), &loadInfo, nullptr, (ID3D11Resource**)&pTex2D, NULL )
 				)){
 
 					throw std::exception("render:dx create tex2D failed");

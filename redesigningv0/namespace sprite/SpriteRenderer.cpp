@@ -135,7 +135,7 @@ void sprite::SpriteRenderer::Render( InstancedSprites * pInstSprites, Camera *pC
 
 		s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
 		s_drawInst.AddPipelineState( &m_instancedVertexInput );
-		s_drawInst.AddPipelineState( &m_camera.m_pipeState );
+		s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
 
 		s_drawInst.SetSortKey( sortKey.intRepresentation );
 

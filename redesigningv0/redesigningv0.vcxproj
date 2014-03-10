@@ -105,7 +105,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <StringPooling>true</StringPooling>
       <PrecompiledHeaderFile>
@@ -155,9 +155,11 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
+    <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MatchConfig.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
@@ -204,6 +206,7 @@
     <ClInclude Include="namespace net\PeerHost.h" />
     <ClInclude Include="namespace net\Socket.h" />
     <ClInclude Include="namespace phys\AABB2D.h" />
+    <ClInclude Include="namespace phys\Circle.h" />
     <ClInclude Include="namespace render\dx\pipeline\PipeState.h" />
     <ClInclude Include="namespace render\dx\BinderCache.h" />
     <ClInclude Include="namespace render\dx\BinderCache.inl" />
@@ -267,6 +270,7 @@
     <ClInclude Include="namespace text\TextParser.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
@@ -274,6 +278,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
+    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MatchConfig.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />

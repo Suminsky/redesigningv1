@@ -344,7 +344,7 @@ void text::TextRenderer::RenderText(
 		}
 		else if( szText_p[itChar] == L'\t' ){
 
-			fPosOffsetX += fPosOffsetX += gen::RoundUpToNextMultiple_POT( int(fPosOffsetX+0.5f), m_fonts[iFontID_p].GetTabMultiple());
+			fPosOffsetX += gen::RoundUpToNextMultiple_POT( int(fPosOffsetX+0.5f), m_fonts[iFontID_p].GetTabMultiple());
 			continue;
 		}
 		}

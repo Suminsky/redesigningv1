@@ -22,6 +22,8 @@
 
 namespace gen{
 
+
+
 	//========================================================================
 	// used initially for boost shared_ptr deleter, when using shared pointer 
 	// with stack allocated data
@@ -82,7 +84,7 @@ namespace gen{
 
 		inline void VectorFromAngleD( float & x, float & y, float degree_p ){
 			//orientationVector( cosAngle, sinAngle )
-			float rad = degree_p * 180.0f / (float)gen_PI;
+			float rad = degree_p * (float)gen_PI/180.0f ;
 
 			x = cos( rad );
 			y = sin( rad );
@@ -99,7 +101,7 @@ namespace gen{
 		}
 		inline float AngleFromDirectionVectorD( float x, float y ){
 
-			return atan2( y, x ) * 180.0f / (float)gen_PI;
+			return atan2( y, x ) * 180.0f/(float)gen_PI;
 		}
 	}
 

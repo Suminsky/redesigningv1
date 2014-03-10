@@ -96,6 +96,8 @@ void sprite::InstancesVertexBuffer::MapInstancesToVB_NoSort( ID3D11DeviceContext
 		m_iBufferingAt -= m_nWarpedAt; // used bellow to advance on the VB
 
 		m_iVBfirstAvailable = 0;
+
+		if( !m_iBufferingAt ) m_nWarpedAt = 0; // if warped on the last, didnt really warped
 	}
 
 	memcpy( ( ((spriteInstance*)mapped.pData) + m_iVBfirstAvailable ),	// offset on the VB

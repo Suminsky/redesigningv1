@@ -47,7 +47,7 @@ namespace game{
 		void AddObject( const shared_Object_ptr & pObject_p );
 		void RemoveObject( OBJECTINDEX objectCurrentIndex_p );
 		void RemoveObject( const shared_Object_ptr & pObject_p );
-		void RemoveObject( const Object * pObject_p );
+		void RemoveObject( Object * pObject_p );
 
 		Layer * GetLayer() const { return m_pLayerRef; }
 
@@ -68,7 +68,8 @@ namespace game{
 
 
 		Objects m_objects;
-		ObjectIndexes m_removedObjects;
+		//ObjectIndexes m_removedObjects;
+		std::vector<Object*> m_removedObjects;
 
 		Layer * m_pLayerRef;
 

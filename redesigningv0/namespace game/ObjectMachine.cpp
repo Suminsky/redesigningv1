@@ -39,81 +39,79 @@ void ObjectMachine::AddObject( const shared_Object_ptr & pObject_p )
 			pObject_p->m_pObjMachineOwner = this;
 			pObject_p->m_pLayerOwner = m_pLayerRef;
 
-			//pObject_p->VOnInit();
 
 			m_objects.push_back( pObject_p );
 
-			//InformSystemsAboutObjectAdded( pObject_p->m_currentObjectIndex );
 	}
 }
 
 void ObjectMachine::RemoveObject( OBJECTINDEX objectCurrentIndex_p )
 {
-	assert( objectCurrentIndex_p != INVALID_OBJECTINDEX );
+	/*assert( objectCurrentIndex_p != INVALID_OBJECTINDEX );
 	assert( !m_objects[objectCurrentIndex_p]->m_bDettached );
 
 	m_objects[objectCurrentIndex_p]->m_bDettached = true;
 
-	m_removedObjects.push_back( objectCurrentIndex_p );
+	m_removedObjects.push_back( objectCurrentIndex_p );*/
+	RemoveObject( m_objects[objectCurrentIndex_p].get() );
 }
 
 void ObjectMachine::RemoveObject( const shared_Object_ptr & pObject_p )
 {
-	RemoveObject(pObject_p->m_currentObjectIndex);
+	//RemoveObject(pObject_p->m_currentObjectIndex);
+	RemoveObject(pObject_p.get());
 }
 
-void ObjectMachine::RemoveObject( const Object * pObject_p )
+void ObjectMachine::RemoveObject( Object * pObject_p )
 {
-	RemoveObject(pObject_p->m_currentObjectIndex);
+	//RemoveObject(pObject_p->m_currentObjectIndex);
+
+	assert( pObject_p->m_currentObjectIndex != INVALID_OBJECTINDEX );
+	assert( !pObject_p->m_bDettached );
+
+	pObject_p->m_bDettached = true;
+
+	m_removedObjects.push_back( pObject_p );
 }
 
 void ObjectMachine::CleanRemovedObjects()
 {
 	unsigned int nRemoved =	(unsigned int)m_removedObjects.size(); // cache
 	unsigned int nObjects =		(unsigned int)m_objects.size();
+	
+	int nSkipped = 0;
+	for( unsigned int itR = 0, itLast = (nObjects-1); itR < nRemoved; ++itR ){
 
-	for( unsigned int itRemoved = 0, itLast = nObjects - 1;
-		itRemoved < nRemoved;
-		++itRemoved, --itLast ){
+		if( !m_removedObjects[itR]->m_bDettached ){
 
-			if( !m_objects[m_removedObjects[itRemoved]]->m_bDettached ){
+			++nSkipped;
+			continue;
+		}
 
-				--nRemoved;
-				continue; // untested
-			}
+		if( m_removedObjects[itR]->m_currentObjectIndex == itLast ){
+			
+			m_removedObjects[itR]->m_currentObjectIndex = INVALID_OBJECTINDEX;
+			--itLast;
+			continue; // already "swapped"
+		}
 
-			m_objects[m_removedObjects[itRemoved]]->m_currentObjectIndex = INVALID_OBJECTINDEX;
-			m_objects[m_removedObjects[itRemoved]]->m_pObjMachineOwner = nullptr;
-			//m_objects[m_removedObjects[itRemoved]]->m_pLayerOwner = nullptr;
-			// it may be usefull have the layer even after dettached, and I dont think its dangerous..TODO
+		std::swap( m_objects[m_removedObjects[itR]->m_currentObjectIndex], m_objects[itLast] );
+		--itLast;
 
-			if( m_removedObjects[itRemoved] == itLast ){
+		// update the index of the swapped object (not the one sent to pop)
 
-				continue;
-			}
+		m_objects[m_removedObjects[itR]->m_currentObjectIndex]->m_currentObjectIndex = m_removedObjects[itR]->m_currentObjectIndex;
 
-			std::swap( m_objects[m_removedObjects[itRemoved]], m_objects[itLast] );
-
-			if( m_objects[m_removedObjects[itRemoved]]->m_bDettached ){
-
-				// find the swapped obj on the list to be destroyed, update the index
-
-				for( unsigned int itToBeDestroyed = itRemoved; itToBeDestroyed < nRemoved; ++itToBeDestroyed ){
-
-					if( m_removedObjects[itToBeDestroyed] == m_objects[m_removedObjects[itRemoved]]->m_currentObjectIndex ){
-
-						m_removedObjects[itToBeDestroyed] = m_removedObjects[itRemoved];
-					}
-				}
-			}
-			else{
-
-				m_objects[m_removedObjects[itRemoved]]->m_currentObjectIndex = m_removedObjects[itRemoved];
-			}
+		// since the removed vector store pointers, theres no dirt data to update
+		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
+		// can be discarded TODO
+		
+		m_removedObjects[itR]->m_currentObjectIndex = INVALID_OBJECTINDEX;
 	}
 
 	// "trim"
 
+	nRemoved -= nSkipped;
 	m_objects.resize(nObjects - nRemoved);
 
 	m_removedObjects.clear();

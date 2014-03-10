@@ -357,6 +357,15 @@
     <ClInclude Include="Mentle\InGame\BGLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace phys\Circle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mentle\mainmenu\fadelayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -636,6 +645,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\InGame\BGLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
