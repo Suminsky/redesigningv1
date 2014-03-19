@@ -35,6 +35,8 @@ void game::ColorSystem::VOnUpdate( double /*dAccum_p*/, double /*dDelta_p*/ )
 			if( colorCompo.IsAttached() )
 				colorCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(ColorComponent), &colorCompo );
 
+			colorCompo.m_bSnap = false;
+
 			// recurse on childes
 
 			RecursiveUpdate( colorCompo );

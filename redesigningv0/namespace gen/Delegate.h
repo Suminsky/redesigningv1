@@ -374,6 +374,102 @@ namespace gen{
 
 	//========================================================================
 	// delegate which takes 2 params from the invoker..untested
+	// returns void
+	//========================================================================
+	template< typename PARAM, typename PARAM2, typename PARAM3 >	class Delegate3Param;
+	template< typename PARAM, typename PARAM2, typename PARAM3 >	inline bool operator ==
+		(const Delegate3Param< PARAM, PARAM2, PARAM3 > & lhs, const Delegate3Param< PARAM, PARAM2, PARAM3 > & rhs);
+
+	template< typename PARAM, typename PARAM2, typename PARAM3 >
+	class Delegate3Param{
+
+		friend bool operator == <> (const Delegate3Param<PARAM, PARAM2, PARAM3> & lhs, const Delegate3Param<PARAM, PARAM2, PARAM3> & rhs);
+
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		Delegate3Param()
+			:
+		m_pCallerInstance(nullptr),
+			m_pFuncMemberFuncInvoker(nullptr){}
+
+		~Delegate3Param(){}
+
+		//------------------------------------------------------------------------
+		// Sugar for creating a delegate at once
+		//------------------------------------------------------------------------
+		template< class InstanceClass, void (InstanceClass::*Method)(PARAM, PARAM2, PARAM3) >
+		static Delegate3Param Build( InstanceClass * pInstance_p ){
+
+			Delegate3Param newDelegate;
+			newDelegate.Set<InstanceClass, Method>( pInstance_p );
+
+			return newDelegate;
+		}
+
+		//------------------------------------------------------------------------
+		// holds obj instance and generates static templated invoker func,
+		// holding its address on the func ptr.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, void (InstanceClass::*Method)(PARAM, PARAM2, PARAM3) >
+		void Set( InstanceClass * pInstance_p ){
+
+			m_pCallerInstance = pInstance_p;
+			m_pFuncMemberFuncInvoker = &MemberFuncInvoker<InstanceClass, Method>;
+		}
+
+		//------------------------------------------------------------------------
+		// test if the delegate is initialized
+		//------------------------------------------------------------------------
+		operator bool() const{
+
+			return m_pFuncMemberFuncInvoker != nullptr;
+		}
+
+		//------------------------------------------------------------------------
+		// Delegate callers, explicit and function calling syntax
+		//------------------------------------------------------------------------
+		void Execute( PARAM param_p, PARAM2 param2_p, PARAM3 param3_p ) const{
+
+			(*m_pFuncMemberFuncInvoker)( m_pCallerInstance, param_p, param2_p, param3_p );
+		}
+		void operator()( PARAM param_p, PARAM2 param2_p, PARAM3 param3_p ) const{
+
+			(*m_pFuncMemberFuncInvoker)( m_pCallerInstance, param_p, param2_p, param3_p );
+		}
+
+	private:
+
+		//------------------------------------------------------------------------
+		// this func main objective is have the same signature of the func ptr
+		// holded by this class, the second objective is be templated so it
+		// can "generate" any func matching the template args given.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, void (InstanceClass::*Method)(PARAM, PARAM2, PARAM3) >
+		static void MemberFuncInvoker( void * pInstanceCaller_p, PARAM param_p, PARAM2 param2_p, PARAM3 param3_p ){
+
+			( ((InstanceClass*)pInstanceCaller_p)->*(Method) )( param_p, param2_p, param3_p );
+		}
+
+		void * m_pCallerInstance;
+		void (*m_pFuncMemberFuncInvoker)( void*, PARAM, PARAM2, PARAM3 );
+	};
+
+	//------------------------------------------------------------------------
+	// ==
+	//------------------------------------------------------------------------
+	template< typename PARAM, typename PARAM2, typename PARAM3 >
+	bool operator == (const Delegate3Param<PARAM, PARAM2, PARAM3> & lhs, const Delegate3Param<PARAM, PARAM2, PARAM3> & rhs){
+
+		return ( lhs.m_pFuncMemberFuncInvoker == rhs.m_pFuncMemberFuncInvoker
+			&&
+			lhs.m_pCallerInstance == rhs.m_pCallerInstance );
+	}
+
+	//========================================================================
+	// delegate which takes 2 params from the invoker..untested
 	// returns bool
 	//========================================================================
 	template< typename RETURN, typename PARAM >	class DelegateR1Param;

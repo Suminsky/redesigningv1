@@ -123,7 +123,7 @@ namespace dx{
 				loadInfo.pSrcInfo = &imgInfo;
 
 				if( FAILED(
-				D3DX11CreateTextureFromFileA( pDeviceRef_p, params_p.desc.szFilename.c_str(), &loadInfo, nullptr, (ID3D11Resource**)&pTex2D, NULL )
+				D3DX11CreateTextureFromFileA( pDeviceRef_p, params_p.desc.szFilename.c_str(), /*nullptr*/&loadInfo, nullptr, (ID3D11Resource**)&pTex2D, NULL )
 				)){
 
 					throw std::exception("render:dx create tex2D failed");

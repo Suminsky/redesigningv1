@@ -211,6 +211,7 @@ void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & e
 
 	m_previousColor = pColor->GetPreviousFinalColor();
 	m_currentColor = pColor->GetFinalColor();
+	if( pColor->GonnaSnap() ) m_previousColor = m_currentColor;
 }
 
 void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEventData> & event_p )
@@ -237,9 +238,12 @@ void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData
 
 	if( m_bHFlip ){
 		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.x = -spriteFrame.xOffset;
+		
 	}
 	if( m_bVFlip ){
 		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.y = -spriteFrame.yOffset;
 	}
 
 	(*(++m_pipeState.Begin())) = pAnim->GetSprite().pBindPSSRV;
@@ -256,12 +260,14 @@ void game::SpriteComponent_::FlipHorz()
 {
 	m_bHFlip = !m_bHFlip;
 	gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+	m_renderData.m_padding.x = -m_renderData.m_padding.x;
 }
 
 void game::SpriteComponent_::FlipVertc()
 {
 	m_bVFlip = !m_bVFlip;
 	gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+	m_renderData.m_padding.y = -m_renderData.m_padding.y;
 }
 
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )

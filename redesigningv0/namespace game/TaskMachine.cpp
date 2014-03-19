@@ -13,7 +13,8 @@ void game::TaskMachine::Update( double accumTime_p, double delta_p )
 
 	//check if theres destroyed tasks, clean then off
 
-	if( !m_destroyedTasks.empty() )
+	//if( !m_destroyedTasks.empty() )
+	if( !m_removedTasks.empty() )
 		CleanAbortedTasks();
 }
 
@@ -65,7 +66,8 @@ void game::TaskMachine::AbortTask( TASKINDEX taskCurrentIndex_p )
 
 	m_tasks[taskCurrentIndex_p]->m_bDead = true;
 
-	m_destroyedTasks.push_back(taskCurrentIndex_p);
+	//m_destroyedTasks.push_back(taskCurrentIndex_p);
+	m_removedTasks.push_back(m_tasks[taskCurrentIndex_p].get());
 }
 
 void game::TaskMachine::ChainTask( TASKINDEX taskCompletedIndex_p )
@@ -83,52 +85,45 @@ void game::TaskMachine::ChainTask( TASKINDEX taskCompletedIndex_p )
 
 void game::TaskMachine::CleanAbortedTasks()
 {
-	unsigned int nDestroyed =	(unsigned int)m_destroyedTasks.size(); // cache
+	unsigned int nRemoved =	(unsigned int)m_removedTasks.size(); // cache
 	unsigned int nTasks =		(unsigned int)m_tasks.size();
 
-	for(	unsigned int itDestroyed = 0, itLast = nTasks - 1;
-		itDestroyed < nDestroyed;
-		++itDestroyed, --itLast ){
+	int nSkipped = 0;
+	for( unsigned int itR = 0, itLast = (nTasks-1); itR < nRemoved; ++itR ){
 
-			if( !m_tasks[m_destroyedTasks[itDestroyed]]->m_bDead ){
+		if( !m_removedTasks[itR]->m_bDead ){
 
-				--nDestroyed;
-				continue; // untested
-			}
+			++nSkipped;
+			continue;
+		}
 
+		if( m_removedTasks[itR]->m_currentTaskIndex == itLast ){
 
-			m_tasks[m_destroyedTasks[itDestroyed]]->VOnDestroy();
-			m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex = INVALID_TASKINDEX;
-			m_tasks[m_destroyedTasks[itDestroyed]]->m_pTaskMachineRef = nullptr;
+			m_removedTasks[itR]->VOnDestroy();
+			m_removedTasks[itR]->m_currentTaskIndex = INVALID_TASKINDEX;
+			--itLast;
+			continue; // already "swapped"
+		}
 
-			if( m_destroyedTasks[itDestroyed] == itLast ){
+		std::swap( m_tasks[m_removedTasks[itR]->m_currentTaskIndex], m_tasks[itLast] );
+		--itLast;
 
-				continue;
-			}
+		// update the index of the swapped object (not the one sent to pop)
 
-			std::swap( m_tasks[m_destroyedTasks[itDestroyed]], m_tasks[itLast] );
+		m_tasks[m_removedTasks[itR]->m_currentTaskIndex]->m_currentTaskIndex = m_removedTasks[itR]->m_currentTaskIndex;
 
-			if( m_tasks[m_destroyedTasks[itDestroyed]]->m_bDead ){
+		// since the removed vector store pointers, theres no dirt data to update
+		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
+		// can be discarded TODO
 
-				// find the swapped task on the list to be destroyed, update the index
-
-				for( unsigned int itToBeDestroyed = itDestroyed; itToBeDestroyed < nDestroyed; ++itToBeDestroyed ){
-
-					if( m_destroyedTasks[itToBeDestroyed] == m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex ){
-
-						m_destroyedTasks[itToBeDestroyed] = m_destroyedTasks[itDestroyed];
-					}
-				}
-			}
-			else{
-
-				m_tasks[m_destroyedTasks[itDestroyed]]->m_currentTaskIndex = m_destroyedTasks[itDestroyed];
-			}
+		m_removedTasks[itR]->VOnDestroy();
+		m_removedTasks[itR]->m_currentTaskIndex = INVALID_TASKINDEX;	
 	}
 
 	// "trim"
 
-	m_tasks.resize(nTasks - nDestroyed);
+	nRemoved -= nSkipped;
+	m_tasks.resize(nTasks - nRemoved);
 
-	m_destroyedTasks.clear();
+	m_removedTasks.clear();
 }

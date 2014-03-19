@@ -107,6 +107,23 @@ namespace game{
 
 			return gen::pool_ptr<DerivedComponent>();
 		}
+		template< typename DerivedComponent >
+		gen::pool_ptr<DerivedComponent> GetNthOfComponent( int nth_p ){
+
+			for( int it = 0, currentTH = 0, iSize = (int)m_components.size();
+				it < iSize;
+				++it ){
+
+					if( m_components[it]->GetType() == COMPONENT_TYPE(DerivedComponent) ){
+
+						if( currentTH == nth_p ) return m_components[it];
+
+						++currentTH;
+					}
+			}
+
+			return gen::pool_ptr<DerivedComponent>();
+		}
 
 	protected:
 

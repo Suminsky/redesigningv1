@@ -46,9 +46,9 @@ void game::State::VOnResize()
 
 void game::State::AddLayer( shared_Layer_ptr && pNewLayer_p )
 {
-	assert( pNewLayer_p->m_bDead );
+	assert( pNewLayer_p->m_bDettached );
 
-	pNewLayer_p->m_bDead = false;
+	pNewLayer_p->m_bDettached = false;
 
 	if( pNewLayer_p->m_currentLayerIndex == INVALID_LAYERINDEX
 		||
@@ -63,15 +63,19 @@ void game::State::AddLayer( shared_Layer_ptr && pNewLayer_p )
 	}
 	else{
 
+		// if I call OnDestroy only on clean, why call onInit here?
+		// if layer not yet cleaned then ondestroy was never called, so
+		// on init is called twice.. 
+
 		pNewLayer_p->VOnInit();
 	}
 }
 
 void game::State::AddLayer( const shared_Layer_ptr & pNewLayer_p )
 {
-	assert( pNewLayer_p->m_bDead );
+	assert( pNewLayer_p->m_bDettached );
 
-	pNewLayer_p->m_bDead = false;
+	pNewLayer_p->m_bDettached = false;
 
 	if( pNewLayer_p->m_currentLayerIndex == INVALID_LAYERINDEX
 		||
@@ -88,22 +92,22 @@ void game::State::AddLayer( const shared_Layer_ptr & pNewLayer_p )
 
 void game::State::RemoveLayer( LAYERINDEX layerCurrentIndex_p )
 {
-	assert( layerCurrentIndex_p != INVALID_LAYERINDEX );
-	assert( !m_layers[layerCurrentIndex_p]->m_bDead );
-
-	m_layers[layerCurrentIndex_p]->m_bDead = true;
-
-	m_removedLayers.push_back( layerCurrentIndex_p );
+	m_removedLayers.push_back( m_layers[layerCurrentIndex_p].get() );
 }
 
 void game::State::RemoveLayer( const shared_Layer_ptr & pNewLayer_p )
 {
-	RemoveLayer( pNewLayer_p->m_currentLayerIndex );
+	RemoveLayer( pNewLayer_p.get() );
 }
 
-void game::State::RemoveLayer( const Layer * pNewLayer_p )
+void game::State::RemoveLayer( Layer * pNewLayer_p )
 {
-	RemoveLayer( pNewLayer_p->m_currentLayerIndex );
+	assert( pNewLayer_p->m_currentLayerIndex != INVALID_LAYERINDEX );
+	assert( !pNewLayer_p->m_bDettached );
+
+	pNewLayer_p->m_bDettached = true;
+
+	m_removedLayers.push_back( pNewLayer_p );
 }
 
 //========================================================================
@@ -174,48 +178,41 @@ void game::State::CleanRemovedLayers()
 	unsigned int nRemoved =	(unsigned int)m_removedLayers.size(); // cache
 	unsigned int nObjects =		(unsigned int)m_layers.size();
 
-	for( unsigned int itRemoved = 0, itLast = nObjects - 1;
-		itRemoved < nRemoved;
-		++itRemoved, --itLast ){
+	int nSkipped = 0;
+	for( unsigned int itR = 0, itLast = (nObjects-1); itR < nRemoved; ++itR ){
 
-			if( !m_layers[m_removedLayers[itRemoved]]->m_bDead ){
+		if( !m_removedLayers[itR]->m_bDettached ){
 
-				--nRemoved;
-				continue; // untested
-			}
+			++nSkipped;
+			continue;
+		}
 
+		if( m_removedLayers[itR]->m_currentLayerIndex == itLast ){
 
-			m_layers[m_removedLayers[itRemoved]]->VOnDestroy();
-			m_layers[m_removedLayers[itRemoved]]->m_currentLayerIndex = INVALID_LAYERINDEX;
-			m_layers[m_removedLayers[itRemoved]]->m_pStateOwner = nullptr;
+			m_removedLayers[itR]->VOnDestroy();
+			m_removedLayers[itR]->m_currentLayerIndex = INVALID_LAYERINDEX;
+			--itLast;
+			continue; // already "swapped"
+		}
 
-			if( m_removedLayers[itRemoved] == itLast ){
+		std::swap( m_layers[m_removedLayers[itR]->m_currentLayerIndex], m_layers[itLast] );
+		--itLast;
 
-				continue;
-			}
+		// update the index of the swapped object (not the one sent to pop)
 
-			std::swap( m_layers[m_removedLayers[itRemoved]], m_layers[itLast] );
+		m_layers[m_removedLayers[itR]->m_currentLayerIndex]->m_currentLayerIndex = m_removedLayers[itR]->m_currentLayerIndex;
 
-			if( m_layers[m_removedLayers[itRemoved]]->m_bDead ){
+		// since the removed vector store pointers, theres no dirt data to update
+		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
+		// can be discarded TODO
 
-				// find the swaped task on the list to be destroyed, update the index
+		m_removedLayers[itR]->m_currentLayerIndex = INVALID_LAYERINDEX;
 
-				for( unsigned int itToBeDestroyed = itRemoved; itToBeDestroyed < nRemoved; ++itToBeDestroyed ){
-
-					if( m_removedLayers[itToBeDestroyed] == m_layers[m_removedLayers[itRemoved]]->m_currentLayerIndex ){
-
-						m_removedLayers[itToBeDestroyed] = m_removedLayers[itRemoved];
-					}
-				}
-			}
-			else{
-
-				m_layers[m_removedLayers[itRemoved]]->m_currentLayerIndex = m_removedLayers[itRemoved];
-			}
 	}
 
 	// "trim"
 
+	nRemoved -= nSkipped;
 	m_layers.resize(nObjects - nRemoved);
 
 	m_removedLayers.clear();

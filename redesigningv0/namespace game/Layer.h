@@ -65,7 +65,7 @@ namespace game{
 			m_bActive(bActive_p), m_bVisible(bVisible_p),
 			m_currentLayerIndex(INVALID_LAYERINDEX),
 			m_pStateOwner(nullptr),
-			m_bDead(true)
+			m_bDettached(true)
 			{
 				m_objects.SetLayer(this);
 				m_systems.SetLayer(this);
@@ -119,7 +119,7 @@ namespace game{
 		void Draw( const double /*dInterpolation_p*/ );
 
 		LAYERINDEX m_currentLayerIndex;
-		bool m_bDead;
+		bool m_bDettached;
 		shared_AObjectFactory_ptr m_pObjFactory;
 
 		//------------------------------------------------------------------------

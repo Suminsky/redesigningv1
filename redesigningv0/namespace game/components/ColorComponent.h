@@ -55,6 +55,7 @@ namespace game{
 		DirectX::XMFLOAT4 GetFinalColor() const{ return m_finalColor; }
 		DirectX::XMFLOAT4 GetWorldColor() const{ return m_worldColor; }
 		DirectX::XMFLOAT4 GetPreviousFinalColor() const{ return m_previousFinalColor; }
+		bool GonnaSnap()const{ return m_bSnap; }
 
 		//------------------------------------------------------------------------
 		// parenting stuff
@@ -68,7 +69,11 @@ namespace game{
 			m_node.RemoveNode( &pColor_p->m_node );
 		}
 
+		void Snap(){ m_bSnap = true; }
+
 	private:
+
+		bool m_bSnap;
 
 		//------------------------------------------------------------------------
 		// stores local * parent world

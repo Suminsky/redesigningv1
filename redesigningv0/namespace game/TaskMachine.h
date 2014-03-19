@@ -55,8 +55,8 @@ namespace game{
 	private:
 
 		Tasks m_tasks;
-		TaskIndexes m_destroyedTasks;
-		//std::vector<Task*> m_removedTasks; TODO
+		//TaskIndexes m_destroyedTasks;
+		std::vector<Task*> m_removedTasks;
 
 		//------------------------------------------------------------------------
 		// call this to kill a task and put his chain on its place

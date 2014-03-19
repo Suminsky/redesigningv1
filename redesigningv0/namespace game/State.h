@@ -52,7 +52,7 @@ namespace game{
 		void AddLayer( const shared_Layer_ptr & pNewLayer_p );
 		void RemoveLayer( LAYERINDEX layerCurrentIndex_p );
 		void RemoveLayer(  const shared_Layer_ptr & pNewLayer_p  );
-		void RemoveLayer(  const Layer * pNewLayer_p  );
+		void RemoveLayer(  Layer * pNewLayer_p  );
 
 	private:
 
@@ -83,7 +83,8 @@ namespace game{
 
 
 		StateLayers m_layers;
-		LayerIndexes m_removedLayers;
+		//LayerIndexes m_removedLayers;
+		std::vector<Layer*> m_removedLayers;
 
 		//------------------------------------------------------------------------
 		// to be override
