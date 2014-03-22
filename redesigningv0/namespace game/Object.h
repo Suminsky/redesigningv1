@@ -61,10 +61,21 @@ namespace game{
 			m_currentObjectIndex(INVALID_OBJECTINDEX),
 			m_pLayerOwner(nullptr),
 			m_pObjMachineOwner(nullptr),
-			m_bDettached(true){}
+			m_bDettached(true){
+
+				static int s_count = 0;
+				m_ID = s_count++;
+			}
 
 		virtual ~Object(){
-			BREAKHERE;
+
+			//TODO: dettach components?
+			//BREAKHERE;
+			// 
+			for( int it = 0, nCompo = (int)m_components.size(); it < nCompo; ++it ){
+
+				m_components[it]->m_bDettached = true;
+			}
 		}
 
 		//------------------------------------------------------------------------
@@ -74,7 +85,7 @@ namespace game{
 		void AttachComponent( const pool_Component_ptr & pComponent_p );
 		void DettachComponent( COMPONENTINDEX componentCurrentIndex_p );
 		void DettachComponent( const pool_Component_ptr & pComponent_p );
-		void DettachComponent( const Component * pComponent_p );
+		void DettachComponent( Component * pComponent_p );
 
 		//------------------------------------------------------------------------
 		// event/message stuff
@@ -147,9 +158,12 @@ namespace game{
 		bool m_bDettached;
 
 		ObjectComponents m_components;
-		ComponentIndexes m_removedComponents;
+		//ComponentIndexes m_removedComponents;
+		std::vector<Component*> m_removedComponents;
 
 		EventMachine<ComponentEventData> m_objectEventMachine;
+
+		int m_ID;
 	};
 
 	typedef std::shared_ptr<Object> shared_Object_ptr;

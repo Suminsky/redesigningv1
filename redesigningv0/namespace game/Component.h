@@ -56,14 +56,18 @@ namespace game{
 		m_type(INVALID_COMPONENTTYPE),
 		m_currentComponentObjectIndex(INVALID_COMPONENTINDEX),
 		m_pObjectOwner(nullptr),
-		m_bDetached(true){}
+		m_bDettached(true){
+
+			static int s_count = 0;
+			m_ID = s_count++;
+		}
 
 		virtual ~Component(){}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		bool IsAttached() const { return !m_bDetached; }
+		bool IsAttached() const { return !m_bDettached; }
 
 		//------------------------------------------------------------------------
 		// getters
@@ -87,7 +91,9 @@ namespace game{
 
 		COMPONENTINDEX m_currentComponentObjectIndex;
 
-		bool m_bDetached;
+		bool m_bDettached;
+
+		int m_ID;
 	};
 
 	typedef gen::pool_ptr<Component> pool_Component_ptr;

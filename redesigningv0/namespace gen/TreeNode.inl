@@ -16,12 +16,14 @@ void TreeNode<T>::RemoveNode( TreeNode * pNode_p )
 {
 	assert( pNode_p->m_pParent == this );
 
-	pNode_p->m_pParent = nullptr;
-	pNode_p->m_indexOnParent = INVALID_INDEX_ONPARENT;
-
-	int itLast = (int)m_vChilds.size();
+	int itLast = (int)m_vChilds.size()-1;
 
 	std::swap( m_vChilds[pNode_p->m_indexOnParent], m_vChilds[itLast] );
+	 m_vChilds[pNode_p->m_indexOnParent]->m_indexOnParent = pNode_p->m_indexOnParent;
+
+	 pNode_p->m_pParent = nullptr;
+	 pNode_p->m_indexOnParent = INVALID_INDEX_ONPARENT;
+
 	m_vChilds.pop_back();
 }
 
@@ -50,4 +52,6 @@ TreeNode<T>::~TreeNode()
 			 m_vChilds[it]->m_pParent = nullptr;
 			 m_vChilds[it]->m_indexOnParent = INVALID_INDEX_ONPARENT;
 	}
+
+	SetParent( nullptr );
 }

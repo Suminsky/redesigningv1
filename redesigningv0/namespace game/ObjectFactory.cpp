@@ -25,6 +25,9 @@ shared_Object_ptr AObjectFactory::VCreateObject( text::GfigElementA * pGfig_p ){
 
 			pObj->AttachComponent( std::move(pCompo) );
 		}
+		else{
+			BREAKHERE;
+		}
 	}
 
 	return pObj;
