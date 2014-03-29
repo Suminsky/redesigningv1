@@ -429,6 +429,18 @@
     <ClInclude Include="namespace net\P2PConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\SpriteAnimTool\FramesLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -776,6 +788,15 @@
     <ClCompile Include="namespace net\P2PConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mentle\SpriteAnimTool\SpriteAnimTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\SpriteAnimTool\FramesLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico">
@@ -790,6 +811,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RC_icon.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="RC_SpriteAnimDialogs.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

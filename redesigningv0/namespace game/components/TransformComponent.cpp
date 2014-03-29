@@ -23,7 +23,7 @@ game::TransformComponent::TransformComponent()
 
 game::TransformComponent::~TransformComponent()
 {
-
+	BREAKHERE;
 }
 
 void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMFLOAT4X4 & mParentWorldTrafo_p )

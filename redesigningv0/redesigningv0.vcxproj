@@ -182,6 +182,9 @@
     <ClInclude Include="Mentle\MainMenu\PlayOptionsLayer.h" />
     <ClInclude Include="Mentle\MatchConfig.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\FramesLayer.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimTool.h" />
     <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
     <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
     <ClInclude Include="namespace game\Component.h" />
@@ -289,6 +292,7 @@
     <ClInclude Include="namespace game\StateMachine.h" />
     <ClInclude Include="namespace game\tasks\FadeTask.h" />
     <ClInclude Include="namespace text\TextParser.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
@@ -321,6 +325,9 @@
     <ClCompile Include="Mentle\MainMenu\PlayOptionsLayer.cpp" />
     <ClCompile Include="Mentle\MatchConfig.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
+    <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp" />
+    <ClCompile Include="Mentle\SpriteAnimTool\FramesLayer.cpp" />
+    <ClCompile Include="Mentle\SpriteAnimTool\SpriteAnimTool.cpp" />
     <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />
     <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
@@ -415,6 +422,7 @@
     <None Include="namespace gen\TreeNode.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="RC_SpriteAnimDialogs.rc" />
     <ResourceCompile Include="RC_icon.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

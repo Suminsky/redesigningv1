@@ -43,6 +43,30 @@ void game::Object::AttachComponent( const pool_Component_ptr & pComponent_p )
 	}
 }
 
+void game::Object::DettachComponent( COMPONENTINDEX componentCurrentIndex_p )
+{
+	DettachComponent( m_components[componentCurrentIndex_p].Get() );
+}
+
+void game::Object::DettachComponent( const pool_Component_ptr & pComponent_p )
+{
+	DettachComponent(pComponent_p.Get());
+}
+
+void game::Object::DettachComponent( Component * pComponent_p )
+{
+	assert( pComponent_p->m_currentComponentObjectIndex != INVALID_COMPONENTINDEX );
+	assert( !pComponent_p->m_bDettached );
+
+	pComponent_p->m_bDettached = true;
+	pComponent_p->VOnDetach(); // new
+
+	m_removedComponents.push_back(pComponent_p);
+}
+
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
 void game::Object::CleanRemovedComponents()
 {
 	unsigned int nRemoved =	(unsigned int)m_removedComponents.size(); // cache
@@ -87,6 +111,9 @@ void game::Object::CleanRemovedComponents()
 	m_removedComponents.clear();
 }
 
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
 void game::Object::RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p )
 {
 	m_objectEventMachine.RegisterForEvent( eveHandlerDelegate_p, eveType_p );
@@ -112,23 +139,3 @@ void game::Object::DispatchComponentEventImmediately( EventType eveType_p, Compo
 	m_objectEventMachine.DispatchEventImmetiately( eveType_p, eveData_p );
 }
 
-void game::Object::DettachComponent( COMPONENTINDEX componentCurrentIndex_p )
-{
-	DettachComponent( m_components[componentCurrentIndex_p].Get() );
-}
-
-void game::Object::DettachComponent( const pool_Component_ptr & pComponent_p )
-{
-	DettachComponent(pComponent_p.Get());
-}
-
-void game::Object::DettachComponent( Component * pComponent_p )
-{
-	assert( pComponent_p->m_currentComponentObjectIndex != INVALID_COMPONENTINDEX );
-	assert( !pComponent_p->m_bDettached );
-
-	pComponent_p->m_bDettached = true;
-	pComponent_p->VOnDetach(); // new
-
-	m_removedComponents.push_back(pComponent_p);
-}

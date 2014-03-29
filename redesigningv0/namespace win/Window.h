@@ -122,6 +122,10 @@ namespace win{
 		bool IsActive(){
 			return (GetActiveWindow() == m_hWnd);
 		}
+		bool HaveKeyboardFocus(){
+
+			return (GetFocus() == m_hWnd);
+		}
 
 		//------------------------------------------------------------------------
 		// Sets a menu bar to the window
@@ -144,6 +148,7 @@ namespace win{
 		// getters
 		//------------------------------------------------------------------------
 		inline HWND GetHWND(){ return m_hWnd;}
+		inline HINSTANCE GetHINSTANCE(){ return m_hAppInstance; }
 		inline const TCHAR* GetTitle(){ return m_szTitle_p; }
 		inline Rect GetCLientRect(){ return m_cliRect; }
 		inline Rect GetWindowRect(){ return m_rect; }
@@ -196,7 +201,7 @@ namespace win{
 				m_cliRect.y = cliPos.y;		
 			}	
 
-	private:
+	public:
 
 		//------------------------------------------------------------------------
 		// Message Handler
@@ -214,6 +219,8 @@ namespace win{
 				return pThis->WndProcHandler( hWnd_p, Msg_p, wParam_p, lParam_p );
 			}
 			else if( Msg_p == WM_NCCREATE ){
+
+				assert( ((CREATESTRUCT*)lParam_p)->lpCreateParams );
 
 				// initialize wnd handle
 				((Window*)

@@ -10,6 +10,7 @@ game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const pool_
 	: m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
+	m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
 
 	m_ID = iID_p;
 
@@ -32,6 +33,7 @@ game::ButtonComponent< DELEGATE_PARAM >::ButtonComponent(	int iID_p, const pool_
 	: m_pSpriteCompoRef(pSpriteCompo_p)
 {
 	assert(pSpriteCompo_p);
+	m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
 
 	m_ID = iID_p;
 
@@ -52,7 +54,7 @@ void game::ButtonComponent< DELEGATE_PARAM >::Init(	int iID_p, const pool_Sprite
 													Delegate1Param callBack_p ){
 
 	assert(pSpriteCompo_p);
-
+	//m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
 	 m_pSpriteCompoRef = pSpriteCompo_p;
 
 	m_ID = iID_p;
@@ -74,7 +76,7 @@ void game::ButtonComponent< DELEGATE_PARAM >::Init(	int iID_p, const pool_Sprite
 													Delegate1Param callBack_p){
 
 	assert(pSpriteCompo_p);
-
+	//m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
 	 m_pSpriteCompoRef = pSpriteCompo_p;
 
 	m_ID = iID_p;
@@ -97,11 +99,16 @@ bool game::ButtonComponent< DELEGATE_PARAM >::GetPointCollision( XMFLOAT2 mouseX
 	float halfW = m_pSpriteCompoRef->m_renderData.m_res.x / 2.0f - m_borderGap.x;
 
 	float x = XMVectorGetX(m_pSpriteCompoRef->m_renderData.m_mWorld.r[3]);
-	if( mouseXY_p.x >  x - halfW 
+	float xOff = m_pSpriteCompoRef->m_renderData.m_padding.x;
+	x += xOff;
+
+	if( mouseXY_p.x >  x - halfW
 		&& mouseXY_p.x < x + halfW ){
 
 			float halfH =  m_pSpriteCompoRef->m_renderData.m_res.y / 2.0f - m_borderGap.y;
 			float y = XMVectorGetY(m_pSpriteCompoRef->m_renderData.m_mWorld.r[3]);
+			float yOff = m_pSpriteCompoRef->m_renderData.m_padding.y;
+			y += yOff;
 
 			if( mouseXY_p.y > y - halfH
 				&& mouseXY_p.y < y + halfH ){

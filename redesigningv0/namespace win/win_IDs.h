@@ -66,6 +66,7 @@ namespace win{
 #define VK_T 0x54
 #define VK_V 0x56
 #define VK_W 0x57
+#define VK_X 0x58
 	//for numbers:
 #define VK_0 0x30
 #define VK_1 0x31

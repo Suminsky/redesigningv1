@@ -129,9 +129,12 @@ namespace gen{
 			:
 		m_roster(size_p), m_size(size_p){
 
-			m_pool = new T[m_size];
+			//m_pool = new T[m_size];
+			m_pool = (T*)malloc( sizeof(T) * size_p );
 
 			for( uint it = 0; it < m_size;++it ){
+
+				//new (&m_pool[it]) T();
 
 				m_pool[it].m_iCurrentRosterIndex = it;
 			}
@@ -140,7 +143,13 @@ namespace gen{
 		}
 		~Pool(){
 
-			delete [] m_pool;
+			/*for( uint it = 0; it < m_size;++it ){
+
+				m_pool[it].~T();
+			}*/
+
+			//delete [] m_pool;
+			free( m_pool );
 		}
 
 		//------------------------------------------------------------------------
@@ -150,13 +159,17 @@ namespace gen{
 
 			assert( m_roster.m_iFreeIndexesStart < m_size );
 
-			return &m_pool[m_roster.m_elements[m_roster.m_iFreeIndexesStart++].iPoolIndex];
+			return new (&m_pool[m_roster.m_elements[m_roster.m_iFreeIndexesStart++].iPoolIndex]) T();
+
+			//return &m_pool[m_roster.m_elements[m_roster.m_iFreeIndexesStart++].iPoolIndex];
 		}
 
 		//------------------------------------------------------------------------
 		// deallocate
 		//------------------------------------------------------------------------
 		void Free( const T* pT_p ){
+
+			pT_p->~T();
 
 			uint iRosterIndex_p = pT_p->m_iCurrentRosterIndex;
 			assert( iRosterIndex_p < m_roster.m_iFreeIndexesStart );
@@ -184,6 +197,8 @@ namespace gen{
 		// pool_ptr
 		//------------------------------------------------------------------------
 		void Free( const void* pT_p ){
+
+			((T*)pT_p)->~T();
 
 			uint iRosterIndex_p = ((T*)pT_p)->m_iCurrentRosterIndex;
 			assert( iRosterIndex_p < m_roster.m_iFreeIndexesStart );

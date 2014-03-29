@@ -22,8 +22,6 @@
 
 namespace gen{
 
-
-
 	//========================================================================
 	// used initially for boost shared_ptr deleter, when using shared pointer 
 	// with stack allocated data
@@ -77,7 +75,6 @@ namespace gen{
 		return RoundUpToNextMultiple_POT( (uint32_t)n_p, (uint32_t)multiplePOT_p );
 	}
 
-
 	namespace Math2DUtil{
 
 		#define gen_PI       3.14159265358979323846
@@ -104,7 +101,6 @@ namespace gen{
 			return atan2( y, x ) * 180.0f/(float)gen_PI;
 		}
 	}
-
 
 	//========================================================================
 	// 
@@ -307,8 +303,10 @@ namespace gen{
 
 			return counter;
 		}
-		inline bool CompareString( const char* string1_p, const char* string2_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
+		inline bool GCompareString( const char* string1_p, const char* string2_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
 		{
+			// the G is due name claching on stupid WinNIS.h or something
+
 			uint32_t it = 0;
 
 			while( string1_p[it] == string2_p[it] )

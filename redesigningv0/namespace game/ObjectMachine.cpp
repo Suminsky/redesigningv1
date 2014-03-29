@@ -95,6 +95,9 @@ void ObjectMachine::CleanRemovedObjects()
 			continue; // already "swapped"
 		}
 
+		// why swap? I dont think I still need to care with the one being removed now
+		// TODO
+
 		std::swap( m_objects[m_removedObjects[itR]->m_currentObjectIndex], m_objects[itLast] );
 		--itLast;
 

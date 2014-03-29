@@ -52,7 +52,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		Component()
 			:
-		m_iCurrentRosterIndex((unsigned int)-1),
+		//m_iCurrentRosterIndex((unsigned int)-1),
 		m_type(INVALID_COMPONENTTYPE),
 		m_currentComponentObjectIndex(INVALID_COMPONENTINDEX),
 		m_pObjectOwner(nullptr),

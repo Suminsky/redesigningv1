@@ -302,7 +302,7 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 
 game::E_ANIMWRAPMODE game::SpriteAnimationComponentFactory::GetWrapModeFromGFig( text::GfigElementA * pGFig_p )
 {
-	if( pGFig_p->m_value == "loop" ){
+	if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_LOOP] ){
 
 		return E_ANIMWRAPMODE_LOOP;
 	}
@@ -310,15 +310,15 @@ game::E_ANIMWRAPMODE game::SpriteAnimationComponentFactory::GetWrapModeFromGFig(
 
 		return E_ANIMWRAPMODE_PINGPONG;
 	}*/
-	else if( pGFig_p->m_value == "once" ){
+	else if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_ONCE] ){
 
 		return E_ANIMWRAPMODE_ONCE;
 	}
-	else if( pGFig_p->m_value == "clampfirst" ){
+	else if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_CLAMFIRST] ){
 
 		return E_ANIMWRAPMODE_CLAMFIRST;
 	}
-	else if( pGFig_p->m_value == "clamplast" ){
+	else if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_CLAMPLAST] ){
 
 		return E_ANIMWRAPMODE_CLAMPLAST;
 	}
@@ -342,4 +342,102 @@ void game::SpriteAnimationComponentFactory::LoadXYWHFromGfig( text::GfigElementA
 	if( pGFig_p->GetSubElement( "h", pElement) ){
 		rect_p.w = (float)atof(pElement->m_value.c_str());
 	}
+}
+
+void game::SpriteAnimationComponentFactory::LoadFrameFromGfig( text::GfigElementA * pGFig_p, SpriteFrame & spriteFrame_p )
+{
+	spriteFrame_p.iSpriteUsedIndex = 0;
+	spriteFrame_p.xOffset = spriteFrame_p.yOffset = 0.0f;
+	spriteFrame_p.fW = spriteFrame_p.fH = 32.0f; // really random value that should never be used
+	spriteFrame_p.uvRect = DirectX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f );
+
+	GfigElementA * pGFigParam;
+
+	if( pGFig_p->GetSubElement( "sprite", pGFigParam ) ){
+
+		spriteFrame_p.iSpriteUsedIndex = atoi( pGFigParam->m_value.c_str() );
+	}
+	//
+	if( pGFig_p->GetSubElement( "xoff", pGFigParam ) ){
+
+		spriteFrame_p.xOffset = (float)atof( pGFigParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "yoff", pGFigParam ) ){
+
+		spriteFrame_p.yOffset = (float)atof( pGFigParam->m_value.c_str() );
+	}
+	//
+	if( pGFig_p->GetSubElement( "w", pGFigParam ) ){
+
+		spriteFrame_p.fW = (float)atof( pGFigParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "h", pGFigParam ) ){
+
+		spriteFrame_p.fH = (float)atof( pGFigParam->m_value.c_str() );
+	}
+	//
+	if( pGFig_p->GetSubElement( "uvRect", pGFigParam ) ){
+
+		LoadXYWHFromGfig( pGFigParam, spriteFrame_p.uvRect );
+	}
+}
+
+void game::SpriteAnimationComponentFactory::LoadFrame( SpriteFrame & frame_p, SpriteAnimationComponent * compo_p )
+{
+	compo_p->m_vFrames.push_back( frame_p );
+}
+
+void game::SpriteAnimationComponentFactory::LoadClip( AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p )
+{
+	AnimationClip animClip;
+	animClip.configData = clip_p;
+
+	compo_p->m_vClips.push_back( animClip );
+}
+
+void game::SpriteAnimationComponentFactory::LoadSprite( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p )
+{
+	compo_p->m_vSprites.push_back( ID_Binder_p );
+}
+
+int game::SpriteAnimationComponentFactory::LoadFrameIfNew( SpriteFrame & frame_p, SpriteAnimationComponent * compo_p )
+{
+	int iSize = (int)compo_p->m_vFrames.size();
+	for( int it = 0; it < iSize; ++it ){
+
+		SpriteFrame & frameNew = compo_p->m_vFrames[it];
+		if( frameNew == frame_p  )
+			return it;
+	}
+
+
+	compo_p->m_vFrames.push_back( frame_p );
+	return iSize;
+}
+
+void game::SpriteAnimationComponentFactory::LoadClipFrame( int iClip_p, frame frame_p, SpriteAnimationComponent * compo_p )
+{
+	compo_p->m_vClips[iClip_p].configData.vFrames.push_back( frame_p );
+}
+
+void game::SpriteAnimationComponentFactory::UpdateClipConfig( int iClip_p, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p )
+{
+	compo_p->m_vClips[iClip_p].configData.eWrapMode = clip_p.eWrapMode;
+	compo_p->m_vClips[iClip_p].configData.szName = clip_p.szName;
+	compo_p->m_vClips[iClip_p].configData.SPF = clip_p.SPF;
+}
+
+int game::SpriteAnimationComponentFactory::LoadSpriteIfNew( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p )
+{
+	int iSize = (int)compo_p->m_vSprites.size();
+	for( int it = 0; it < iSize; ++it ){
+
+		TextureID_Binder_Pair & spriteNew = compo_p->m_vSprites[it];
+		if( spriteNew == ID_Binder_p  )
+			return it;
+	}
+
+
+	compo_p->m_vSprites.push_back( ID_Binder_p );
+	return iSize;
 }

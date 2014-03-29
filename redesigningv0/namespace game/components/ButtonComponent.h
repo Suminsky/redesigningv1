@@ -40,7 +40,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ButtonComponent(){}
+		ButtonComponent(){
+			m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
+		}
 		~ButtonComponent(){
 			BREAKHERE;
 		}

@@ -41,12 +41,21 @@ namespace game{
 
 	enum E_ANIMWRAPMODE{
 
-		E_ANIMWRAPMODE_LOOP,
+		E_ANIMWRAPMODE_LOOP = 0,
 		//E_ANIMWRAPMODE_PINGPONG,
 		E_ANIMWRAPMODE_CLAMPLAST,		// after finish, stop in the last frame
 		E_ANIMWRAPMODE_CLAMFIRST,		// after finish, it resets to first frame
 		E_ANIMWRAPMODE_ONCE,			// after finish, play the previous clip that was playing
 	};
+
+	static const char* s_szAnimWrapModes[] = {
+
+		"loop",
+		"clamplast",
+		"clampfirst",
+		"once"
+	};
+
 	enum E_ANIMSTATE{
 
 		E_ANIMSTATE_STOPPED,
@@ -96,12 +105,46 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
+	
 	struct SpriteFrame{
 
 		unsigned int iSpriteUsedIndex;
 		float fW, fH;			// if w and h differs from original sprite,
 		float xOffset, yOffset;	// offsets are need to let the sprite on the relative same position
 		DirectX::XMFLOAT4 uvRect;
+
+		bool UVRectCompareDifferent ( const DirectX::XMFLOAT4 & a, const DirectX::XMFLOAT4 & b ) const {
+
+			if( a.x != b.x 
+				||
+				a.y != b.y
+				||
+				a.z != b.z
+				||
+				a.w != b.w	)
+
+				return true;
+
+			return false;
+		}
+		bool operator == ( const SpriteFrame & other_p ) const{
+
+			if( iSpriteUsedIndex != other_p.iSpriteUsedIndex 
+				||
+				fW != other_p.fW
+				||
+				fH != other_p.fH
+				||
+				xOffset != other_p.xOffset
+				||
+				yOffset != other_p.yOffset
+				||
+				UVRectCompareDifferent(uvRect, other_p.uvRect) )
+
+				return false;
+
+			return true;
+		}
 	};
 
 	//========================================================================
@@ -111,6 +154,11 @@ namespace game{
 
 		dx::BindPSShaderResourceView *	pBindPSSRV;
 		int								iID;
+
+		bool operator == ( const TextureID_Binder_Pair & other_p ) const{
+
+			return (iID == other_p.iID);
+		}
 	};
 
 	//========================================================================
@@ -156,6 +204,7 @@ namespace game{
 		SpriteFrame GetFrame(){	return m_vFrames[m_currentFrame]; }
 
 		TextureID_Binder_Pair GetSprite(){ return m_vSprites[m_vFrames[m_currentFrame].iSpriteUsedIndex]; }
+		int GetNSprites() const { return (int) m_vSprites.size(); }
 
 	private:
 
@@ -192,8 +241,8 @@ namespace game{
 
 	public:
 
-		gen::Pool<SpriteAnimationComponent>	  m_pool;
-		sprite::SpriteRenderer						* m_pSpriteRenderer;
+		gen::Pool<SpriteAnimationComponent>		m_pool;
+		sprite::SpriteRenderer					* m_pSpriteRenderer;
 
 		//------------------------------------------------------------------------
 		// ctor
@@ -208,12 +257,22 @@ namespace game{
 		void LoadClipsFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
 		E_ANIMWRAPMODE GetWrapModeFromGFig( text::GfigElementA * pGFig_p );
 		void LoadClipFramesFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
-		void LoadXYWHFromGfig( text::GfigElementA * pGFig_p, DirectX::XMFLOAT4 & rect_p );
+		static void LoadXYWHFromGfig( text::GfigElementA * pGFig_p, DirectX::XMFLOAT4 & rect_p );
+
+		static void LoadFrameFromGfig( text::GfigElementA * pGFig_p, SpriteFrame & spriteFrame_p );
+
+		static void LoadSprite( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p );
+		static int LoadSpriteIfNew( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p );
+		static void LoadFrame( SpriteFrame & frame_p, SpriteAnimationComponent * compo_p );
+		static int LoadFrameIfNew( SpriteFrame & frame_p, SpriteAnimationComponent * compo_p );
+		static void LoadClip( AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p );
+		static void LoadClipFrame( int iClip_p, frame frame_p, SpriteAnimationComponent * compo_p );
+		static void UpdateClipConfig( int iClip, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p );
 
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		pool_Component_ptr VCreateComponent(){ assert(0); return pool_Component_ptr();} //TODO
+		pool_Component_ptr VCreateComponent(){ /*assert(0); */return pool_Component_ptr(m_pool);} //TODO
 		pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 	};
 
