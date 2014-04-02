@@ -28,6 +28,8 @@
 
 namespace game{
 
+	struct TextureID_Binder_Pair;
+
 	class SpriteComponent_: public Component{
 
 		friend class sprite::SpriteRenderer;
@@ -61,6 +63,15 @@ namespace game{
 			const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p,
 			sprite::E_BLENDTYPE blendType_p,  sprite::E_SAMPLERTYPE sampler_p,
 			sprite::SpriteRenderer * pSpriteRenderer_p);
+
+		void SpriteComponent_::Init( dx::Device * pDevice_p,
+			game::TextureID_Binder_Pair * texture_p,
+			float fWidth_p,
+			float fHeight_p,
+			DirectX::XMFLOAT4 uvRect_p,
+			sprite::E_BLENDTYPE blendType_p,
+			sprite::E_SAMPLERTYPE sampler_p,
+			sprite::SpriteRenderer * pSpriteRenderer_p );
 
 		//------------------------------------------------------------------------
 		// interpolates

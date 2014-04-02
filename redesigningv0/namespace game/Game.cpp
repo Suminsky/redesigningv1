@@ -9,10 +9,11 @@ void Game::FixedStepLoop(){
 	m_timer.Update();
 
 	// get time since last timer update
-	double && dDeltaSeconds = m_timer.GetDeltaSeconds();
+	double dDeltaSeconds = m_timer.GetDeltaSeconds();
 
 	// cap to max frame delay allowed, this is to avoid spiral of death
-	if( dDeltaSeconds > m_dMaxFrameTimeDelay ) dDeltaSeconds = m_dMaxFrameTimeDelay;
+	if( dDeltaSeconds > m_dMaxFrameTimeDelay )
+		dDeltaSeconds = m_dMaxFrameTimeDelay;
 
 	// add the delta to the delta remained from previous updates (deltas not used)
 	static double dFrameDeltaRemainingsAccumulated = 0.0;
@@ -33,18 +34,34 @@ void Game::FixedStepLoop(){
 
 	// compute the interpolation factor based on the remaining timing
 	// the interpolation is used to fix rendering motion across the discrete update steps
-	const double dInterpolationAmount = dFrameDeltaRemainingsAccumulated/m_dFixedTimeStep;
+	double dInterpolationAmount = dFrameDeltaRemainingsAccumulated/m_dFixedTimeStep;
 
 	// draw
+
+	if( dInterpolationAmount > 1.0 )
+		dInterpolationAmount = 1.0;
 
 	m_stateControl.Draw( dInterpolationAmount );
 
 	// scream?
 
-
-
 	//win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
 	//win::UniqueFileLogger()<<m_timer.GetDeltaMilliseconds()<<SZ_NEWLINE;
+
+	m_stateControl.ResolveStateChange();
+}
+
+void game::Game::LooseStepLoop()
+{
+	// update timer
+	m_timer.Update();
+
+	// get time since last timer update
+	double dDeltaSeconds = m_timer.GetDeltaSeconds();
+
+	m_stateControl.Update( dDeltaSeconds );
+
+	m_stateControl.Draw( 1.0 );
 
 	m_stateControl.ResolveStateChange();
 }

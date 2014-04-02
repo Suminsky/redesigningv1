@@ -90,7 +90,8 @@ namespace sprite{
 		// builds/rebuilds the pipe state, setting viewport, cbuffer1 and RTV 
 		// bind commands
 		//------------------------------------------------------------------------
-		void BuildPipeState( UINT width_p, UINT height_p,  dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p );
+		void BuildPipeState( UINT width_p, UINT height_p,  dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
+							UINT x_p = 0, UINT y_p = 0 );
 
 		//------------------------------------------------------------------------
 		// Update cbuffer data, and set to update to buffer interface

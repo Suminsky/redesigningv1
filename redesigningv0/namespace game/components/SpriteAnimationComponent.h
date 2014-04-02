@@ -199,12 +199,28 @@ namespace game{
 		void SetClipFrame( unsigned int frameIndex_p );
 
 		//------------------------------------------------------------------------
+		// info
+		//------------------------------------------------------------------------
+		bool IsPlaying()const{ return m_vClips[m_iCurrentClip].stateData.eState == E_ANIMSTATE_PLAYING; }
+
+		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
 		SpriteFrame GetFrame(){	return m_vFrames[m_currentFrame]; }
+		SpriteFrame GetNTHFrame( unsigned int nth_p ){	return m_vFrames[nth_p]; }
+		std::vector<SpriteFrame> GetFrames(){ return m_vFrames; }
 
 		TextureID_Binder_Pair GetSprite(){ return m_vSprites[m_vFrames[m_currentFrame].iSpriteUsedIndex]; }
+		TextureID_Binder_Pair GetNTHSprite( unsigned int nth_p ){  return m_vSprites[nth_p]; }
+		std::vector<TextureID_Binder_Pair> GetSprites(){ return m_vSprites; }
+
+		AnimationClip GetClip(){ return m_vClips[m_iCurrentClip]; }
+		AnimationClip GetNTHClip( unsigned int nth_p ){ return m_vClips[nth_p]; }
+		std::vector<AnimationClip> GetClips(){ return m_vClips; }
+
 		int GetNSprites() const { return (int) m_vSprites.size(); }
+		int GetNFrames() const { return (int) m_vFrames.size(); }
+		int GetNClips() const { return (int) m_vClips.size(); }
 
 	private:
 
@@ -216,7 +232,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// return true if needs to quit updating
 		//------------------------------------------------------------------------
-		bool OnFrameWrap( AnimationClip & currentClip );
+		bool OnFrameWrap( AnimationClip *& currentClip );
 
 		unsigned int								m_iCurrentClip;
 		unsigned int								m_iPreviousClip;
@@ -263,11 +279,19 @@ namespace game{
 
 		static void LoadSprite( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p );
 		static int LoadSpriteIfNew( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p );
+
 		static void LoadFrame( SpriteFrame & frame_p, SpriteAnimationComponent * compo_p );
 		static int LoadFrameIfNew( SpriteFrame & frame_p, SpriteAnimationComponent * compo_p );
+
 		static void LoadClip( AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p );
 		static void LoadClipFrame( int iClip_p, frame frame_p, SpriteAnimationComponent * compo_p );
-		static void UpdateClipConfig( int iClip, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p );
+		static AnimationClip::ConfigData GetClipConfigData( int iClip_p, SpriteAnimationComponent * compo_p );
+
+		static void UpdateClipConfig_NoFrames( int iClip, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p );
+
+		static void ClearAllFrameInfo_KeepClipsConfig( SpriteAnimationComponent * compo_p );
+
+		//static void CreateEmptyGfigForAnimComponent( )
 
 		//------------------------------------------------------------------------
 		// to be overridden

@@ -52,6 +52,7 @@ namespace game{
 		// skipping, and then calls draw passing the interpolation amount
 		//------------------------------------------------------------------------
 		void FixedStepLoop();
+		void LooseStepLoop();
 
 	protected:
 

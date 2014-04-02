@@ -63,12 +63,12 @@ void dx::SwapChain::Resize( UINT width_p, UINT height_p, ID3D11Device * pDevice_
 		throw std::exception("dxgi failed to resize");
 	}
 
-	// recreate the references
-	CreateRTVFromBackBuffer( pDevice_p );
-
 	DXGI_SWAP_CHAIN_DESC desc;
 	m_pSwapChain->GetDesc( &desc );
 	m_BackBufferDisplayMode = desc.BufferDesc;
+
+	// recreate the references
+	CreateRTVFromBackBuffer( pDevice_p );
 }
 
 void dx::SwapChain::CreateTheSwapChain( /*in: */ ID3D11Device *pDevice_p, IDXGIFactory1 *pFactory_p, const HWND hWnd_p,

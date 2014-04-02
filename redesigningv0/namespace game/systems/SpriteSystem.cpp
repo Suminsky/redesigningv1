@@ -14,6 +14,8 @@ void game::SpriteSystem::VOnInit()
 
 void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 {
+	// TODO interpolate camera
+
 	for( int itSprite = 0, iSize = m_poolAccess.GetNAllocated();
 		itSprite < iSize;
 		++itSprite ){

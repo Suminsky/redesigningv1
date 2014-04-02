@@ -106,6 +106,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		State * GetStateOwner() const { return m_pStateOwner; }
 
+		bool IsAttached() const { return !m_bDettached; }
+
 	protected:
 
 		State * m_pStateOwner;

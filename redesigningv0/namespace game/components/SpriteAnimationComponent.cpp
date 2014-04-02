@@ -35,19 +35,19 @@ void game::SpriteAnimationComponent::Update( animTimeUnit delta_p )
 {
 	// get current clip
 
-	AnimationClip & currentClip = m_vClips[m_iCurrentClip];
+	AnimationClip * pCurrentClip = &m_vClips[m_iCurrentClip];
 
-	currentClip.stateData.deltaAccum += delta_p;
+	pCurrentClip->stateData.deltaAccum += delta_p;
 
-	while( currentClip.stateData.deltaAccum > currentClip.configData.SPF ){
+	while( pCurrentClip->stateData.deltaAccum > pCurrentClip->configData.SPF ){
 
-		currentClip.stateData.deltaAccum -= currentClip.configData.SPF;
-		++currentClip.stateData.itCurrentFrame;
+		pCurrentClip->stateData.deltaAccum -= pCurrentClip->configData.SPF;
+		++pCurrentClip->stateData.itCurrentFrame;
 
-		unsigned int itLastFrame = (unsigned int)currentClip.configData.vFrames.size() -1;
-		if( currentClip.stateData.itCurrentFrame > itLastFrame ){
+		unsigned int itLastFrame = (unsigned int)pCurrentClip->configData.vFrames.size() -1;
+		if( pCurrentClip->stateData.itCurrentFrame > itLastFrame ){
 
-			if( OnFrameWrap( currentClip ) ){
+			if( OnFrameWrap( pCurrentClip ) ){
 
 				break;
 			}
@@ -55,36 +55,35 @@ void game::SpriteAnimationComponent::Update( animTimeUnit delta_p )
 	}
 
 	//m_previousFrame = m_currentFrame;
-	m_currentFrame = currentClip.GetCurrentFrame();
+	m_currentFrame = pCurrentClip->GetCurrentFrame();
 }
 
-bool game::SpriteAnimationComponent::OnFrameWrap( AnimationClip & currentClip )
+bool game::SpriteAnimationComponent::OnFrameWrap( AnimationClip *& pCurrentClip_p )
 {
-	switch( currentClip.configData.eWrapMode ){
+	switch( pCurrentClip_p->configData.eWrapMode ){
 
 	case E_ANIMWRAPMODE_LOOP:
 
-		currentClip.stateData.itCurrentFrame = 0;
+		pCurrentClip_p->stateData.itCurrentFrame = 0;
 		return false;
 		break;
 
 	case E_ANIMWRAPMODE_ONCE:
 
-		Stop();
-		m_iCurrentClip = m_iPreviousClip;	// set previous clip as current again
-		Play();								// play it again
+		//Stop();
+		//m_iCurrentClip = m_iPreviousClip;	// set previous clip as current again
+		PlayClip( m_iPreviousClip );		// play it again
 
-		currentClip = m_vClips[m_iCurrentClip];
+		pCurrentClip_p = &m_vClips[m_iCurrentClip];
 		return false;
 		break;
 
 	case E_ANIMWRAPMODE_CLAMPLAST:{
 
 		Stop();
-		unsigned int itLastFrame = (unsigned int)currentClip.configData.vFrames.size() -1;
-		//m_previousFrame = m_currentFrame;
-		currentClip.stateData.itCurrentFrame = itLastFrame;
-		//m_currentFrame = currentClip.configData.vFrames[itLastFrame];
+
+		unsigned int itLastFrame = (unsigned int)pCurrentClip_p->configData.vFrames.size() -1;
+		pCurrentClip_p->stateData.itCurrentFrame = itLastFrame;
 
 		return true;
 								  }break;
@@ -92,9 +91,8 @@ bool game::SpriteAnimationComponent::OnFrameWrap( AnimationClip & currentClip )
 	case E_ANIMWRAPMODE_CLAMFIRST:
 
 		Stop();
-		//m_previousFrame = m_currentFrame;
-		//m_currentFrame = currentClip.GetCurrentFrame();
 		return true;
+
 		break;
 	}
 
@@ -420,7 +418,7 @@ void game::SpriteAnimationComponentFactory::LoadClipFrame( int iClip_p, frame fr
 	compo_p->m_vClips[iClip_p].configData.vFrames.push_back( frame_p );
 }
 
-void game::SpriteAnimationComponentFactory::UpdateClipConfig( int iClip_p, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p )
+void game::SpriteAnimationComponentFactory::UpdateClipConfig_NoFrames( int iClip_p, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p )
 {
 	compo_p->m_vClips[iClip_p].configData.eWrapMode = clip_p.eWrapMode;
 	compo_p->m_vClips[iClip_p].configData.szName = clip_p.szName;
@@ -441,3 +439,22 @@ int game::SpriteAnimationComponentFactory::LoadSpriteIfNew( TextureID_Binder_Pai
 	compo_p->m_vSprites.push_back( ID_Binder_p );
 	return iSize;
 }
+
+void game::SpriteAnimationComponentFactory::ClearAllFrameInfo_KeepClipsConfig( SpriteAnimationComponent * compo_p )
+{
+	compo_p->m_vSprites.clear();
+	compo_p->m_vFrames.clear();
+	
+	for( int it = 0, iSize = (int)compo_p->m_vClips.size(); it < iSize; ++it ){
+
+		compo_p->m_vClips[it].configData.vFrames.clear();
+		compo_p->m_vClips[it].stateData.itCurrentFrame = 0;
+		compo_p->m_vClips[it].stateData.deltaAccum = (animTimeUnit)0.0;
+	}
+}
+
+AnimationClip::ConfigData game::SpriteAnimationComponentFactory::GetClipConfigData( int iClip_p, SpriteAnimationComponent * compo_p )
+{
+	return compo_p->m_vClips[iClip_p].configData;
+}
+

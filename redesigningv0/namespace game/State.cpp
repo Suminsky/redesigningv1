@@ -206,6 +206,7 @@ void game::State::CleanRemovedLayers()
 		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
 		// can be discarded TODO
 
+		m_removedLayers[itR]->VOnDestroy();
 		m_removedLayers[itR]->m_currentLayerIndex = INVALID_LAYERINDEX;
 
 	}

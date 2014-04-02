@@ -319,6 +319,58 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 	m_sortKey.bitfield.textureID = m_TextureID;
 	m_sortKey.bitfield.transparency = blendType_p;
 }
+
+void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
+{
+	m_sortKey.intRepresentation = 0LL;
+
+	m_bHFlip = m_bVFlip = false;
+
+	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
+	m_iShaderPermutation = 0;
+
+	m_renderData.m_mWorld = XMMatrixIdentity();
+	m_renderData.m_res.x = fWidth_p;
+	m_renderData.m_res.y = fHeight_p;
+	m_renderData.m_uvRect = uvRect_p;
+	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
+	m_renderData.m_bUpdate = true;
+
+	m_previousColor = m_currentColor = m_renderData.m_color;
+	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
+	m_previousTrafo = m_currentTrafo;
+
+	// creates a ID3DBuffer for the vs constant buffer
+
+	BufferResource::CreationParams cbufferParams;
+	ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
+	cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
+	cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
+	cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
+	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
+	cbufferParams.desc.bufferDesc.MiscFlags = 0;
+
+	ID3D11Buffer * pBuffer = NULL;
+	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+
+	// initialize pipe state for this sprite
+
+	m_pipeState.Reset();
+	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
+	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
+
+	int iTextureID = pTexture_p->iID;
+	m_pipeState.AddBinderCommand( pTexture_p->pBindPSSRV );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
+	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
+
+	m_TextureID = iTextureID;
+	m_sortKey.bitfield.textureID = m_TextureID;
+	m_sortKey.bitfield.transparency = blendType_p;
+}
+
+
 //========================================================================
 // 
 //========================================================================

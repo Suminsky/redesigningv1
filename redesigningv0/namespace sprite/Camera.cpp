@@ -5,7 +5,8 @@
 using namespace sprite;
 using namespace DirectX;
 
-void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p )
+void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
+	UINT x_p /*= 0*/, UINT y_p /*= 0*/ )
 {
 	m_pipeState.Reset(); //m_binds.resize(0);
 
@@ -13,8 +14,8 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 
 	m_viewPort.Width = (float)width_p;///2.0f;
 	m_viewPort.Height = (float)height_p;///2.0f;
-	m_viewPort.TopLeftX = 0.0f;
-	m_viewPort.TopLeftY = 0.0f;
+	m_viewPort.TopLeftX = (float)x_p;//0.0f;
+	m_viewPort.TopLeftY = (float)y_p;//0.0f;
 	m_viewPort.MinDepth = 0.0f;
 	m_viewPort.MaxDepth = 1.0f;
 
@@ -52,4 +53,6 @@ void sprite::Camera::Update()
 		// send to GPU?
 		m_renderData.m_bUpdate = true;
 	}
+
+	//m_renderData.m_bUpdate = true; //dbg
 }
