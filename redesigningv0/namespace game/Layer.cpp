@@ -66,9 +66,9 @@ void game::Layer::RemoveObject( const Object * pObject_p )
 	RemoveObject(pObject_p->m_currentObjectIndex);
 }
 
-void game::Layer::Draw( const double dInterpolation_p )
+void game::Layer::Draw( const double dInterpolation_p, const double dDelta_p )
 {
-	VOnDraw( dInterpolation_p );
+	VOnDraw( dInterpolation_p, dDelta_p );
 
 	for( int itSys = 0, iSize = (int)m_systems.m_systems.size();
 		itSys < iSize;

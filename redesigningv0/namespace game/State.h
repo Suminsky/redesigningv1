@@ -74,7 +74,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// traverse layer and call draw
 		//------------------------------------------------------------------------
-		void Draw( const double dInterpolation_p );
+		void Draw( const double dInterpolation_p, const double dDelta_p = 0.0 );
 
 		//------------------------------------------------------------------------
 		// 

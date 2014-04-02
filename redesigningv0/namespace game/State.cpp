@@ -160,13 +160,13 @@ void game::State::Destroy()
 	VOnDestroy();
 }
 
-void game::State::Draw( const double dInterpolation_p )
+void game::State::Draw( const double dInterpolation_p, const double dDelta_p )
 {
 	for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
 		if( m_layers[it]->m_bVisible ){
 
-			m_layers[it]->Draw( dInterpolation_p );
+			m_layers[it]->Draw( dInterpolation_p, dDelta_p );
 		}
 	}
 

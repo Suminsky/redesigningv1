@@ -52,7 +52,10 @@ namespace game{
 		// skipping, and then calls draw passing the interpolation amount
 		//------------------------------------------------------------------------
 		void FixedStepLoop();
+		void SmoothedFixedStepLoop( double dVsyncRefreshRate_p );
 		void LooseStepLoop();
+
+		void SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p );
 
 	protected:
 

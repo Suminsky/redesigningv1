@@ -25,11 +25,11 @@ void game::StateMachine::Update( const double dDeltaTime_p )
 	}
 }
 
-void game::StateMachine::Draw( const double dInterpolation_p )
+void game::StateMachine::Draw( const double dInterpolation_p, const double dDelta_p = 0.0 )
 {
 	if( m_pCurrentState ){
 
-		m_pCurrentState->Draw( dInterpolation_p );
+		m_pCurrentState->Draw( dInterpolation_p, dDelta_p );
 	}
 }
 

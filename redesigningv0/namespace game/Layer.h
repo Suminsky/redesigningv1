@@ -118,7 +118,7 @@ namespace game{
 		// updates state timer and call updates with timer time
 		//------------------------------------------------------------------------
 		void Update( const double dDeltaTime_p );
-		void Draw( const double /*dInterpolation_p*/ );
+		void Draw( const double /*dInterpolation_p*/, const double dDelta_p = 0.0 );
 
 		LAYERINDEX m_currentLayerIndex;
 		bool m_bDettached;
@@ -130,7 +130,7 @@ namespace game{
 		virtual void VOnInit(){}
 		virtual void VOnUpdate(		const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called before objects update
 		virtual void VLateUpdate(	const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called after objects update
-		virtual void VOnDraw(		const double /*dInterpolation_p*/ ){}
+		virtual void VOnDraw(		const double /*dInterpolation_p*/, const double /*dDelta_p = 0.0*/ ){}
 		virtual void VOnDestroy(){}
 
 		virtual void VOnResize( int /*W_p*/, int /*H_p*/ ){}		

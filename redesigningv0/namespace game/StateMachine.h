@@ -42,7 +42,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// Draws current state
 		//------------------------------------------------------------------------
-		void Draw( const double dInterpolation_p );
+		void Draw( const double dInterpolation_p, const double dDelta_p );
 
 		//------------------------------------------------------------------------
 		// set state to be changed to
