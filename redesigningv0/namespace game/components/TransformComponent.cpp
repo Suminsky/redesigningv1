@@ -84,6 +84,27 @@ TransformComponent * game::TransformComponent::GetParent()
 	return m_node.GetParent()->GetData();
 }
 
+void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMMATRIX & mParentWorldTrafo_p )
+{
+	//m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	// world
+
+	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorldTrafo_p );
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+
+	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
+
+	// TODO: move snapping to here
+}
+
 //========================================================================
 // 
 //========================================================================
