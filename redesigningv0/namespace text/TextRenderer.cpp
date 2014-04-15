@@ -21,8 +21,9 @@ void text::TextRenderer::Initialize( dx::Device * pDevice_p, sprite::SpriteRende
 	cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
 	m_pGlyphBufferInterface = NULL;
-	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, m_pGlyphBufferInterface );
+	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, m_pGlyphBufferInterface );
 	//pDevice_p->GetDevice()->CreateBuffer( &cbufferParams.desc.bufferDesc, nullptr, &m_pGlyphBufferInterface );
+	m_pGlyphBufferInterface = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 	
 	// !!!!!!!!!!!!! TODO NOW !!!!!!!!!!!!!!!!!!!!
 	// using another buffer interface is the problem, not the buffer config, but another interface ptr

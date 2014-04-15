@@ -70,11 +70,20 @@ namespace text{
 		//------------------------------------------------------------------------
 		TextRenderer( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p )
 			:
-		m_pSpriteRendererRef(&spriteRenderer_p)
+		m_pSpriteRendererRef(&spriteRenderer_p),
+		m_pGlyphBufferInterface(nullptr)
 		{
 			Initialize( pDevice_p, spriteRenderer_p );
 		}
-		TextRenderer(){}
+		TextRenderer()
+		:
+		m_pGlyphBufferInterface(nullptr){}
+
+		~TextRenderer(){
+
+			if( m_pGlyphBufferInterface )
+				m_pGlyphBufferInterface->Release();
+		}
 		void Initialize( dx::Device * pDevice_p, sprite::SpriteRenderer & spriteRenderer_p );
 
 		//------------------------------------------------------------------------

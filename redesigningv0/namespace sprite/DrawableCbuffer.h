@@ -92,7 +92,7 @@ namespace sprite{
 		// Test if buffer data was modified since last update call, than updates it,
 		// or not.
 		//------------------------------------------------------------------------
-		void UpdateIfDirt( ID3D11DeviceContext * pContext_p, ID3D11Buffer *& pConstantBuffer_p ){
+		inline void UpdateIfDirt( ID3D11DeviceContext * pContext_p, ID3D11Buffer *& pConstantBuffer_p ){
 			
 			// need 2 flags, a dirt per object (did I changed since last time), and a dirt for the
 			// buffer (the shared buffer), (its my data on the buffer?)
@@ -163,25 +163,9 @@ namespace sprite{
 
 			if( m_pConstantBuffer != s_pConstantBufferBound ){
 
-				// update if data is dirt - dirt on the buffer
-
-				if( s_pConstantBufferDataBound != m_pConstantBufferData ){
-				
-					D3D11_MAPPED_SUBRESOURCE mapped;// = {0};
-					pDeviceContext_p->Map( m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );
-					memcpy( mapped.pData, m_pConstantBufferData, m_pConstantBufferData->s_SIZE );
-					pDeviceContext_p->Unmap( m_pConstantBuffer, 0 );
-
-					//pDeviceContext_p->UpdateSubresource( m_pConstantBuffer, 0, NULL, m_pConstantBufferData, 0, 0 );
-
-					s_pConstantBufferDataBound = m_pConstantBufferData;
-				}
-				else{
-
-					// update if data is dirt - dirt on the object
+				// update if data is dirt - dirt on the object
 					
-					m_pConstantBufferData->UpdateIfDirt( pDeviceContext_p, m_pConstantBuffer );
-				}
+				m_pConstantBufferData->UpdateIfDirt( pDeviceContext_p, m_pConstantBuffer );
 
 				// bind buffer
 
@@ -199,6 +183,8 @@ namespace sprite{
 				memcpy( mapped.pData, m_pConstantBufferData, m_pConstantBufferData->s_SIZE );
 				pDeviceContext_p->Unmap( m_pConstantBuffer, 0 );
 
+				m_pConstantBufferData->m_bUpdate = false;
+
 				//pDeviceContext_p->UpdateSubresource( m_pConstantBuffer, 0, NULL, m_pConstantBufferData, 0, 0 );
 			}
 		}
@@ -211,7 +197,6 @@ namespace sprite{
 		DrawableCbuffer * m_pConstantBufferData;
 
 		static ID3D11Buffer *s_pConstantBufferBound;	// test: using to check if this buffer need to be bound
-		static DrawableCbuffer *s_pConstantBufferDataBound;
 	};
 
 

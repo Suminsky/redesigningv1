@@ -113,14 +113,27 @@ namespace gen{
 		return (value_p - start_p) / (end_p - start_p) * (newEnd_p - newStart_p) + newStart_p;
 	}
 
+	template<typename T>
+	inline T Min( T a, T b ){
+
+		return a < b ? a : b;
+	}
+	template<typename T>
+	inline T Max( T a, T b ){
+
+		return a > b ? a : b;
+	}
+
 	//========================================================================
 	// min max clamping
 	//========================================================================
-	inline void MinClamp( float & f_p, float min_p = 0.0f ){
+	template<typename T>	
+	inline void MinClamp( T & f_p, T min_p = (T)0 ){
 
 		if( f_p < min_p ) f_p = min_p;
 	}
-	inline void MaxClamp( float & f_p, float max_p = 1.0f ){
+	template<typename T>
+	inline void MaxClamp( T & f_p, T max_p = (T)1.0f ){
 
 		if( f_p > max_p ) f_p = max_p;
 	}
@@ -168,6 +181,50 @@ namespace gen{
 	inline int indexFromXY( int x_p, int y_p, int iW_p ){
 
 		return y_p * iW_p + x_p;
+	}
+
+	//------------------------------------------------------------------------
+	// -assuming centralized world
+	// -with y going down on negative
+	// - starting from 0.0, 0.0 (first tile)
+	//------------------------------------------------------------------------
+	inline int WorldXToTileX( float x_p, float tileW_p ){
+
+		return  int( ( x_p / tileW_p ) + 0.5f );
+	}
+	inline int WorldYToTileY( float y_p, float tileH_p ){
+
+		return  -int( ( y_p / tileH_p ) - 0.5f );
+	}
+	inline void WordToTileXY( float x, float y, int & iX, int &iY, float tileW_p, float tileH_p )
+	{
+		// this commented out also works
+		//iX = (int)((x + CurrentMap().hHalfSpc) / CurrentMap().hSpacing);
+		//iY = -(int)((y - CurrentMap().vHalfSpc) / CurrentMap().vSpacing);
+
+		iX =  int( ( x / tileW_p ) + 0.5f );
+		iY = -int( ( y / tileH_p ) - 0.5f );
+	}
+
+	//------------------------------------------------------------------------
+	// copies the 'rect' of a on b, without modifying anything else
+	//------------------------------------------------------------------------
+	template< typename T >
+	inline void CopyPaste2DArray_AtoB(	T * pA_p, int aW_p, int aH_p,
+										T * pB_p, int bW_p, int bH_p  ){
+
+		int h = bH_p < aH_p ? bH_p : aH_p;
+		int w = bW_p < aW_p ? bW_p : aW_p;
+
+		for( int y = 0; y < h; ++y ){
+			for( int x = 0; x < w; ++x ){
+
+				int indexA = indexFromXY( x, y, aW_p );
+				int indexB = indexFromXY( x, y, bW_p );
+
+				pB_p[indexB] = pA_p[indexA];
+			}
+		}
 	}
 
 	//========================================================================

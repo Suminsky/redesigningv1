@@ -144,7 +144,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>false</Profile>
@@ -156,6 +156,8 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Mentle\InGame\AudioHandler.h" />
@@ -185,7 +187,12 @@
     <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\FramesLayer.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimTool.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimToolEvents.h" />
     <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
+    <ClInclude Include="Mentle\TileMapEditor\GridLayer.h" />
+    <ClInclude Include="Mentle\TileMapEditor\TileCollisionLayer.h" />
+    <ClInclude Include="Mentle\TileMapEditor\TileMapEditor.h" />
+    <ClInclude Include="Mentle\TileMapEditor\TilesLayer.h" />
     <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\ComponentFactory.h" />
@@ -293,6 +300,7 @@
     <ClInclude Include="namespace game\tasks\FadeTask.h" />
     <ClInclude Include="namespace text\TextParser.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
@@ -300,6 +308,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Mentle\InGame\AudioHandler.cpp" />
@@ -329,6 +338,10 @@
     <ClCompile Include="Mentle\SpriteAnimTool\FramesLayer.cpp" />
     <ClCompile Include="Mentle\SpriteAnimTool\SpriteAnimTool.cpp" />
     <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />
+    <ClCompile Include="Mentle\TileMapEditor\GridLayer.cpp" />
+    <ClCompile Include="Mentle\TileMapEditor\TileCollisionLayer.cpp" />
+    <ClCompile Include="Mentle\TileMapEditor\TileMapEditor.cpp" />
+    <ClCompile Include="Mentle\TileMapEditor\TilesLayer.cpp" />
     <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\ComponentFactory.cpp" />
@@ -424,6 +437,7 @@
   <ItemGroup>
     <ResourceCompile Include="RC_SpriteAnimDialogs.rc" />
     <ResourceCompile Include="RC_icon.rc" />
+    <ResourceCompile Include="RC_TileEditDialogs.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

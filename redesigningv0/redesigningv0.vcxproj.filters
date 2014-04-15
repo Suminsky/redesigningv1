@@ -441,6 +441,30 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\TileMapEditor\TileMapEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimToolEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\TileMapEditor\GridLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\TileMapEditor\TilesLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mentle\TileMapEditor\TileCollisionLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -797,6 +821,21 @@
     <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\TileMapEditor\TileMapEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\TileMapEditor\GridLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\TileMapEditor\TilesLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\TileMapEditor\TileCollisionLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico">
@@ -814,6 +853,9 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
     <ResourceCompile Include="RC_SpriteAnimDialogs.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="RC_TileEditDialogs.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

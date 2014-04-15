@@ -17,8 +17,8 @@ namespace dx{
 
 	typedef ResourceCache<RenderTargetView,		1>	RTVCache;
 	typedef ResourceCache<Texture2DResource,	30>	Tex2DCache;
-	typedef ResourceCache<VertexShader,			2>	VSCache;
-	typedef ResourceCache<PixelShader,			2>	PSCache;
+	typedef ResourceCache<VertexShader,			3>	VSCache;
+	typedef ResourceCache<PixelShader,			3>	PSCache;
 	typedef ResourceCache<BufferResource,		7>	BufferCache;
 	typedef ResourceCache<BlendState,			2>	BlendStateCache;
 	typedef ResourceCache<ShaderResourceView,	30>	ShaderResourceViewCache;

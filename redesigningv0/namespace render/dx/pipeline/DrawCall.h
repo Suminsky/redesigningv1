@@ -72,6 +72,32 @@ namespace dx{
 	//========================================================================
 	// 
 	//========================================================================
+	class Draw: public DrawCall{
+
+		UINT m_nVertices;		// how much indexes from the bound buffer to use
+		UINT m_iStartIndex;
+
+	public:
+
+		Draw( UINT nVertices_p, UINT iStartIndex_p = 0 )
+			:
+		DrawCall(E_Normal),
+		m_nVertices(nVertices_p), m_iStartIndex(iStartIndex_p){}
+
+		void UpdateNumberOfVertices( UINT nVertices_p ){
+
+			m_nVertices = nVertices_p;
+		}
+
+		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
+
+			pDeviceContext_p->Draw( m_nVertices, m_iStartIndex );
+		}
+	};
+
+	//========================================================================
+	// 
+	//========================================================================
 	class DrawIndexed: public DrawCall{
 
 		UINT m_nIndexes;		// how much indexes from the bound buffer to use

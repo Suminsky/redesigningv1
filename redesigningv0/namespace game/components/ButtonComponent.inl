@@ -102,16 +102,16 @@ bool game::ButtonComponent< DELEGATE_PARAM >::GetPointCollision( XMFLOAT2 mouseX
 	float xOff = m_pSpriteCompoRef->m_renderData.m_padding.x;
 	x += xOff;
 
-	if( mouseXY_p.x >  x - halfW
-		&& mouseXY_p.x < x + halfW ){
+	if( mouseXY_p.x >=  x - halfW
+		&& mouseXY_p.x <= x + halfW ){
 
 			float halfH =  m_pSpriteCompoRef->m_renderData.m_res.y / 2.0f - m_borderGap.y;
 			float y = XMVectorGetY(m_pSpriteCompoRef->m_renderData.m_mWorld.r[3]);
 			float yOff = m_pSpriteCompoRef->m_renderData.m_padding.y;
 			y += yOff;
 
-			if( mouseXY_p.y > y - halfH
-				&& mouseXY_p.y < y + halfH ){
+			if( mouseXY_p.y >= y - halfH
+				&& mouseXY_p.y <= y + halfH ){
 
 					return true;
 			}

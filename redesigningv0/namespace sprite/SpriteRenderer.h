@@ -59,12 +59,14 @@ namespace sprite{
 
 	class SpriteRenderer{
 
+	public:
+
 		struct vpostex{
 			float pos[3];
 			float uv[2];
 		};
 
-	public:		
+	
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
@@ -108,8 +110,6 @@ namespace sprite{
 
 		InstancesVertexBuffer		m_dynamic_tmp_instancesVB;	
 
-	private:
-
 		// TODO: a cache class for each of those binders would be the right thing
 		dx::BindIAPrimitiveTopology m_bindPrimitiveTopo;
 		dx::BindIAInputLayout		m_bindIAInputLayout; // TODO: should be tied with vertex shaders some how
@@ -117,6 +117,7 @@ namespace sprite{
 		dx::BindIAVertexBuffer		m_bindVB;
 		dx::BindIAIndexBuffer		m_bindIB;
 
+	private:
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------

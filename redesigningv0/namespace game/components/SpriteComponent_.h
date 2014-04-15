@@ -58,6 +58,7 @@ namespace game{
 			const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p,
 			sprite::E_BLENDTYPE blendType_p,  sprite::E_SAMPLERTYPE sampler_p,
 			sprite::SpriteRenderer * pSpriteRenderer_p );
+		~SpriteComponent_();
 
 		void Init(dx::Device * pDevice_p,
 			const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p,
@@ -79,13 +80,14 @@ namespace game{
 		void OnDraw( double dInterpolation_p );
 		void OnDraw( double dInterpolation_p, sprite::Camera * pCamera_p );
 
-		void FlipHorz();
-		void FlipVertc();
+		void FlipHorzToogle(); void FlipHorz(); void UnFlipHorz();
+		void FlipVertcToogle(); void FlipVertc(); void UnFlipVertc();
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
 		void VOnAttach();
+		void VOnDetach();
 
 		//------------------------------------------------------------------------
 		// delegates
@@ -93,6 +95,8 @@ namespace game{
 		void OnColorEventDelegate( const Event<ComponentEventData> & event_p );
 		void OnTransformEventDelegate( const Event<ComponentEventData> & event_p );
 		void OnAnimEventDelegate( const Event<ComponentEventData> & event_p );
+
+		int GetTextureID() const{ return m_TextureID; }
 
 	public:
 
@@ -112,6 +116,9 @@ namespace game{
 		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
 		sprite::DrawableCbuffer m_renderData;
 		sprite::BindVSDrawableCBuffer m_VSDrawableCbufferBinder;
+
+		// testing
+		ID3D11Buffer * m_pBuffer;
 
 		ALLIGN16ONLY;
 	};

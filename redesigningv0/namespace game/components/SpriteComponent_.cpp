@@ -15,6 +15,7 @@ using namespace text;
 
 game::SpriteComponent_::SpriteComponent_()
 {
+	m_pBuffer = nullptr;
 	m_type = COMPONENT_TYPE(SpriteComponent_);
 }
 
@@ -23,6 +24,7 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	E_BLENDTYPE blendType_p, E_SAMPLERTYPE sampler_p,
 	SpriteRenderer * pSpriteRenderer_p )
 {
+	m_pBuffer = nullptr;
 	m_type = COMPONENT_TYPE(SpriteComponent_);
 
 	m_sortKey.intRepresentation = 0LL;
@@ -205,6 +207,22 @@ void SpriteComponent_::VOnAttach()
 	m_pObjectOwner->RegisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
 }
 
+void game::SpriteComponent_::VOnDetach()
+{
+	EventMachine<ComponentEventData>::EventHandlerDelegate colorDelegate =
+		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnColorEventDelegate>(this);
+	m_pObjectOwner->UnregisterForComponentEvent(colorDelegate, COMPONENT_TYPE(ColorComponent));
+
+	EventMachine<ComponentEventData>::EventHandlerDelegate trafoDelegate =
+		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnTransformEventDelegate>(this);
+	m_pObjectOwner->UnregisterForComponentEvent(trafoDelegate, COMPONENT_TYPE(TransformComponent));
+
+	EventMachine<ComponentEventData>::EventHandlerDelegate animDelegate =
+		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
+	m_pObjectOwner->UnregisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
+}
+
+
 void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & event_p )
 {
 	ColorComponent * pColor = event_p.GetDataAs<ColorComponent*>();
@@ -256,18 +274,58 @@ void game::SpriteComponent_::SetColor( DirectX::XMFLOAT4 color_p )
 	m_previousColor = m_currentColor = color_p;
 }
 
-void game::SpriteComponent_::FlipHorz()
+void game::SpriteComponent_::FlipHorzToogle()
 {
 	m_bHFlip = !m_bHFlip;
 	gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
 	m_renderData.m_padding.x = -m_renderData.m_padding.x;
 }
-
-void game::SpriteComponent_::FlipVertc()
+void game::SpriteComponent_::FlipVertcToogle()
 {
 	m_bVFlip = !m_bVFlip;
 	gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
 	m_renderData.m_padding.y = -m_renderData.m_padding.y;
+}
+void game::SpriteComponent_::FlipHorz()
+{
+	if( !m_bHFlip ){
+	
+		m_bHFlip = true;
+		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.x = -m_renderData.m_padding.x;
+	}
+}
+void game::SpriteComponent_::FlipVertc()
+{
+	if( !m_bVFlip ){
+	
+		m_bVFlip = true;
+		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.y = -m_renderData.m_padding.y;
+	}
+}
+void game::SpriteComponent_::UnFlipHorz()
+{
+	if( m_bHFlip ){
+
+		m_bHFlip = false;
+		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.x = -m_renderData.m_padding.x;
+	}
+}
+void game::SpriteComponent_::UnFlipVertc()
+{
+	if( m_bVFlip ){
+
+		m_bVFlip = false;
+		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.y = -m_renderData.m_padding.y;
+	}
+}
+
+game::SpriteComponent_::~SpriteComponent_()
+{
+	if( m_pBuffer )m_pBuffer->Release();
 }
 
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
@@ -301,13 +359,14 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
 	cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
-	ID3D11Buffer * pBuffer = NULL;
-	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	//ID3D11Buffer * pBuffer = NULL;
+	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
 	// initialize pipe state for this sprite
 
 	m_pipeState.Reset();
-	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
+	m_VSDrawableCbufferBinder.Initialize( m_pBuffer/*pBuffer*/, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
 	int iTextureID;
@@ -351,13 +410,14 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair
 	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
 	cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
-	ID3D11Buffer * pBuffer = NULL;
-	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	//ID3D11Buffer * pBuffer = NULL;
+	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
 	// initialize pipe state for this sprite
 
 	m_pipeState.Reset();
-	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
+	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
 	int iTextureID = pTexture_p->iID;
@@ -387,9 +447,9 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 
 	GfigElementA * pParam = nullptr;
 
-	assert( pGFig_p->GetSubElement( "w", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "w", pParam ) );
 	w = (float)atof( pParam->m_value.c_str() );
-	assert( pGFig_p->GetSubElement( "h", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "h", pParam ) );
 	h = (float)atof( pParam->m_value.c_str() );
 
 	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
@@ -414,7 +474,7 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 		eSampler = GetSamplerType( pParam );
 	}
 
-	assert( pGFig_p->GetSubElement( "texture", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "texture", pParam ) );
 
 	pSprite->Init( m_pDeviceRef_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, m_pRendererRef );
 	pSprite->m_renderData.m_padding.x = xOffset;
@@ -483,9 +543,9 @@ void game::SpriteComponent_Factory::CreateSprite( SpriteComponent_ & sprite_p, t
 
 	GfigElementA * pParam = nullptr;
 
-	assert( pGFig_p->GetSubElement( "w", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "w", pParam ) );
 	w = (float)atof( pParam->m_value.c_str() );
-	assert( pGFig_p->GetSubElement( "h", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "h", pParam ) );
 	h = (float)atof( pParam->m_value.c_str() );
 
 	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
@@ -510,7 +570,7 @@ void game::SpriteComponent_Factory::CreateSprite( SpriteComponent_ & sprite_p, t
 		eSampler = GetSamplerType( pParam );
 	}
 
-	assert( pGFig_p->GetSubElement( "texture", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "texture", pParam ) );
 
 	sprite_p.Init( pDevice_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, pRendererRef );
 	sprite_p.m_renderData.m_padding.x = xOffset;
@@ -521,9 +581,9 @@ void game::SpriteComponent_Factory::LoadInstanceData( spriteInstance & inst_p, t
 {
 	GfigElementA * pParam = nullptr;
 
-	assert( pGFig_p->GetSubElement( "w", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "w", pParam ) );
 	inst_p.res[0] = (float)atof( pParam->m_value.c_str() );
-	assert( pGFig_p->GetSubElement( "h", pParam ) );
+	keepAssert( pGFig_p->GetSubElement( "h", pParam ) );
 	inst_p.res[1] = (float)atof( pParam->m_value.c_str() );
 
 	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
