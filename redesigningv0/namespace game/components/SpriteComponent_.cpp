@@ -81,20 +81,12 @@ void SpriteComponent_::OnDraw( double dInterpolation_p )
 
 		// decompose matrices
 
-		Trafo mCurrent;
-		mCurrent.FromMatrix(mCurrentTrafo);
-		Trafo mPrevious;
-		mPrevious.FromMatrix(m_previousTrafo);
+		XMVECTOR vPos, vScale, qRot; 
+		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
 
-		XMVECTOR vPos, vPrevPos, vScale, vPrevScale, qRot, qPrevRot;
-
-		vPos = XMLoadFloat4( &mCurrent.position );
-		qRot = XMLoadFloat4( &mCurrent.qRotation );
-		vScale = XMLoadFloat4( &mCurrent.scale );
-		//
-		vPrevPos = XMLoadFloat4( &mPrevious.position );
-		qPrevRot = XMLoadFloat4( &mPrevious.qRotation );
-		vPrevScale = XMLoadFloat4( &mPrevious.scale );
+		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
+		XMVECTOR vPrevPos, vPrevScale, qPrevRot;
+		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
 
 		// interpolate independent components
 
@@ -140,27 +132,24 @@ void SpriteComponent_::OnDraw( double dInterpolation_p, Camera * /*pCamera_p*/ )
 
 		// interpolate
 
-		Trafo mCurrent;
-		mCurrent.FromMatrix(mCurrentTrafo);
-		Trafo mPrevious;
-		mPrevious.FromMatrix(m_previousTrafo);
+		// decompose matrices
 
-		XMVECTOR vPos, vPrevPos, vScale, vPrevScale, qRot, qPrevRot;
+		XMVECTOR vPos, vScale, qRot; 
+		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
 
-		vPos = XMLoadFloat4( &mCurrent.position );
-		qRot = XMLoadFloat4( &mCurrent.qRotation );
-		vScale = XMLoadFloat4( &mCurrent.scale );
+		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
+		XMVECTOR vPrevPos, vPrevScale, qPrevRot;
+		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
 
-		vPrevPos = XMLoadFloat4( &mPrevious.position );
-		vPrevScale = XMLoadFloat4( &mPrevious.scale );
-		qPrevRot = XMLoadFloat4( &mPrevious.qRotation );
-
+		// interpolate independent components
 
 		XMVECTOR vFactor = XMVectorReplicate( (float)dInterpolation_p); // do only once
 
 		XMVECTOR vlPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
-		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
 		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
+		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
+
+		// compose matrix again
 
 		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
 
@@ -194,31 +183,31 @@ void SpriteComponent_::VOnAttach()
 	//gen::Delegate1Param<const game::Event<InGameEventData>&> eventHandlerDelegate =
 	//	gen::Delegate1Param<const game::Event<InGameEventData> &>::Build<CardsLayer, &CardsLayer::OnEvent>(this);
 
-	EventMachine<ComponentEventData>::EventHandlerDelegate colorDelegate =
-		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnColorEventDelegate>(this);
+	EventMachine<ComponentEventData>::EventHandler colorDelegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnColorEventDelegate>(this);
 	m_pObjectOwner->RegisterForComponentEvent(colorDelegate, COMPONENT_TYPE(ColorComponent));
 
-	EventMachine<ComponentEventData>::EventHandlerDelegate trafoDelegate =
-		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnTransformEventDelegate>(this);
+	EventMachine<ComponentEventData>::EventHandler trafoDelegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnTransformEventDelegate>(this);
 	m_pObjectOwner->RegisterForComponentEvent(trafoDelegate, COMPONENT_TYPE(TransformComponent));
 
-	EventMachine<ComponentEventData>::EventHandlerDelegate animDelegate =
-		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
+	EventMachine<ComponentEventData>::EventHandler animDelegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
 	m_pObjectOwner->RegisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
 }
 
 void game::SpriteComponent_::VOnDetach()
 {
-	EventMachine<ComponentEventData>::EventHandlerDelegate colorDelegate =
-		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnColorEventDelegate>(this);
+	EventMachine<ComponentEventData>::EventHandler colorDelegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnColorEventDelegate>(this);
 	m_pObjectOwner->UnregisterForComponentEvent(colorDelegate, COMPONENT_TYPE(ColorComponent));
 
-	EventMachine<ComponentEventData>::EventHandlerDelegate trafoDelegate =
-		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnTransformEventDelegate>(this);
+	EventMachine<ComponentEventData>::EventHandler trafoDelegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnTransformEventDelegate>(this);
 	m_pObjectOwner->UnregisterForComponentEvent(trafoDelegate, COMPONENT_TYPE(TransformComponent));
 
-	EventMachine<ComponentEventData>::EventHandlerDelegate animDelegate =
-		EventMachine<ComponentEventData>::EventHandlerDelegate::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
+	EventMachine<ComponentEventData>::EventHandler animDelegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
 	m_pObjectOwner->UnregisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
 }
 
@@ -227,18 +216,19 @@ void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & e
 {
 	ColorComponent * pColor = event_p.GetDataAs<ColorComponent*>();
 
-	m_previousColor = pColor->GetPreviousFinalColor();
+	
 	m_currentColor = pColor->GetFinalColor();
 	if( pColor->GonnaSnap() ) m_previousColor = m_currentColor;
+	else m_previousColor = pColor->GetPreviousFinalColor();
 }
 
 void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEventData> & event_p )
 {
 	TransformComponent * pTrafo = event_p.GetDataAs<TransformComponent*>();
 	
-	m_previousTrafo = pTrafo->GetPreviousFinal();
 	m_currentTrafo = pTrafo->GetFinal();
 	if( pTrafo->GonnaSnap() ) m_previousTrafo = m_currentTrafo;
+	else m_previousTrafo = pTrafo->GetPreviousFinal();
 }
 
 void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData> & event_p )
@@ -279,12 +269,14 @@ void game::SpriteComponent_::FlipHorzToogle()
 	m_bHFlip = !m_bHFlip;
 	gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
 	m_renderData.m_padding.x = -m_renderData.m_padding.x;
+	m_renderData.m_bUpdate = true;
 }
 void game::SpriteComponent_::FlipVertcToogle()
 {
 	m_bVFlip = !m_bVFlip;
 	gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
 	m_renderData.m_padding.y = -m_renderData.m_padding.y;
+	m_renderData.m_bUpdate = true;
 }
 void game::SpriteComponent_::FlipHorz()
 {
@@ -293,6 +285,7 @@ void game::SpriteComponent_::FlipHorz()
 		m_bHFlip = true;
 		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
 		m_renderData.m_padding.x = -m_renderData.m_padding.x;
+		m_renderData.m_bUpdate = true;
 	}
 }
 void game::SpriteComponent_::FlipVertc()
@@ -302,6 +295,7 @@ void game::SpriteComponent_::FlipVertc()
 		m_bVFlip = true;
 		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
 		m_renderData.m_padding.y = -m_renderData.m_padding.y;
+		m_renderData.m_bUpdate = true;
 	}
 }
 void game::SpriteComponent_::UnFlipHorz()
@@ -311,6 +305,7 @@ void game::SpriteComponent_::UnFlipHorz()
 		m_bHFlip = false;
 		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
 		m_renderData.m_padding.x = -m_renderData.m_padding.x;
+		m_renderData.m_bUpdate = true;
 	}
 }
 void game::SpriteComponent_::UnFlipVertc()
@@ -320,6 +315,7 @@ void game::SpriteComponent_::UnFlipVertc()
 		m_bVFlip = false;
 		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
 		m_renderData.m_padding.y = -m_renderData.m_padding.y;
+		m_renderData.m_bUpdate = true;
 	}
 }
 
@@ -330,6 +326,8 @@ game::SpriteComponent_::~SpriteComponent_()
 
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
+	
+
 	m_sortKey.intRepresentation = 0LL;
 
 	m_bHFlip = m_bVFlip = false;
@@ -361,7 +359,8 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 
 	//ID3D11Buffer * pBuffer = NULL;
 	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+	if( !m_pBuffer )
+		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
 	// initialize pipe state for this sprite
 

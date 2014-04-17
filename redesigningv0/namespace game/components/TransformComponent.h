@@ -40,7 +40,7 @@ namespace game{
 		DirectX::XMFLOAT4 qRotation;
 		DirectX::XMFLOAT4 scale;
 
-		DirectX::XMFLOAT4X4 DeriveMatrix_f4x4(){
+		inline DirectX::XMFLOAT4X4 DeriveMatrix_f4x4(){
 
 			DirectX::XMFLOAT4X4 mTrafo;
 
@@ -55,7 +55,7 @@ namespace game{
 
 			return mTrafo;
 		}
-		DirectX::XMMATRIX DeriveMatrix(){
+		inline DirectX::XMMATRIX DeriveMatrix(){
 
 			return
 
@@ -66,24 +66,24 @@ namespace game{
 													);
 		}
 
-		void FromMatrix( const DirectX::XMFLOAT4X4 & mTransform_p ){
+		inline void FromMatrix( const DirectX::XMFLOAT4X4 & mTransform_p ){
 
 			DirectX::XMMATRIX mTransform = DirectX::XMLoadFloat4x4( &mTransform_p );
 
 			DirectX::XMVECTOR vPos, qRot, vScale;
 
-			assert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mTransform ) );
+			keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mTransform ) );
 
 			DirectX::XMStoreFloat4( &position, vPos );
 			DirectX::XMStoreFloat4( &qRotation, qRot );
 			DirectX::XMStoreFloat4( &scale, vScale );
 		}
 
-		void FromMatrix( const DirectX::XMMATRIX & mTransform_p ){
+		inline void FromMatrix( const DirectX::XMMATRIX & mTransform_p ){
 
 			DirectX::XMVECTOR vPos, qRot, vScale;
 
-			assert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mTransform_p ) );
+			keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mTransform_p ) );
 
 			DirectX::XMStoreFloat4( &position, vPos );
 			DirectX::XMStoreFloat4( &qRotation, qRot );
@@ -132,6 +132,12 @@ namespace game{
 		void UpdateWorldAndFinalTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p );
 		void UpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p );
 		void UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMMATRIX & mParentWorldTrafo_p );
+
+		//------------------------------------------------------------------------
+		// for the orfans ;D
+		//------------------------------------------------------------------------
+		void UpdateWorldAndFinalTransformation();
+		void UpdateWorldAndFinalTransformation_NoPrevious();
 
 	private:
 

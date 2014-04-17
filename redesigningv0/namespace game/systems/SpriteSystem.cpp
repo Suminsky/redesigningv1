@@ -1,7 +1,11 @@
 #include "SpriteSystem.h"
 #include "../Layer.h"
+#include "../../namespace phys/AABB2D.h"
+
+#include "../../namespace win/FileLogger.h"
 
 using namespace game;
+using namespace DirectX;
 
 void game::SpriteSystem::VOnInit()
 {
@@ -15,7 +19,7 @@ void game::SpriteSystem::VOnInit()
 void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 {
 	// TODO interpolate camera
-
+	//int iCulled = 0;
 	for( int itSprite = 0, iSize = m_poolAccess.GetNAllocated();
 		itSprite < iSize;
 		++itSprite ){
@@ -28,10 +32,37 @@ void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 			spriteCompo.OnDraw( dInterpolation_p );
 
 			// cull invisible sprites
-			if( spriteCompo.m_renderData.m_color.w > 0.0f )
-			// cull out of view sprites
-			//if( m_pCameraRef->)
+			if( spriteCompo.m_renderData.m_color.w > 0.0f ){
 
-			m_pSpriteRendererRef->Render( &spriteCompo, m_pCameraRef );
+				// cull out of view sprites (needs zoom info)
+				
+				float halfW = spriteCompo.m_renderData.m_res.x * 0.5f;
+				float halfH = spriteCompo.m_renderData.m_res.y * 0.5f;
+				XMFLOAT2 pos( 
+					XMVectorGetX( spriteCompo.m_renderData.m_mWorld.r[3] ) + spriteCompo.m_renderData.m_padding.x,
+					XMVectorGetY( spriteCompo.m_renderData.m_mWorld.r[3] ) + spriteCompo.m_renderData.m_padding.y
+					);
+
+				phys::AABB2D spriteBox = { pos, halfW, halfH };
+
+				float zoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
+				float camHalfW = m_pCameraRef->m_viewPort.Width * zoom;
+				float camHalfH = m_pCameraRef->m_viewPort.Height * zoom;
+
+				XMFLOAT2 camPos(
+					-XMVectorGetX( m_pCameraRef->m_mView.r[3] ),
+					-XMVectorGetY( m_pCameraRef->m_mView.r[3] )
+					);
+
+				phys::AABB2D camBox = { camPos, camHalfW, camHalfH };
+
+				//float pen;
+				//if( spriteBox.CollisionData_v2( camBox, pen ) )
+				if( spriteBox.IsColliding_e( camBox ) )
+					m_pSpriteRendererRef->Render( &spriteCompo, m_pCameraRef );
+				//else
+				//	++iCulled;
+			}
 	}
+	//win::UniqueFileLogger()<<"culled: "<<iCulled<<SZ_NEWLINE;
 }

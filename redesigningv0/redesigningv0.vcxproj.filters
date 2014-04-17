@@ -465,6 +465,9 @@
     <ClInclude Include="Mentle\TileMapEditor\TileCollisionLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mentle\TileMapEditor\TileImageLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -834,6 +837,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\TileMapEditor\TileCollisionLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mentle\TileMapEditor\TileImageLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

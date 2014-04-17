@@ -81,6 +81,7 @@ namespace game{
 		// a possibly outdated color
 		//------------------------------------------------------------------------
 		void UpdateWorldAndFinalColor( const DirectX::XMFLOAT4 & parentWorldColor_p );
+		void UpdateWorldAndFinalColor();
 
 		DirectX::XMFLOAT4 m_worldColor; // local * parent world
 		DirectX::XMFLOAT4 m_finalColor;

@@ -6,7 +6,9 @@
 	file:		EventMachine.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	TODO, test if holding a single vector of handles is faster
+				(instead of handlers per event type)
+				(so when dispatching, all handlers would be traversed and checked).
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -32,12 +34,25 @@ namespace game{
 	public:
 
 		typedef Event<EVENT_DATA> Event;
-		typedef gen::Delegate1Param<const Event &> EventHandlerDelegate;
+		typedef gen::Delegate1Param<const Event &> EventHandler;
 
-		typedef std::vector<EventHandlerDelegate> EventHandlers;
-		typedef std::unordered_map<EventType, EventHandlers> EventHandlerRegister;
+		typedef std::vector<EventHandler> EventHandlers;
+		struct RegisteredHandlers{
+
+			EventType eveType;
+			EventHandlers vHandlers;
+		};
+		
+		typedef std::vector<RegisteredHandlers> EventHandlerRegister;
+		struct RegisterIt{
+			int itR, itH;
+		};
 
 		typedef std::vector<Event> EventQueue;
+
+		EventMachine()
+			:
+		m_iCurrentBuffer(0){}
 
 		//------------------------------------------------------------------------
 		// 
@@ -45,42 +60,48 @@ namespace game{
 		virtual ~EventMachine(){}
 
 		//------------------------------------------------------------------------
-		// for each event, check all handlers registered for it, calling their
+		// for each event, check all handlers registered for itE, calling their
 		// handling method OnEvent
 		//------------------------------------------------------------------------
 		void DispatchEvents()
 		{
+			// for each event
 
-			// as it is for now...adding or removing listeners would also fuck everything up..
-			// so its for now, forbidden... e.e boss solution (TODO)
+			int iConsumingBuffer = m_iCurrentBuffer;
+			m_iCurrentBuffer = m_iCurrentBuffer == 0 ? 1 : 0;
 
-			EventQueue events = std::move( m_events );
-			m_events.clear();
+			for( int itE = 0, nEves = (int) m_events[iConsumingBuffer].size();
+				 itE < nEves;
+				 ++itE ){
 
-			// traverse all current events
+				Event & eve = m_events[iConsumingBuffer][itE];
 
-			for(	EventQueue::iterator itEvent = events.begin(), itEventEnd = events.end();
-					itEvent !=  itEventEnd;
-					++ itEvent ){
+				// find the registered handlers for the eve type
 
-					// get handlers registered for current event type
+				for( int itR = 0, nRegistered = (int)m_register.size();
+					 itR < nRegistered;
+					 ++itR ){
 
-					EventHandlerRegister::iterator itHandlersOfCurrentEvent = m_register.find( (*itEvent).GetType() );
+					RegisteredHandlers & reg = m_register[itR];
 
-					if(	 itHandlersOfCurrentEvent == m_register.end() ) continue;
+					if( reg.eveType == eve.GetType() ){
 
-					EventHandlers & handlers = itHandlersOfCurrentEvent->second; // cache for readability..
+						// dispatch event for all handlers
 
-					// dispatch event to handlers
+						for( int itH = 0, nHandlers = (int) reg.vHandlers.size();
+							 itH < nHandlers;
+							 ++ itH ){
 
-					for(	EventHandlers::iterator itHandler = handlers.begin(), itHandlersEnd = handlers.end();
-							itHandler != itHandlersEnd;
-							++ itHandler ){
+							EventHandler & handler = reg.vHandlers[itH];
 
-							(*itHandler).Execute(*itEvent ); // TODO: consider "consuming" event if OnEvent returns false
+							handler( eve );
 
-					}// traverse handlers
-			}// traverse events
+						}// handlers
+					}// found type
+				}//regs
+			}//eves
+
+			m_events[iConsumingBuffer].clear();
 		}
 
 		//------------------------------------------------------------------------
@@ -89,7 +110,7 @@ namespace game{
 		void AddEvent( EventType type_p, EVENT_DATA data_p = EVENT_DATA() ){
 
 			// TODO: use real emplace_back on vs2012
-			m_events.emplace_back( Event(type_p, data_p) );
+			m_events[m_iCurrentBuffer].emplace_back( Event(type_p, data_p) );
 		}
 
 		//------------------------------------------------------------------------
@@ -97,98 +118,124 @@ namespace game{
 		// before the call returns.
 		// returns false if no one processed the event.
 		//------------------------------------------------------------------------
-		bool DispatchEventImmetiately( EventType type_p, EVENT_DATA data_p = 0 )
+		void DispatchEventImmetiately( EventType type_p, EVENT_DATA data_p = 0 )
 		{
 			// build event
 
-			Event immEvent(type_p, data_p);
+			Event eve(type_p, data_p);
 
-			// get handlers registered for current even type
+			// find the registered handlers for the eve type
 
-			EventHandlerRegister::iterator itHandlersOfCurrentEvent =
-				m_register.find( immEvent.GetType() );
+			for( int itR = 0, nRegistered = (int)m_register.size();
+				itR < nRegistered;
+				++itR ){
 
-			if(	 itHandlersOfCurrentEvent == m_register.end() ) return false;
+					RegisteredHandlers & reg = m_register[itR];
 
-			EventHandlers & handlers = itHandlersOfCurrentEvent->second; // cache
+					if( reg.eveType == eve.GetType() ){
 
-			// dispatch event to handlers
+						// dispatch event for all handlers
 
-			for(	EventHandlers::iterator itHandler = handlers.begin(), itHandlersEnd = handlers.end();
-					itHandler != itHandlersEnd;
-					++ itHandler ){
+						for( int itH = 0, nHandlers = (int) reg.vHandlers.size();
+							itH < nHandlers;
+							++ itH ){
 
-					(*itHandler).Execute( immEvent );
-			}
+								EventHandler & handler = reg.vHandlers[itH];
 
-			return true;
+								handler( eve );
+
+						}// handlers
+					}// found type
+			}//regs
 		}
 
 		//------------------------------------------------------------------------
-		// do NOT register inside OnEvent
+		//
 		//------------------------------------------------------------------------
-		void RegisterForEvent( const EventHandlerDelegate & pHandler_p, EventType eventType_p )
+		void RegisterForEvent( const EventHandler & handler_p, EventType eventType_p )
 		{
-			// get handlers for given type, if theres none, operator [] creates one,
-			// then add new handler to it
+			
+			// traverse register, if theres a evetype registered, add handle to the register
+			// if not, create one and register
+			// in DBG, check for double registering handler for the same type
+			
+			for( int it = 0, size = (int)m_register.size();
+				 it < size;
+				 ++it ){
 
-			NDBG(
+				if( m_register[it].eveType == eventType_p ){
 
-				m_register[eventType_p].push_back( pHandler_p );
+					NDBG(
+					m_register[it].vHandlers.push_back(handler_p);
+					);
+					DBG(
+					assert( FindHandlerInHandlers( m_register[it].vHandlers, handler_p) == -1 );
+					m_register[it].vHandlers.push_back(handler_p);
+					);
 
-			)
-
-			DBG(
-
-				// check for double registering
-
-				EventHandlers & handlers = m_register[eventType_p];
-
-			if( handlers.empty() ){
-
-				handlers.push_back( pHandler_p );
-			}
-			else{
-
-				EventHandlers::const_iterator itHandlersEnd = handlers.cend();
-				EventHandlers::const_iterator itFound = std::find( handlers.cbegin(), itHandlersEnd, pHandler_p );
-				assert( itFound == itHandlersEnd );
-
-				handlers.push_back( pHandler_p );
+					return;
+				}
 			}
 
-			)
+			RegisteredHandlers newRegisteredHandlers;
+			newRegisteredHandlers.eveType = eventType_p;
+			newRegisteredHandlers.vHandlers.push_back( handler_p );
+
+			m_register.emplace_back( std::move(newRegisteredHandlers) );
 		}
 
 		//------------------------------------------------------------------------
 		// do NOT unregister inside OnEvent
 		//------------------------------------------------------------------------
-		void UnregisterForEvent( const EventHandlerDelegate & pHandler_p, EventType eventType_p )
+		void UnregisterForEvent( const EventHandler & handler_p, EventType eventType_p )
 		{
 			// find/check handlers of event
 
-			EventHandlers & handlers = m_register[eventType_p];
-			assert( !handlers.empty());
+			for( int it = 0, size = (int)m_register.size();
+				 it < size;
+				 ++it ){
 
-			EventHandlers::iterator itHandlersEnd = handlers.end();
+					if( m_register[it].eveType == eventType_p ){
 
-			EventHandlers::iterator itHandler = std::find( handlers.begin(), itHandlersEnd, pHandler_p );
-			assert( itHandler != itHandlersEnd );
+						int itUnreg = FindHandlerInHandlers( m_register[it].vHandlers, handler_p );
+						assert( it != -1 );
 
-			// swap it with last element
+						//RegisterIt toRemove = { it, itUnreg };
+						//m_removedHandlers.push_back( toRemove );
+						int iHandlersLast = (int)m_register[it].vHandlers.size() -1;
+						m_register[it].vHandlers[itUnreg] = m_register[it].vHandlers[iHandlersLast];
+						m_register[it].vHandlers.pop_back();
 
-			--itHandlersEnd;
-			*itHandler = *itHandlersEnd;
+						return;
+					}
+			}
 
-			// remove it
-
-			handlers.pop_back();
+			assert(0);
 		}
 
 	private:
 
-		EventQueue m_events;
+		//------------------------------------------------------------------------
+		// aux
+		//------------------------------------------------------------------------
+		int inline FindHandlerInHandlers( EventHandlers & handlers_p, const EventHandler & handler_p ){
+
+			for( int it = 0, size = (int) handlers_p.size();
+				 it < size;
+				 ++ it ){
+
+					if( handlers_p[it] == handler_p )
+						return it;
+			}
+
+			return -1;
+		}
+
+		unsigned int m_iCurrentBuffer;
+		EventQueue m_events[2]; // double buffering
 		EventHandlerRegister m_register;
+		//std::vector<RegisterIt> m_removedHandlers;
+
 	};
 
 	//typedef std::shared_ptr<EventMachine> shared_EventMachine_ptr;

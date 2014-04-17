@@ -115,12 +115,12 @@ void SystemMachine::CleanRemovedSystems()
 // event stuff
 //========================================================================
 
-void SystemMachine::RegisterForSystemEvent( EventMachine<SystemEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p )
+void SystemMachine::RegisterForSystemEvent( EventMachine<SystemEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p )
 {
 	m_SystemEventMachine.RegisterForEvent( eveHandlerDelegate_p, eveType_p );
 }
 
-void SystemMachine::UnregisterForSystemEvent( EventMachine<SystemEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p )
+void SystemMachine::UnregisterForSystemEvent( EventMachine<SystemEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p )
 {
 	m_SystemEventMachine.UnregisterForEvent( eveHandlerDelegate_p, eveType_p );
 }

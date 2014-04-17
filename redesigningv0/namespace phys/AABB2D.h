@@ -70,6 +70,8 @@ namespace phys{
 				if( xDist < 0.0f )	penetration = xDist;
 				else				penetration = yDist;
 			}
+
+			return true;
 		}
 
 		bool CollisionData( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration ){
@@ -235,6 +237,13 @@ namespace phys{
 
 			if( XDistance( other_p) > 0.0f ) return false;
 			if( YDistance( other_p) > 0.0f ) return false;
+
+			return true;
+		}
+		bool IsColliding_e( const AABB2D & other_p ){
+
+			if( XDistance( other_p) >= 0.0f ) return false;
+			if( YDistance( other_p) >= 0.0f ) return false;
 
 			return true;
 		}

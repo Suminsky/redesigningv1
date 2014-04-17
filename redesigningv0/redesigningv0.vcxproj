@@ -110,6 +110,8 @@
       <StringPooling>true</StringPooling>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -142,6 +144,8 @@
       <PreprocessorDefinitions>_WINSOCKAPI_;SOUND;NETWORK; %(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -191,6 +195,7 @@
     <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
     <ClInclude Include="Mentle\TileMapEditor\GridLayer.h" />
     <ClInclude Include="Mentle\TileMapEditor\TileCollisionLayer.h" />
+    <ClInclude Include="Mentle\TileMapEditor\TileImageLayer.h" />
     <ClInclude Include="Mentle\TileMapEditor\TileMapEditor.h" />
     <ClInclude Include="Mentle\TileMapEditor\TilesLayer.h" />
     <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
@@ -340,6 +345,7 @@
     <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />
     <ClCompile Include="Mentle\TileMapEditor\GridLayer.cpp" />
     <ClCompile Include="Mentle\TileMapEditor\TileCollisionLayer.cpp" />
+    <ClCompile Include="Mentle\TileMapEditor\TileImageLayer.cpp" />
     <ClCompile Include="Mentle\TileMapEditor\TileMapEditor.cpp" />
     <ClCompile Include="Mentle\TileMapEditor\TilesLayer.cpp" />
     <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />

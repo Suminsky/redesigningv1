@@ -114,12 +114,12 @@ void game::Object::CleanRemovedComponents()
 //------------------------------------------------------------------------
 // 
 //------------------------------------------------------------------------
-void game::Object::RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p )
+void game::Object::RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p )
 {
 	m_objectEventMachine.RegisterForEvent( eveHandlerDelegate_p, eveType_p );
 }
 
-void game::Object::UnregisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p )
+void game::Object::UnregisterForComponentEvent( EventMachine<ComponentEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p )
 {
 	m_objectEventMachine.UnregisterForEvent( eveHandlerDelegate_p, eveType_p );
 }

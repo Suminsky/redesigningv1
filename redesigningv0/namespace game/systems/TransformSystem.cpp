@@ -28,12 +28,8 @@ void game::TransformSystem::VOnUpdate( double , double )
 
 			// compute final trafo
 			
-			XMFLOAT4X4 mIdentity;
-			XMStoreFloat4x4( &mIdentity, XMMatrixIdentity() );
-			transformCompo.UpdateWorldAndFinalTransformation( mIdentity );
-
-			if( transformCompo.IsAttached() )
-				transformCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &transformCompo );
+			transformCompo.UpdateWorldAndFinalTransformation();
+			transformCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &transformCompo );
 
 			transformCompo.m_bSnap = false;
 

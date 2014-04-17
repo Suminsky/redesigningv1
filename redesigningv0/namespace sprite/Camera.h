@@ -41,10 +41,11 @@ namespace sprite{
 	class Camera{
 	public:
 
-		DirectX::XMMATRIX	m_mProjection;		// the projection matrix, the aspect ratio and scaling
+		DirectX::XMMATRIX	m_mProjection;		// the projection matrix, the aspect ratio and scaling (zooming)
 		DirectX::XMMATRIX	m_mView;			// the view matrix, the camera pos and orientation
 		D3D11_VIEWPORT		m_viewPort;			// the viewport rectangle on the render target
 		//UINT			m_RenderTargetID;		// the render target the camera will output to
+		float m_fZoom;
 	
 		dx::PipeState m_pipeState; //binds viewport, render target
 		BindVSCameraCBuffer m_bindVSCameraCbuffer;
@@ -66,7 +67,8 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		Camera()
 			:
-		m_bindViewPort(m_viewPort)
+		m_bindViewPort(m_viewPort),
+		m_fZoom(1.0f)
 		{
 			// initializes projection and view to identity
 

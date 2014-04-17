@@ -90,8 +90,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// event/message stuff
 		//------------------------------------------------------------------------
-		void RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p );
-		void UnregisterForComponentEvent( EventMachine<ComponentEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p );
+		void RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p );
+		void UnregisterForComponentEvent( EventMachine<ComponentEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p );
 		void AddComponentEvent( EventType eveType_p, ComponentEventData eveData_p );
 		void DispatchComponentEventImmediately( EventType eveType_p, ComponentEventData eveData_p );
 

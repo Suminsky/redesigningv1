@@ -69,6 +69,27 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMMATRIX
 	// TODO: move snapping to here
 }
 
+void game::TransformComponent::UpdateWorldAndFinalTransformation()
+{
+	m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	// world
+
+	XMMATRIX mWorld = mLocal;
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+
+	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
+
+	// TODO: move snapping to here
+}
+
 void game::TransformComponent::AddChild( TransformComponent * pTrafo_p )
 {
 	m_node.AddNode( &pTrafo_p->m_node);
@@ -96,6 +117,25 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious( con
 	// world
 
 	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorldTrafo_p );
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+
+	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
+
+	// TODO: move snapping to here
+}
+
+void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious()
+{
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	// world
+
+	XMMATRIX mWorld = mLocal;
 	XMStoreFloat4x4( &m_world, mWorld );
 
 	// final

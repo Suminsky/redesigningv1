@@ -44,7 +44,7 @@ namespace game{
 			m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
 		}
 		~ButtonComponent(){
-			BREAKHERE;
+			m_pSpriteCompoRef.Release();
 		}
 		ButtonComponent( int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param() );
 		ButtonComponent( int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param() );
@@ -54,16 +54,19 @@ namespace game{
 		void SetHoverImage(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Hover;
+			m_pSpriteCompoRef->m_renderData.m_bUpdate = true;
 			m_eState = E_STATE_HOVER;
 		}
 		void SetNormalImage(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Normal;
+			m_pSpriteCompoRef->m_renderData.m_bUpdate = true;
 			m_eState = E_STATE_NORMAL;
 		}
 		void SetPressedImage(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Pressed;
+			m_pSpriteCompoRef->m_renderData.m_bUpdate = true;
 			m_eState = E_STATE_PRESSED;
 		}
 

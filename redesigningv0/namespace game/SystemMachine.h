@@ -53,8 +53,8 @@ namespace game{
 		//------------------------------------------------------------------------
 		// events
 		//------------------------------------------------------------------------
-		void RegisterForSystemEvent( EventMachine<SystemEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p );
-		void UnregisterForSystemEvent( EventMachine<SystemEventData>::EventHandlerDelegate eveHandlerDelegate_p, EventType eveType_p );
+		void RegisterForSystemEvent( EventMachine<SystemEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p );
+		void UnregisterForSystemEvent( EventMachine<SystemEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p );
 		void AddSystemEvent( EventType eveType_p, SystemEventData eveData_p );
 		void DispatchSystemEventImmediately( EventType eveType_p, SystemEventData eveData_p );
 

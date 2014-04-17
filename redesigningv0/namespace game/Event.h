@@ -29,7 +29,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Event( EventType type_p = INVALID_EVENTTYPE, DATA data_p = DATA() )
+		inline Event( EventType type_p = INVALID_EVENTTYPE, DATA data_p = DATA() )
 			:
 			m_type(type_p),
 			m_data(data_p)
@@ -40,7 +40,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Set( EventType type_p, DATA data_p = DATA() ){
+		inline void Set( EventType type_p, DATA data_p = DATA() ){
 
 			m_type = type_p;
 			m_data = data_p;
@@ -49,15 +49,16 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		EventType GetType() const { return m_type; }
+		inline EventType GetType() const { return m_type; }
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		DATA GetData() const { return m_data; }
-		DATA& GetDataRef() { return m_data; }
+		inline DATA GetData() const { return m_data; }
+		inline DATA& GetDataRef() { return m_data; }
 
-		template<typename asType> asType GetDataAs()const{ return (asType)m_data; }
+		template<typename asType>
+		inline asType GetDataAs()const{ return (asType)m_data; }
 
 	private:
 

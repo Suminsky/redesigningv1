@@ -26,6 +26,19 @@ void game::ColorComponent::UpdateWorldAndFinalColor( const DirectX::XMFLOAT4 & p
 	
 	XMStoreFloat4( &m_finalColor, XMVectorMultiply( vOffset, vWorld ) );
 }
+
+void game::ColorComponent::UpdateWorldAndFinalColor()
+{
+	m_previousFinalColor = m_finalColor;
+
+	XMVECTOR vWorld = XMLoadFloat4(&m_localColor);
+	DirectX::XMStoreFloat4( &m_worldColor, vWorld );
+
+	XMVECTOR vOffset = XMLoadFloat4( &m_offsetColor );
+
+	XMStoreFloat4( &m_finalColor, XMVectorMultiply( vOffset, vWorld ) );
+}
+
 //========================================================================
 // 
 //========================================================================

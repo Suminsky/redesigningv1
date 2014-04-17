@@ -30,10 +30,10 @@ void game::ColorSystem::VOnUpdate( double /*dAccum_p*/, double /*dDelta_p*/ )
 
 			// compute final color
 
-			colorCompo.UpdateWorldAndFinalColor( DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+			colorCompo.UpdateWorldAndFinalColor();
 
-			if( colorCompo.IsAttached() )
-				colorCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(ColorComponent), &colorCompo );
+			//if( colorCompo.IsAttached() )
+			colorCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(ColorComponent), &colorCompo );
 
 			colorCompo.m_bSnap = false;
 
