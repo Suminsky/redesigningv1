@@ -51,6 +51,7 @@ dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTextur
 	{
 		if( m_names[it] == szTexture_p )
 		{
+			*pIndexID_p = it;
 			return m_cache[it];
 		}
 	}
