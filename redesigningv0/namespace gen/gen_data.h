@@ -602,6 +602,42 @@ namespace gen{
 
 			m_currentByteIndex += iSize;
 		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		void QueueChunkAs( const TYPE & newData_p ){
+
+			assert( m_currentByteIndex + sizeof(TYPE) <= m_size );
+
+			*((TYPE*) (&(m_data[m_currentByteIndex])) ) = newData_p;
+
+			m_currentByteIndex += sizeof(TYPE);
+		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template< typename TYPE >
+		TYPE GetChunkAs( unsigned int iByteOffset_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= m_size );
+
+			return   *((TYPE*) (&(m_data[iByteOffset_p])) );
+		}
+
+		template< typename TYPE >
+		TYPE GetNextChunkAs(){
+
+			assert( m_currentByteIndex + sizeof(TYPE) <= m_size );
+			
+			TYPE * pT = ((TYPE*) (&(m_data[m_currentByteIndex])) );
+			
+			m_currentByteIndex += sizeof(TYPE);
+
+			return *pT;
+		}
 	};
 
 	struct DataStreamW{

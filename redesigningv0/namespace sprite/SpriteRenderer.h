@@ -43,19 +43,29 @@ namespace game{
 namespace sprite{
 
 	union SortMask{
+
 		unsigned __int64 intRepresentation;
+
 		struct{
+
+			// least sig bit
 			unsigned __int64 textureID		: 15;
 			unsigned __int64 shaderID		: 15;
-			unsigned __int64 transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
 			unsigned __int64 Zdepth			: 24;	// 0 - 16 777 216 drawables depth range
+			unsigned __int64 transparency	: 2;	// 4 modes: opaque, blended, additive, subtractive...
 			unsigned __int64 viewportLayer	: 3;	// 8 viewport layers: skybox, world, fx, HUD...
 			unsigned __int64 viewport		: 3;	// 8 viewports: split screens, portals, mirrors...
 			unsigned __int64 layer			: 2;	// 4 layers: game, HUD, full screen effect...
+			// most sig bit
+
 		}bitfield;
 	};
 		//TODO: depth test/write for opaques, depth test/no write for alpha blended and additive
-
+		//TODO: if not ~transparent, the sorting should be by shader and texture before Zdepth
+		//TODO: current, bigger values are drawn first, so the zdepth is contrary from the actual
+		// viewport z culling (near 0 far 1)
+		// TODO: on the draw(), update the key from the camera, (viewport and layer stuff should be info holded
+		// by the camera).
 
 	class SpriteRenderer{
 
@@ -65,8 +75,6 @@ namespace sprite{
 			float pos[3];
 			float uv[2];
 		};
-
-	
 
 		//------------------------------------------------------------------------
 		// ctor/dctor

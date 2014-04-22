@@ -76,6 +76,11 @@ namespace sprite{
 		void MapInstancesToVB_NoSort( ID3D11DeviceContext * pDContext_p );
 
 		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void SetForImmutableVB();
+
+		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
 		UINT GetCurrentVBOffset() const { return m_iVBfirstAvailable; }
@@ -155,6 +160,11 @@ namespace sprite{
 		void ConcludeInstancesBuffering( ID3D11DeviceContext * pDContext_p, UINT64 sortKey_p );
 		void ConcludeInstancesBuffering_NoSort( ID3D11DeviceContext * pDContext_p, UINT64 sortKey_p );
 
+		//------------------------------------------------------------------------
+		// only use that for setting for a manually filled VB
+		//------------------------------------------------------------------------
+		void ConcludeInstancesBuffering_Aux( UINT64 sortKey_p );
+
 	private:
 
 		//------------------------------------------------------------------------
@@ -177,7 +187,7 @@ namespace sprite{
 		InstancesVertexBuffer	* m_pIVBref;
 		
 		void AddInstance_Aux();
-		void ConcludeInstancesBuffering_Aux( UINT64 sortKey_p );
+		//void ConcludeInstancesBuffering_Aux( UINT64 sortKey_p );
 	};
 
 }

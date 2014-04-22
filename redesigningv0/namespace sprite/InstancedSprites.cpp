@@ -114,6 +114,12 @@ void sprite::InstancesVertexBuffer::MapInstancesToVB_NoSort( ID3D11DeviceContext
 	m_bLocked = false;
 }
 
+void sprite::InstancesVertexBuffer::SetForImmutableVB()
+{
+	m_iBufferingAt = m_size;
+	m_iVBfirstAvailable = m_iVBfirstAvailable;
+}
+
 //========================================================================
 // 
 //========================================================================

@@ -712,12 +712,14 @@ void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::strin
 
 	int size = (int)header_p.size();
 
-	if( buffer_p.m_currentByteIndex + size >= buffer_p.m_size ){
+	if( buffer_p.m_currentByteIndex + size > buffer_p.m_size ){
+
+		int sizeNeed = buffer_p.m_currentByteIndex + size;
 
 		DataStream newBuffer_p;
-		newBuffer_p.m_data = new unsigned char[size];
-		newBuffer_p.m_size = size;
-		newBuffer_p.Set( buffer_p.m_data, buffer_p.m_size );
+		newBuffer_p.m_data = new unsigned char[sizeNeed];
+		newBuffer_p.m_size = sizeNeed;
+		newBuffer_p.Set( buffer_p.m_data, buffer_p.m_currentByteIndex );
 		if( buffer_p.m_size ) delete [] buffer_p.m_data;
 		buffer_p = newBuffer_p;
 	}

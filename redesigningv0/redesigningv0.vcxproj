@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
@@ -311,6 +312,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
@@ -443,7 +445,7 @@
   <ItemGroup>
     <ResourceCompile Include="RC_SpriteAnimDialogs.rc" />
     <ResourceCompile Include="RC_icon.rc" />
-    <ResourceCompile Include="RC_TileEditDialogs.rc" />
+    <ResourceCompile Include="RC_FrameEditDialogs.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

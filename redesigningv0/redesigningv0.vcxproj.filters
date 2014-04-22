@@ -468,6 +468,9 @@
     <ClInclude Include="Mentle\TileMapEditor\TileImageLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -842,6 +845,9 @@
     <ClCompile Include="Mentle\TileMapEditor\TileImageLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico">
@@ -861,7 +867,7 @@
     <ResourceCompile Include="RC_SpriteAnimDialogs.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="RC_TileEditDialogs.rc">
+    <ResourceCompile Include="RC_FrameEditDialogs.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
