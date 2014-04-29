@@ -47,8 +47,8 @@ void ObjectMachine::AddObject( const shared_Object_ptr & pObject_p )
 
 void ObjectMachine::RemoveObject( OBJECTINDEX objectCurrentIndex_p )
 {
-	/*assert( objectCurrentIndex_p != INVALID_OBJECTINDEX );
-	assert( !m_objects[objectCurrentIndex_p]->m_bDettached );
+	assert( objectCurrentIndex_p != INVALID_OBJECTINDEX );
+	/*assert( !m_objects[objectCurrentIndex_p]->m_bDettached );
 
 	m_objects[objectCurrentIndex_p]->m_bDettached = true;
 
