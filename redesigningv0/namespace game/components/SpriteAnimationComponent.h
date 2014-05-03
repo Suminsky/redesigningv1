@@ -206,17 +206,18 @@ namespace game{
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		SpriteFrame GetFrame(){	return m_vFrames[m_currentFrame]; }
-		SpriteFrame GetNTHFrame( unsigned int nth_p ){	return m_vFrames[nth_p]; }
-		std::vector<SpriteFrame> GetFrames(){ return m_vFrames; }
+		SpriteFrame GetFrame()const {	return m_vFrames[m_currentFrame]; }
+		SpriteFrame GetNTHFrame( unsigned int nth_p ) const {	return m_vFrames[nth_p]; }
+		std::vector<SpriteFrame> GetFrames() const { return m_vFrames; }
 
-		TextureID_Binder_Pair GetSprite(){ return m_vSprites[m_vFrames[m_currentFrame].iSpriteUsedIndex]; }
-		TextureID_Binder_Pair GetNTHSprite( unsigned int nth_p ){  return m_vSprites[nth_p]; }
-		std::vector<TextureID_Binder_Pair> GetSprites(){ return m_vSprites; }
+		TextureID_Binder_Pair GetSprite() const { return m_vSprites[m_vFrames[m_currentFrame].iSpriteUsedIndex]; }
+		TextureID_Binder_Pair GetNTHSprite( unsigned int nth_p ) const {  return m_vSprites[nth_p]; }
+		std::vector<TextureID_Binder_Pair> GetSprites() const { return m_vSprites; }
 
-		AnimationClip GetClip(){ return m_vClips[m_iCurrentClip]; }
-		AnimationClip GetNTHClip( unsigned int nth_p ){ return m_vClips[nth_p]; }
-		std::vector<AnimationClip> GetClips(){ return m_vClips; }
+		AnimationClip GetClip() const { return m_vClips[m_iCurrentClip]; }
+		int GetClipIndex() const { return m_iCurrentClip; }
+		AnimationClip GetNTHClip( unsigned int nth_p ) const { return m_vClips[nth_p]; }
+		std::vector<AnimationClip> GetClips() const { return m_vClips; }
 
 		int GetNSprites() const { return (int) m_vSprites.size(); }
 		int GetNFrames() const { return (int) m_vFrames.size(); }
