@@ -88,13 +88,15 @@ namespace phys{
 										other_p.Down()	- Up(),
 										Down()			- other_p.Up() };
 
-			penetration = distances[0];
-			normal = normals[0];
+			penetration = 0.0;
+			normal.x = normal.y = 0.0f;
 			for( int it = 0; it < 4; ++it ){
 
-				if( distances[it] > 0.0f ) return false;
+				// ignore if theres no penetration
+				if( distances[it] >= 0.0f ) return false;
 
-				if( distances[it] > penetration ){
+				// keep the normal with least penetration
+				if( penetration == 0 || distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
