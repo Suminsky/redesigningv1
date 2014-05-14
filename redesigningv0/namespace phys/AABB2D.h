@@ -127,7 +127,7 @@ namespace phys{
 			normal.x = normal.y = 0.0f;
 			for( int it = 0; it < 4; ++it ){
 
-				// ignore if theres no penetration
+				// ignore if theres no penetration between any of the opposing faces
 				if( distances[it] >= 0.0f ) return false;
 
 				// skip if face is blocked
@@ -135,8 +135,10 @@ namespace phys{
 					 &&
 					(blockedFace_p & (0x01 << it)) ) continue;
 
-				// keep the normal with least penetration
-				if( penetration == 0 || distances[it] > penetration ){
+				// keep the normal with least penetration (pen is negative)
+				if( penetration == 0
+					||
+					distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
@@ -169,7 +171,7 @@ namespace phys{
 			const DirectX::XMFLOAT2 normals[] = {	DirectX::XMFLOAT2(  1.0f,  0.0f ),
 													DirectX::XMFLOAT2( -1.0f,  0.0f ),
 													DirectX::XMFLOAT2(  0.0f,  1.0f ),
-													DirectX::XMFLOAT2(  0.0f,  -1.0f ) };
+													DirectX::XMFLOAT2(  0.0f, -1.0f ) };
 
 			// get penetration
 
