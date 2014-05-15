@@ -163,6 +163,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\StorySlideState.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Mentle\InGame\AudioHandler.h" />
@@ -281,6 +282,7 @@
     <ClInclude Include="namespace win\FileLogger.h" />
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
+    <ClInclude Include="namespace win\KeyboardInput.h" />
     <ClInclude Include="namespace win\MouseInput.h" />
     <ClInclude Include="namespace win\OpenDialog.h" />
     <ClInclude Include="namespace win\Window.h" />
@@ -316,6 +318,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\StorySlideState.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Mentle\InGame\AudioHandler.cpp" />
@@ -417,6 +420,7 @@
     <ClCompile Include="namespace win\FileLogger.cpp" />
     <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
     <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />
+    <ClCompile Include="namespace win\KeyboardInput.cpp" />
     <ClCompile Include="namespace win\MouseInput.cpp" />
     <ClCompile Include="namespace win\Window.cpp" />
     <ClCompile Include="namespace render\dx\ResourceCache.cpp" />
