@@ -379,3 +379,152 @@ void text::TextRenderer::RenderText(
 
 	m_pSpriteRendererRef->Render( &m_perFrameText, &camera_p );
 }
+
+void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_p, const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, ID3D11DeviceContext * pDContext_p, sprite::SortMask sortKey_p, UINT iFontID_p /*= 0*/, sprite::E_BLENDTYPE eBlendType_p /*= sprite::E_BLEND_ALPHA_BLENDED*/, sprite::E_SAMPLERTYPE eSamplerType_p /*= sprite::E_SAMPLER_NONE */ )
+{
+	if( szText_p[0] == 0 ) return;
+
+	// cache instance common data (color and world rotation)
+	sprite::spriteInstance perGlyph = {0};
+	(*((XMFLOAT4*)perGlyph.color)) = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+	perGlyph.mWorld[0] = perGlyph.mWorld[5] = perGlyph.mWorld[10] = perGlyph.mWorld[15] = 1.0f;
+
+	// prepare for instancing
+	// TODO:blend & sampler by param
+	instancedSprites_p.Initialize(
+		*m_fonts[iFontID_p].GetTextureBinder(),
+		m_pSpriteRendererRef->m_blends_cache.GetBlendBind(eBlendType_p),
+		m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(eSamplerType_p),
+		m_pSpriteRendererRef->m_dynamic_tmp_instancesVB	);
+	instancedSprites_p.StartBufferingInstances();
+
+	// cached
+	float fPosOffsetX = 0.0f;
+	float fPosOffsetY = 0.0f;
+
+	for( int itChar = 0; szText_p[itChar] != 0x0000; ++ itChar ){
+
+		// handle spaces
+		{
+			if( szText_p[itChar] == L' ' ){
+
+				fPosOffsetX += m_fonts[iFontID_p].GetSpaceWidth();
+				continue;
+			}
+			else if(szText_p[itChar] == L'\n' ){
+
+				fPosOffsetY -= m_fonts[iFontID_p].GetMinNewLineHeight() + 1.0f;
+				fPosOffsetX = 0.0f;
+				continue;
+			}
+			else if( szText_p[itChar] == L'\t' ){
+
+				fPosOffsetX += gen::RoundUpToNextMultiple_POT( int(fPosOffsetX+0.5f), m_fonts[iFontID_p].GetTabMultiple());
+				continue;
+			}
+		}
+
+		// set data specific to each glyph
+
+		// uv
+		(*((GlyphRect*)perGlyph.uvRect)) = m_fonts[iFontID_p].GetGlyphUV( szText_p[itChar] );
+
+		// res
+		perGlyph.res[0] = perGlyph.uvRect[2] * (float)m_fonts[iFontID_p].GetTextureWidth(); // uv width * tex res
+		perGlyph.res[1] = perGlyph.uvRect[3] * (float)m_fonts[iFontID_p].GetTextureHeight();
+
+		float halfWidth = perGlyph.res[0] * 0.5f; // cache
+		fPosOffsetX += halfWidth;
+
+		// pos
+		//(*((XMFLOAT4*)perGlyph.mWorld[gen::indexFromXY(0, 3, 4)])) = pos_p;
+		perGlyph.mWorld[gen::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
+		perGlyph.mWorld[gen::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
+		perGlyph.mWorld[gen::indexFromXY(2, 3, 4)] = pos_p.z;
+
+		fPosOffsetX += halfWidth + 1.0f; // a pixel of space between glyphs
+
+		instancedSprites_p.AddInstance( perGlyph );
+	}
+
+	sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
+	sortKey_p.bitfield.transparency = eBlendType_p;
+	instancedSprites_p.ConcludeInstancesBuffering_NoSort( pDContext_p, sortKey_p.intRepresentation );
+}
+
+void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_p, unsigned int iIndexOnVB_p, const wchar_t szText_p[],
+	DirectX::XMFLOAT4 pos_p, ID3D11DeviceContext * pDContext_p, sprite::SortMask sortKey_p, UINT iFontID_p /*= 0*/ )
+{
+	if( szText_p[0] == 0 ) return;
+
+	// cache instance common data (color and world rotation)
+	sprite::spriteInstance perGlyph = {0};
+	(*((XMFLOAT4*)perGlyph.color)) = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+	perGlyph.mWorld[0] = perGlyph.mWorld[5] = perGlyph.mWorld[10] = perGlyph.mWorld[15] = 1.0f;
+
+	// prepare for instancing
+
+	instancedSprites_p.StartBufferingInstancesAtVBIndex( iIndexOnVB_p );
+
+	// cached
+	float fPosOffsetX = 0.0f;
+	float fPosOffsetY = 0.0f;
+
+	for( int itChar = 0; szText_p[itChar] != 0x0000; ++ itChar ){
+
+		// handle spaces
+		{
+			if( szText_p[itChar] == L' ' ){
+
+				fPosOffsetX += m_fonts[iFontID_p].GetSpaceWidth();
+				continue;
+			}
+			else if(szText_p[itChar] == L'\n' ){
+
+				fPosOffsetY -= m_fonts[iFontID_p].GetMinNewLineHeight() + 1.0f;
+				fPosOffsetX = 0.0f;
+				continue;
+			}
+			else if( szText_p[itChar] == L'\t' ){
+
+				fPosOffsetX += gen::RoundUpToNextMultiple_POT( int(fPosOffsetX+0.5f), m_fonts[iFontID_p].GetTabMultiple());
+				continue;
+			}
+		}
+
+		// set data specific to each glyph
+
+		// uv
+		(*((GlyphRect*)perGlyph.uvRect)) = m_fonts[iFontID_p].GetGlyphUV( szText_p[itChar] );
+
+		// res
+		perGlyph.res[0] = perGlyph.uvRect[2] * (float)m_fonts[iFontID_p].GetTextureWidth(); // uv width * tex res
+		perGlyph.res[1] = perGlyph.uvRect[3] * (float)m_fonts[iFontID_p].GetTextureHeight();
+
+		float halfWidth = perGlyph.res[0] * 0.5f; // cache
+		fPosOffsetX += halfWidth;
+
+		// pos
+		//(*((XMFLOAT4*)perGlyph.mWorld[gen::indexFromXY(0, 3, 4)])) = pos_p;
+		perGlyph.mWorld[gen::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
+		perGlyph.mWorld[gen::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
+		perGlyph.mWorld[gen::indexFromXY(2, 3, 4)] = pos_p.z;
+
+		fPosOffsetX += halfWidth + 1.0f; // a pixel of space between glyphs
+
+		instancedSprites_p.AddInstance( perGlyph );
+	}
+
+	sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
+	//sortKey_p.bitfield.transparency = eBlendType_p;
+	instancedSprites_p.ConcludeInstancesBuffering_NoSort( pDContext_p, sortKey_p.intRepresentation );
+}
+
+void text::TextRenderer::InitializeSpriteInstances( sprite::InstancedSprites & instancedSprites_p, sprite::InstancesVertexBuffer & instVB_p, UINT iFontID_p /*= 0*/, sprite::E_BLENDTYPE eBlendType_p /*= sprite::E_BLEND_ALPHA_BLENDED*/, sprite::E_SAMPLERTYPE eSamplerType_p /*= sprite::E_SAMPLER_NONE */ )
+{
+	instancedSprites_p.Initialize(
+		*m_fonts[iFontID_p].GetTextureBinder(),
+		m_pSpriteRendererRef->m_blends_cache.GetBlendBind(eBlendType_p),
+		m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(eSamplerType_p),
+		instVB_p	);
+}

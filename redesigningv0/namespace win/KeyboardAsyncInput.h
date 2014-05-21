@@ -35,6 +35,8 @@ namespace win{
 		bool KeySinglePress( const  USHORT VK ) const;	//returns true if key wasnt pressed last frame
 		bool KeyJustReleased( const USHORT VK ) const;
 		bool IsKeyToogledON( const USHORT VK ) const;
+		const SHORT * GetKeysStatus() const{ return m_keysStatus; }
+		bool WasKeyPressed( const USHORT VK ) const;
 	};
 
 	//------------------------------------------------------------------------

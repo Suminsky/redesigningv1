@@ -127,6 +127,31 @@ namespace text{
 						DrawableGlyph * pDrawableText_p, int & nDrawables_p,
 						sprite::Camera & camera_p );
 
+		void Draw_Text(	sprite::InstancedSprites & instancedSprites_p,
+						const wchar_t szText_p[],
+						DirectX::XMFLOAT4 pos_p,
+						ID3D11DeviceContext * pDContext_p,
+						sprite::SortMask sortKey_p,
+						UINT iFontID_p = 0, 
+						sprite::E_BLENDTYPE eBlendType_p = sprite::E_BLEND_ALPHA_BLENDED,
+						sprite::E_SAMPLERTYPE eSamplerType_p = sprite::E_SAMPLER_NONE );
+
+		void Draw_Text(	sprite::InstancedSprites & instancedSprites_p,
+						unsigned int iIndexOnVB_p,
+						const wchar_t szText_p[],
+						DirectX::XMFLOAT4 pos_p,
+						ID3D11DeviceContext * pDContext_p,
+						sprite::SortMask sortKey_p,
+						UINT iFontID_p = 0 );
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void InitializeSpriteInstances( sprite::InstancedSprites & instancedSprites_p, sprite::InstancesVertexBuffer & instVB_p,
+										UINT iFontID_p = 0, 
+										sprite::E_BLENDTYPE eBlendType_p = sprite::E_BLEND_ALPHA_BLENDED,
+										sprite::E_SAMPLERTYPE eSamplerType_p = sprite::E_SAMPLER_NONE );
+
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------

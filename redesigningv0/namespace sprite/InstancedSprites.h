@@ -62,6 +62,12 @@ namespace sprite{
 		// resets index on the data buffers
 		//------------------------------------------------------------------------
 		void StartBuffering();
+		
+		//------------------------------------------------------------------------
+		// set in which part of the VB things should be mapped to, and resets
+		// index on the data buffers too
+		//------------------------------------------------------------------------
+		void StartBufferingAt( unsigned int iIndex_p );
 
 		//------------------------------------------------------------------------
 		// 
@@ -144,6 +150,9 @@ namespace sprite{
 		// reset draw calls offset and length
 		//------------------------------------------------------------------------
 		void StartBufferingInstances();
+		void StartBufferingInstancesAtVBIndex( unsigned int iVBIndex_p );
+		
+		
 
 		//------------------------------------------------------------------------
 		// 

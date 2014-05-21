@@ -31,6 +31,18 @@ void sprite::InstancesVertexBuffer::StartBuffering()
 	m_bLocked = true;
 }
 
+void sprite::InstancesVertexBuffer::StartBufferingAt( unsigned int iIndex_p )
+{
+	assert( !m_bLocked );
+
+	m_iBufferingAt = 0;
+	m_bLocked = true;
+
+	m_iVBfirstAvailable = iIndex_p;
+
+}
+
+
 void sprite::InstancesVertexBuffer::BufferNewInstance( const spriteInstance & spriteData_p, UINT64 sortKey_p )
 {
 	Entry entry = { sortKey_p, m_iBufferingAt };
@@ -171,6 +183,12 @@ void sprite::InstancedSprites::StartBufferingInstances()
 	m_pIVBref->StartBuffering();
 	m_drawCall.UpdateInstanceOffset( m_pIVBref->GetCurrentVBOffset() );
 	//m_drawCall.UpdateNumberOfInstances( 0 );
+	m_drawCall_warpException.UpdateNumberOfInstances( 0 );
+}
+void sprite::InstancedSprites::StartBufferingInstancesAtVBIndex( unsigned int iVBIndex_p )
+{
+	m_pIVBref->StartBufferingAt( iVBIndex_p );
+	m_drawCall.UpdateInstanceOffset( m_pIVBref->GetCurrentVBOffset() );
 	m_drawCall_warpException.UpdateNumberOfInstances( 0 );
 }
 

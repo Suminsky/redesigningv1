@@ -54,12 +54,13 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
 	cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
-	ID3D11Buffer * pBuffer = NULL;
-	pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
 	//pDevice_p->GetDevice()->CreateBuffer( &cbufferParams.desc.bufferDesc, nullptr, &pBuffer );
+	if( !m_pBuffer )
+		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
 	// initialize pipe state for this sprite
-	m_VSDrawableCbufferBinder.Initialize( pBuffer, &m_renderData );
+	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
 	int iTextureID;
@@ -326,8 +327,6 @@ game::SpriteComponent_::~SpriteComponent_()
 
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
-	
-
 	m_sortKey.intRepresentation = 0LL;
 
 	m_bHFlip = m_bVFlip = false;

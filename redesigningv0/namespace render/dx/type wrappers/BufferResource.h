@@ -78,14 +78,15 @@ namespace dx{
 				//	return szName == anotherDesc_p.szName;
 				//else
 
-				return (
-							bufferDesc.BindFlags == anotherDesc_p.bufferDesc.BindFlags
+				bool bReturn = 
+							(bufferDesc.BindFlags == anotherDesc_p.bufferDesc.BindFlags
 						&& bufferDesc.ByteWidth == anotherDesc_p.bufferDesc.ByteWidth
 						&& bufferDesc.CPUAccessFlags == anotherDesc_p.bufferDesc.CPUAccessFlags
 						&& bufferDesc.MiscFlags == anotherDesc_p.bufferDesc.MiscFlags
 						&& bufferDesc.StructureByteStride == anotherDesc_p.bufferDesc.StructureByteStride
-						&& bufferDesc.Usage == anotherDesc_p.bufferDesc.Usage
-						);
+						&& bufferDesc.Usage == anotherDesc_p.bufferDesc.Usage );
+
+				return bReturn;
 			}
 		};
 

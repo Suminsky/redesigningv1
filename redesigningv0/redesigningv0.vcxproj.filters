@@ -477,6 +477,15 @@
     <ClInclude Include="namespace win\KeyboardInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -858,6 +867,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace win\KeyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

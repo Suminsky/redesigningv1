@@ -100,7 +100,7 @@ void game::TransformComponent::RemoveChild( TransformComponent * pTrafo_p )
 	m_node.RemoveNode( &pTrafo_p->m_node );
 }
 
-TransformComponent * game::TransformComponent::GetParent()
+TransformComponent * game::TransformComponent::GetParent()const
 {
 	return m_node.GetParent()->GetData();
 }
@@ -155,7 +155,6 @@ game::pool_Component_ptr game::TransformComponentFactory::VCreateComponent()
 
 pool_Component_ptr TransformComponentFactory::VCreateComponent( GfigElementA * pGFig_p )
 {
-	//TransformComponent * pTransform = m_pool.Allocate();
 	gen::pool_ptr<TransformComponent> pTransform( m_pool );
 
 	GfigElementA * pParam = nullptr;
@@ -181,11 +180,6 @@ pool_Component_ptr TransformComponentFactory::VCreateComponent( GfigElementA * p
 	XMStoreFloat4x4( &pTransform->m_final, mFinal );
 	pTransform->m_previousFinal = pTransform->m_final;
 
-	//return MAKE_STACK_SHAREDPTR( TransformComponent, pTransform );
-	/*pool_Component_ptr ptr;
-	ptr = pTransform;
-	return ptr;*/
-
 	return pTransform;
 }
 
@@ -199,9 +193,17 @@ Trafo TransformComponentFactory::GetTrafoFromGfig( GfigElementA * pGFig_p )
 
 		trafo.position = GetXYZWFromGfig(pPropertie);
 	}
+	else{
+
+		trafo.position = XMFLOAT4( 0.0f, 0.0f, 0.0f, 1.0f ); 
+	}
 	if( pGFig_p->GetSubElement( "rotation", pPropertie ) ){
 
 		trafo.qRotation = GetXYZWFromGfig(pPropertie);
+	}
+	else{
+
+		trafo.qRotation = XMFLOAT4( 0.0f, 0.0f, 0.0f, 1.0f ); 
 	}
 	if( pGFig_p->GetSubElement( "scale", pPropertie ) ){
 

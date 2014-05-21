@@ -155,6 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
@@ -312,6 +315,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
