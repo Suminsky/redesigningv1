@@ -159,7 +159,6 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
@@ -202,7 +201,6 @@
     <ClInclude Include="Mentle\TileMapEditor\TileCollisionLayer.h" />
     <ClInclude Include="Mentle\TileMapEditor\TileImageLayer.h" />
     <ClInclude Include="Mentle\TileMapEditor\TileMapEditor.h" />
-    <ClInclude Include="Mentle\TileMapEditor\TilesLayer.h" />
     <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\ComponentFactory.h" />
@@ -318,7 +316,6 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
@@ -357,7 +354,6 @@
     <ClCompile Include="Mentle\TileMapEditor\TileCollisionLayer.cpp" />
     <ClCompile Include="Mentle\TileMapEditor\TileImageLayer.cpp" />
     <ClCompile Include="Mentle\TileMapEditor\TileMapEditor.cpp" />
-    <ClCompile Include="Mentle\TileMapEditor\TilesLayer.cpp" />
     <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\ComponentFactory.cpp" />

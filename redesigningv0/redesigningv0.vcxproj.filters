@@ -336,9 +336,6 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -454,9 +451,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mentle\TileMapEditor\GridLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\TileMapEditor\TilesLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h">
@@ -749,9 +743,6 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -849,9 +840,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\TileMapEditor\GridLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\TileMapEditor\TilesLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\TileMapEditor\TileCollisionLayer.cpp">
