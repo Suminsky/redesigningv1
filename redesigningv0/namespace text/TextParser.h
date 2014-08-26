@@ -155,6 +155,10 @@ namespace text{
 		bool GetSubElement( const char * szName_p, GfigElementA *& pElement_p );
 		bool GetSubElement( std::string szName_p, GfigElementA *& pElement_p  );
 
+		static bool FindFirstElementBFS( const char * szName_p, GfigElementA *& pElement_p );
+		static bool FindLastElementDFS( const char * szName_p, GfigElementA *& pElement_p );
+		static bool FindFirstElementDFS( const char * szName_p, GfigElementA *& pElement_p );
+
 
 		//------------------------------------------------------------------------
 		// remove comments, than recursively parses using below function

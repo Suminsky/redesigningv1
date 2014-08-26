@@ -206,6 +206,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
+		//TODO NOW
+// verify if current frame is clip[currentClip].frames[currentFrame] or vframes[currentFrame]!!!
+		
 		SpriteFrame GetFrame()const {	return m_vFrames[m_currentFrame]; }
 		SpriteFrame GetNTHFrame( unsigned int nth_p ) const {	return m_vFrames[nth_p]; }
 		std::vector<SpriteFrame> GetFrames() const { return m_vFrames; }
@@ -238,7 +241,7 @@ namespace game{
 		unsigned int								m_iCurrentClip;
 		unsigned int								m_iPreviousClip;
 		frame										m_currentFrame;
-		frame										m_previousFrame;
+		frame										m_previousFrame; // updated by the anim system
 
 		std::vector<SpriteFrame>					m_vFrames;
 		std::vector<AnimationClip>					m_vClips;
@@ -272,8 +275,8 @@ namespace game{
 		void LoadSpritesFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
 		void LoadFramesFromGFig(  text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
 		void LoadClipsFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
-		E_ANIMWRAPMODE GetWrapModeFromGFig( text::GfigElementA * pGFig_p );
-		void LoadClipFramesFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
+		static E_ANIMWRAPMODE GetWrapModeFromGFig( text::GfigElementA * pGFig_p );
+		//void LoadClipFramesFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
 		static void LoadXYWHFromGfig( text::GfigElementA * pGFig_p, DirectX::XMFLOAT4 & rect_p );
 
 		static void LoadFrameFromGfig( text::GfigElementA * pGFig_p, SpriteFrame & spriteFrame_p );
@@ -291,13 +294,15 @@ namespace game{
 		static void UpdateClipConfig_NoFrames( int iClip, AnimationClip::ConfigData & clip_p, SpriteAnimationComponent * compo_p );
 
 		static void ClearAllFrameInfo_KeepClipsConfig( SpriteAnimationComponent * compo_p );
+		static void ReplaceFrames( SpriteAnimationComponent * compo_p, std::vector<SpriteFrame> && vFrames_p );
+		static void ReplaceSprites( SpriteAnimationComponent * compo_p, std::vector<TextureID_Binder_Pair> && vSprites_p );
 
 		//static void CreateEmptyGfigForAnimComponent( )
 
 		//------------------------------------------------------------------------
-		// to be overridden
+		// overridden
 		//------------------------------------------------------------------------
-		pool_Component_ptr VCreateComponent(){ /*assert(0); */return pool_Component_ptr(m_pool);} //TODO
+		pool_Component_ptr VCreateComponent(){ return pool_Component_ptr(m_pool);}
 		pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 	};
 

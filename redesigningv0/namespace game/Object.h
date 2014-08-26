@@ -158,7 +158,6 @@ namespace game{
 		bool m_bDettached;
 
 		ObjectComponents m_components;
-		//ComponentIndexes m_removedComponents;
 		std::vector<Component*> m_removedComponents;
 
 		EventMachine<ComponentEventData> m_objectEventMachine;

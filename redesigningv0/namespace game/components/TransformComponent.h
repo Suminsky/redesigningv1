@@ -78,7 +78,6 @@ namespace game{
 			DirectX::XMStoreFloat4( &qRotation, qRot );
 			DirectX::XMStoreFloat4( &scale, vScale );
 		}
-
 		inline void FromMatrix( const DirectX::XMMATRIX & mTransform_p ){
 
 			DirectX::XMVECTOR vPos, qRot, vScale;

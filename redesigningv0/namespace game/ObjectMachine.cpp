@@ -21,7 +21,11 @@ void ObjectMachine::AddObject( shared_Object_ptr && pObject_p )
 			m_objects.push_back( std::move(pObject_p) );
 
 			//InformSystemsAboutObjectAdded( pObject_p->m_currentObjectIndex );
+			// 
 			// TODO: is adding on the same frame..shouldnt it be at the end of frame?
+			// that worked before, but now systems updates components, not objects, so
+			// consequently new objects (its compos) will be updated in the frame theyr added in, not
+			// the planned behavior =(
 	}
 }
 
@@ -39,33 +43,22 @@ void ObjectMachine::AddObject( const shared_Object_ptr & pObject_p )
 			pObject_p->m_pObjMachineOwner = this;
 			pObject_p->m_pLayerOwner = m_pLayerRef;
 
-
 			m_objects.push_back( pObject_p );
-
 	}
 }
 
 void ObjectMachine::RemoveObject( OBJECTINDEX objectCurrentIndex_p )
 {
-	assert( objectCurrentIndex_p != INVALID_OBJECTINDEX );
-	/*assert( !m_objects[objectCurrentIndex_p]->m_bDettached );
-
-	m_objects[objectCurrentIndex_p]->m_bDettached = true;
-
-	m_removedObjects.push_back( objectCurrentIndex_p );*/
 	RemoveObject( m_objects[objectCurrentIndex_p].get() );
 }
 
 void ObjectMachine::RemoveObject( const shared_Object_ptr & pObject_p )
 {
-	//RemoveObject(pObject_p->m_currentObjectIndex);
 	RemoveObject(pObject_p.get());
 }
 
 void ObjectMachine::RemoveObject( Object * pObject_p )
 {
-	//RemoveObject(pObject_p->m_currentObjectIndex);
-
 	assert( pObject_p->m_currentObjectIndex != INVALID_OBJECTINDEX );
 	assert( !pObject_p->m_bDettached );
 
@@ -76,8 +69,10 @@ void ObjectMachine::RemoveObject( Object * pObject_p )
 
 void ObjectMachine::CleanRemovedObjects()
 {
+	// this method swaps all removed objs to the end of the vector, updating theyr indexes, than pops all together
+
 	unsigned int nRemoved =	(unsigned int)m_removedObjects.size(); // cache
-	unsigned int nObjects =		(unsigned int)m_objects.size();
+	unsigned int nObjects =	(unsigned int)m_objects.size();
 	
 	int nSkipped = 0;
 	for( unsigned int itR = 0, itLast = (nObjects-1); itR < nRemoved; ++itR ){
@@ -88,28 +83,25 @@ void ObjectMachine::CleanRemovedObjects()
 			continue;
 		}
 
-		if( m_removedObjects[itR]->m_currentObjectIndex == itLast ){
+		// since the removed vector store pointers, theres no dirt data to update
+		// but we need to invalidate the discarded, cause its used as check (assertions) when adding and removing..that
+		// can be discarded TODO
+		
+		OBJECTINDEX removedIndex = m_removedObjects[itR]->m_currentObjectIndex;
+		m_removedObjects[itR]->m_currentObjectIndex = INVALID_OBJECTINDEX;
+
+		if( removedIndex == itLast ){
 			
-			m_removedObjects[itR]->m_currentObjectIndex = INVALID_OBJECTINDEX;
 			--itLast;
 			continue; // already "swapped"
 		}
 
-		// why swap? I dont think I still need to care with the one being removed now
-		// TODO
-
-		std::swap( m_objects[m_removedObjects[itR]->m_currentObjectIndex], m_objects[itLast] );
+		std::swap( m_objects[removedIndex], m_objects[itLast] );// assertion triggered once: m_removedObjects[itR]->m_currentObjectIndex was INVALID_OBJECTINDEX here(how the fuk can that be possible)
 		--itLast;
 
 		// update the index of the swapped object (not the one sent to pop)
 
-		m_objects[m_removedObjects[itR]->m_currentObjectIndex]->m_currentObjectIndex = m_removedObjects[itR]->m_currentObjectIndex;
-
-		// since the removed vector store pointers, theres no dirt data to update
-		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
-		// can be discarded TODO
-		
-		m_removedObjects[itR]->m_currentObjectIndex = INVALID_OBJECTINDEX;
+		m_objects[removedIndex]->m_currentObjectIndex = removedIndex;
 	}
 
 	// "trim"

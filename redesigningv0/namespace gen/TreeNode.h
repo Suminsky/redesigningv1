@@ -39,7 +39,7 @@ namespace gen{
 		~TreeNode();
 
 		//------------------------------------------------------------------------
-		// makes given node a child of this noe
+		// makes given node a child of this node
 		//------------------------------------------------------------------------
 		void AddNode( TreeNode * pNode_p );
 

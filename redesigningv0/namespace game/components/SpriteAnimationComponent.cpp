@@ -154,6 +154,8 @@ void game::SpriteAnimationComponent::SetClipFrame( unsigned int frameIndex_p )
 	clip.stateData.itCurrentFrame = frameIndex_p;
 }
 
+
+
 //========================================================================
 // 
 //========================================================================
@@ -456,5 +458,15 @@ void game::SpriteAnimationComponentFactory::ClearAllFrameInfo_KeepClipsConfig( S
 AnimationClip::ConfigData game::SpriteAnimationComponentFactory::GetClipConfigData( int iClip_p, SpriteAnimationComponent * compo_p )
 {
 	return compo_p->m_vClips[iClip_p].configData;
+}
+
+void game::SpriteAnimationComponentFactory::ReplaceFrames( SpriteAnimationComponent * compo_p, std::vector<SpriteFrame> && vFrames_p )
+{
+	compo_p->m_vFrames = std::move( vFrames_p );
+}
+
+void game::SpriteAnimationComponentFactory::ReplaceSprites( SpriteAnimationComponent * compo_p, std::vector<TextureID_Binder_Pair> && vSprites_p )
+{
+	compo_p->m_vSprites = std::move( vSprites_p );
 }
 

@@ -148,6 +148,7 @@ namespace text{
 		// 
 		//------------------------------------------------------------------------
 		void InitializeSpriteInstances( sprite::InstancedSprites & instancedSprites_p, sprite::InstancesVertexBuffer & instVB_p,
+										sprite::SortMask & sortMask_p,
 										UINT iFontID_p = 0, 
 										sprite::E_BLENDTYPE eBlendType_p = sprite::E_BLEND_ALPHA_BLENDED,
 										sprite::E_SAMPLERTYPE eSamplerType_p = sprite::E_SAMPLER_NONE );

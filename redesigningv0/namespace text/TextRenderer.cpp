@@ -515,16 +515,19 @@ void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_
 		instancedSprites_p.AddInstance( perGlyph );
 	}
 
-	sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
+	//sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
 	//sortKey_p.bitfield.transparency = eBlendType_p;
 	instancedSprites_p.ConcludeInstancesBuffering_NoSort( pDContext_p, sortKey_p.intRepresentation );
 }
 
-void text::TextRenderer::InitializeSpriteInstances( sprite::InstancedSprites & instancedSprites_p, sprite::InstancesVertexBuffer & instVB_p, UINT iFontID_p /*= 0*/, sprite::E_BLENDTYPE eBlendType_p /*= sprite::E_BLEND_ALPHA_BLENDED*/, sprite::E_SAMPLERTYPE eSamplerType_p /*= sprite::E_SAMPLER_NONE */ )
+void text::TextRenderer::InitializeSpriteInstances( sprite::InstancedSprites & instancedSprites_p, sprite::InstancesVertexBuffer & instVB_p, sprite::SortMask & sortMask_p, UINT iFontID_p /*= 0*/, sprite::E_BLENDTYPE eBlendType_p /*= sprite::E_BLEND_ALPHA_BLENDED*/, sprite::E_SAMPLERTYPE eSamplerType_p /*= sprite::E_SAMPLER_NONE */ )
 {
 	instancedSprites_p.Initialize(
 		*m_fonts[iFontID_p].GetTextureBinder(),
 		m_pSpriteRendererRef->m_blends_cache.GetBlendBind(eBlendType_p),
 		m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(eSamplerType_p),
 		instVB_p	);
+
+	sortMask_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
+	sortMask_p.bitfield.transparency = eBlendType_p;
 }

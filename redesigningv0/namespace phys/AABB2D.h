@@ -57,7 +57,7 @@ namespace phys{
 			float xDist = XDistance( other_p );
 			float yDist = YDistance( other_p );
 
-			if( xDist >= 0.0f && yDist >= 0.0f ) return false;
+			if( xDist >= 0.0f || yDist >= 0.0f ) return false;
 
 			if( xDist < 0.0f && yDist < 0.0f ){
 
@@ -302,7 +302,7 @@ namespace phys{
 				Xdist = a_p.Left() - p_p.x;
 				dist += (Xdist) * (Xdist);
 			}
-			if( p_p.x > a_p.Right() ){
+			else if( p_p.x > a_p.Right() ){
 
 				Xdist = p_p.x - a_p.Right();
 				dist += (Xdist) * (Xdist);
@@ -314,7 +314,7 @@ namespace phys{
 				Ydist = a_p.Down() - p_p.y;
 				dist += (Ydist) * (Ydist);
 			}
-			if( p_p.y > a_p.Up() ){
+			else if( p_p.y > a_p.Up() ){
 
 				Ydist = p_p.y - a_p.Up();
 				dist += (Ydist) * (Ydist);

@@ -78,6 +78,15 @@ namespace sprite{
 			return m_cache[iTexture_p];
 		}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		const std::string & GetTextureName( UINT iTexture_p ) const{
+
+			assert( iTexture_p < m_cache.size());
+
+			return m_names[iTexture_p];
+		}
 
 	private:
 

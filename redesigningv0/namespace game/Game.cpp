@@ -11,7 +11,7 @@ void Game::FixedStepLoop(){
 	// get time since last timer update
 	double dDeltaSeconds = m_timer.GetDeltaSeconds();
 
-	win::UniqueFileLogger()<<"O DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"O DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
 
 	// cap to max frame delay allowed, this is to avoid spiral of death
 	if( dDeltaSeconds > m_dMaxFrameTimeDelay )
@@ -33,13 +33,13 @@ void Game::FixedStepLoop(){
 
 		m_stateControl.Update( m_dFixedTimeStep );
 
-		win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
-		win::UniqueFileLogger()<<"FIX: "<<m_dFixedTimeStep<<SZ_NEWLINE;
+		//win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
+		//win::UniqueFileLogger()<<"FIX: "<<m_dFixedTimeStep<<SZ_NEWLINE;
 	}
 
-	if( count > 1 ){
+	/*if( count > 1 ){
 		win::UniqueFileLogger()<<"COUNT"<<SZ_NEWLINE;
-	}
+	}*/
 
 	// compute the interpolation factor based on the remaining timing
 	// the interpolation is used to fix rendering motion across the discrete update steps
@@ -52,8 +52,8 @@ void Game::FixedStepLoop(){
 
 	m_stateControl.Draw( dInterpolationAmount, dDeltaSeconds );
 
-	win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
-	win::UniqueFileLogger()<<"i:  "<<dInterpolationAmount<<SZ_NEWLINE<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"i:  "<<dInterpolationAmount<<SZ_NEWLINE<<SZ_NEWLINE;
 
 	// scream?
 

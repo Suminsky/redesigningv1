@@ -469,6 +469,9 @@ void GfigElementA::ParseCleanGfigFile( DataStream & buffer_p, GfigElementA & par
 	int iEqualsPos = -1;
 	bool bIgnoringDueQuote = false;
 
+	// test
+	bool bNameHandled = false;
+
 	while( buffer_p.m_currentByteIndex < buffer_p.m_size ){
 
 		if( buffer_p.m_data[buffer_p.m_currentByteIndex] == '"' ){
@@ -526,10 +529,16 @@ void GfigElementA::ParseCleanGfigFile( DataStream & buffer_p, GfigElementA & par
 
 						iEqualsPos = -1;
 					}
-					else if( parsed_p.m_name.empty() ){
+					else if( !bNameHandled /*parsed_p.m_name.empty()*/ ){
+
+						bNameHandled = true;
+
 
 					// if didnt got a name yet
 					// get all data between this open bracket and the previous one
+					// 
+					// problem: this can be the second child of a nameless bracket, means it
+					// will get the first child as name!
 
 						unsigned int nCharsBetweenOpenBrackets = (buffer_p.m_currentByteIndex - iOpenBracketPos) -1;
 
@@ -576,6 +585,8 @@ void GfigElementA::ParseCleanGfigFile( DataStream & buffer_p, GfigElementA & par
 					// note that here is not needed to test if name is empty, cause
 					// there cant be a name already set between '[' and '=', that
 					// would require 2 or more equals..
+					// 
+					bNameHandled = true;
 				
 					unsigned int nCharsBetweenOpenBracketAndEquals = (iEqualsPos - iOpenBracketPos) -1;
 
@@ -624,7 +635,9 @@ void GfigElementA::ParseCleanGfigFile( DataStream & buffer_p, GfigElementA & par
 					}
 					else{
 
-						if( parsed_p.m_name.empty() ){
+						if( !bNameHandled/*parsed_p.m_name.empty()*/ ){
+
+							bNameHandled = true;
 
 							unsigned int nCharsBetweenBrackets = (iCloseBracketPos - iOpenBracketPos) -1; // [#,4,5], 5-4 = 1, -1 = 0
 
@@ -692,6 +705,84 @@ bool GfigElementA::GetSubElement( const char * szName_p, GfigElementA *& pElemen
 			pElement_p = &m_subElements[it];
 
 			return true;
+		}
+	}
+
+	return false;
+}
+
+bool text::GfigElementA::FindFirstElementBFS( const char * szName_p, GfigElementA *& pElement_p )
+{
+	std::vector<GfigElementA*> vCandidates;
+
+	vCandidates.push_back( pElement_p );
+	int itFront = 0;
+
+	while( vCandidates.size() - itFront > 0 ){
+
+		GfigElementA * pCurrent = vCandidates[itFront];
+
+		if( pCurrent->m_name == szName_p ){
+
+			pElement_p = pCurrent;
+			return true;
+		}
+
+		++itFront;
+
+		for( int it = 0, itEnd = (int)pCurrent->m_subElements.size(); it != itEnd; ++it ){
+
+			vCandidates.push_back( &pCurrent->m_subElements[it] );
+		}
+	}
+
+	return false;
+}
+bool text::GfigElementA::FindLastElementDFS( const char * szName_p, GfigElementA *& pElement_p )
+{
+	std::vector<GfigElementA*> vCandidates;
+
+	vCandidates.push_back( pElement_p );
+
+	while( vCandidates.size() > 0 ){
+
+		GfigElementA * pCurrent = vCandidates.back();
+		vCandidates.pop_back();
+
+		if( pCurrent->m_name == szName_p ){
+
+			pElement_p = pCurrent;
+			return true;
+		}
+
+		for( int it = 0, itEnd = (int)pCurrent->m_subElements.size(); it != itEnd; ++it ){
+
+			vCandidates.push_back( &pCurrent->m_subElements[it] );
+		}
+	}
+
+	return false;
+}
+bool text::GfigElementA::FindFirstElementDFS( const char * szName_p, GfigElementA *& pElement_p )
+{
+	std::vector<GfigElementA*> vCandidates;
+
+	vCandidates.push_back( pElement_p );
+
+	while( vCandidates.size() > 0 ){
+
+		GfigElementA * pCurrent = vCandidates.back();
+		vCandidates.pop_back();
+
+		if( pCurrent->m_name == szName_p ){
+
+			pElement_p = pCurrent;
+			return true;
+		}
+
+		for( int it = (int)pCurrent->m_subElements.size()-1; it > -1; --it ){
+
+			vCandidates.push_back( &pCurrent->m_subElements[it] );
 		}
 	}
 

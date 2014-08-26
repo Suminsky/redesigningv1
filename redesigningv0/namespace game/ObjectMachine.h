@@ -68,7 +68,6 @@ namespace game{
 
 
 		Objects m_objects;
-		//ObjectIndexes m_removedObjects;
 		std::vector<Object*> m_removedObjects;
 
 		Layer * m_pLayerRef;
