@@ -408,6 +408,9 @@
     <ClInclude Include="namespace phys\AABB3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -717,6 +720,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

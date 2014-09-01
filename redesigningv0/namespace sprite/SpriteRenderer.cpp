@@ -18,7 +18,6 @@ sprite::SpriteRenderer::SpriteRenderer( dx::Device * pDevice_p, int maxInstances
 {
 	LoadShader(pDevice_p, maxInstances_p );
 }
-
 sprite::SpriteRenderer::SpriteRenderer()
 	:
 	m_drawIndexed(6),

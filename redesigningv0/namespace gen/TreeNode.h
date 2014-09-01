@@ -46,7 +46,8 @@ namespace gen{
 		//------------------------------------------------------------------------
 		// removes given node from the childs
 		//------------------------------------------------------------------------
-		void RemoveNode( TreeNode * pNode_p );	
+		void RemoveNode( TreeNode * pNode_p );
+		void RemoveAllNodes();
 
 		//------------------------------------------------------------------------
 		// data management

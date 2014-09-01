@@ -142,17 +142,17 @@ namespace phys{
 
 		bool IsColliding( const AABB3D & other_p ){
 
-			if( XDistance( other_p) > 0.0f ) return false;
-			if( YDistance( other_p) > 0.0f ) return false;
-			if( ZDistance( other_p) > 0.0f ) return false;
+			if( XDistance(other_p) > 0.0f ) return false;
+			if( YDistance(other_p) > 0.0f ) return false;
+			if( ZDistance(other_p) > 0.0f ) return false;
 
 			return true;
 		}
 		bool IsColliding_e( const AABB3D & other_p ){
 
-			if( XDistance( other_p) >= 0.0f ) return false;
-			if( YDistance( other_p) >= 0.0f ) return false;
-			if( ZDistance( other_p) >= 0.0f ) return false;
+			if( XDistance(other_p) >= 0.0f ) return false;
+			if( YDistance(other_p) >= 0.0f ) return false;
+			if( ZDistance(other_p) >= 0.0f ) return false;
 
 			return true;
 		}

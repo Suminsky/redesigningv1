@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h" />
@@ -288,6 +289,7 @@
     <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp" />

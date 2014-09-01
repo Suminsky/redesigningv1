@@ -41,7 +41,7 @@ namespace gen{
 			// percentage, amount to be traversed
 			// plus offset, plus from where it started
 
-			return (B_p-A_p) * (elapsed_p/duration_p) + A_p; 
+			return (B_p-A_p) * (elapsed_p/duration_p) + A_p;
 		}
 
 		//------------------------------------------------------------------------

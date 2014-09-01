@@ -27,6 +27,19 @@ void TreeNode<T>::RemoveNode( TreeNode * pNode_p )
 	m_vChilds.pop_back();
 }
 
+template< typename T>
+void gen::TreeNode<T>::RemoveAllNodes()
+{
+	int nChilds = (int)m_vChilds.size();
+	for( int it = 0; it < nChilds; ++it ){
+
+		m_vChilds[it]->m_indexOnParent = INVALID_INDEX_ONPARENT;
+		m_vChilds[it]->m_pParent = nullptr;
+	}
+
+	m_vChilds.clear();
+}
+
 template< typename T >
 void TreeNode<T>::SetParent( TreeNode * pNewParent_p )
 {

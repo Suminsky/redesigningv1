@@ -19,6 +19,20 @@ void game::SpriteSystem::VOnInit()
 void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 {
 	// TODO interpolate camera
+
+	// create cam box
+
+	float zoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
+	float camHalfW = m_pCameraRef->m_viewPort.Width * zoom;
+	float camHalfH = m_pCameraRef->m_viewPort.Height * zoom;
+	XMFLOAT2 camPos(
+		-XMVectorGetX( m_pCameraRef->m_mView.r[3] ),
+		-XMVectorGetY( m_pCameraRef->m_mView.r[3] )
+		);
+
+	phys::AABB2D camBox = { camPos, camHalfW, camHalfH };
+
+	
 	//int iCulled = 0;
 	for( int itSprite = 0, iSize = m_poolAccess.GetNAllocated();
 		itSprite < iSize;
@@ -36,6 +50,8 @@ void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 
 				// cull out of view sprites (needs zoom info)
 				
+				// create sprite box
+
 				float halfW = spriteCompo.m_renderData.m_res.x * 0.5f;
 				float halfH = spriteCompo.m_renderData.m_res.y * 0.5f;
 				XMFLOAT2 pos( 
@@ -45,19 +61,10 @@ void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 
 				phys::AABB2D spriteBox = { pos, halfW, halfH };
 
-				float zoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
-				float camHalfW = m_pCameraRef->m_viewPort.Width * zoom;
-				float camHalfH = m_pCameraRef->m_viewPort.Height * zoom;
+				// TODO: allow sprite to render w/ diff camera
 
-				XMFLOAT2 camPos(
-					-XMVectorGetX( m_pCameraRef->m_mView.r[3] ),
-					-XMVectorGetY( m_pCameraRef->m_mView.r[3] )
-					);
+				// test
 
-				phys::AABB2D camBox = { camPos, camHalfW, camHalfH };
-
-				//float pen;
-				//if( spriteBox.CollisionData_v2( camBox, pen ) )
 				if( spriteBox.IsColliding_e( camBox ) )
 					m_pSpriteRendererRef->Render( &spriteCompo, m_pCameraRef );
 				//else
