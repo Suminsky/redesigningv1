@@ -85,10 +85,6 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	drawable.AddPipelineState( &m_fonts[iFontID_p].GetPipeState() );
 	drawable.AddPipelineState( &camera_p.m_pipeState );
 
-// 	m_pSpriteRendererRef->BeginInstancing(  m_fonts[iFontID_p].GetTextureBinder(),
-// 		&m_pSpriteRendererRef->m_blends_cache.GetBlendBind(sprite::E_BLEND_ALPHA_BLENDED),
-// 		&m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(sprite::E_SAMPLER_NONE) );
-
 	while( szText_p[itChar] != 0x0000 ){
 
 		// handle spaces
@@ -144,22 +140,12 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 		drawable.AddPipelineState( &m_glyphsRenderData().pipeState );
 
 		m_pSpriteRendererRef->m_queue.Submit( drawable );
-// 		sprite::SpriteRenderer::spriteInstance instanceData;
-// 		memcpy( (void*)instanceData.color, (void*)&glyphCBuffer.m_color, sizeof(float)*4 );
-// 		instanceData.padding[0] = instanceData.padding[1] = 0.0f;
-// 		memcpy( (void*)instanceData.res, (void*)&glyphCBuffer.m_res, sizeof(float)*2 );
-// 		memcpy( (void*)instanceData.mWorld, (void*)&glyphCBuffer.m_mWorld, sizeof(float)*16 );
-// 		memcpy( (void*)instanceData.uvRect, (void*)&glyphCBuffer.m_uvRect, sizeof(float)*4 );
-
-		//m_pSpriteRendererRef->RenderInstance( instanceData, sorMask.intRepresentation );
 
 		drawable.PopLastPipelineState();
 
 		++itChar;
 		++m_glyphsRenderData;
 	}
-
-	//m_pSpriteRendererRef->FinishInstancingRender( pDevice_p, sorMask.intRepresentation );
 }
 
 void text::TextRenderer::Draw_Text( const wchar_t szText_p[], DirectX::XMFLOAT4 pos_p, UINT iFontID_p,
@@ -312,12 +298,13 @@ void text::TextRenderer::RenderText(
 	if( szText_p[0] == 0 ) return;
 
 	// cache instance common data (color and world rotation)
+
 	sprite::spriteInstance perGlyph = {0};
 	(*((XMFLOAT4*)perGlyph.color)) = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 	perGlyph.mWorld[0] = perGlyph.mWorld[5] = perGlyph.mWorld[10] = perGlyph.mWorld[15] = 1.0f;
 
 	// prepare for instancing
-	// TODO:blend & sampler by param
+
 	m_perFrameText.Initialize(	*m_fonts[iFontID_p].GetTextureBinder(),
 								m_pSpriteRendererRef->m_blends_cache.GetBlendBind(eBlendType_p),
 								m_pSpriteRendererRef->m_samplers_cache.GetSamplerBind(eSamplerType_p),

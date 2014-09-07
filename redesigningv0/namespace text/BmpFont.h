@@ -14,7 +14,7 @@
 
 // standard includes
 #include <memory>
-#include <map>
+#include <vector>
 #include "../namespace render/dx/Device.h"
 
 // private includes
@@ -23,10 +23,14 @@
 
 namespace text{
 
+	struct GlyphIDRect{
+
+		wchar_t szChar;
+		GlyphRect rect;
+	};
+
 
 	class BmpFont{
-
-		typedef std::map<wchar_t, GlyphRect> GlyphMap;
 
 	public:
 
@@ -44,14 +48,14 @@ namespace text{
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		GlyphRect GetGlyphUV( const wchar_t id )const;
-		float GetSpaceWidth()const{ return m_fSpaceWidth; }
-		float GetMinNewLineHeight()const{ return m_fNewLineMinHeight; }
+		GlyphRect GetGlyphUV( const wchar_t id ) const;
+		float GetSpaceWidth() const{ return m_fSpaceWidth; }
+		float GetMinNewLineHeight() const { return m_fNewLineMinHeight; }
 		int GetTabMultiple() const { return m_tabMultiple; }
 		dx::BindPSShaderResourceView *& GetTextureBinder(){ return m_pTextureSRVBinder; }
 		dx::PipeState & GetPipeState(){ return m_pipeState; }
-		int GetTextureWidth()  const{ return m_iTextureW; }
-		int GetTextureHeight() const{ return m_iTextureH; }
+		int GetTextureWidth()  const { return m_iTextureW; }
+		int GetTextureHeight() const { return m_iTextureH; }
 		int GetTextureID() const {return m_iTextureID;}
 
 
@@ -63,11 +67,11 @@ namespace text{
 		int m_iTextureW, m_iTextureH;
 		GlyphRect m_notSupportedGlyph;
 
+		std::vector<GlyphIDRect> m_vGlyphUVs;
+
 		dx::BindPSShaderResourceView * m_pTextureSRVBinder;
 		dx::PipeState	m_pipeState;
 		int m_iTextureID;
-
-		GlyphMap m_glyphUVs;
 	};
 
 	typedef std::shared_ptr<BmpFont> shared_BmpFont_ptr;

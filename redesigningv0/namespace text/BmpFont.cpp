@@ -1,4 +1,5 @@
 #include "BmpFont.h"
+#include <algorithm>
 
 using namespace text;
 
@@ -17,16 +18,24 @@ void text::BmpFont::InitFromDesc( BmpFontDesc & fontDesc_p, sprite::TextureBinde
 	m_notSupportedGlyph.X = 0.0f;
 	m_notSupportedGlyph.Y = 0.0f;
 
+	m_vGlyphUVs.resize( fontDesc_p.nCharacteres );
 	for( int it = 0; it < fontDesc_p.nCharacteres; ++it ){
 
-		m_glyphUVs[ fontDesc_p.characteresIDs[it] ] = fontDesc_p.charUVRects[it];
+		GlyphIDRect newGlyph = { fontDesc_p.characteresIDs[it], fontDesc_p.charUVRects[it] };
+		m_vGlyphUVs.push_back( newGlyph );
 	}
+
+	// sort vector based on wchar value
+	auto comp = []( const GlyphIDRect & a, const GlyphIDRect & b  ){
+
+		return a.szChar < b.szChar;
+	};
+	std::sort( m_vGlyphUVs.begin(), m_vGlyphUVs.end(), comp );
 
 	// get texture
 
 	m_pTextureSRVBinder = &textureCache_p.Get(fontDesc_p.szTextureFilename, &m_iTextureID);
 	m_pipeState.AddBinderCommand( m_pTextureSRVBinder );
-	BREAKHERE;
 }
 
 bool text::BmpFont::InitFromFile( const char * szFontDescFilename_p, sprite::TextureBinders & textureCache_p )
@@ -48,10 +57,18 @@ bool text::BmpFont::InitFromFile( const char * szFontDescFilename_p, sprite::Tex
 
 text::GlyphRect text::BmpFont::GetGlyphUV( const wchar_t id ) const
 {
-	GlyphMap::const_iterator element = m_glyphUVs.find( id );
-	if( element != m_glyphUVs.end() ){
+	auto comp = []( const GlyphIDRect & a,  const wchar_t b  ){
 
-		return element->second;
+		return   a.szChar < b;
+	};
+
+	std::vector<GlyphIDRect>::const_iterator itEnd = m_vGlyphUVs.end();
+	std::vector<GlyphIDRect>::const_iterator it =
+		std::lower_bound( m_vGlyphUVs.begin(), itEnd, id, comp );
+
+	if( it != itEnd ){
+
+		return it->rect;
 	}
 	else{
 

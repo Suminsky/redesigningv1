@@ -166,22 +166,52 @@ namespace gen{
 		uv_p[3] = -uv_p[3];
 	}
 
-	//------------------------------------------------------------------------
-	// array 2d <-> 1d conversions
-	//------------------------------------------------------------------------
-	inline int XFromIndex( int index_p, int iW_p ){
+	namespace array2Dto1D{
+		//------------------------------------------------------------------------
+		// array 2d <-> 1d conversions
+		//------------------------------------------------------------------------
+		
+		inline int XFromIndex( int index_p, int iW_p ){
 
-		return index_p % iW_p; // x/col repeats for every row
-		// return index - ((index_p / iW_p) * iW_p);
-	}
-	inline int YFromIndex( int index_p, int iW_p ){
+			return index_p % iW_p; // x/col repeats for every row
+			// return index - ((index_p / iW_p) * iW_p);
+		}
+		inline int YFromIndex( int index_p, int iW_p ){
 
-		return index_p / iW_p;
-	}
-	inline int indexFromXY( int x_p, int y_p, int iW_p ){
+			return index_p / iW_p;
+		}
+		//
+		inline int indexFromXY( int x_p, int y_p, int iW_p ){
 
-		return y_p * iW_p + x_p;
+			return x_p + y_p * iW_p;
+		}
 	}
+
+	namespace array3Dto1D{
+
+		//------------------------------------------------------------------------
+		// array 3d <-> 1d conversions
+		//------------------------------------------------------------------------
+	
+		inline int XFromIndex( int index_p, int iW_p ){
+
+			return index_p % iW_p;
+		}
+		inline int YFromIndex( int index_p, int iW_p, int iH_p ){
+
+			return (index_p / iW_p) % iH_p;
+		}
+		inline int ZFromIndex( int index_p, int iW_p, int iH_p ){
+
+			return index_p / ( iW_p * iH_p );
+		}
+		//
+		inline int indexFromXYZ( int x_p, int y_p, int z_p,  int iW_p, int iH_p ){
+
+			return x_p + (y_p * iW_p) + (z_p * iW_p * iH_p);
+		}
+	}
+
 
 	//------------------------------------------------------------------------
 	// -assuming centralized world
@@ -204,6 +234,14 @@ namespace gen{
 
 		iX =  int( ( x / tileW_p ) + 0.5f );
 		iY = -int( ( y / tileH_p ) - 0.5f );
+	}
+	inline void WordToTileXYZ( float x, float y, float z, int & iX, int &iY, int &iZ, float tileW_p, float tileH_p, float tileZ_p )
+	{
+		//untested
+
+		iX =  int( ( x / tileW_p ) + 0.5f );
+		iY = -int( ( y / tileH_p ) - 0.5f );
+		iZ =  int( ( z / tileZ_p ) + 0.5f );
 	}
 
 	//------------------------------------------------------------------------
