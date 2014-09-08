@@ -47,7 +47,7 @@ namespace game{
 		void SetLayer( Layer * pLayer_p ){ m_pLayerOwner = pLayer_p; }
 
 		//------------------------------------------------------------------------
-		// 
+		// TODO:use a pool too
 		//------------------------------------------------------------------------
 		virtual shared_Object_ptr VCreateObject();
 		virtual shared_Object_ptr VCreateObject( text::GfigElementA * pGfig_p );

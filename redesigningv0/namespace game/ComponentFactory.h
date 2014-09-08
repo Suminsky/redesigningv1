@@ -58,7 +58,7 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	
+	//TODO: use vector and binary search instead of map
 	typedef std::map<int, shared_AComponentFactory_ptr> ComponentFactoryRegistry;
 	typedef std::map<std::string, int> ComponentNameToTypeMap;
 

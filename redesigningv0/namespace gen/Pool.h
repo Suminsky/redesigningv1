@@ -6,8 +6,7 @@
 	file:		PoolTry.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	T needs to have a member of type unsigned int called m_iCurrentRosterIndex, assessable
-				to this class
+	purpose:	
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

@@ -168,6 +168,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\StorySlideState.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
@@ -300,6 +301,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\StorySlideState.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />

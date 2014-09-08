@@ -146,8 +146,6 @@ namespace game{
 
 		bool m_bSnap; // hack
 
-		//unsigned int m_iCurrentRosterIndex;
-
 		gen::TreeNode<TransformComponent*> m_node;
 	};
 

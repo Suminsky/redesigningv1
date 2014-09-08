@@ -428,10 +428,10 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair
 	m_sortKey.bitfield.transparency = blendType_p;
 }
 
-
 //========================================================================
 // 
 //========================================================================
+
 pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA * pGFig_p )
 {
 	//SpriteComponent_ * pSprite = m_pool.Allocate();

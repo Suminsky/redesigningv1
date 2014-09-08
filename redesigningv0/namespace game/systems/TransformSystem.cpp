@@ -29,6 +29,8 @@ void game::TransformSystem::VOnUpdate( double , double )
 			// compute final trafo
 			
 			transformCompo.UpdateWorldAndFinalTransformation();
+
+			// TODO shouldnt dispatch if unchanged..(profile)
 			transformCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &transformCompo );
 
 			transformCompo.m_bSnap = false;

@@ -170,13 +170,13 @@ namespace phys{
 			closest_p = p_p; // start as the point itself, if inside it will stay like that
 
 			if( p_p.x < Left() ) closest_p.x = Left();
-			if( p_p.x > Right() ) closest_p.x = Right();
+			else if( p_p.x > Right() ) closest_p.x = Right();
 
 			if( p_p.y < Down() ) closest_p.y = Down();
-			if( p_p.y > Up() ) closest_p.y = Up();
+			else if( p_p.y > Up() ) closest_p.y = Up();
 
 			if( p_p.z < Front() ) closest_p.z = Front();
-			if( p_p.z > Back() ) closest_p.z = Back();
+			else if( p_p.z > Back() ) closest_p.z = Back();
 		}
 
 		bool IsPointInside( const DirectX::XMFLOAT3 & p_p ) const{
