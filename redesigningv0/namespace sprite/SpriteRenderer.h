@@ -92,8 +92,6 @@ namespace sprite{
 		// queue the states of a sprite
 		//------------------------------------------------------------------------
 		void Render( Sprite * pSprite_p );
-		void Render( game::SpriteComponent *pSprite_p);
-		void Render( game::SpriteComponent *pSprite_p, Camera *pCamera_p );
 		void Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p );
 		void Render( InstancedSprites * pInstSprites, Camera *pCamera_p );
 

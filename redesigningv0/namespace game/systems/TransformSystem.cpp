@@ -15,6 +15,13 @@ void game::TransformSystem::VOnInit()
 
 void game::TransformSystem::VOnUpdate( double , double )
 {
+	// TODO depth first traversal?
+	// put every root on a vector
+	// for each node on the vector
+	//	update final/world
+	//	add every child on the vector
+	// 
+
 	for( int itColor = 0, iSize = m_poolAccess.GetNAllocated();
 		itColor < iSize;
 		++itColor ){
@@ -28,16 +35,21 @@ void game::TransformSystem::VOnUpdate( double , double )
 
 			// compute final trafo
 			
-			transformCompo.UpdateWorldAndFinalTransformation();
+			//transformCompo.UpdateWorldAndFinalTransformation();
+			if( transformCompo.BUpdateWorldAndFinalTransformation() || transformCompo.m_bSnap ){
 
-			// TODO shouldnt dispatch if unchanged..(profile)
+			// TODO shouldnt dispatch if unchanged..(profile)-> actually, sprite need to receive the last previous for
+			// proper interpolation
+			
 			transformCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &transformCompo );
 
 			transformCompo.m_bSnap = false;
 
+			}
 			// recurse on childes
 
 			RecursiveUpdate( transformCompo );
+			
 	}
 }
 
@@ -48,15 +60,17 @@ void game::TransformSystem::RecursiveUpdate( TransformComponent & currentParent_
 		++itChild ){
 
 			TransformComponent & childTransform = (*currentParent_p.m_node.GetChild(itChild)->GetData());
-
 			// compute final trafo
 
-			childTransform.UpdateWorldAndFinalTransformation(currentParent_p.GetWorld());
+			//childTransform.UpdateWorldAndFinalTransformation(currentParent_p.GetWorld());
+			if( childTransform.BUpdateWorldAndFinalTransformation(currentParent_p.GetWorld()) || childTransform.m_bSnap ){
 
-			if( childTransform.IsAttached() )
+				//if( childTransform.IsAttached() ) why this?
 				childTransform.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &childTransform );
 
-			childTransform.m_bSnap = false;
+				childTransform.m_bSnap = false;
+
+			}
 
 			// recurse on childes
 

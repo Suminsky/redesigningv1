@@ -228,7 +228,8 @@ void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEven
 	TransformComponent * pTrafo = event_p.GetDataAs<TransformComponent*>();
 	
 	m_currentTrafo = pTrafo->GetFinal();
-	if( pTrafo->GonnaSnap() ) m_previousTrafo = m_currentTrafo;
+	if( pTrafo->GonnaSnap() )
+		m_previousTrafo = m_currentTrafo;
 	else m_previousTrafo = pTrafo->GetPreviousFinal();
 }
 

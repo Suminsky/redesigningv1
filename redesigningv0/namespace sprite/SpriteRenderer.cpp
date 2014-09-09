@@ -3,7 +3,6 @@
 #include <D3D11Shader.h>
 
 #include "../namespace render/dx/HLSLResource.h"
-#include "../namespace game/components/SpriteComponent.h"
 #include "../namespace game/components/SpriteComponent_.h"
 #include <algorithm>
 
@@ -56,47 +55,6 @@ void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
 	drawInst.SetDrawCall( &m_drawIndexed );
 
 	m_queue.Submit( drawInst );
-}
-void sprite::SpriteRenderer::Render( game::SpriteComponent * pSprite_p )
-{
-	static render::Drawable drawInst;
-	drawInst.Clear();
-
-	drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
-	// shader
-	drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
-	// vb
-	drawInst.AddPipelineState( &m_defaultVertexInput );
-	// camera
-	drawInst.AddPipelineState( &m_camera.m_pipeState );
-	// sprite
-	drawInst.AddPipelineState( &pSprite_p->m_pipeState );
-
-	// draw call
-	drawInst.SetDrawCall( &m_drawIndexed );
-
-	m_queue.Submit( drawInst );
-}
-void sprite::SpriteRenderer::Render( game::SpriteComponent *pSprite_p, Camera *pCamera_p )
-{
-
-	static render::Drawable s_drawInst;
-	s_drawInst.Clear();
-
-	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
-	// shader
-	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
-	// vb
-	s_drawInst.AddPipelineState( &m_defaultVertexInput );
-	// camera
-	s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
-	// sprite
-	s_drawInst.AddPipelineState( &pSprite_p->m_pipeState );
-
-	// draw call
-	s_drawInst.SetDrawCall( &m_drawIndexed );
-
-	m_queue.Submit( s_drawInst );
 }
 void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p )
 {

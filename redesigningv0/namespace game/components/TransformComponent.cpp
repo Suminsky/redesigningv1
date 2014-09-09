@@ -48,6 +48,52 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMFLOAT4
 
 	// TODO: move snapping to here
 }
+
+bool game::TransformComponent::BUpdateWorldAndFinalTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p )
+{
+	XMMATRIX mFinal = XMLoadFloat4x4( &m_final );
+	XMMATRIX mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
+
+	bool bPreviousUpdated =
+		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
+		||
+		XMVector4NotEqual( mPrevFinal.r[0], mFinal.r[0] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+
+	m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	XMMATRIX mParentWorld = XMLoadFloat4x4( &mParentWorldTrafo_p );
+
+	// world
+
+	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorld );
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+	mFinal = XMMatrixMultiply( mOffset, mWorld );
+	XMStoreFloat4x4( &m_final, mFinal );
+
+	mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
+
+	return	bPreviousUpdated
+		||
+		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
+		||
+		XMVector4NotEqual( mPrevFinal.r[0], mFinal.r[0] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+}
+
 void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMMATRIX & mParentWorldTrafo_p )
 {
 	m_previousFinal = m_final;
@@ -69,6 +115,49 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation( const XMMATRIX
 	// TODO: move snapping to here
 }
 
+bool game::TransformComponent::BUpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p )
+{
+	XMMATRIX mFinal = XMLoadFloat4x4( &m_final );
+	XMMATRIX mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
+
+	bool bPreviousUpdated =
+		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
+		||
+		XMVector4NotEqual( mPrevFinal.r[0], mFinal.r[0] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+
+	m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	// world
+
+	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorldTrafo_p );
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+	mFinal = XMMatrixMultiply( mOffset, mWorld );
+	XMStoreFloat4x4( &m_final, mFinal );
+
+	mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
+
+	return	bPreviousUpdated
+		||
+		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
+		||
+		XMVector4NotEqual( mPrevFinal.r[0], mFinal.r[0] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+}
+
 void game::TransformComponent::UpdateWorldAndFinalTransformation()
 {
 	m_previousFinal = m_final;
@@ -88,6 +177,53 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation()
 	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
 
 	// TODO: move snapping to here
+}
+
+bool game::TransformComponent::BUpdateWorldAndFinalTransformation()
+{
+	XMMATRIX mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
+	XMMATRIX mFinal = XMLoadFloat4x4( &m_final );
+	
+	bool bPreviousUpdated =
+		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
+		||
+		XMVector4NotEqual( mPrevFinal.r[0], mFinal.r[0] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
+		||
+		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+
+	//
+
+	m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	
+
+	// world
+
+	XMMATRIX mWorld = mLocal;
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+	mFinal = XMMatrixMultiply( mOffset, mWorld );
+	XMStoreFloat4x4( &m_final, mFinal );
+
+	mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
+
+	return	bPreviousUpdated
+			||
+			XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
+			||
+			XMVector4NotEqual( mPrevFinal.r[0], mFinal.r[0] )
+			||
+			XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
+			||
+			XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+	// memcmp( &mPrevFinal, &mFinal, sizeof(XMMATRIX)) ){
 }
 
 void game::TransformComponent::AddChild( TransformComponent * pTrafo_p )

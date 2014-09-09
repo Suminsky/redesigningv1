@@ -85,8 +85,8 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 void render::DrawablesQueue::Prepare()
 {
-	//m_drawables.clear();
-	m_drawables.resize(0);
+	m_drawables.clear();
+	//m_drawables.resize(0);
 	m_sortqueue.clear();
 }
 

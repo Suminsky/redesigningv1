@@ -148,7 +148,7 @@
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>false</Profile>
@@ -159,6 +159,8 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
@@ -192,9 +194,7 @@
     <ClInclude Include="namespace game\systems\TransformSystem.h" />
     <ClInclude Include="namespace gen\Pool.h" />
     <ClInclude Include="namespace game\ComponentTypes.h" />
-    <ClInclude Include="namespace game\components\MovableComponent.h" />
     <ClInclude Include="namespace game\components\ParentingComponent.h" />
-    <ClInclude Include="namespace game\components\SpriteComponent.h" />
     <ClInclude Include="namespace game\components\TransformComponent.h" />
     <ClInclude Include="namespace game\Event.h" />
     <ClInclude Include="namespace game\EventMachine.h" />
@@ -294,6 +294,8 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
@@ -318,7 +320,6 @@
     <ClCompile Include="namespace game\components\ColorComponent.cpp" />
     <ClCompile Include="namespace game\components\ParentingComponent.cpp" />
     <ClCompile Include="namespace game\components\SpriteAnimationComponent.cpp" />
-    <ClCompile Include="namespace game\components\SpriteComponent.cpp" />
     <ClCompile Include="namespace game\components\SpriteComponent_.cpp" />
     <ClCompile Include="namespace game\components\TransformComponent.cpp" />
     <ClCompile Include="namespace game\EventMachine.cpp" />

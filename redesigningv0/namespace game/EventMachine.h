@@ -68,7 +68,7 @@ namespace game{
 			// for each event
 
 			int iConsumingBuffer = m_iCurrentBuffer;
-			m_iCurrentBuffer = m_iCurrentBuffer == 0 ? 1 : 0;
+			m_iCurrentBuffer = !m_iCurrentBuffer;// == 0 ? 1 : 0;
 
 			for( int itE = 0, nEves = (int) m_events[iConsumingBuffer].size();
 				 itE < nEves;

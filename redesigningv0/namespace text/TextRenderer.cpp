@@ -351,9 +351,9 @@ void text::TextRenderer::RenderText(
 
 		// pos
 		//(*((XMFLOAT4*)perGlyph.mWorld[gen::indexFromXY(0, 3, 4)])) = pos_p;
-		perGlyph.mWorld[gen::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
-		perGlyph.mWorld[gen::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
-		perGlyph.mWorld[gen::indexFromXY(2, 3, 4)] = pos_p.z;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(2, 3, 4)] = pos_p.z;
 
 		fPosOffsetX += halfWidth + 1.0f; // a pixel of space between glyphs
 
@@ -425,9 +425,9 @@ void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_
 
 		// pos
 		//(*((XMFLOAT4*)perGlyph.mWorld[gen::indexFromXY(0, 3, 4)])) = pos_p;
-		perGlyph.mWorld[gen::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
-		perGlyph.mWorld[gen::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
-		perGlyph.mWorld[gen::indexFromXY(2, 3, 4)] = pos_p.z;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(2, 3, 4)] = pos_p.z;
 
 		fPosOffsetX += halfWidth + 1.0f; // a pixel of space between glyphs
 
@@ -493,9 +493,9 @@ void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_
 
 		// pos
 		//(*((XMFLOAT4*)perGlyph.mWorld[gen::indexFromXY(0, 3, 4)])) = pos_p;
-		perGlyph.mWorld[gen::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
-		perGlyph.mWorld[gen::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
-		perGlyph.mWorld[gen::indexFromXY(2, 3, 4)] = pos_p.z;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(0, 3, 4)] = pos_p.x + fPosOffsetX;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(1, 3, 4)] = pos_p.y + fPosOffsetY;
+		perGlyph.mWorld[gen::array2Dto1D::indexFromXY(2, 3, 4)] = pos_p.z;
 
 		fPosOffsetX += halfWidth + 1.0f; // a pixel of space between glyphs
 

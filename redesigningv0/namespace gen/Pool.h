@@ -225,6 +225,7 @@ namespace gen{
 		// 
 		//------------------------------------------------------------------------
 		uint GetNAllocated()const{return m_roster.m_iFreeIndexesStart;}
+		uint GetMaxSize() const{ return m_size; }
 
 		//------------------------------------------------------------------------
 		// 

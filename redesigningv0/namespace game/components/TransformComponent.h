@@ -129,13 +129,16 @@ namespace game{
 		// stores local * parent world and offset * world
 		//------------------------------------------------------------------------
 		void UpdateWorldAndFinalTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p );
+		bool BUpdateWorldAndFinalTransformation( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p );
 		void UpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p );
+		bool BUpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p );
 		void UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMMATRIX & mParentWorldTrafo_p );
 
 		//------------------------------------------------------------------------
 		// for the orfans ;D
 		//------------------------------------------------------------------------
 		void UpdateWorldAndFinalTransformation();
+		bool BUpdateWorldAndFinalTransformation();
 		void UpdateWorldAndFinalTransformation_NoPrevious();
 
 	private:

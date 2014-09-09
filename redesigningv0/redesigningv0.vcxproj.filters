@@ -162,16 +162,10 @@
     <ClInclude Include="namespace win\MouseInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace game\components\MovableComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace game\Task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace game\TaskMachine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="namespace game\components\SpriteComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace game\components\ButtonComponent.h">
@@ -414,6 +408,12 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -537,9 +537,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\TaskMAchine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="namespace game\components\SpriteComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\components\ButtonComponent.cpp">
@@ -729,6 +726,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
