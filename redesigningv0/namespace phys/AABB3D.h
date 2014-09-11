@@ -181,15 +181,15 @@ namespace phys{
 
 		bool IsPointInside( const DirectX::XMFLOAT3 & p_p ) const{
 
-			if( abs( p_p.x - m_pos.x ) < m_halfW
-				&&
-				abs( p_p.y - m_pos.y ) < m_halfH
-				&&
-				abs( p_p.z - m_pos.z ) < m_halfD )
+			if( abs( p_p.x - m_pos.x ) > m_halfW
+				||
+				abs( p_p.y - m_pos.y ) > m_halfH
+				||
+				abs( p_p.z - m_pos.z ) > m_halfD )
 
-				return true;
+				return false;
 
-			return false;
+			return true;
 		}
 
 		bool FitInside( const AABB3D & other_p, float & wGap_p, float & hGap_p, float & dGap_p ) const{
@@ -198,7 +198,28 @@ namespace phys{
 			hGap_p = H() - other_p.H();
 			dGap_p = D() - other_p.D();
 
-			return (wGap_p + hGap_p + dGap_p) >= 0;
+			if( wGap_p < 0.0f 
+				||
+				hGap_p < 0.0f
+				||
+				dGap_p < 0.0f ) return false;
+
+			return true;
+		}
+		bool IsInsideOther( const AABB3D & other_p ) const{
+
+			float xPen = XDistance(other_p);
+			float yPen = YDistance(other_p);
+			float zPen = ZDistance(other_p);
+
+			// 30 + (-30) 
+			if( W() + xPen > 0.0f
+				||
+				H() + yPen > 0.0f
+				||
+				D() + zPen > 0.0f ) return false;
+
+			return true;
 		}
 
 		//------------------------------------------------------------------------
