@@ -76,7 +76,7 @@ namespace phys{
 										other_p.Front() - Back(),
 										Front()			- other_p.Back() };
 
-			penetration = 0.0;
+			penetration = (std::numeric_limits<float>::lowest)();
 			normal.x = normal.y = normal.z = 0.0f;
 			for( int it = 0; it < 6; ++it ){
 
@@ -84,7 +84,7 @@ namespace phys{
 				if( distances[it] >= 0.0f ) return false;
 
 				// keep the normal with least penetration
-				if( penetration == 0 || distances[it] > penetration ){
+				if( distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
@@ -115,7 +115,7 @@ namespace phys{
 										other_p.Front() - Back(),
 										Front()			- other_p.Back() };
 
-			penetration = 0.0;
+			penetration = (std::numeric_limits<float>::lowest)();
 			normal.x = normal.y = normal.z = 0.0f;
 			for( int it = 0; it < 6; ++it ){
 
@@ -123,18 +123,21 @@ namespace phys{
 				if( distances[it] >= 0.0f ) return false;
 
 				// skip if face is blocked
-				if( (blockedFace_p != 0x3f) // but if all faces are blocked, consider all
-					 &&
+				if( //(blockedFace_p != 0x3f) // but if all faces are blocked, consider all
+					 //&&
 					(blockedFace_p & (0x01 << it)) ) continue;
 
 				// keep the normal with least penetration (pen is negative)
-				if( penetration == 0
-					||
-					distances[it] > penetration ){
+				if( distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
-				}
+				}/*else if( distances[it] == penetration ){
+
+					if( normals[it].x ) normal.x = normals[it].x;
+					else if( normals[it].y ) normal.y = normals[it].y;
+					else if( normals[it].z ) normal.z = normals[it].z;
+				}*/
 			}
 
 			return true;

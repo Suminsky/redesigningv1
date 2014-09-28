@@ -8,10 +8,7 @@
 	file ext:	h
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
-	purpose:	!!!SUPER IMPORTANT MASTER FUCKER!!!
-				all textures should be initialized at once, OR the vector should reserve the exactly quantity needed,
-				otherwise the vector can reallocate, and than any pointer pointing to the binder command will became shit
-				TODO: create a definitive cache class
+	purpose:	TODO: create a definitive cache class
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */
@@ -22,7 +19,6 @@
 // system/standard headers
 
 #include <vector>
-//#include <boost/smart_ptr.hpp>
 
 // private headers
 

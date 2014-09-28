@@ -65,9 +65,6 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 						commandList_p.push_back( binds[itBinds] );
 					}
-					/*else{
-						int x = 0;
-					}*/
 
 					// * NOTE that later binds are discarded, so to add default binds that may be discarded if drawable
 					// is setting a specific bind, it must came later on the states, not before
@@ -86,7 +83,6 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 void render::DrawablesQueue::Prepare()
 {
 	m_drawables.clear();
-	//m_drawables.resize(0);
 	m_sortqueue.clear();
 }
 
@@ -94,51 +90,3 @@ void render::DrawablesQueue::ResetState( dx::E_BIND eBind_p )
 {
 	m_stateCache[eBind_p] = NULL;
 }
-
-
-/*
-for( sortarray::const_iterator itDrawable = m_sortqueue.begin(),
-		 itEnd = m_sortqueue.end();
-		 itDrawable != itEnd; ++itDrawable){
-
-		const vStatePtrs * pStateGroup = m_drawables[(*itDrawable).index].GetPipeStateGroup();
-
-		// traverse pipe states
-
-		UINT64 bindsSetMask = 0;
-
-		for( vStatePtrs::const_iterator itStates = pStateGroup->begin(),
-			statesEnd =  pStateGroup->end();
-			itStates != statesEnd;
-			++itStates ){
-
-			// traverse bind commands
-			
-		
-			for( dx::vBinderPtrs::const_iterator itBinds = (*itStates)->Begin(),
-				bindsEnd = (*itStates)->End();
-				itBinds != bindsEnd;
-				++itBinds ){
-
-					// check redundancy: needs to check precedences redundancy between pipe states binds of the same drawable
-
-					if( !(bindsSetMask & (*itBinds)->TypeBits())	// check if bind was not set by previous states*
-						&&
-						m_stateCache[(*itBinds)->TypeIndex()] != (*itBinds) ){		// check if bind not already set
-
-						bindsSetMask |= (*itBinds)->TypeBits();
-						m_stateCache[(*itBinds)->TypeIndex()] = (*itBinds);
-						commandList_p.push_back((*itBinds));
-					}
-
-					// * NOTE that later binds are discarded, so to add default binds that may be discarded if drawable
-					// is setting a specific bind, it must came later on the states, not before
-			}
-
-		}
-
-		// add draw call
-
-		commandList_p.push_back(m_drawables[(*itDrawable).index].GetDrawCall());
-	}
- */

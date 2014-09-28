@@ -36,26 +36,6 @@ void sprite::SpriteRenderer::Init( dx::Device * pDevice_p, int maxInstances_p )
 	LoadShader( pDevice_p, maxInstances_p );
 }
 
-void sprite::SpriteRenderer::Render( Sprite * pSprite_p )
-{
-	static render::Drawable drawInst;
-	drawInst.Clear();
-
-	drawInst.SetSortKey( pSprite_p->m_renderSortKey.intRepresentation );
-	// shader
-	drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iCurrentPermutationIndex].m_pipeState );
-	// vb
-	drawInst.AddPipelineState( &m_defaultVertexInput );
-	// camera
-	drawInst.AddPipelineState( &m_camera.m_pipeState );
-	// sprite
-	drawInst.AddPipelineState( &pSprite_p->m_pipeState );
-
-	// draw call
-	drawInst.SetDrawCall( &m_drawIndexed );
-
-	m_queue.Submit( drawInst );
-}
 void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p )
 {
 

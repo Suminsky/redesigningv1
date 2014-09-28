@@ -11,6 +11,7 @@
 	purpose:	TODO: create a default camera that holds common RTV (the back buffer), common viewport (full screen one), and cameras that get
 				their bind commands from it
 				TODO: RS states also here
+				TODO: sprites are creating they'r own ibuffer, cameras should too
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */
@@ -41,43 +42,22 @@ namespace sprite{
 	class Camera{
 	public:
 
-		DirectX::XMMATRIX	m_mProjection;		// the projection matrix, the aspect ratio and scaling (zooming)
-		DirectX::XMMATRIX	m_mView;			// the view matrix, the camera pos and orientation
-		D3D11_VIEWPORT		m_viewPort;			// the viewport rectangle on the render target
-		//UINT			m_RenderTargetID;		// the render target the camera will output to
-		float m_fZoom;
-	
-		dx::PipeState m_pipeState; //binds viewport, render target
-		BindVSCameraCBuffer m_bindVSCameraCbuffer;
-
-
-		//TODO put those on a cache
-		dx::BindRSViewPort m_bindViewPort;
-		dx::BindOMRenderTargetDepthStencil m_bindOMRTVDS;
-		
-
-	private:
-
-		CameraCbuffer  m_renderData;
-
-	public:
-
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
 		Camera()
 			:
 		m_bindViewPort(m_viewPort),
-		m_fZoom(1.0f)
+			m_fZoom(1.0f)
 		{
 			// initializes projection and view to identity
 
 			m_mProjection = m_mView = DirectX::XMMatrixIdentity();
 		}
-
 		Camera( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p )
 			:
-		m_bindViewPort(m_viewPort)
+		m_bindViewPort(m_viewPort),
+			m_fZoom(1.0f)
 		{
 
 			// initializes projection and view to identity
@@ -93,12 +73,34 @@ namespace sprite{
 		// bind commands
 		//------------------------------------------------------------------------
 		void BuildPipeState( UINT width_p, UINT height_p,  dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
-							UINT x_p = 0, UINT y_p = 0 );
+			UINT x_p = 0, UINT y_p = 0 );
 
 		//------------------------------------------------------------------------
 		// Update cbuffer data, and set to update to buffer interface
 		//------------------------------------------------------------------------
 		void Update();
+
+		//private:
+
+		DirectX::XMMATRIX	m_mProjection;		// the projection matrix, the aspect ratio and scaling (zooming)
+		DirectX::XMMATRIX	m_mView;			// the view matrix, the camera pos and orientation
+		D3D11_VIEWPORT		m_viewPort;			// the viewport rectangle on the render target
+
+		float m_fZoom;
+	
+		dx::PipeState m_pipeState; //binds viewport, render target
+		BindVSCameraCBuffer m_bindVSCameraCbuffer;
+
+
+		//TODO put those on a cache
+		dx::BindRSViewPort m_bindViewPort;
+		dx::BindOMRenderTargetDepthStencil m_bindOMRTVDS;
+		
+	private:
+
+		CameraCbuffer  m_renderData;
+
+	
 
 		ALLIGN16ONLY;
 	};

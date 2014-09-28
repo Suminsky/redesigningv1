@@ -141,14 +141,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>_WINSOCKAPI_;SOUND; %(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINSOCKAPI_;SOUND; %(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>false</Profile>
@@ -229,7 +229,6 @@
     <ClInclude Include="namespace render\dx\BinderCache.h" />
     <ClInclude Include="namespace render\dx\BinderCache.inl" />
     <ClInclude Include="namespace sprite\InstancedSprites.h" />
-    <ClInclude Include="namespace sprite\SpriteAtlas.h" />
     <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
@@ -257,7 +256,6 @@
     <ClInclude Include="namespace sprite\binders cache\BlendStateBinders.h" />
     <ClInclude Include="namespace sprite\CameraCbuffer.h" />
     <ClInclude Include="namespace sprite\DrawableCbuffer.h" />
-    <ClInclude Include="namespace sprite\Movable.h" />
     <ClInclude Include="namespace text\SpriteInstancedTexts.h" />
     <ClInclude Include="namespace text\TextRenderer.h" />
     <ClInclude Include="namespace win\FileLogger.h" />
@@ -369,8 +367,6 @@
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
     <ClCompile Include="namespace sprite\InstancedSprites.cpp" />
-    <ClCompile Include="namespace sprite\Movable.cpp" />
-    <ClCompile Include="namespace sprite\SpriteAtlas.cpp" />
     <ClCompile Include="namespace text\BmpFont.cpp" />
     <ClCompile Include="namespace text\CreateFontTexture.cpp" />
     <ClCompile Include="namespace text\SpriteInstancedTexts.cpp" />

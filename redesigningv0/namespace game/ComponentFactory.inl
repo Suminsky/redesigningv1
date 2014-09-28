@@ -10,8 +10,8 @@ void game::ComponentFactory::RegisterFactory( const shared_AComponentFactory_ptr
 	m_nameToType.emplace( std::make_pair( COMPONENT_NAME(DerivedComponent), COMPONENT_TYPE(DerivedComponent) ) );
 	);
 	DBG(
-	assert( m_registry.emplace( std::make_pair( COMPONENT_TYPE(DerivedComponent), pFactory_p) ).second );
-	assert(m_nameToType.emplace( std::make_pair( COMPONENT_NAME(DerivedComponent), COMPONENT_TYPE(DerivedComponent) ) ).second );
+	keepAssert( m_registry.emplace( std::make_pair( COMPONENT_TYPE(DerivedComponent), pFactory_p) ).second );
+	keepAssert(m_nameToType.emplace( std::make_pair( COMPONENT_NAME(DerivedComponent), COMPONENT_TYPE(DerivedComponent) ) ).second );
 	);
 	// insert returns a pair of <it, bool> indicating if the insertion took place or there
 	// was already an element

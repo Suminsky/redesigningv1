@@ -47,9 +47,9 @@ bool sound::Sounder::Init()
 
 	UINT32 flags = 0;
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	flags |= XAUDIO2_DEBUG_ENGINE;
-#endif
+//#endif
 
 	HRESULT hr = 
 		XAudio2Create( &m_pXAudio, flags, XAUDIO2_DEFAULT_PROCESSOR );

@@ -10,7 +10,7 @@ void KeyboardAsyncInput::UpdateKeyStates(){
 
 	for( USHORT i = 0; i < 256; i++ ){
 
-		m_keysStatus[i] = GetAsyncKeyState( i );		
+		m_keysStatus[i] = GetAsyncKeyState( i );
 	}
 }
 //----------

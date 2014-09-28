@@ -132,9 +132,6 @@
     <ClInclude Include="namespace sprite\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace sprite\Movable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace game\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -307,9 +304,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace win\OpenDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="namespace sprite\SpriteAtlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h">
@@ -503,9 +497,6 @@
     <ClCompile Include="namespace sprite\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace sprite\Movable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace render\ConstantBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -651,9 +642,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace sprite\InstancedSprites.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="namespace sprite\SpriteAtlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp">

@@ -27,14 +27,58 @@ namespace dx{
 
 	class Device{
 
-		ID3D11Device * m_pDevice;
-		ID3D11DeviceContext * m_pContext;
+	public:
 
-		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		Device()
+			:
+			m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
+			m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
+			m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
 
-		D3D_FEATURE_LEVEL m_featureLVLavailable;
+				InitCaches();
+		};
+		virtual ~Device(){
 
-		public:
+			if( m_pDevice ) m_pDevice->Release();
+			if( m_pContext ) m_pContext->Release();
+			if( m_pFactory ) m_pFactory->Release();
+
+			if( m_pCacheRTV )		delete m_pCacheRTV;
+			if( m_pCacheTex2D )		delete m_pCacheTex2D;
+			if( m_pCacheVS)			delete m_pCacheVS;
+			if( m_pCachePS)			delete m_pCachePS;
+			if( m_pCacheBuffer )	delete m_pCacheBuffer;
+			if( m_pCacheBlendState ) delete m_pCacheBlendState;
+			if( m_pCacheSRV )		delete m_pCacheSRV;
+			if( m_pCacheInputLayout ) delete m_pCacheInputLayout;
+			if( m_pCacheSamplerState ) delete m_pCacheSamplerState;
+		};
+
+		ID3D11Device * GetDevice(){ return m_pDevice;}
+		ID3D11DeviceContext * GetContext(){ return m_pContext;}
+
+		//------------------------------------------------------------------------
+		// Feature Levels array can be NULL, then all the features will be tested,
+		// starting by the highest.
+		//
+		// Creates a device and a device immediate context.
+		//
+		//------------------------------------------------------------------------
+		void InitDevice(
+			//in:
+			IDXGIAdapter1 *pAdapter_p,
+			const BOOL bSingleThreaded_p,
+			//in/holded:
+			IDXGIFactory1 *pFactory_p, //not used only holded
+			const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p	);
+
+		//------------------------------------------------------------------------
+		// Executes a list of render commands
+		//------------------------------------------------------------------------
+		void ExecutePipelineCommands( const render::RenderCommands & commandList_p );
 
 		RTVCache				* m_pCacheRTV;
 		Tex2DCache				* m_pCacheTex2D;
@@ -64,56 +108,11 @@ namespace dx{
 			m_pCacheSamplerState = new SamplerStateCache(m_pDevice);
 		}
 
-	public:
+		ID3D11Device * m_pDevice;
+		ID3D11DeviceContext * m_pContext;
 
-		//------------------------------------------------------------------------
-		// ctor/dctor
-		//------------------------------------------------------------------------
-		Device()
-			:
-		m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
-		m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
-		m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
+		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
 
-			InitCaches();
-		};
-		virtual ~Device(){
-
-			if( m_pDevice ) m_pDevice->Release();
-			if( m_pContext ) m_pContext->Release();
-			if( m_pFactory ) m_pFactory->Release();
-
-			if( m_pCacheRTV )		delete m_pCacheRTV;
-			if( m_pCacheTex2D )		delete m_pCacheTex2D;
-			if( m_pCacheVS)			delete m_pCacheVS;
-			if( m_pCachePS)			delete m_pCachePS;
-			if( m_pCacheBuffer )	delete m_pCacheBuffer;
-			if( m_pCacheBlendState ) delete m_pCacheBlendState;
-			if( m_pCacheSRV )		delete m_pCacheSRV;
-			if( m_pCacheInputLayout ) delete m_pCacheInputLayout;
-			if( m_pCacheSamplerState ) delete m_pCacheSamplerState;
-		};
-
-		ID3D11Device * GetDevice(){ return m_pDevice;}
-		ID3D11DeviceContext * GetContext(){ return m_pContext;}
-
-		//------------------------------------------------------------------------
-		// Feature Levels array can be NULL, then all the features will be tested,
-		// starting by the highest.
-		//
-		// Creates a device and a device immediate context.
-		//
-		//------------------------------------------------------------------------
-		void InitDevice(	//in:
-							IDXGIAdapter1 *pAdapter_p,
-							const BOOL bSingleThreaded_p,
-							//in/holded:
-							IDXGIFactory1 *pFactory_p, //not used only holded
-							const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p	);
-
-		//------------------------------------------------------------------------
-		// Executes a list of render commands
-		//------------------------------------------------------------------------
-		void ExecutePipelineCommands( const render::RenderCommands & commandList_p );
+		D3D_FEATURE_LEVEL m_featureLVLavailable;
 	};
 }

@@ -135,6 +135,7 @@ namespace game{
 
 			return gen::pool_ptr<DerivedComponent>();
 		}
+		int GetID() const { return m_ID; }
 
 	protected:
 

@@ -27,12 +27,15 @@
 #include "../namespace win/win_macros.h"
 
 #include "../namespace render/dx/Device.h"
+#include "../namespace render/dx/HLSLResource.h"
+
 #include "../namespace render/DrawablesQueue.h"
 #include "binders cache/BlendStateBinders.h"
 #include "binders cache/binderscache.h"
+
+#include "DrawableCbuffer.h"
 #include "Camera.h"
 #include "CameraCbuffer.h"
-#include "Sprite.h"
 #include "InstancedSprites.h"
 
 namespace game{
@@ -91,7 +94,6 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// queue the states of a sprite
 		//------------------------------------------------------------------------
-		void Render( Sprite * pSprite_p );
 		void Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p );
 		void Render( InstancedSprites * pInstSprites, Camera *pCamera_p );
 

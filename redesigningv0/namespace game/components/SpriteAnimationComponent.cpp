@@ -174,13 +174,13 @@ game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCreateComponent
 
 	GfigElementA * pGFigParam = nullptr;
 
-	assert( pGFig_p->GetSubElement( "sprites", pGFigParam ) );
+	keepAssert( pGFig_p->GetSubElement( "sprites", pGFigParam ) );
 	LoadSpritesFromGFig( pGFigParam, pAnimCompo.Get() );
 
-	assert( pGFig_p->GetSubElement( "frames", pGFigParam ) );
+	keepAssert( pGFig_p->GetSubElement( "frames", pGFigParam ) );
 	LoadFramesFromGFig( pGFigParam, pAnimCompo.Get() );
 
-	assert( pGFig_p->GetSubElement( "clips", pGFigParam ) );
+	keepAssert( pGFig_p->GetSubElement( "clips", pGFigParam ) );
 	LoadClipsFromGFig( pGFigParam, pAnimCompo.Get() );
 
 	//return  MAKE_STACK_SHAREDPTR( SpriteAnimationComponent, pAnimCompo );
@@ -283,7 +283,7 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 			}
 			//
 
-			assert( clipGFig.GetSubElement( "frames", pGFigParam ) );
+			keepAssert( clipGFig.GetSubElement( "frames", pGFigParam ) );
 
 			animClip.configData.vFrames.resize(0);
 			for( int it = 0, nFrames = (int) pGFigParam->m_subElements.size();
