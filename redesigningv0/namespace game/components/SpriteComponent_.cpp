@@ -17,6 +17,7 @@ game::SpriteComponent_::SpriteComponent_()
 {
 	m_pBuffer = nullptr;
 	m_type = COMPONENT_TYPE(SpriteComponent_);
+	m_pCamera = nullptr;
 }
 
 SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
@@ -26,6 +27,7 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 {
 	m_pBuffer = nullptr;
 	m_type = COMPONENT_TYPE(SpriteComponent_);
+	m_pCamera = nullptr;
 
 	m_sortKey.intRepresentation = 0LL;
 
@@ -328,6 +330,7 @@ game::SpriteComponent_::~SpriteComponent_()
 
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
+	m_pCamera = nullptr;
 	m_sortKey.intRepresentation = 0LL;
 
 	m_bHFlip = m_bVFlip = false;
@@ -380,6 +383,7 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 
 void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
+	m_pCamera = nullptr;
 	m_sortKey.intRepresentation = 0LL;
 
 	m_bHFlip = m_bVFlip = false;

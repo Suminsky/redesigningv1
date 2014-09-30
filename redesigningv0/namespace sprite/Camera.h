@@ -47,7 +47,8 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		Camera()
 			:
-		m_bindViewPort(m_viewPort),
+			m_bindViewPort(m_viewPort),
+			m_pBuffer(nullptr),
 			m_fZoom(1.0f)
 		{
 			// initializes projection and view to identity
@@ -66,7 +67,10 @@ namespace sprite{
 
 			BuildPipeState(width_p, height_p, pDevice_p, pRTV_p);
 		}
-		virtual ~Camera(){}
+		virtual ~Camera(){
+
+			if( m_pBuffer ) m_pBuffer->Release();
+		}
 
 		//------------------------------------------------------------------------
 		// builds/rebuilds the pipe state, setting viewport, cbuffer1 and RTV 
@@ -97,7 +101,7 @@ namespace sprite{
 		dx::BindOMRenderTargetDepthStencil m_bindOMRTVDS;
 		
 	private:
-
+		ID3D11Buffer * m_pBuffer;
 		CameraCbuffer  m_renderData;
 
 	

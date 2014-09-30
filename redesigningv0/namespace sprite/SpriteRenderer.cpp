@@ -44,14 +44,15 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *
 
 	pSprite_p->m_sortKey.bitfield.shaderID = 0;
 	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
+	// sprite
+	s_drawInst.AddPipelineState( &pSprite_p->m_pipeState );
 	// shader
 	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
 	// vb
 	s_drawInst.AddPipelineState( &m_defaultVertexInput );
 	// camera
 	s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
-	// sprite
-	s_drawInst.AddPipelineState( &pSprite_p->m_pipeState );
+	
 
 	// draw call
 	s_drawInst.SetDrawCall( &m_drawIndexed );

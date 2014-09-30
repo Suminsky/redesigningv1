@@ -324,12 +324,22 @@ class BindPSShaderResourceView: public Binder{
 
 public:
 
+	BindPSShaderResourceView(){}
 	BindPSShaderResourceView( UINT iSlot_p, ID3D11ShaderResourceView *pSRV_p )
 		:
 	Binder( 1LL << (E_PS_ShaderResourceView0 + iSlot_p), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) ),
 		m_iStartSlot( iSlot_p ), m_pSRV( pSRV_p ){
 
 			assert( iSlot_p < 4);	// handling up to 4 srv slot
+	}
+	void Initialize( UINT iSlot_p, ID3D11ShaderResourceView *pSRV_p ){
+
+		assert( iSlot_p < 4);
+
+		m_iStartSlot = iSlot_p;
+		m_pSRV = pSRV_p;
+
+		Set( 1LL << (E_PS_ShaderResourceView0 + iSlot_p), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) );
 	}
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){

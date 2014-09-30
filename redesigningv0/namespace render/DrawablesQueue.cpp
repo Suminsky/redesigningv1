@@ -56,21 +56,31 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 					// check redundancy: needs to check precedences redundancy between pipe states binds of the same drawable
 
-					if( !(bindsSetMask & binds[itBinds]->TypeBits())	// check if bind was not set by previous states*
-						&&
-						m_stateCache[binds[itBinds]->TypeIndex()] != binds[itBinds] ){		// check if bind not already set
-
+					if( (bindsSetMask & binds[itBinds]->TypeBits()) != binds[itBinds]->TypeBits() ){	// check if bind was not set by previous states* of the drawable
+						
 						bindsSetMask |= binds[itBinds]->TypeBits();
-						m_stateCache[binds[itBinds]->TypeIndex()] =  binds[itBinds];
 
-						commandList_p.push_back( binds[itBinds] );
+						if(	m_stateCache[binds[itBinds]->TypeIndex()] != binds[itBinds] ){		// check if bind not already set
+
+							m_stateCache[binds[itBinds]->TypeIndex()] =  binds[itBinds];
+
+							commandList_p.push_back( binds[itBinds] );
+						}
 					}
 
 					// * NOTE that later binds are discarded, so to add default binds that may be discarded if drawable
 					// is setting a specific bind, it must came later on the states, not before
+					
+					// If a binderPtrs binds X, and later another bindersPtrs, of the same drawable, binds a
+					// diff X, the test will fail, but thats ok, cause it means the X bind (w precedence) is already cached.
+					// But, if the next drawable binds the same X, the test will fail (already cached), and the bindsSetMask
+					// will not be updated, meaning that if a later bindersPtrs binds a diff X, it will succeed even if
+					// it didnt have precedence.-> fixed (changed && for 2 ifs)
 			}
 
 		}
+
+
 
 		// add draw call
 

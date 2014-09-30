@@ -28,13 +28,15 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 
 	dx::BufferResource::CreationParams params = {0};
 	params.desc.bufferDesc.ByteWidth = CameraCbuffer::s_SIZE;
-	params.desc.bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	params.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT
 	params.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	params.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE;
 
-	ID3D11Buffer * pBuffer = NULL;
-	pDevice_p->m_pCacheBuffer->Acquire( params, pBuffer );
+	//ID3D11Buffer * pBuffer = NULL;
+	//pDevice_p->m_pCacheBuffer->Acquire( params, pBuffer );
+	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), params );
 
-	m_bindVSCameraCbuffer.Initialize( pBuffer, shared_CameraCbuffer_ptr( &m_renderData, &gen::NoOp<CameraCbuffer>) );
+	m_bindVSCameraCbuffer.Initialize( m_pBuffer, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_bindVSCameraCbuffer );
 
 	// render target

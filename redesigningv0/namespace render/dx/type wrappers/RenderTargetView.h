@@ -80,27 +80,26 @@ namespace dx{
 			Description desc;			
 		};
 
-	private:
-
 		//------------------------------------------------------------------------
 		// Creates...
 		//------------------------------------------------------------------------
 		static ID3D11RenderTargetView* Create( ID3D11Device * pDeviceRef_p, const CreationParams & params_p ){
-			
+
 			ID3D11RenderTargetView *pSRV;		
 
 			if( FAILED(
 				pDeviceRef_p->CreateRenderTargetView( params_p.desc.pResourceData, &params_p.desc.srvDesc, &pSRV )
 				)){
-					
+
 					throw std::exception("render:dx create RTV failed");
 			}
 
 			return pSRV;
 		}
 
+	private:
 
-
+		
 		virtual ~RenderTargetView();
 	};
 }

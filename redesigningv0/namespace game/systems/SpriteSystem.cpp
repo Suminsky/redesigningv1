@@ -61,12 +61,33 @@ void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 
 				phys::AABB2D spriteBox = { pos, halfW, halfH };
 
-				// TODO: allow sprite to render w/ diff camera
+				// if sprite have its own camera
 
-				// test
+				if( spriteCompo.m_pCamera ){
+
+					float zoom = spriteCompo.m_pCamera->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
+					float camHalfW = spriteCompo.m_pCamera->m_viewPort.Width * zoom;
+					float camHalfH = spriteCompo.m_pCamera->m_viewPort.Height * zoom;
+					XMFLOAT2 camPos(
+						-XMVectorGetX( spriteCompo.m_pCamera->m_mView.r[3] ),
+						-XMVectorGetY( spriteCompo.m_pCamera->m_mView.r[3] )
+						);
+
+					phys::AABB2D ScamBox = { camPos, camHalfW, camHalfH };
+
+					if( spriteBox.IsColliding_e( ScamBox ) )
+						m_pSpriteRendererRef->Render( &spriteCompo, spriteCompo.m_pCamera );
+					
+					//else
+					//	++iCulled;
+
+				}else
+
+				// if not
 
 				if( spriteBox.IsColliding_e( camBox ) )
 					m_pSpriteRendererRef->Render( &spriteCompo, m_pCameraRef );
+
 				//else
 				//	++iCulled;
 			}

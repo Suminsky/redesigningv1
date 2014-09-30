@@ -108,6 +108,8 @@ namespace game{
 		// testing
 		ID3D11Buffer * m_pBuffer;
 
+		sprite::Camera * m_pCamera;
+
 		ALLIGN16ONLY;
 	};
 

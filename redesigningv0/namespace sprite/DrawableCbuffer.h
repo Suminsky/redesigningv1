@@ -131,7 +131,8 @@ namespace sprite{
 			:
 		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
 		m_iStartSlot( 0 ),
-		m_pConstantBuffer( pConstantBuffers_p ), m_pConstantBufferData(pConstBufferData_p)
+		m_pConstantBuffer( pConstantBuffers_p ),
+		m_pConstantBufferData(pConstBufferData_p)
 		{}
 
 		BindVSDrawableCBuffer()
