@@ -23,6 +23,18 @@
 namespace gen{
 
 	//========================================================================
+	// disallow copy of derived objects
+	//========================================================================
+	class NonCopyable{
+	protected:
+		NonCopyable(){}
+		~NonCopyable(){}
+	private: 
+		NonCopyable( const NonCopyable& );
+		const NonCopyable& operator=( const NonCopyable& );
+	};
+
+	//========================================================================
 	// used initially for boost shared_ptr deleter, when using shared pointer 
 	// with stack allocated data
 	//========================================================================

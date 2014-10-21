@@ -470,3 +470,21 @@ void game::SpriteAnimationComponentFactory::ReplaceSprites( SpriteAnimationCompo
 	compo_p->m_vSprites = std::move( vSprites_p );
 }
 
+game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCloneComponent( const Component * pCompo_p )
+{
+	pool_SpriteAnimCompo_ptr pAnimCompo( m_pool );
+	SpriteAnimationComponent * pOther = (SpriteAnimationComponent*)pCompo_p;
+
+	pAnimCompo->m_currentFrame = pOther->m_currentFrame;
+	pAnimCompo->m_previousFrame = pOther->m_previousFrame;
+	pAnimCompo->m_iCurrentClip = pOther->m_iCurrentClip;
+	pAnimCompo->m_iPreviousClip = pOther->m_iPreviousClip;
+
+	pAnimCompo->m_vClips = pOther->m_vClips;
+	pAnimCompo->m_vFrames = pOther->m_vFrames;
+	pAnimCompo->m_vSprites = pOther->m_vSprites;
+	
+
+	return pAnimCompo;
+}
+

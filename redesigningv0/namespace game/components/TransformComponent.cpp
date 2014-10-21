@@ -374,3 +374,18 @@ DirectX::XMFLOAT4 game::TransformComponentFactory::GetXYZWFromGfig( text::GfigEl
 
 	return vector;
 }
+
+game::pool_Component_ptr game::TransformComponentFactory::VCloneComponent( const Component * pCompo_p )
+{
+	gen::pool_ptr<TransformComponent> pTransform( m_pool );
+	TransformComponent * pOther = (TransformComponent*)pCompo_p;
+	
+	pTransform->m_local = pOther->m_local;
+	pTransform->m_offset = pOther->m_offset;
+	pTransform->m_final = pOther->m_final;
+	pTransform->m_previousFinal = pOther->m_previousFinal;
+	pTransform->m_bSnap = pOther->m_bSnap;
+
+
+	return pTransform;
+}

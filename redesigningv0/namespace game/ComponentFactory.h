@@ -50,6 +50,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		virtual pool_Component_ptr VCreateComponent() = 0;
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
+		virtual pool_Component_ptr VCloneComponent(  const Component * pCompo_p ) = 0;
 	};
 
 	typedef std::shared_ptr<AComponentFactory> shared_AComponentFactory_ptr;
@@ -75,9 +76,11 @@ namespace game{
 		pool_Component_ptr CreateComponent( const char * szComponent_p );
 		pool_Component_ptr CreateComponent( int iType_p, text::GfigElementA * pGFig_p );
 		pool_Component_ptr CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p );
+		pool_Component_ptr CloneComponent( const Component * pComponent_p );
 
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent();
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent( text::GfigElementA * pGFig_p );
+		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CloneComponent( const DerivedComponent * pCompo_p );
 
 		//------------------------------------------------------------------------
 		// registers

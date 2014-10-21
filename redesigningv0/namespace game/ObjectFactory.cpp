@@ -25,9 +25,26 @@ shared_Object_ptr AObjectFactory::VCreateObject( text::GfigElementA * pGfig_p ){
 
 			pObj->AttachComponent( std::move(pCompo) );
 		}
-		else{
+		else
 			BREAKHERE;
+	}
+
+	return pObj;
+}
+
+game::shared_Object_ptr game::AObjectFactory::VCloneObject( const Object * pObj_p )
+{
+	shared_Object_ptr pObj = std::make_shared<Object>();
+
+	for( int itCompo = 0, nCompos = (int)pObj_p->m_components.size(); itCompo < nCompos; ++itCompo ){
+
+		pool_Component_ptr pCompo = m_pLayerOwner->m_componentFactory.CloneComponent( pObj_p->m_components[itCompo].Get() );
+		if( pCompo ){
+
+			pObj->AttachComponent( std::move(pCompo) );
 		}
+		else
+			BREAKHERE;
 	}
 
 	return pObj;

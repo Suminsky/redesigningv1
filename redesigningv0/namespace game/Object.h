@@ -31,6 +31,7 @@
 namespace game{
 
 	class ObjectMachine;
+	class AObjectFactory;
 	class Layer;
 	class System;
 	class Component;
@@ -46,10 +47,11 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class Object{
+	class Object: public gen::NonCopyable{
 
 		friend class Layer;
 		friend class ObjectMachine;
+		friend class AObjectFactory;
 
 	public:
 

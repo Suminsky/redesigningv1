@@ -411,9 +411,10 @@ namespace gen{
 		// getters
 		//------------------------------------------------------------------------
 		T* Get(){ return pData;	}
-		T* Get()const{ return pData;	}
+		T* Get() const { return pData;	}
 		T* operator ->(){ return pData; }
 		T* operator ->() const { return pData; }
+		T& operator *(){ return *pData; }
 
 		//------------------------------------------------------------------------
 		// 

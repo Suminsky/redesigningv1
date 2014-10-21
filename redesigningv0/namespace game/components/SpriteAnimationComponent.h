@@ -304,6 +304,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		pool_Component_ptr VCreateComponent(){ return pool_Component_ptr(m_pool);}
 		pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 	};
 
 	typedef std::shared_ptr<SpriteAnimationComponentFactory> shared_SpriteAnimationComponentFactory_ptr;

@@ -15,6 +15,7 @@
 #include <memory>
 #include "ComponentTypes.h"
 #include "../namespace gen/Pool.h"
+#include "../namespace gen/gen_data.h"
 
 namespace game{
 
@@ -37,7 +38,7 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class Component{
+	class Component: public gen::NonCopyable{
 
 		friend class Object;
 		friend class System;

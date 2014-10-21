@@ -56,10 +56,7 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
 	cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
-	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	//pDevice_p->GetDevice()->CreateBuffer( &cbufferParams.desc.bufferDesc, nullptr, &pBuffer );
-	if( !m_pBuffer )
-		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
 	// initialize pipe state for this sprite
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
@@ -602,4 +599,56 @@ void game::SpriteComponent_Factory::LoadInstanceData( spriteInstance & inst_p, t
 
 		(*((XMFLOAT4*)inst_p.uvRect)) = GetXYWH( pParam );
 	}
+}
+
+game::pool_Component_ptr game::SpriteComponent_Factory::VCloneComponent( const Component * pCompo_p )
+{
+	pool_SpriteCompo__ptr pSprite( m_pool );
+	SpriteComponent_ * pOther = (SpriteComponent_*)pCompo_p;
+
+	BufferResource::CreationParams cbufferParams;
+	ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
+	cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
+	cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
+	cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
+	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
+	cbufferParams.desc.bufferDesc.MiscFlags = 0;
+
+	pSprite->m_pBuffer = dx::BufferResource::Create( m_pDeviceRef_p->GetDevice(), cbufferParams );
+	
+	pSprite->m_VSDrawableCbufferBinder.Initialize( pSprite->m_pBuffer, &pSprite->m_renderData );
+
+	pSprite->m_pipeState.AddBinderCommand( &pSprite->m_VSDrawableCbufferBinder );
+
+	//
+
+	vBinderPtrs::iterator itBinders = pOther->m_pipeState.Begin();
+	++itBinders;
+	pSprite->m_pipeState.AddBinderCommand( *itBinders ); ++itBinders;
+	pSprite->m_pipeState.AddBinderCommand( *itBinders ); ++itBinders;
+	pSprite->m_pipeState.AddBinderCommand( *itBinders );
+
+	//
+
+	pSprite->m_TextureID = pOther->m_TextureID;
+	pSprite->m_BlendModeID = pOther->m_BlendModeID;
+	pSprite->m_FilterModeID = pOther->m_FilterModeID;
+	pSprite->m_ShaderID = pOther->m_ShaderID;
+	pSprite->m_iShaderPermutation = pOther->m_iShaderPermutation;
+
+
+	pSprite->m_sortKey = pOther->m_sortKey;
+	pSprite->m_renderData = pOther->m_renderData;
+	pSprite->m_pCamera = pOther->m_pCamera;
+
+	pSprite->m_currentTrafo = pOther->m_currentTrafo;
+	pSprite->m_previousTrafo = pOther->m_previousTrafo;
+	pSprite->m_currentColor = pOther->m_currentColor;
+	pSprite->m_previousColor = pOther->m_previousColor;
+
+	pSprite->m_bHFlip = pOther->m_bHFlip;
+	pSprite->m_bVFlip = pOther->m_bVFlip;
+
+	return pSprite;
 }

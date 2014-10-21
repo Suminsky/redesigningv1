@@ -65,3 +65,14 @@ shared_AComponentFactory_ptr game::ComponentFactory::GetComponentFactory( int iT
 
 	return itFound->second;
 }
+
+game::pool_Component_ptr game::ComponentFactory::CloneComponent( const Component * pComponent_p )
+{
+	ComponentFactoryRegistry::iterator itFound = m_registry.find( pComponent_p->GetType() );
+
+	assert( itFound != m_registry.end() );
+
+	shared_AComponentFactory_ptr & pFactory = itFound->second;
+
+	return pFactory->VCloneComponent( pComponent_p );
+}

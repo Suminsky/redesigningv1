@@ -51,6 +51,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		virtual shared_Object_ptr VCreateObject();
 		virtual shared_Object_ptr VCreateObject( text::GfigElementA * pGfig_p );
+		virtual shared_Object_ptr VCloneObject( const Object * pObj_p );
 
 	private:
 

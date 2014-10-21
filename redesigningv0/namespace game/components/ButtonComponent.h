@@ -128,6 +128,12 @@ namespace game{
 		// to be overridden
 		//------------------------------------------------------------------------
 		virtual pool_Component_ptr VCreateComponent(){return pool_Component_ptr(m_pool);}
+		virtual pool_Component_ptr VCloneComponent( const Component * /*pCompo_p*/ ){
+			assert(0);
+			 pool_Component_ptr pButton(m_pool);
+
+			 return pButton;
+		}
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * /*pGFig_p*/ ){
 
 			assert(0);

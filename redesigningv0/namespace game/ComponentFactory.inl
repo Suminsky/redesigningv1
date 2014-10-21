@@ -18,7 +18,7 @@ void game::ComponentFactory::RegisterFactory( const shared_AComponentFactory_ptr
 }
 
 template< typename DerivedComponent >
-gen::pool_ptr<DerivedComponent> game::ComponentFactory::CreateComponent()
+gen::pool_ptr<DerivedComponent> ComponentFactory::CreateComponent()
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 
@@ -30,7 +30,7 @@ gen::pool_ptr<DerivedComponent> game::ComponentFactory::CreateComponent()
 }
 
 template< typename DerivedComponent >
-gen::pool_ptr<DerivedComponent> game::ComponentFactory::CreateComponent( text::GfigElementA * pGFig_p )
+gen::pool_ptr<DerivedComponent> ComponentFactory::CreateComponent( text::GfigElementA * pGFig_p )
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 
@@ -41,8 +41,22 @@ gen::pool_ptr<DerivedComponent> game::ComponentFactory::CreateComponent( text::G
 	return pFactory->VCreateComponent( pGFig_p );
 }
 
+
 template< typename DerivedComponent >
-shared_AComponentFactory_ptr game::ComponentFactory::GetComponentFactory()
+gen::pool_ptr<DerivedComponent> ComponentFactory::CloneComponent( const DerivedComponent * pCompo_p )
+{
+	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
+
+	assert( itFound != m_registry.end() );
+
+	shared_AComponentFactory_ptr & pFactory = itFound->second;
+
+	return pFactory->VCloneComponent( pCompo_p );
+}
+
+
+template< typename DerivedComponent >
+shared_AComponentFactory_ptr ComponentFactory::GetComponentFactory()
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 

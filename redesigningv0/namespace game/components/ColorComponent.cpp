@@ -72,6 +72,20 @@ game::pool_Component_ptr game::ColorComponentFactory::VCreateComponent( text::Gf
 	return pColor;//MAKE_STACK_SHAREDPTR( ColorComponent, pColor );
 }
 
+game::pool_Component_ptr game::ColorComponentFactory::VCloneComponent( const Component* pCompo_p )
+{
+	pool_ColorCompo_ptr pColor(m_pool);
+	ColorComponent * pOther = (ColorComponent*)pCompo_p;
+
+	pColor->m_localColor = pOther->m_localColor;
+	pColor->m_offsetColor = pOther->m_offsetColor;
+	pColor->m_finalColor = pOther->m_finalColor;
+	pColor->m_previousFinalColor = pOther->m_previousFinalColor;
+	pColor->m_bSnap = pOther->m_bSnap;
+
+	return pColor;
+}
+
 XMFLOAT4 ColorComponentFactory::GetRGBAFromGfig( GfigElementA * pGFig_p )
 {
 	XMFLOAT4 color(1.0f, 1.0f, 1.0f, 1.0f);

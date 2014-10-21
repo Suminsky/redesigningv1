@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
@@ -290,6 +292,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp" />
@@ -298,6 +301,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\MovableComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />

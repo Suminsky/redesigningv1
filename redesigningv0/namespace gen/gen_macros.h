@@ -26,7 +26,7 @@
 #else
 #define COMMA
 #define DBG(param)
-#define BREAKHERE
+#define BREAKHERE {}
 #define NDBG(param) param
 #endif
 
@@ -35,12 +35,6 @@
 #else
 #define keepAssert(x) x
 #endif // _DEBUG
-
-#ifdef IDIOTSPROOFOFF
-#define IDIOTSPROOF(p)
-#else
-#define IDIOTSPROOF(p) p
-#endif
 
 #include <exception>
 //------------------------------------------------------------------------

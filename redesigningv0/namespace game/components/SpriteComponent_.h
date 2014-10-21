@@ -36,8 +36,6 @@ namespace game{
 
 	public:
 
-		sprite::SortMask m_sortKey;
-
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
@@ -86,20 +84,22 @@ namespace game{
 
 		int GetTextureID() const{ return m_TextureID; }
 
+		void SetColor( DirectX::XMFLOAT4 color_p );
+
 	public:
 
-		void SetColor( DirectX::XMFLOAT4 color_p );
+		sprite::SortMask m_sortKey;
 
 		DirectX::XMFLOAT4X4 m_currentTrafo;
 		DirectX::XMFLOAT4X4 m_previousTrafo;
+
+		DirectX::XMFLOAT4 m_currentColor;
+		DirectX::XMFLOAT4 m_previousColor;
 
 		int m_TextureID, m_BlendModeID, m_FilterModeID, m_ShaderID;
 		int m_iShaderPermutation;
 
 		bool m_bHFlip, m_bVFlip;
-
-		DirectX::XMFLOAT4 m_currentColor;
-		DirectX::XMFLOAT4 m_previousColor;
 
 		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
 		sprite::DrawableCbuffer m_renderData;
@@ -107,7 +107,6 @@ namespace game{
 
 		// testing
 		ID3D11Buffer * m_pBuffer;
-
 		sprite::Camera * m_pCamera;
 
 		ALLIGN16ONLY;
@@ -160,6 +159,8 @@ namespace game{
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		static void CreateSprite( SpriteComponent_ & sprite_p, text::GfigElementA * pGFig_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pRendererRef );
 		static void LoadInstanceData( sprite::spriteInstance & inst_p, text::GfigElementA * pGFig_p );
+
+		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 
 	};
 

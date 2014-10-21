@@ -185,6 +185,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		virtual pool_Component_ptr VCreateComponent();
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
+		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 
 	};
 

@@ -123,21 +123,14 @@ namespace phys{
 				if( distances[it] >= 0.0f ) return false;
 
 				// skip if face is blocked
-				if( //(blockedFace_p != 0x3f) // but if all faces are blocked, consider all
-					 //&&
-					(blockedFace_p & (0x01 << it)) ) continue;
+				if( blockedFace_p & (0x01 << it) ) continue;
 
 				// keep the normal with least penetration (pen is negative)
 				if( distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
-				}/*else if( distances[it] == penetration ){
-
-					if( normals[it].x ) normal.x = normals[it].x;
-					else if( normals[it].y ) normal.y = normals[it].y;
-					else if( normals[it].z ) normal.z = normals[it].z;
-				}*/
+				}
 			}
 
 			return true;
@@ -172,14 +165,14 @@ namespace phys{
 
 			closest_p = p_p; // start as the point itself, if inside it will stay like that
 
-			if( p_p.x < Left() ) closest_p.x = Left();
-			else if( p_p.x > Right() ) closest_p.x = Right();
+			if( p_p.x < Left() )		closest_p.x = Left();
+			else if( p_p.x > Right() )	closest_p.x = Right();
 
-			if( p_p.y < Down() ) closest_p.y = Down();
-			else if( p_p.y > Up() ) closest_p.y = Up();
+			if( p_p.y < Down() )		closest_p.y = Down();
+			else if( p_p.y > Up() )		closest_p.y = Up();
 
-			if( p_p.z < Front() ) closest_p.z = Front();
-			else if( p_p.z > Back() ) closest_p.z = Back();
+			if( p_p.z < Front() )		closest_p.z = Front();
+			else if( p_p.z > Back() )	closest_p.z = Back();
 		}
 
 		bool IsPointInside( const DirectX::XMFLOAT3 & p_p ) const{
@@ -229,18 +222,6 @@ namespace phys{
 		// 
 		//------------------------------------------------------------------------
 		static float SquareDistanceToPoint( const AABB3D & a_p, const DirectX::XMFLOAT3 & p_p ){
-
-			/*DirectX::XMFLOAT3 closest;
-			a_p.ClosestPointToPoint( p_p, closest );
-
-			float XDist = p_p.x - closest.x;
-			float YDist = p_p.y - closest.y;
-			float ZDist = p_p.z - closest.z;
-			return  XDist * XDist
-					+
-					YDist * YDist
-					+
-					ZDist * ZDist;*/
 			
 			float dist;
 
@@ -282,6 +263,27 @@ namespace phys{
 			}
 
 			return dist;
+		}
+
+		static void GetOppositeToDirFacesMask( const DirectX::XMFLOAT3 & dir, char & cMask ){
+
+				// logic:
+				// if going right, can only collide with left faces of other block, not right faces, etc.
+
+				if( dir.x <= 0.0f )
+					cMask |= 0x01 << 0;
+				if( dir.x >= 0.0f )
+					cMask |= 0x01 << 1;
+
+				if( dir.y <= 0.0f )
+					cMask |= 0x01 << 2;
+				if( dir.y >= 0.0f )
+					cMask |= 0x01 << 3;
+
+				if( dir.z <= 0.0f )
+					cMask |= 0x01 << 4;
+				if( dir.z >= 0.0f )
+					cMask |= 0x01 << 5;
 		}
 
 	private:
