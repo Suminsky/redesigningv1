@@ -44,32 +44,11 @@ void game::ColorComponent::UpdateWorldAndFinalColor()
 //========================================================================
 game::pool_Component_ptr game::ColorComponentFactory::VCreateComponent( text::GfigElementA * pGFig_p )
 {
-	//ColorComponent * pColor = m_pool.Allocate();
 	pool_ColorCompo_ptr pColor(m_pool);
 
-	text::GfigElementA * pParam = nullptr;
+	VUpdateComponent(pColor.Get(), pGFig_p);
 
-
-	if( pGFig_p->GetSubElement( "offset", pParam ) ){
-
-		pColor->m_offsetColor = GetRGBAFromGfig( pParam );
-	}
-	if( pGFig_p->GetSubElement( "local", pParam ) ){
-
-		pColor->m_localColor = GetRGBAFromGfig( pParam );
-	}
-	
-	if( !pParam ){
-
-		pColor->m_localColor = GetRGBAFromGfig( pGFig_p );
-	}
-
-
-	XMVECTOR vFinal = XMVectorMultiply( XMLoadFloat4(&pColor->m_offsetColor), XMLoadFloat4(&pColor->m_localColor) );
-	XMStoreFloat4( &pColor->m_finalColor, vFinal );
-	pColor->m_previousFinalColor = pColor->m_finalColor;
-
-	return pColor;//MAKE_STACK_SHAREDPTR( ColorComponent, pColor );
+	return pColor;
 }
 
 game::pool_Component_ptr game::ColorComponentFactory::VCloneComponent( const Component* pCompo_p )
@@ -84,6 +63,32 @@ game::pool_Component_ptr game::ColorComponentFactory::VCloneComponent( const Com
 	pColor->m_bSnap = pOther->m_bSnap;
 
 	return pColor;
+}
+
+void game::ColorComponentFactory::VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+	ColorComponent * pColor = (ColorComponent*)pCompo_p;
+
+	text::GfigElementA * pParam = nullptr;
+
+	if( pGFig_p->GetSubElement( "offset", pParam ) ){
+
+		pColor->m_offsetColor = GetRGBAFromGfig( pParam );
+	}
+	if( pGFig_p->GetSubElement( "local", pParam ) ){
+
+		pColor->m_localColor = GetRGBAFromGfig( pParam );
+	}
+
+	if( !pParam ){
+
+		pColor->m_localColor = GetRGBAFromGfig( pGFig_p );
+	}
+
+
+	XMVECTOR vFinal = XMVectorMultiply( XMLoadFloat4(&pColor->m_offsetColor), XMLoadFloat4(&pColor->m_localColor) );
+	XMStoreFloat4( &pColor->m_finalColor, vFinal );
+	pColor->m_previousFinalColor = pColor->m_finalColor;
 }
 
 XMFLOAT4 ColorComponentFactory::GetRGBAFromGfig( GfigElementA * pGFig_p )

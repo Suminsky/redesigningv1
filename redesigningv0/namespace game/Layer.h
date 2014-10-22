@@ -56,6 +56,7 @@ namespace game{
 		SystemMachine		m_systems;
 		ComponentFactory	m_componentFactory;
 		ObjectMachine		m_objects;
+		shared_AObjectFactory_ptr m_pObjFactory;
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
@@ -122,7 +123,7 @@ namespace game{
 
 		LAYERINDEX m_currentLayerIndex;
 		bool m_bDettached;
-		shared_AObjectFactory_ptr m_pObjFactory;
+		
 
 		//------------------------------------------------------------------------
 		// to be overridden

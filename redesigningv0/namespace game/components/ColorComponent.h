@@ -118,7 +118,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		DirectX::XMFLOAT4 GetRGBAFromGfig( text::GfigElementA * pGFig_p );
+		static DirectX::XMFLOAT4 GetRGBAFromGfig( text::GfigElementA * pGFig_p );
 
 		//------------------------------------------------------------------------
 		// to be overridden
@@ -130,6 +130,7 @@ namespace game{
 		}
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		virtual pool_Component_ptr VCloneComponent( const Component* pCompo_p );
+		void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
 
 	};
 

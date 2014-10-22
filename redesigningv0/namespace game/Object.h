@@ -103,8 +103,6 @@ namespace game{
 		Layer * GetLayerOwner() const { return m_pLayerOwner; }
 		ObjectComponents & GetComponents(){	return m_components; }
 		bool IsAttached() const { return !m_bDettached; }
-
-		// TODO: this method used to return WEAK ptr
 		template< typename DerivedComponent >
 		gen::pool_ptr<DerivedComponent> GetFirstOfComponent(){
 
@@ -119,6 +117,20 @@ namespace game{
 			}
 
 			return gen::pool_ptr<DerivedComponent>();
+		}
+		pool_Component_ptr GetFirstOfComponent( const unsigned int iType_p ){
+
+			for( int it = 0, iSize = (int)m_components.size();
+				it < iSize;
+				++it ){
+
+					if( m_components[it]->GetType() == iType_p ){
+
+						return m_components[it];
+					}
+			}
+
+			return pool_Component_ptr();
 		}
 		template< typename DerivedComponent >
 		gen::pool_ptr<DerivedComponent> GetNthOfComponent( int nth_p ){

@@ -31,7 +31,7 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 
 	m_sortKey.intRepresentation = 0LL;
 
-	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
+	m_ShaderID = 0;
 	m_iShaderPermutation = 0;
 
 	m_renderData.m_mWorld = XMMatrixIdentity();
@@ -68,6 +68,8 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
 
 	m_TextureID = iTextureID;
+	m_BlendModeID = blendType_p;
+	m_SamplerModeID = sampler_p;
 	m_sortKey.bitfield.textureID = m_TextureID;
 	m_sortKey.bitfield.transparency = blendType_p;
 }
@@ -332,7 +334,7 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 
 	m_bHFlip = m_bVFlip = false;
 
-	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
+	m_BlendModeID= m_SamplerModeID= m_ShaderID = 0;
 	m_iShaderPermutation = 0;
 
 	m_renderData.m_mWorld = XMMatrixIdentity();
@@ -385,7 +387,7 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair
 
 	m_bHFlip = m_bVFlip = false;
 
-	m_BlendModeID= m_FilterModeID= m_ShaderID = 0;
+	m_BlendModeID= m_SamplerModeID= m_ShaderID = 0;
 	m_iShaderPermutation = 0;
 
 	m_renderData.m_mWorld = XMMatrixIdentity();
@@ -633,7 +635,7 @@ game::pool_Component_ptr game::SpriteComponent_Factory::VCloneComponent( const C
 
 	pSprite->m_TextureID = pOther->m_TextureID;
 	pSprite->m_BlendModeID = pOther->m_BlendModeID;
-	pSprite->m_FilterModeID = pOther->m_FilterModeID;
+	pSprite->m_SamplerModeID = pOther->m_SamplerModeID;
 	pSprite->m_ShaderID = pOther->m_ShaderID;
 	pSprite->m_iShaderPermutation = pOther->m_iShaderPermutation;
 
@@ -651,4 +653,74 @@ game::pool_Component_ptr game::SpriteComponent_Factory::VCloneComponent( const C
 	pSprite->m_bVFlip = pOther->m_bVFlip;
 
 	return pSprite;
+}
+
+void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pParam = nullptr;
+
+	SpriteComponent_ *pSprite = (SpriteComponent_*)pCompo_p;
+
+	if( pGFig_p->GetSubElement( "w", pParam ) ) pSprite->m_renderData.m_res.x = (float)atof( pParam->m_value.c_str() );
+	if( pGFig_p->GetSubElement( "h", pParam ) ) pSprite->m_renderData.m_res.y = (float)atof( pParam->m_value.c_str() );
+
+	if( pGFig_p->GetSubElement( "xoff", pParam ) ) pSprite->m_renderData.m_padding.x = (float)atof( pParam->m_value.c_str() );
+	if( pGFig_p->GetSubElement( "yoff", pParam ) ) pSprite->m_renderData.m_padding.y = (float)atof( pParam->m_value.c_str() );
+
+	if( pGFig_p->GetSubElement( "uvRect", pParam ) ) UpdateXYWHFromGfig( pSprite->m_renderData.m_uvRect, pParam );
+	if( pGFig_p->GetSubElement( "blend", pParam ) ){
+	
+		sprite::E_BLENDTYPE eBlend = GetBlendType( pParam );
+	
+		if( pSprite->m_BlendModeID != eBlend ){
+
+			pSprite->m_BlendModeID = eBlend;
+			pSprite->m_sortKey.bitfield.transparency = eBlend;
+
+			auto pipeIt = pSprite->m_pipeState.Begin();
+			pipeIt+=3;
+			*pipeIt = &m_pRendererRef->m_blends_cache.GetBlendBind(eBlend);
+		}
+	}
+	if( pGFig_p->GetSubElement( "sampler", pParam ) ){
+
+		sprite::E_SAMPLERTYPE eSampler = GetSamplerType( pParam );
+
+		if( pSprite->m_SamplerModeID != eSampler ){
+
+			pSprite->m_SamplerModeID = eSampler;
+
+			auto pipeIt = pSprite->m_pipeState.Begin();
+			pipeIt+=2;
+			*pipeIt = &m_pRendererRef->m_samplers_cache.GetSamplerBind(eSampler);
+		}
+	}
+
+	if( pGFig_p->GetSubElement( "texture", pParam ) ){
+		
+		if( m_pRendererRef->m_tex2D_cache.GetTextureName( pSprite->m_TextureID ) != pParam->m_value.c_str() ){
+
+			auto pipeIt = pSprite->m_pipeState.Begin();
+			pipeIt++;
+			*pipeIt = &m_pRendererRef->m_tex2D_cache.Get( pParam->m_value.c_str(), &pSprite->m_TextureID );
+		}
+	}
+}
+
+void game::SpriteComponent_Factory::UpdateXYWHFromGfig( DirectX::XMFLOAT4 & xywh_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pElement;
+
+	if( pGFig_p->GetSubElement( "x", pElement) ){
+		xywh_p.x = (float)atof(pElement->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "y", pElement) ){
+		xywh_p.y = (float)atof(pElement->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "w", pElement) ){
+		xywh_p.z = (float)atof(pElement->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "h", pElement) ){
+		xywh_p.w = (float)atof(pElement->m_value.c_str());
+	}
 }

@@ -51,6 +51,7 @@ namespace game{
 		virtual pool_Component_ptr VCreateComponent() = 0;
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
 		virtual pool_Component_ptr VCloneComponent(  const Component * pCompo_p ) = 0;
+		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p ) = 0;
 	};
 
 	typedef std::shared_ptr<AComponentFactory> shared_AComponentFactory_ptr;
@@ -61,7 +62,7 @@ namespace game{
 	//========================================================================
 	//TODO: use vector and binary search instead of map
 	typedef std::map<int, shared_AComponentFactory_ptr> ComponentFactoryRegistry;
-	typedef std::map<std::string, int> ComponentNameToTypeMap;
+	typedef std::map<std::string, unsigned int> ComponentNameToTypeMap;
 
 	class ComponentFactory{
 
@@ -77,6 +78,7 @@ namespace game{
 		pool_Component_ptr CreateComponent( int iType_p, text::GfigElementA * pGFig_p );
 		pool_Component_ptr CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p );
 		pool_Component_ptr CloneComponent( const Component * pComponent_p );
+		void UpdateComponent( Component * pComponent_p, text::GfigElementA * pGFig_p );
 
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent();
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent( text::GfigElementA * pGFig_p );
@@ -87,6 +89,12 @@ namespace game{
 		//------------------------------------------------------------------------
 		template< typename DerivedComponent >
 		void RegisterFactory( const shared_AComponentFactory_ptr & pFactory_p );
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		unsigned int GetCompoTypeFromName( const std::string & szCompoName_p );
+		//const std::string & GetCompoNameFromType( const unsigned int iType_p );
 
 		//------------------------------------------------------------------------
 		// 

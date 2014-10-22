@@ -177,8 +177,15 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		Trafo GetTrafoFromGfig( text::GfigElementA * pGFig_p );
-		DirectX::XMFLOAT4 GetXYZWFromGfig( text::GfigElementA * pGFig_p );
+		static Trafo GetTrafoFromGfig( text::GfigElementA * pGFig_p );
+		static DirectX::XMFLOAT4 GetXYZWFromGfig( text::GfigElementA * pGFig_p );
+
+		//------------------------------------------------------------------------
+		// updaters
+		//------------------------------------------------------------------------
+		static void UpdateDataFromGfig( TransformComponent & trafoCompo_p, text::GfigElementA * pGFig_p );
+		static void UpdateTrafoFromGfig( Trafo & trafo_p, text::GfigElementA * pGFig_p );
+		static void UpdateXYZWFromGfig( DirectX::XMFLOAT4 & XYZW_p, text::GfigElementA * pGFig_p );
 
 		//------------------------------------------------------------------------
 		// to be overridden
@@ -186,6 +193,7 @@ namespace game{
 		virtual pool_Component_ptr VCreateComponent();
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
+		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
 
 	};
 

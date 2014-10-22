@@ -484,7 +484,26 @@ game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCloneComponent(
 	pAnimCompo->m_vFrames = pOther->m_vFrames;
 	pAnimCompo->m_vSprites = pOther->m_vSprites;
 	
-
 	return pAnimCompo;
 }
 
+void game::SpriteAnimationComponentFactory::VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pGFigParam = nullptr;
+
+	SpriteAnimationComponent * pAnimCompo = (SpriteAnimationComponent*)pCompo_p;
+
+	// TODO
+	// not sure how this should work, sprites and frames are added, clips too, but clips reference to frames and frames ref
+	// to sprites are all on the gfig...so if the user doesnt take in account that the sprites and frames will be ADDED, not
+	// replaced, shit will happen
+
+	if( pGFig_p->GetSubElement( "sprites", pGFigParam ) )
+		LoadSpritesFromGFig( pGFigParam, pAnimCompo );
+
+	if( pGFig_p->GetSubElement( "frames", pGFigParam ) )
+		LoadFramesFromGFig( pGFigParam, pAnimCompo );
+
+	if( pGFig_p->GetSubElement( "clips", pGFigParam ) )
+		LoadClipsFromGFig( pGFigParam, pAnimCompo );
+}

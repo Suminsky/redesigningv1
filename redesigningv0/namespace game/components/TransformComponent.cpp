@@ -223,7 +223,7 @@ bool game::TransformComponent::BUpdateWorldAndFinalTransformation()
 			XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
 			||
 			XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
-	// memcmp( &mPrevFinal, &mFinal, sizeof(XMMATRIX)) ){
+
 }
 
 void game::TransformComponent::AddChild( TransformComponent * pTrafo_p )
@@ -293,28 +293,7 @@ pool_Component_ptr TransformComponentFactory::VCreateComponent( GfigElementA * p
 {
 	gen::pool_ptr<TransformComponent> pTransform( m_pool );
 
-	GfigElementA * pParam = nullptr;
-
-
-	if( pGFig_p->GetSubElement( "offset", pParam ) ){
-
-		pTransform->m_offset = GetTrafoFromGfig( pParam );
-	}
-	if( pGFig_p->GetSubElement( "local", pParam ) ){
-
-		pTransform->m_local = GetTrafoFromGfig( pParam );
-	}
-
-	if( !pParam ){
-
-		pTransform->m_local = GetTrafoFromGfig( pGFig_p );
-	}	
-
-	//XMFLOAT4X4 moffset = pTransform->m_offset.DeriveMatrix(); XMFLOAT4X4 mlocal = pTransform->m_local.DeriveMatrix();
-	XMMATRIX mFinal = XMMatrixMultiply( pTransform->m_offset.DeriveMatrix(), pTransform->m_local.DeriveMatrix() );
-
-	XMStoreFloat4x4( &pTransform->m_final, mFinal );
-	pTransform->m_previousFinal = pTransform->m_final;
+	UpdateDataFromGfig( *pTransform, pGFig_p );
 
 	return pTransform;
 }
@@ -388,4 +367,79 @@ game::pool_Component_ptr game::TransformComponentFactory::VCloneComponent( const
 
 
 	return pTransform;
+}
+
+void game::TransformComponentFactory::UpdateDataFromGfig( TransformComponent & trafoCompo_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pParam = nullptr;
+
+	if( pGFig_p->GetSubElement( "offset", pParam ) ){
+
+		UpdateTrafoFromGfig( trafoCompo_p.m_offset, pParam );
+	}
+	if( pGFig_p->GetSubElement( "local", pParam ) ){
+
+		UpdateTrafoFromGfig( trafoCompo_p.m_local, pParam );
+	}
+
+	if( !pParam ){
+
+		UpdateTrafoFromGfig( trafoCompo_p.m_local, pGFig_p );
+	}
+
+	XMMATRIX mFinal = XMMatrixMultiply( trafoCompo_p.m_offset.DeriveMatrix(), trafoCompo_p.m_local.DeriveMatrix() );
+
+	XMStoreFloat4x4( &trafoCompo_p.m_final, mFinal );
+	trafoCompo_p.m_previousFinal = trafoCompo_p.m_final;
+
+	trafoCompo_p.m_bSnap = true;
+}
+
+void game::TransformComponentFactory::UpdateTrafoFromGfig( Trafo & trafo_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pPropertie = nullptr;
+
+	if( pGFig_p->GetSubElement( "pos", pPropertie ) ){
+
+		 UpdateXYZWFromGfig( trafo_p.position, pPropertie);
+	}
+	if( pGFig_p->GetSubElement( "rotation", pPropertie ) ){
+
+		 UpdateXYZWFromGfig( trafo_p.qRotation, pPropertie);
+	}
+	if( pGFig_p->GetSubElement( "scale", pPropertie ) ){
+
+		UpdateXYZWFromGfig( trafo_p.scale, pPropertie);
+	}
+}
+
+void game::TransformComponentFactory::UpdateXYZWFromGfig( DirectX::XMFLOAT4 & XYZW_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pElement;
+
+	if( pGFig_p->GetSubElement( "x", pElement) ){
+		XYZW_p.x = (float)atof(pElement->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "y", pElement) ){
+		XYZW_p.y = (float)atof(pElement->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "z", pElement) ){
+		XYZW_p.z = (float)atof(pElement->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "w", pElement) ){
+		XYZW_p.w = (float)atof(pElement->m_value.c_str());
+	}
+}
+
+void game::TransformComponentFactory::VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+	UpdateDataFromGfig( *((TransformComponent*)pCompo_p), pGFig_p );
+
+	// TODO: not sure...
+	/*if( (Object*pObj = pCompo_p->GetObjectOwner()) ){
+
+		pObj->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), pCompo_p )
+	}*/
+		
+
 }

@@ -134,6 +134,9 @@ namespace game{
 
 			 return pButton;
 		}
+		void VUpdateComponent( Component * /*pCompo_p*/, text::GfigElementA * /*pGFig_p*/ ){
+			assert(0);
+		}
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * /*pGFig_p*/ ){
 
 			assert(0);

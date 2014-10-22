@@ -14,6 +14,8 @@
 
 // standard includes
 #include <memory>
+#include <string>
+#include <vector>
 
 // private includes
 
@@ -53,9 +55,27 @@ namespace game{
 		virtual shared_Object_ptr VCreateObject( text::GfigElementA * pGfig_p );
 		virtual shared_Object_ptr VCloneObject( const Object * pObj_p );
 
+		void LoadNewPrefab( const Object * pObj_p, const std::string & szName_p );
+		void LoadNewPrefab( text::GfigElementA * pGfig_p );
+		void UnLoadAllPrefabs(){ m_prefabs.clear(); }
+
+		unsigned int PrefabIndexFromName( const std::string & szName_p );
+		shared_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p );
+		shared_Object_ptr CreateObjectFromPrefab( const std::string & szName_p );
+		shared_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p, text::GfigElementA * pIntanceGfig_p );
+		shared_Object_ptr CreateObjectFromPrefab( const std::string & szName_p, text::GfigElementA * pIntanceGfig_p );
+		
+
 	private:
 
 		Layer * m_pLayerOwner;
+
+		struct Prefab{
+			std::string szName;
+			shared_Object_ptr pObj;
+		};
+
+		std::vector<Prefab> m_prefabs;
 
 	};
 

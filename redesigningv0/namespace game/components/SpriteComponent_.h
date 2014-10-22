@@ -96,7 +96,7 @@ namespace game{
 		DirectX::XMFLOAT4 m_currentColor;
 		DirectX::XMFLOAT4 m_previousColor;
 
-		int m_TextureID, m_BlendModeID, m_FilterModeID, m_ShaderID;
+		int m_TextureID, m_BlendModeID, m_SamplerModeID, m_ShaderID;
 		int m_iShaderPermutation;
 
 		bool m_bHFlip, m_bVFlip;
@@ -145,22 +145,19 @@ namespace game{
 		static sprite::E_BLENDTYPE GetBlendType( text::GfigElementA * pGFig_p );
 		static sprite::E_SAMPLERTYPE GetSamplerType( text::GfigElementA * pGFig_p );
 
-		//------------------------------------------------------------------------
-		// to be overridden
-		//------------------------------------------------------------------------
-		virtual pool_Component_ptr VCreateComponent(){
+		static void UpdateXYWHFromGfig( DirectX::XMFLOAT4 & xywh_p, text::GfigElementA * pGFig_p );
 
-			/*pool_Component_ptr test;
-			gen::pool_ptr<SpriteComponent_> spriteP( &m_pool );
-			test = spriteP;*/
-
-			 return pool_Component_ptr(m_pool);
-		}
-		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		static void CreateSprite( SpriteComponent_ & sprite_p, text::GfigElementA * pGFig_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pRendererRef );
 		static void LoadInstanceData( sprite::spriteInstance & inst_p, text::GfigElementA * pGFig_p );
 
+
+		//------------------------------------------------------------------------
+		// to be overridden
+		//------------------------------------------------------------------------
+		virtual pool_Component_ptr VCreateComponent(){ return pool_Component_ptr(m_pool);}
+		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
+		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
 
 	};
 
