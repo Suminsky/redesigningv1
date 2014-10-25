@@ -196,7 +196,7 @@ namespace game{
 		// meticulous ctrl
 		//------------------------------------------------------------------------
 		void SetSpriteFrame( frame frame_p, bool bPauseCurrent_dontStop_p = true );
-		void SetClipFrame( unsigned int frameIndex_p );
+		void SetClipFrameIndex( unsigned int frameIndex_p );
 
 		//------------------------------------------------------------------------
 		// info
@@ -218,9 +218,11 @@ namespace game{
 		std::vector<TextureID_Binder_Pair> GetSprites() const { return m_vSprites; }
 
 		AnimationClip GetClip() const { return m_vClips[m_iCurrentClip]; }
-		int GetClipIndex() const { return m_iCurrentClip; }
+		unsigned int GetClipIndex() const { return m_iCurrentClip; }
 		AnimationClip GetNTHClip( unsigned int nth_p ) const { return m_vClips[nth_p]; }
 		std::vector<AnimationClip> GetClips() const { return m_vClips; }
+		unsigned int GetClipFrameIndex()const{ return m_vClips[m_iCurrentClip].stateData.itCurrentFrame; }
+		unsigned int GetClipNFrames() const{ return (unsigned)m_vClips[m_iCurrentClip].configData.vFrames.size(); }
 
 		int GetNSprites() const { return (int) m_vSprites.size(); }
 		int GetNFrames() const { return (int) m_vFrames.size(); }

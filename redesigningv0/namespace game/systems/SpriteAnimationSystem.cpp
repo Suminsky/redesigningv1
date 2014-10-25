@@ -26,7 +26,9 @@ void game::SpriteAnimationSystem::VOnUpdate( double /*dAccum_p*/, double dDelta_
 				 animCompo.Update( dDelta_p );
 			}
 
-			if( animCompo.m_previousFrame != animCompo.m_currentFrame ){
+			if( animCompo.m_previousFrame != animCompo.m_currentFrame
+				||
+				animCompo.m_iCurrentClip != animCompo.m_iPreviousClip ){
 
 				animCompo.m_previousFrame = animCompo.m_currentFrame;
 

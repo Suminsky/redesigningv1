@@ -147,7 +147,7 @@ void game::SpriteAnimationComponent::SetSpriteFrame( frame frame_p, bool bPauseC
 	m_currentFrame = frame_p;
 }
 
-void game::SpriteAnimationComponent::SetClipFrame( unsigned int frameIndex_p )
+void game::SpriteAnimationComponent::SetClipFrameIndex( unsigned int frameIndex_p )
 {
 	AnimationClip & clip = m_vClips[m_iCurrentClip];
 
