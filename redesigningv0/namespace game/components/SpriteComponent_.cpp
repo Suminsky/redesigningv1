@@ -482,6 +482,13 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 	pSprite->m_renderData.m_padding.x = xOffset;
 	pSprite->m_renderData.m_padding.y = yOffset;
 	//return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );
+
+	if( pGFig_p->GetSubElement( "color", pParam ) ){
+
+		ColorComponentFactory::UpdateRGBAFromGfig( pSprite->m_renderData.m_color, pParam);
+		pSprite->SetColor( pSprite->m_renderData.m_color );
+	}
+
 	return pSprite;
 }
 
@@ -704,6 +711,12 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 			pipeIt++;
 			*pipeIt = &m_pRendererRef->m_tex2D_cache.Get( pParam->m_value.c_str(), &pSprite->m_TextureID );
 		}
+	}
+
+	if( pGFig_p->GetSubElement( "color", pParam ) ){
+
+		ColorComponentFactory::UpdateRGBAFromGfig( pSprite->m_renderData.m_color, pParam);
+		pSprite->SetColor( pSprite->m_renderData.m_color );
 	}
 }
 

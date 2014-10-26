@@ -111,14 +111,15 @@ namespace game{
 			:
 		m_pool(maxComponents_p){}
 
-	private:
-
-		gen::Pool<ColorComponent> m_pool;
-
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
 		static DirectX::XMFLOAT4 GetRGBAFromGfig( text::GfigElementA * pGFig_p );
+		static void UpdateRGBAFromGfig( DirectX::XMFLOAT4 & color_p, text::GfigElementA * pGFig_p );
+
+	private:
+
+		gen::Pool<ColorComponent> m_pool;
 
 		//------------------------------------------------------------------------
 		// to be overridden

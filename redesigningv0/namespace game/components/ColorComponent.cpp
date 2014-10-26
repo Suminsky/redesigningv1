@@ -73,22 +73,40 @@ void game::ColorComponentFactory::VUpdateComponent( Component * pCompo_p, text::
 
 	if( pGFig_p->GetSubElement( "offset", pParam ) ){
 
-		pColor->m_offsetColor = GetRGBAFromGfig( pParam );
+		 UpdateRGBAFromGfig( pColor->m_offsetColor, pParam );
 	}
 	if( pGFig_p->GetSubElement( "local", pParam ) ){
 
-		pColor->m_localColor = GetRGBAFromGfig( pParam );
+		 UpdateRGBAFromGfig( pColor->m_localColor, pParam );
 	}
 
 	if( !pParam ){
 
-		pColor->m_localColor = GetRGBAFromGfig( pGFig_p );
+		 UpdateRGBAFromGfig( pColor->m_localColor, pGFig_p );
 	}
 
 
 	XMVECTOR vFinal = XMVectorMultiply( XMLoadFloat4(&pColor->m_offsetColor), XMLoadFloat4(&pColor->m_localColor) );
 	XMStoreFloat4( &pColor->m_finalColor, vFinal );
 	pColor->m_previousFinalColor = pColor->m_finalColor;
+}
+
+void game::ColorComponentFactory::UpdateRGBAFromGfig( DirectX::XMFLOAT4 & color_p, text::GfigElementA * pGFig_p )
+{
+	GfigElementA * pChannel;
+
+	if( pGFig_p->GetSubElement( "r", pChannel) ){
+		color_p.x = (float)atof(pChannel->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "g", pChannel) ){
+		color_p.y = (float)atof(pChannel->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "b", pChannel) ){
+		color_p.z = (float)atof(pChannel->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement( "a", pChannel) ){
+		color_p.w = (float)atof(pChannel->m_value.c_str());
+	}
 }
 
 XMFLOAT4 ColorComponentFactory::GetRGBAFromGfig( GfigElementA * pGFig_p )
