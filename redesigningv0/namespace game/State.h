@@ -83,7 +83,6 @@ namespace game{
 
 
 		StateLayers m_layers;
-		//LayerIndexes m_removedLayers;
 		std::vector<Layer*> m_removedLayers;
 
 		//------------------------------------------------------------------------

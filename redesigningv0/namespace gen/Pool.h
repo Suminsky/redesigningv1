@@ -84,6 +84,8 @@ namespace gen{
 		//------------------------------------------------------------------------
 		class PoolAccessor{
 
+			
+
 		public:
 
 			//------------------------------------------------------------------------
@@ -103,6 +105,27 @@ namespace gen{
 				assert( it_p < m_pRosterRef->m_iFreeIndexesStart );
 
 				return &m_pPoolRef[ m_pRosterRef->m_elements[it_p].iPoolIndex ];
+			}
+
+			//------------------------------------------------------------------------
+			// 
+			//------------------------------------------------------------------------
+			T * GetAllocatedLinearly( uint & it_p ){
+
+				// TODO:
+				// find a way to iterate linearly the pool, and check if T is valid or
+				// a hole (a freed element)
+				// iterating linearly is certainly faster, but how to check if T is allocated?
+				// this seems to work, not really sure
+				// dont know if its actually faster either (since theres a check)
+				// 
+
+				while( m_pPoolRef[it_p].m_iCurrentRosterIndex >= m_pRosterRef->m_iFreeIndexesStart ){
+
+					++it_p;
+				}
+
+				return  &m_pPoolRef[it_p];
 			}
 
 			//------------------------------------------------------------------------
@@ -178,19 +201,20 @@ namespace gen{
 
 			// swap given rooster element with last allocated element, update pool element roster index
 
-			Roster::RosterElement lastAllocated = m_roster.m_elements[iRosterIndexLastAllocated];
+			Roster::RosterElement lastAllocatedcpy = m_roster.m_elements[iRosterIndexLastAllocated];
 
 			m_roster.m_elements[iRosterIndexLastAllocated] = m_roster.m_elements[iRosterIndex_p];
 			++m_roster.m_elements[iRosterIndexLastAllocated].nTimesFree;
 			m_pool[m_roster.m_elements[iRosterIndexLastAllocated].iPoolIndex].m_iCurrentRosterIndex = iRosterIndexLastAllocated;
+			m_roster.m_elements[iRosterIndex_p] = lastAllocatedcpy;
 
-			m_roster.m_elements[iRosterIndex_p] = lastAllocated;
 			m_pool[m_roster.m_elements[iRosterIndex_p].iPoolIndex].m_iCurrentRosterIndex = iRosterIndex_p;
 
 			// "pop"
 
 			--m_roster.m_iFreeIndexesStart;
 		}
+
 		//------------------------------------------------------------------------
 		// hackish solution for having the same type for the delegate on
 		// pool_ptr
@@ -311,6 +335,7 @@ namespace gen{
 
 			pData->m_refCount.AddRef();
 		}
+		
 		//------------------------------------------------------------------------
 		// generalized cpy ctor
 		//------------------------------------------------------------------------
@@ -359,6 +384,7 @@ namespace gen{
 
 			return *this;
 		}
+		
 		//------------------------------------------------------------------------
 		// generalized assignment
 		//------------------------------------------------------------------------	

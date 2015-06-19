@@ -97,7 +97,7 @@ namespace phys{
 		//------------------------------------------------------------------------
 		// blocked face is a bit mask, each bit is a face
 		//------------------------------------------------------------------------
-		bool CollisionData_Btests( const AABB3D & other_p, DirectX::XMFLOAT3 & normal, float & penetration, char blockedFace_p ) const{
+		bool CollisionData_Btests( const AABB3D & other_p, DirectX::XMFLOAT3 & normal, float & penetration, char blockedFace_p, float fNoPenTolerance_p = 0.0f ) const{
 
 			const DirectX::XMFLOAT3 normals[] = {	DirectX::XMFLOAT3( -1.0f,  0.0f, 0.0f ),
 													DirectX::XMFLOAT3(  1.0f,  0.0f, 0.0f ),
@@ -120,7 +120,7 @@ namespace phys{
 			for( int it = 0; it < 6; ++it ){
 
 				// ignore if theres no penetration between any of the opposing faces
-				if( distances[it] >= 0.0f ) return false;
+				if( distances[it] >= fNoPenTolerance_p/*-0.001f*//*0.0f*/ ) return false;
 
 				// skip if face is blocked
 				if( blockedFace_p & (0x01 << it) ) continue;
@@ -144,11 +144,11 @@ namespace phys{
 
 			return true;
 		}
-		bool IsColliding_e( const AABB3D & other_p ) const{
+		bool IsColliding_e( const AABB3D & other_p, float fNoPenTolerance_p = 0.0f ) const{
 
-			if( XDistance(other_p) >= 0.0f ) return false;
-			if( YDistance(other_p) >= 0.0f ) return false;
-			if( ZDistance(other_p) >= 0.0f ) return false;
+			if( XDistance(other_p) >= fNoPenTolerance_p ) return false;
+			if( YDistance(other_p) >= fNoPenTolerance_p ) return false;
+			if( ZDistance(other_p) >= fNoPenTolerance_p ) return false;
 
 			return true;
 		}

@@ -417,6 +417,9 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Legalia\AABB2DColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -738,6 +741,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\AABB2DColliderComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

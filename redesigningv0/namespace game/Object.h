@@ -7,12 +7,6 @@
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	The game object, the rice of the game.
-				NOTE:
-				Cache friendly idea:
-				store all components (derived from Component) instances in a contiguous block (std::vector)
-				and make objects point to then based on a pointer to type plus a pointer to the right instance.
-				To update the actors, instead of iterating actors, one would update all components of the same
-				type, till all types.
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

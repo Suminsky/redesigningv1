@@ -134,6 +134,8 @@ void game::State::Update( const double dDeltaTime_p )
 
 	// clean dead layers
 
+	// cleaning should be done after draw.. TODO
+
 	if( !m_removedLayers.empty() )
 		CleanRemovedLayers();
 

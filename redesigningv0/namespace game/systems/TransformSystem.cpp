@@ -22,11 +22,11 @@ void game::TransformSystem::VOnUpdate( double , double )
 	//	add every child on the vector
 	// 
 
-	for( int itColor = 0, iSize = m_poolAccess.GetNAllocated();
-		itColor < iSize;
-		++itColor ){
+	for( unsigned int itTrafo = 0, iSize = m_poolAccess.GetNAllocated();
+		itTrafo < iSize;
+		++itTrafo ){
 
-			TransformComponent & transformCompo = (*m_poolAccess.GetAllocated( itColor ));
+			TransformComponent & transformCompo = (*m_poolAccess.GetAllocated( itTrafo )); //(*m_poolAccess.GetAllocatedLinearly(itTrafo));//
 			if( !transformCompo.GetObjectOwner()->IsAttached() ) continue;
 
 			// ignore if not root trafo
@@ -55,7 +55,7 @@ void game::TransformSystem::VOnUpdate( double , double )
 
 void game::TransformSystem::RecursiveUpdate( TransformComponent & currentParent_p )
 {
-	for( int itChild = 0, nChilds = currentParent_p.m_node.GetNumberOfChilds();
+	for( unsigned int itChild = 0, nChilds = currentParent_p.m_node.GetNumberOfChilds();
 		itChild < nChilds;
 		++itChild ){
 

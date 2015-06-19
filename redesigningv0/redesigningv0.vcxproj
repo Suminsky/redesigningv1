@@ -108,10 +108,10 @@
       <PreprocessorDefinitions>_DEBUG;SOUND;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <StringPooling>true</StringPooling>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>stdIncludes</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -176,6 +176,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
+    <ClInclude Include="Legalia\AABB2DColliderComponent.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
     <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
@@ -310,6 +311,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
+    <ClCompile Include="Legalia\AABB2DColliderComponent.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
     <ClCompile Include="Mentle\main.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />

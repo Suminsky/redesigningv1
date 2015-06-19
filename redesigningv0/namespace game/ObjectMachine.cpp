@@ -96,7 +96,7 @@ void ObjectMachine::CleanRemovedObjects()
 			continue; // already "swapped"
 		}
 
-		std::swap( m_objects[removedIndex], m_objects[itLast] );// assertion triggered once: m_removedObjects[itR]->m_currentObjectIndex was INVALID_OBJECTINDEX here(how the fuk can that be possible)
+		std::swap( m_objects[removedIndex], m_objects[itLast] );// assertion triggered TWICE: m_removedObjects[itR]->m_currentObjectIndex was INVALID_OBJECTINDEX here(how the fuk can that be possible)
 		--itLast;
 
 		// update the index of the swapped object (not the one sent to pop)
