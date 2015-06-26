@@ -49,9 +49,17 @@ namespace game{
 		// to be overridden
 		//------------------------------------------------------------------------
 		virtual pool_Component_ptr VCreateComponent() = 0;
-		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
 		virtual pool_Component_ptr VCloneComponent(  const Component * pCompo_p ) = 0;
+
+		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
 		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p ) = 0;
+		// TODO
+		// serialize should pushback a gfig on pGfig_p->m_subelements
+		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p ) = 0;
+
+		//virtual pool_Component_ptr VCreateComponent( gen::DataStream * pData_p ) = 0;
+		//virtual void VUpdateComponent( Component * pCompo_p, gen::DataStream * pData_p ) = 0;
+		//virtual void VSerialize( Component * pCompo_p, gen::DataStream * pData_p ) = 0;
 	};
 
 	typedef std::shared_ptr<AComponentFactory> shared_AComponentFactory_ptr;

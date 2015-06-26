@@ -138,6 +138,7 @@ namespace gen{
 
 	//========================================================================
 	// min max clamping
+	// TODO: try branchless version
 	//========================================================================
 	template<typename T>	
 	inline void MinClamp( T & f_p, T min_p = (T)0 ){
@@ -149,6 +150,31 @@ namespace gen{
 
 		if( f_p > max_p ) f_p = max_p;
 	}
+
+//#include <mmintrin.h>
+//
+//	float minss ( float a, float b )
+//	{
+//		// Branchless SSE min.
+//		_mm_store_ss( &a, _mm_min_ss(_mm_set_ss(a),_mm_set_ss(b)) );
+//		return a;
+//	}
+//
+//	float maxss ( float a, float b )
+//	{
+//		// Branchless SSE max.
+//		_mm_store_ss( &a, _mm_max_ss(_mm_set_ss(a),_mm_set_ss(b)) );
+//		return a;
+//	}
+//
+//	float clamp ( float val, float minval, float maxval )
+//	{
+//		// Branchless SSE clamp.
+//		// return minss( maxss(val,minval), maxval );
+//
+//		_mm_store_ss( &val, _mm_min_ss( _mm_max_ss(_mm_set_ss(val),_mm_set_ss(minval)), _mm_set_ss(maxval) ) );
+//		return val;
+//	}
 
 	//========================================================================
 	// verify if given number is power of 2
@@ -719,6 +745,58 @@ namespace gen{
 
 			m_currentByteIndex += iSize;
 		}
+	};
+
+
+	template<typename T>
+	class Array{
+
+	public:
+
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		Array()
+			:
+		m_data(nullptr){}
+
+		void Initialize( uint32_t size_p ){
+
+			if( m_data ) delete [] m_data;
+
+			m_data = new T[size_p];
+			m_size = size_p;
+		}
+		Array( uint32_t size_p )
+			:
+		m_data(nullptr){
+
+			Initialize( size_p );
+		}
+		~Array(){
+
+			if( m_data ) delete [] m_data;
+		}
+
+		//------------------------------------------------------------------------
+		// accessors operators
+		//------------------------------------------------------------------------
+		T & operator[]( uint32_t index_p ){
+
+			assert( index_p < m_size );
+			return m_data[index_p];
+		}
+
+		uint32_t Size() const{
+
+			return m_size;
+		}
+
+	private:
+
+		uint32_t m_size;
+		T *m_data;
+
 	};
 }
 

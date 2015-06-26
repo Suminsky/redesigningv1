@@ -158,7 +158,14 @@ namespace game{
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
+		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
 
+		//------------------------------------------------------------------------
+		// those 2 must receive an already named gfig
+		//------------------------------------------------------------------------
+		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p );
+		static bool SerializeBlendType( const sprite::E_BLENDTYPE eBlend_p, text::GfigElementA & gFig_p );
+		static bool SerializeSamplerType( const sprite::E_SAMPLERTYPE eSampler_p, text::GfigElementA & gFig_p );
 	};
 
 	typedef std::shared_ptr<SpriteComponent_Factory> shared_SpriteComponent_Factory_ptr;

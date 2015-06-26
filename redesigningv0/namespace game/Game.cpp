@@ -23,10 +23,10 @@ void Game::FixedStepLoop(){
 
 	// perform updates by fixed steps, any time remaining will accumulate to the next iteration
 	// any time missing will skip the update till a fix step amount is reached
-	int count = 0;
+	//int count = 0;
 	while( dFrameDeltaRemainingsAccumulated >= m_dFixedTimeStep ){
 
-		++count;
+		//++count;
 
 		// consume the fixed amount from the accumulated buffer
 		dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;

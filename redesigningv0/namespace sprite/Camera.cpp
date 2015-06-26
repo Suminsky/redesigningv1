@@ -58,3 +58,48 @@ void sprite::Camera::Update()
 
 	//m_renderData.m_bUpdate = true; //dbg
 }
+
+void sprite::Camera::ForceUpdate()
+{
+	m_renderData.m_mViewProjection = m_mView * m_mProjection;
+	m_renderData.m_bUpdate = true;
+}
+
+void sprite::Camera::CarryWithCamera( DirectX::XMFLOAT2 & pos )
+{
+	pos.x -= m_viewPort.TopLeftX;
+	pos.y += m_viewPort.TopLeftY;
+
+	// zoom MUST be before translation
+
+	pos.x *= m_fZoom;
+	pos.y *= m_fZoom;
+
+	// account for camera position: apply THE SAME TRAFO as the camera is under to,
+	// its different from applying a view matrix, which will move in reverse.
+	// note that the mouse goes with the camera, different from game objects who stays
+
+	XMVECTOR vNewPos = XMLoadFloat2( &pos );
+	XMMATRIX mCameraTranslation = XMMatrixTranslationFromVector( XMVectorNegate( m_mView.r[3]) );
+
+	vNewPos = XMVector2Transform( vNewPos, mCameraTranslation );
+
+	XMStoreFloat2( &pos, vNewPos );
+}
+
+void sprite::Camera::ToCameraSpace( DirectX::XMFLOAT2 & pos )
+{
+	pos.x += m_viewPort.TopLeftX;
+	pos.y -= m_viewPort.TopLeftY;
+
+	XMVECTOR vNewPos = XMLoadFloat2( &pos );
+
+	vNewPos = XMVector2Transform( vNewPos, m_mView );
+
+	XMStoreFloat2( &pos, vNewPos );
+
+	// zoom MUST be after translation
+
+	pos.x /= m_fZoom;
+	pos.y /= m_fZoom;	
+}

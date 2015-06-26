@@ -4,6 +4,7 @@
 using namespace game;
 using namespace DirectX;
 using namespace text;
+using namespace std;
 
 game::ColorComponent::ColorComponent()
 {
@@ -129,4 +130,64 @@ XMFLOAT4 ColorComponentFactory::GetRGBAFromGfig( GfigElementA * pGFig_p )
 	}
 
 	return color;
+}
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+
+void game::ColorComponentFactory::VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+	/*
+	[TransformComponent
+		[offset
+			[pos		[x = 0]	[y = 0]	[z = 0]	[w = 1] ]
+			[scale  	[x = 1]	[y = 1]	[z = 1]	[w = 1] ]
+			[rotation	[x = 0]	[y = 0]	[z = 0]	[w = 1] ]
+		]
+		[local
+			[pos		[x = 0] [y = 0] [z = 0] [w = 1] ]
+			[scale  	[x = 1]	[y = 1]	[z = 1]	[w = 1] ]
+			[rotation	[x = 0]	[y = 0]	[z = 0]	[w = 1] ]
+		]
+	]
+	*/
+
+	ColorComponent & color = *((ColorComponent*)pCompo_p);
+
+	pGFig_p->m_subElements.emplace_back( GfigElementA(COMPONENT_NAME(ColorComponent)) );
+
+	GfigElementA & gColorCompo = pGFig_p->m_subElements.back();
+	{
+		GfigElementA gLocal(	"local" );
+		SerializeRGBA( color.m_localColor, gLocal );
+		if( gLocal.m_subElements.size())
+			gColorCompo.m_subElements.push_back(std::move(gLocal));
+
+		GfigElementA gOffset(	"offset" );
+		SerializeRGBA( color.m_offsetColor, gOffset );
+		if( gOffset.m_subElements.size())
+			gColorCompo.m_subElements.push_back(std::move(gOffset));
+	}	
+}
+
+void game::ColorComponentFactory::SerializeRGBA( const DirectX::XMFLOAT4 & rgba_p, text::GfigElementA & gFig_p )
+{
+	// check if values are different than default values, since default values dont need to be loaded
+
+	if( rgba_p.x != 1.0f ){
+
+		gFig_p.m_subElements.push_back(GfigElementA("r", std::to_string((long double)rgba_p.x ).c_str()) );
+	}
+	if( rgba_p.y != 1.0f ){
+	
+		gFig_p.m_subElements.push_back(GfigElementA("g", std::to_string((long double)rgba_p.y ).c_str()) );
+	}
+	if( rgba_p.z != 1.0f ){
+
+		gFig_p.m_subElements.push_back(GfigElementA("b", std::to_string((long double)rgba_p.z ).c_str()) );
+	}
+	if( rgba_p.w != 1.0f ){
+
+		gFig_p.m_subElements.push_back(GfigElementA("a", std::to_string((long double)rgba_p.w ).c_str()) );
+	}
 }

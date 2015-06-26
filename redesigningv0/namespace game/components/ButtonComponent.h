@@ -3,7 +3,7 @@
 /*
 	created:	2013/05/25
 	created:	25:5:2013   21:58
-	file:		ButtonComponent.h
+	file:		SpriteButtonCompo.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	
@@ -22,13 +22,10 @@
 
 namespace game{
 
-	template< typename DELEGATE_PARAM = int >
-	class ButtonComponent: public Component{
+	class SpriteButtonCompo: public Component{
 	
 	public:
-		typedef gen::pool_ptr<ButtonComponent> pool_ButtonCompo_ptr;
-
-		typedef gen::Delegate1Param<DELEGATE_PARAM> Delegate1Param;
+		typedef gen::pool_ptr<SpriteButtonCompo> pool_SpriteButtonCompo_ptr;
 
 		enum E_STATE{
 
@@ -40,30 +37,30 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ButtonComponent(){
-			m_type = COMPONENT_TYPE(ButtonComponent<DELEGATE_PARAM>);
+		SpriteButtonCompo(){
+			m_type = COMPONENT_TYPE(SpriteButtonCompo);
 		}
-		~ButtonComponent(){
+		~SpriteButtonCompo(){
 			m_pSpriteCompoRef.Release();
 		}
-		ButtonComponent( int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param() );
-		ButtonComponent( int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param() );
-		void Init(int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param());
-		void Init(int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f, Delegate1Param callBack_p = Delegate1Param());
+		SpriteButtonCompo( int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
+		SpriteButtonCompo( int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
+		void Init(int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
+		void Init(int iID_p, const pool_SpriteCompo__ptr & pSpriteCompo_p, DirectX::XMFLOAT4 uvHover_p, DirectX::XMFLOAT4 uvPressed_p, float wBorder_p = 0.0f, float hBorder_p = 0.0f );
 
-		void SetHoverImage(){
+		void SetHoverUV(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Hover;
 			m_pSpriteCompoRef->m_renderData.m_bUpdate = true;
 			m_eState = E_STATE_HOVER;
 		}
-		void SetNormalImage(){
+		void SetNormalUV(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Normal;
 			m_pSpriteCompoRef->m_renderData.m_bUpdate = true;
 			m_eState = E_STATE_NORMAL;
 		}
-		void SetPressedImage(){
+		void SetPressedUV(){
 
 			m_pSpriteCompoRef->m_renderData.m_uvRect = m_uv_Pressed;
 			m_pSpriteCompoRef->m_renderData.m_bUpdate = true;
@@ -82,47 +79,38 @@ namespace game{
 		//------------------------------------------------------------------------
 		int GetID() const { return m_ID; }
 
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		void OnClickCallback( const DELEGATE_PARAM & param_p );
-
 		private:
 
 		pool_SpriteCompo__ptr m_pSpriteCompoRef;
 		DirectX::XMFLOAT4 m_uv_Normal, m_uv_Hover, m_uv_Pressed;
 		DirectX::XMFLOAT2 m_borderGap;	// used to make the "collision box" smaller
 		E_STATE m_eState;
-		int m_ID;
-
-		Delegate1Param m_OnClickCallback;
-												
+		int m_ID;												
 	};
 
 	
-	typedef std::shared_ptr<ButtonComponent<>> shared_ButtonComponent_ptr;
+	typedef std::shared_ptr<SpriteButtonCompo> shared_ButtonComponent_ptr;
 
 	//========================================================================
 	// 
 	//========================================================================
-	template< typename DELEGATE_PARAM = int >
-	class ButtonComponentFactory: public AComponentFactory{
+	class SpriteButtonCompoFactory: public AComponentFactory{
 
 	public:
 
-		typedef std::shared_ptr<ButtonComponentFactory> shared_ButtonComponentFactory_ptr;
-		typedef std::weak_ptr<ButtonComponentFactory> weak_ButtonComponentFactory_ptr;
+		typedef std::shared_ptr<SpriteButtonCompoFactory> shared_ButtonComponentFactory_ptr;
+		typedef std::weak_ptr<SpriteButtonCompoFactory> weak_ButtonComponentFactory_ptr;
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		ButtonComponentFactory(unsigned int maxComponents_p)
+		SpriteButtonCompoFactory(unsigned int maxComponents_p)
 			:
 		m_pool(maxComponents_p){}
 
 	private:
 
-		gen::Pool<ButtonComponent<DELEGATE_PARAM>> m_pool;
+		gen::Pool<SpriteButtonCompo> m_pool;
 
 		//------------------------------------------------------------------------
 		// to be overridden
@@ -134,6 +122,10 @@ namespace game{
 
 			 return pButton;
 		}
+		virtual void VSerialize( const Component * /*pCompo_p*/, text::GfigElementA * /*pGfig_p*/ ){
+
+			assert(0);
+		}
 		void VUpdateComponent( Component * /*pCompo_p*/, text::GfigElementA * /*pGFig_p*/ ){
 			assert(0);
 		}
@@ -142,8 +134,9 @@ namespace game{
 			assert(0);
 			return pool_Component_ptr(m_pool);
 		}
+		virtual void VSerialize( Component * /*pCompo_p*/, text::GfigElementA * /*pGFig_p*/ ){
+			assert(0);
+		}
 
 	};
 }
-
-#include "ButtonComponent.inl"

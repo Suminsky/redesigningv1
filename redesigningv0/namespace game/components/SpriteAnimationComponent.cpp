@@ -6,6 +6,7 @@
 using namespace game;
 using namespace sprite;
 using namespace text;
+using namespace std;
 
 
 game::SpriteAnimationComponent::SpriteAnimationComponent()
@@ -506,4 +507,132 @@ void game::SpriteAnimationComponentFactory::VUpdateComponent( Component * pCompo
 
 	if( pGFig_p->GetSubElement( "clips", pGFigParam ) )
 		LoadClipsFromGFig( pGFigParam, pAnimCompo );
+}
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+	/*
+	[SpriteAnimationComponent
+		[sprites
+			["PunkContents\Sonna.png"]
+		]
+		[frames
+			[0
+				[sprite = 0]			
+				[w = 349][h = 88]
+				[uvRect	[x = 0.79834]
+						[y = 0.475586]
+						[w = 0.17041]
+						[h = 0.0859375]]
+				[xoff = 1.5][yoff = 12.5]
+			]
+		]
+		[clips
+			[1
+				[wrap = loop]
+				[spf = 0.1]
+				[frames[0][1][2]]
+			]
+		]
+	]
+	 */
+
+	// TODO optimize this shit
+
+	SpriteAnimationComponent & anim = *((SpriteAnimationComponent*)pCompo_p);
+
+	pGFig_p->m_subElements.emplace_back( GfigElementA(COMPONENT_NAME(SpriteAnimationComponent)) );
+
+	GfigElementA & gAnimCompo = pGFig_p->m_subElements.back();
+	gAnimCompo.m_subElements.reserve(3);
+
+	// add used sprites
+
+	gAnimCompo.m_subElements.push_back( GfigElementA(	"sprites" ) );
+	gAnimCompo.m_subElements[0].m_subElements.reserve( (int)anim.GetNSprites() );
+	for( int it = 0, nSprites = (int)anim.GetNSprites(); it < nSprites; ++it ){	
+
+		gAnimCompo.m_subElements[0].m_subElements.push_back(
+			GfigElementA( m_pSpriteRenderer->m_tex2D_cache.GetTextureName( anim.GetNTHSprite( it ).iID ).c_str() )
+			);
+	}
+	
+	// add used frames
+	
+	gAnimCompo.m_subElements.push_back( GfigElementA(	"frames" ) );
+	gAnimCompo.m_subElements[1].m_subElements.reserve( (int)anim.GetNFrames() );
+	for( int it = 0, nFrames = (int)anim.GetNFrames(); it < nFrames; ++it ){
+
+		GfigElementA gFrame;
+		{
+			GfigElementA gSprite("sprite");
+			GfigElementA gW("w"), gH("h");
+			GfigElementA gUV("uvRect");
+			GfigElementA gX("x"), gY("y");
+			gUV.m_subElements.push_back( gX );
+			gUV.m_subElements.push_back( gY );
+			gUV.m_subElements.push_back( gW );
+			gUV.m_subElements.push_back( gH );
+			GfigElementA gXoff("xoff"), gYoff("yoff");
+			gFrame.m_subElements.push_back( gSprite );
+			gFrame.m_subElements.push_back( gW );
+			gFrame.m_subElements.push_back( gH );
+			gFrame.m_subElements.push_back( gUV );
+			gFrame.m_subElements.push_back( gXoff );
+			gFrame.m_subElements.push_back( gYoff );
+		}
+
+		SpriteFrame frame = anim.GetNTHFrame(it);
+
+		gFrame.m_name = to_string( (_Longlong) it );
+
+		gFrame.m_subElements[0].m_value = to_string( (_Longlong) frame.iSpriteUsedIndex );
+
+		gFrame.m_subElements[1].m_value = to_string( (_Longlong) frame.fW );
+		gFrame.m_subElements[2].m_value = to_string( (_Longlong) frame.fH );
+
+		gFrame.m_subElements[3].m_subElements[0].m_value = to_string( (long double) frame.uvRect.x );
+		gFrame.m_subElements[3].m_subElements[1].m_value = to_string( (long double) frame.uvRect.y );
+		gFrame.m_subElements[3].m_subElements[2].m_value = to_string( (long double) frame.uvRect.z );
+		gFrame.m_subElements[3].m_subElements[3].m_value = to_string( (long double) frame.uvRect.w );
+
+		gFrame.m_subElements[4].m_value = to_string( (long double) frame.xOffset );
+		gFrame.m_subElements[5].m_value = to_string( (long double) frame.yOffset );
+
+		gAnimCompo.m_subElements[1].m_subElements.push_back( std::move(gFrame) );
+	}
+
+	// add clips
+		
+	gAnimCompo.m_subElements.push_back( GfigElementA(	"clips" ) );
+	gAnimCompo.m_subElements[2].m_subElements.reserve( (int)anim.GetNClips() );
+	for( int it = 0, nCLips = (int)anim.GetNClips(); it < nCLips; ++it ){
+
+		GfigElementA gClip;
+		{
+			GfigElementA gWarp("wrap");
+			GfigElementA gSPF("spf");
+			GfigElementA gClipFrames("frames");
+			gClip.m_subElements.push_back( gWarp );
+			gClip.m_subElements.push_back( gSPF );
+			gClip.m_subElements.push_back( gClipFrames );
+		}
+
+		AnimationClip clip = anim.GetNTHClip(it);
+
+		gClip.m_name = clip.configData.szName;
+
+		gClip.m_subElements[0].m_value = s_szAnimWrapModes[ clip.configData.eWrapMode ];
+		gClip.m_subElements[1].m_value = to_string( (long double)clip.configData.SPF );
+
+		gClip.m_subElements[2].m_subElements.resize( (int)clip.configData.vFrames.size() );
+		for( int itF = 0, nFrames = (int)clip.configData.vFrames.size(); itF < nFrames; ++itF ){
+
+			gClip.m_subElements[2].m_subElements[itF].m_name = to_string( (_Longlong) clip.configData.vFrames[itF] );
+		}
+
+		gAnimCompo.m_subElements[2].m_subElements.push_back( std::move(gClip) );
+	}
 }

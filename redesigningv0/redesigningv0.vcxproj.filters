@@ -183,9 +183,6 @@
     <ClInclude Include="namespace sound\SoundScreamer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace game\tasks\FadeTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace sound\FinitSoundTracks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -226,9 +223,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace game\tasks\OnUpdateDelegateTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="namespace game\components\ButtonComponent.inl">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace text\TextParser.h">
@@ -420,6 +414,39 @@
     <ClInclude Include="Legalia\AABB2DColliderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Legalia\AABB2DCollisionSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\tasks\LerpValueTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\LegaliaState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\LegaliaEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\GameWindow2D_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\LegaliaWIndow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\ParallaxLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\LegaliaInGameLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\SpringyFollowCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\InterpolatedCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\SpriteDraggingSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -557,9 +584,6 @@
     <ClCompile Include="namespace sound\SoundScreamer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace game\tasks\FadeTask.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace sound\FinitSoundTracks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -695,9 +719,6 @@
     <ClCompile Include="namespace text\SpriteInstancedTexts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mentle\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Mentle\MentleWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -744,6 +765,39 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\AABB2DColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\AABB2DCollisionSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\tasks\LerpValueTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\GameWindow2D_1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\LegaliaState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\LegaliaWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\LegaliaMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\ParallaxLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\InterpolatedCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\SpringyFollowCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\LegaliaInGameLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\SpriteDraggingSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

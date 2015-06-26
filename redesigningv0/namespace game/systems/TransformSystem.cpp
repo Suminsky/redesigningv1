@@ -46,7 +46,7 @@ void game::TransformSystem::VOnUpdate( double , double )
 			transformCompo.m_bSnap = false;
 
 			}
-			// recurse on childes
+			// recurse on childs
 
 			RecursiveUpdate( transformCompo );
 			

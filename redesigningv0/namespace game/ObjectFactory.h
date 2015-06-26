@@ -54,6 +54,7 @@ namespace game{
 		virtual shared_Object_ptr VCreateObject();
 		virtual shared_Object_ptr VCreateObject( text::GfigElementA * pGfig_p );
 		virtual shared_Object_ptr VCloneObject( const Object * pObj_p );
+		virtual void VSerialize( const Object * pObj_p, text::GfigElementA * pGFig_p );
 
 		void LoadNewPrefab( const Object * pObj_p, const std::string & szName_p );
 		void LoadNewPrefab( text::GfigElementA * pGfig_p );

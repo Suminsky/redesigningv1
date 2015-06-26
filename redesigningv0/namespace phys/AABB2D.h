@@ -42,16 +42,16 @@ namespace phys{
 		DirectX::XMFLOAT2 Up_Right()  const { return DirectX::XMFLOAT2( Up(), Right() );}
 
 		// negative means penetration
-		float XDistance( const AABB2D & other_p ){
+		float XDistance( const AABB2D & other_p ) const{
 
 			return abs( m_pos.x - other_p.m_pos.x ) - (m_halfW + other_p.m_halfW);
 		}
-		float YDistance( const AABB2D & other_p ){
+		float YDistance( const AABB2D & other_p ) const{
 
 			return abs( m_pos.y - other_p.m_pos.y ) - (m_halfH + other_p.m_halfH);
 		}
 
-		bool CollisionData_v2( const AABB2D & other_p, float & penetration ){
+		bool CollisionData_v2( const AABB2D & other_p, float & penetration ) const{
 
 			// UNTESTED
 			float xDist = XDistance( other_p );
@@ -74,7 +74,7 @@ namespace phys{
 			return true;
 		}
 
-		bool CollisionData( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration ){
+		bool CollisionData( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration ) const{
 
 			const DirectX::XMFLOAT2 normals[] = {	DirectX::XMFLOAT2( -1.0f,  0.0f ),
 													DirectX::XMFLOAT2(  1.0f,  0.0f ),
@@ -109,7 +109,7 @@ namespace phys{
 		//------------------------------------------------------------------------
 		// blocked face is a bit mask, each bit is a face
 		//------------------------------------------------------------------------
-		bool CollisionData_Btests( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration, char blockedFace_p ){
+		bool CollisionData_Btests( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration, char blockedFace_p, float fNoPenTolerance_p = 0.0f ) const{
 
 			const DirectX::XMFLOAT2 normals[] = {	DirectX::XMFLOAT2( -1.0f,  0.0f ),
 													DirectX::XMFLOAT2(  1.0f,  0.0f ),
@@ -123,22 +123,18 @@ namespace phys{
 										other_p.Down()	- Up(),
 										Down()			- other_p.Up() };
 
-			penetration = 0.0;
+			penetration = (std::numeric_limits<float>::lowest)();
 			normal.x = normal.y = 0.0f;
 			for( int it = 0; it < 4; ++it ){
 
 				// ignore if theres no penetration between any of the opposing faces
-				if( distances[it] >= 0.0f ) return false;
+				if( distances[it] >= fNoPenTolerance_p ) return false;
 
 				// skip if face is blocked
-				if( (blockedFace_p != 0x0f) // but if all faces are blocked, consider all
-					 &&
-					(blockedFace_p & (0x01 << it)) ) continue;
+				if( blockedFace_p & (0x01 << it) ) continue;
 
 				// keep the normal with least penetration (pen is negative)
-				if( penetration == 0
-					||
-					distances[it] > penetration ){
+				if( distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
@@ -153,7 +149,7 @@ namespace phys{
 		//------------------------------------------------------------------------
 		bool CollisionDataMoving( DirectX::XMFLOAT2 & vel_p, const AABB2D & other_p,
 									DirectX::XMFLOAT2 & normal, float & penetration,
-									float & tFirst_p, float & tLast_p ){
+									float & tFirst_p, float & tLast_p ) const{
 
 			// exit early if boxes initially overlapping
 
@@ -237,29 +233,36 @@ namespace phys{
 				return true;
 		}
 
-		bool IsColliding( const AABB2D & other_p ){
+		bool IsColliding( const AABB2D & other_p )const{
 
 			if( XDistance( other_p) > 0.0f ) return false;
 			if( YDistance( other_p) > 0.0f ) return false;
 
 			return true;
 		}
-		bool IsColliding_e( const AABB2D & other_p ){
+		//bool IsColliding_e( const AABB2D & other_p ){
 
-			if( XDistance( other_p) >= 0.0f ) return false;
-			if( YDistance( other_p) >= 0.0f ) return false;
+		//	if( XDistance( other_p) >= 0.0f ) return false;
+		//	if( YDistance( other_p) >= 0.0f ) return false;
+
+		//	return true;
+		//}
+		bool IsColliding_e( const AABB2D & other_p, float fNoPenTolerance_p = 0.0f ) const{
+
+			if( XDistance(other_p) >= fNoPenTolerance_p ) return false;
+			if( YDistance(other_p) >= fNoPenTolerance_p ) return false;
 
 			return true;
 		}
 
-		void RelativeDirection( const AABB2D & other_p, DirectX::XMFLOAT2 & dir_p ){
+		void RelativeDirection( const AABB2D & other_p, DirectX::XMFLOAT2 & dir_p )const{
 
 			dir_p.x = other_p.m_pos.x - m_pos.x;
 			dir_p.y = other_p.m_pos.y - m_pos.y;
 		}
 
 		// if closest == p, means is inside
-		void ClosestPointToPoint( const DirectX::XMFLOAT2 & p_p, DirectX::XMFLOAT2 & closest_p ){
+		void ClosestPointToPoint( const DirectX::XMFLOAT2 & p_p, DirectX::XMFLOAT2 & closest_p )const{
 
 			closest_p = p_p; // start as the point itself, if inside it will stay like that
 
@@ -270,7 +273,7 @@ namespace phys{
 			if( p_p.y > Up() ) closest_p.y = Up();
 		}
 
-		bool IsPointInside( const DirectX::XMFLOAT2 & p_p ){
+		bool IsPointInside( const DirectX::XMFLOAT2 & p_p )const{
 
 			if( abs( p_p.x - m_pos.x ) < m_halfW
 				&&
@@ -281,7 +284,7 @@ namespace phys{
 			return false;
 		}
 
-		bool FitInside( const AABB2D & other_p, float & wGap_p, float & hGap_p ){
+		bool FitInside( const AABB2D & other_p, float & wGap_p, float & hGap_p )const{
 
 			wGap_p = W() - other_p.W();
 			hGap_p = H() - other_p.H();
@@ -321,6 +324,22 @@ namespace phys{
 			}
 
 			return dist;
+		}
+
+		static void GetOppositeToDirFacesMask( const DirectX::XMFLOAT2 & dir, char & cMask ){
+
+			// logic:
+			// if going right, can only collide with left faces of other block, not right faces, etc.
+
+			if( dir.x <= 0.0f )
+				cMask |= 0x01 << 0;
+			if( dir.x >= 0.0f )
+				cMask |= 0x01 << 1;
+
+			if( dir.y <= 0.0f )
+				cMask |= 0x01 << 2;
+			if( dir.y >= 0.0f )
+				cMask |= 0x01 << 3;
 		}
 
 	private:

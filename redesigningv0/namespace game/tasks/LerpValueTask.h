@@ -3,7 +3,7 @@
 /*
 	created:	2013/05/24
 	created:	24:5:2013   10:12
-	file:		FadeTask.h
+	file:		LerpValueTask.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	this is actually a float interpolation task, needs a better name (TODO)
@@ -21,36 +21,36 @@
 
 namespace game{
 
-	class FadeTask: public Task{
+	class LerpValueTask: public Task{
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		FadeTask(	float & fValueToFade_p,
+		LerpValueTask(	float & fValueToLerp_p,
 					float fTimeToComplete_p = 1.0f,
 					float from = 1.0f, float to = 0.0f,
 					shared_Task_ptr pChainedTask_p = nullptr );
-		FadeTask(){}
+		LerpValueTask(){}
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
 		void Set(	float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
-		void Set(	float * fValueToFade_p,
+		void Set(	float * fValueToLerp_p,
 					float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
-		void Set(	const shared_Task_ptr & pChainedTask_p, float & fValueToFade_p,
+		void Set(	const shared_Task_ptr & pChainedTask_p, float & fValueToLerp_p,
 					float fTimeToComplete_p = 1.0f, float from = 1.0f, float to = 0.0f );
 
 	private:
 
 		double m_elapsed;
 		float m_fTimeToComplete;
-		float * m_pfFadingReference;
+		float * m_pfLerpingRef;
 		float m_from, m_to;
 
-		//FadeTask & operator =( const FadeTask & other_p ); // warning supress
+		//LerpValueTask & operator =( const LerpValueTask & other_p ); // warning supress
 
 		//------------------------------------------------------------------------
 		// update
@@ -58,6 +58,6 @@ namespace game{
 		virtual void VOnUpdate( double, double delta );
 	};
 
-	typedef std::shared_ptr<FadeTask> shared_FadeSpriteTask_ptr;
+	typedef std::shared_ptr<LerpValueTask> shared_LerpValueTask_ptr;
 
 }

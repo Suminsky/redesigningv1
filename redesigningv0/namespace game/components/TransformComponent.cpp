@@ -443,3 +443,83 @@ void game::TransformComponentFactory::VUpdateComponent( Component * pCompo_p, te
 		
 
 }
+
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+void game::TransformComponentFactory::VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p )
+{
+
+	/*
+	[TransformComponent
+		[offset
+			[pos		[x = 0]	[y = 0]	[z = 0]	[w = 1] ]
+			[scale  	[x = 1]	[y = 1]	[z = 1]	[w = 1] ]
+			[rotation	[x = 0]	[y = 0]	[z = 0]	[w = 1] ]
+		]
+		[local
+			[pos		[x = 0] [y = 0] [z = 0] [w = 1] ]
+			[scale  	[x = 1]	[y = 1]	[z = 1]	[w = 1] ]
+			[rotation	[x = 0]	[y = 0]	[z = 0]	[w = 1] ]
+		]
+	]
+	*/
+
+	TransformComponent & trafo = *((TransformComponent*)pCompo_p);
+
+	pGFig_p->m_subElements.emplace_back( GfigElementA(COMPONENT_NAME(TransformComponent)) );
+
+	GfigElementA & gTrafoCompo = pGFig_p->m_subElements.back();
+	{
+		GfigElementA gLocal(	"local" );
+		SerializeTrafo( trafo.m_local, gLocal );
+		if( gLocal.m_subElements.size())
+			gTrafoCompo.m_subElements.push_back(std::move(gLocal));
+
+		GfigElementA gOffset(	"offset" );
+		SerializeTrafo( trafo.m_offset, gOffset );
+		if( gOffset.m_subElements.size())
+			gTrafoCompo.m_subElements.push_back(std::move(gOffset));
+	}	
+}
+
+void game::TransformComponentFactory::SerializeTrafo( const Trafo & trafo_p, text::GfigElementA & gFig_p )
+{
+	GfigElementA gPos("pos");
+	SerializeXYZW(trafo_p.position, gPos);
+	if( gPos.m_subElements.size())
+		gFig_p.m_subElements.push_back(std::move(gPos));
+
+	GfigElementA gRotation("rotation");
+	SerializeXYZW(trafo_p.qRotation, gRotation);
+	if( gRotation.m_subElements.size() )
+		gFig_p.m_subElements.push_back(std::move(gRotation));
+
+
+	GfigElementA gScale("scale");
+	SerializeXYZW(trafo_p.scale, gScale);
+	if( gScale.m_subElements.size() )
+		gFig_p.m_subElements.push_back(std::move(gScale));
+}
+
+void game::TransformComponentFactory::SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p )
+{
+	// check if values are different than default values, since default values dont need to be loaded
+
+	if( xyzw_p.x != 0.0f ){
+
+		gFig_p.m_subElements.push_back(GfigElementA("x", std::to_string((long double)xyzw_p.x ).c_str()) );
+	}
+	if( xyzw_p.y != 0.0f ){
+		//GfigElementA gY("y", std::to_string(xyzw_p.y ));
+		gFig_p.m_subElements.push_back(GfigElementA("y", std::to_string((long double)xyzw_p.y ).c_str()) );
+	}
+	if( xyzw_p.z != 0.0f ){
+		
+		gFig_p.m_subElements.push_back(GfigElementA("z", std::to_string((long double)xyzw_p.z ).c_str()) );
+	}
+	if( xyzw_p.w != 1.0f ){
+
+		gFig_p.m_subElements.push_back(GfigElementA("w", std::to_string((long double)xyzw_p.w ).c_str()) );
+	}
+}

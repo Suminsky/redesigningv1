@@ -52,11 +52,7 @@ namespace game{
 	NEW_COMPONENT_TYPE(TransformComponent);
 	NEW_COMPONENT_TYPE(SpriteComponent_);
 	NEW_COMPONENT_TYPE(SpriteAnimationComponent);
-	
-
-	template< typename DELEGATE_PARAM > class ButtonComponent;
-	template<> const unsigned int   ComponentType<ButtonComponent<int>>::s_value = __LINE__;
-	template<> const char *			ComponentType<ButtonComponent<int>>::s_szName = "ButtonComponent<int>";
+	NEW_COMPONENT_TYPE(SpriteButtonCompo);
 
 	enum E_COMPONENTTYPE{
 		E_USERTYPE = __LINE__

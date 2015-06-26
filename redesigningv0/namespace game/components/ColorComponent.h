@@ -133,6 +133,13 @@ namespace game{
 		virtual pool_Component_ptr VCloneComponent( const Component* pCompo_p );
 		void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
 
+		void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
+
+		//------------------------------------------------------------------------
+		// those 2 must receive an already named gfig
+		//------------------------------------------------------------------------
+		static void SerializeRGBA( const DirectX::XMFLOAT4 & rgba_p, text::GfigElementA & gFig_p );
+
 	};
 
 	typedef std::shared_ptr<ColorComponentFactory> shared_ColorComponentFactory_ptr;

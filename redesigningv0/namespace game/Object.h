@@ -36,7 +36,6 @@ namespace game{
 	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
 	
 	typedef std::vector<pool_Component_ptr> ObjectComponents;
-	typedef std::vector<COMPONENTINDEX> ComponentIndexes;
 
 	//========================================================================
 	// 
@@ -170,6 +169,8 @@ namespace game{
 		std::vector<Component*> m_removedComponents;
 
 		EventMachine<ComponentEventData> m_objectEventMachine;
+
+		// TODO: make obj a huge block of mem, using max compos, eves and eve handlers
 
 		int m_ID;
 	};

@@ -194,6 +194,13 @@ namespace game{
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
+		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
+
+		//------------------------------------------------------------------------
+		// those 2 must receive an already named gfig
+		//------------------------------------------------------------------------
+		static void SerializeTrafo( const Trafo & trafo_p, text::GfigElementA & gFig_p );
+		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p );
 
 	};
 

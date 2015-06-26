@@ -308,6 +308,8 @@ namespace game{
 		pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p );
 		pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 		void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
+
+		void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
 	};
 
 	typedef std::shared_ptr<SpriteAnimationComponentFactory> shared_SpriteAnimationComponentFactory_ptr;

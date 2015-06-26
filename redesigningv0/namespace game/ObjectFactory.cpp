@@ -126,3 +126,10 @@ unsigned int game::AObjectFactory::PrefabIndexFromName( const std::string & szNa
 	assert(0);
 	return (unsigned)-1;
 }
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+void game::AObjectFactory::VSerialize( const Object * pObj_p, text::GfigElementA * pGFig_p )
+{
+
+}

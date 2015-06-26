@@ -71,6 +71,7 @@ namespace sprite{
 
 			if( m_pBuffer ) m_pBuffer->Release();
 		}
+		 
 
 		//------------------------------------------------------------------------
 		// builds/rebuilds the pipe state, setting viewport, cbuffer1 and RTV 
@@ -83,6 +84,15 @@ namespace sprite{
 		// Update cbuffer data, and set to update to buffer interface
 		//------------------------------------------------------------------------
 		void Update();
+		void ForceUpdate();
+		bool WillUpdate(){
+
+			return m_renderData.m_bUpdate;
+		}
+
+
+		void CarryWithCamera( DirectX::XMFLOAT2 & pos );
+		void ToCameraSpace( DirectX::XMFLOAT2 & pos );
 
 		//private:
 

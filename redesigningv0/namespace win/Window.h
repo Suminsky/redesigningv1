@@ -179,7 +179,7 @@ namespace win{
 		//------------------------------------------------------------------------
 		// Override to handle windows messages
 		//------------------------------------------------------------------------
-		virtual LRESULT CALLBACK WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p ) = 0;
+		virtual LRESULT CALLBACK VWndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p ) = 0;
 
 		//------------------------------------------------------------------------
 		// call this when the HWND changes to automatically set the rects
@@ -216,7 +216,7 @@ namespace win{
 
 			if( pThis ){
 
-				return pThis->WndProcHandler( hWnd_p, Msg_p, wParam_p, lParam_p );
+				return pThis->VWndProcHandler( hWnd_p, Msg_p, wParam_p, lParam_p );
 			}
 			else if( Msg_p == WM_NCCREATE ){
 

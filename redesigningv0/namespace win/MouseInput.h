@@ -51,7 +51,7 @@ namespace win{
 
 		//------------------------------------------------------------------------
 		// call per frame
-		// must be called before wndproc or after game logic
+		// must be called after wndproc, before game logic
 		//------------------------------------------------------------------------
 		void Update(){
 
@@ -60,11 +60,19 @@ namespace win{
 
 			m_prevPos = m_pos;
 
-			m_pressedButtons.Reset();
-			m_releasedButtons.Reset();
+			
 
 			m_iWheelDelta = m_iWheelAmount - m_iWheelPrevAmount;
 			m_iWheelPrevAmount = m_iWheelAmount;
+		}
+		//------------------------------------------------------------------------
+		// call per frame
+		// must be called after game logic
+		//------------------------------------------------------------------------
+		void LateUpdate(){
+
+			m_pressedButtons.Reset();
+			m_releasedButtons.Reset();
 		}
 
 		//------------------------------------------------------------------------

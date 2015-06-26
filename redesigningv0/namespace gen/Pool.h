@@ -46,6 +46,8 @@ namespace gen{
 				:
 			m_size(size_p){
 
+				// TODO placement new to put roster together with pool
+
 				m_elements = new RosterElement[size_p];
 
 				ResetRoster(); 

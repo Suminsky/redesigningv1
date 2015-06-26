@@ -38,15 +38,14 @@ void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 		itSprite < iSize;
 		++itSprite ){
 
-			// what if object isnt attached to layer..notting different will happen at all
 
 			SpriteComponent_ & spriteCompo = (*m_poolAccess.GetAllocated( itSprite ));
 			if( !spriteCompo.GetObjectOwner()->IsAttached() ) continue;
 
 			spriteCompo.OnDraw( dInterpolation_p );
 
-			// cull invisible sprites
-			if( spriteCompo.m_renderData.m_color.w > 0.0f ){
+			
+			if( spriteCompo.m_renderData.m_color.w > 0.0f ){ // cull invisible sprites
 
 				// cull out of view sprites (needs zoom info)
 				
