@@ -159,7 +159,7 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class TransformComponentFactory: public AComponentFactory{
+	class TransformComponentFactory: public IComponentFactory{
 
 		friend class TransformSystem;
 
@@ -170,9 +170,10 @@ namespace game{
 		//------------------------------------------------------------------------
 		TransformComponentFactory(unsigned int maxComponents_p)
 			:
-		m_pool(maxComponents_p){}
+		m_pool(maxComponents_p){
 
-		gen::Pool<TransformComponent> m_pool;
+			BREAKHERE;
+		}
 
 		//------------------------------------------------------------------------
 		// 
@@ -200,7 +201,11 @@ namespace game{
 		// those 2 must receive an already named gfig
 		//------------------------------------------------------------------------
 		static void SerializeTrafo( const Trafo & trafo_p, text::GfigElementA & gFig_p );
-		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p );
+		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p, const float fDefault_p = 0.0f );
+
+	private:
+
+		gen::Pool<TransformComponent> m_pool;
 
 	};
 

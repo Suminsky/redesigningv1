@@ -39,7 +39,6 @@ void sprite::InstancesVertexBuffer::StartBufferingAt( unsigned int iIndex_p )
 	m_bLocked = true;
 
 	m_iVBfirstAvailable = iIndex_p;
-
 }
 
 
@@ -129,7 +128,7 @@ void sprite::InstancesVertexBuffer::MapInstancesToVB_NoSort( ID3D11DeviceContext
 void sprite::InstancesVertexBuffer::SetForImmutableVB()
 {
 	m_iBufferingAt = m_size;
-	m_iVBfirstAvailable = m_iVBfirstAvailable;
+	//m_iVBfirstAvailable = m_iVBfirstAvailable; // wtf??
 }
 
 //========================================================================

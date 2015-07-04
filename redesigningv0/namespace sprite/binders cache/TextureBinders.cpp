@@ -40,6 +40,10 @@ int sprite::TextureBinders::Add( const char* szTexture_p )
 
 	m_names.push_back( szTexture_p );
 
+	// add res
+	Resolution tmp = {desc.Width,desc.Height};
+	m_resolutions.push_back( tmp );
+
 	// returns the index
 
 	return (int)(m_cache.size()-1);

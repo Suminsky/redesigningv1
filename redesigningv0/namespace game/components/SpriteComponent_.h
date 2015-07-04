@@ -63,8 +63,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// interpolates
 		//------------------------------------------------------------------------
-		void OnDraw( double dInterpolation_p );
-		void OnDraw( double dInterpolation_p, sprite::Camera * pCamera_p );
+		//void OnDraw( double dInterpolation_p );
+		void InterpolateWorld( double dInterp_p );
+		void InterpolateColor( double dInterp );
 
 		void FlipHorzToogle(); void FlipHorz(); void UnFlipHorz();
 		void FlipVertcToogle(); void FlipVertc(); void UnFlipVertc();
@@ -86,9 +87,11 @@ namespace game{
 
 		void SetColor( DirectX::XMFLOAT4 color_p );
 
+
 	public:
 
 		sprite::SortMask m_sortKey;
+		sprite::DrawableCbuffer m_renderData;
 
 		DirectX::XMFLOAT4X4 m_currentTrafo;
 		DirectX::XMFLOAT4X4 m_previousTrafo;
@@ -96,13 +99,14 @@ namespace game{
 		DirectX::XMFLOAT4 m_currentColor;
 		DirectX::XMFLOAT4 m_previousColor;
 
+
+
 		int m_TextureID, m_BlendModeID, m_SamplerModeID, m_ShaderID;
 		int m_iShaderPermutation;
 
 		bool m_bHFlip, m_bVFlip;
 
 		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
-		sprite::DrawableCbuffer m_renderData;
 		sprite::BindVSDrawableCBuffer m_VSDrawableCbufferBinder;
 
 		// testing
@@ -113,13 +117,11 @@ namespace game{
 	};
 
 	typedef gen::pool_ptr<SpriteComponent_> pool_SpriteCompo__ptr;
-	typedef std::shared_ptr<SpriteComponent_> shared_SpriteComponent__ptr;
-	typedef std::weak_ptr<SpriteComponent_> weak_SpriteComponent__ptr;
 
 	//========================================================================
 	// 
 	//========================================================================
-	class SpriteComponent_Factory: public AComponentFactory{
+	class SpriteComponent_Factory: public IComponentFactory{
 
 		friend class TransformSystem;
 

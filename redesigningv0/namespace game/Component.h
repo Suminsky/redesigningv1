@@ -23,7 +23,7 @@ namespace game{
 
 	class Object;
 	class System;
-	class AComponentFactory;
+	class IComponentFactory;
 
 	// new types
 
@@ -42,7 +42,7 @@ namespace game{
 
 		friend class Object;
 		friend class System;
-		friend class AComponentFactory;
+		friend class IComponentFactory;
 
 		DCL_POOLELEMENT();
 

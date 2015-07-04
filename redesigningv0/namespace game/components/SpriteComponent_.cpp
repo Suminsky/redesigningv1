@@ -19,8 +19,8 @@ game::SpriteComponent_::SpriteComponent_()
 	m_type = COMPONENT_TYPE(SpriteComponent_);
 	m_pCamera = nullptr;
 }
-
-SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
+SpriteComponent_::SpriteComponent_(
+	Device * pDevice_p,
 	const char * szTexture_p, float fWidth_p, float fHeight_p, XMFLOAT4 uvRect_p,
 	E_BLENDTYPE blendType_p, E_SAMPLERTYPE sampler_p,
 	SpriteRenderer * pSpriteRenderer_p )
@@ -74,112 +74,6 @@ SpriteComponent_::SpriteComponent_(	Device * pDevice_p,
 	m_sortKey.bitfield.transparency = blendType_p;
 }
 
-void SpriteComponent_::OnDraw( double dInterpolation_p )
-{
-	XMMATRIX mCurrentTrafo = XMLoadFloat4x4( &m_currentTrafo );
-	if( memcmp( &m_renderData.m_mWorld, &mCurrentTrafo, sizeof(XMMATRIX)) ){
-
-		// interpolate
-
-		// decompose matrices
-
-		XMVECTOR vPos, vScale, qRot; 
-		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
-
-		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
-		XMVECTOR vPrevPos, vPrevScale, qPrevRot;
-		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
-
-		// interpolate independent components
-
-		XMVECTOR vFactor = XMVectorReplicate( (float)dInterpolation_p); // do only once
-
-		XMVECTOR vlPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
-		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
-		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
-
-		// compose matrix again
-
-		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
-
-		// send to GPU?
-		m_renderData.m_bUpdate = true;
-	}
-
-	// interpolate color
-
-	if( m_renderData.m_color.x != m_currentColor.x
-		||
-		m_renderData.m_color.y != m_currentColor.y
-		||
-		m_renderData.m_color.z != m_currentColor.z
-		||
-		m_renderData.m_color.w != m_currentColor.w  ){
-
-			XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
-			XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
-
-			colorCurrent = XMVectorLerp( colorPrevious, colorCurrent, (float)dInterpolation_p );
-
-			XMStoreFloat4( &m_renderData.m_color, colorCurrent );
-
-			// send to GPU?
-			m_renderData.m_bUpdate = true;
-	}
-}
-void SpriteComponent_::OnDraw( double dInterpolation_p, Camera * /*pCamera_p*/ )
-{
-	XMMATRIX mCurrentTrafo = XMLoadFloat4x4( &m_currentTrafo );
-	if( memcmp( &m_renderData.m_mWorld, &mCurrentTrafo, sizeof(XMMATRIX)) ){
-
-		// interpolate
-
-		// decompose matrices
-
-		XMVECTOR vPos, vScale, qRot; 
-		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
-
-		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
-		XMVECTOR vPrevPos, vPrevScale, qPrevRot;
-		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
-
-		// interpolate independent components
-
-		XMVECTOR vFactor = XMVectorReplicate( (float)dInterpolation_p); // do only once
-
-		XMVECTOR vlPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
-		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
-		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
-
-		// compose matrix again
-
-		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
-
-		// send to GPU?
-		m_renderData.m_bUpdate = true;
-	}
-
-	// interpolate color
-	if( m_renderData.m_color.x != m_currentColor.x
-		||
-		m_renderData.m_color.y != m_currentColor.y
-		||
-		m_renderData.m_color.z != m_currentColor.z
-		||
-		m_renderData.m_color.w != m_currentColor.w ){
-
-			XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
-			XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
-
-			colorCurrent = XMVectorLerp( colorPrevious, colorCurrent, (float)dInterpolation_p );
-
-			XMStoreFloat4( &m_renderData.m_color, colorCurrent );
-
-			// send to GPU?
-			m_renderData.m_bUpdate = true;
-	}
-}
-
 void SpriteComponent_::VOnAttach()
 {
 	//gen::Delegate1Param<const game::Event<InGameEventData>&> eventHandlerDelegate =
@@ -197,7 +91,6 @@ void SpriteComponent_::VOnAttach()
 		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
 	m_pObjectOwner->RegisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
 }
-
 void game::SpriteComponent_::VOnDetach()
 {
 	EventMachine<ComponentEventData>::EventHandler colorDelegate =
@@ -213,7 +106,6 @@ void game::SpriteComponent_::VOnDetach()
 	m_pObjectOwner->UnregisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
 }
 
-
 void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & event_p )
 {
 	ColorComponent * pColor = event_p.GetDataAs<ColorComponent*>();
@@ -223,7 +115,6 @@ void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & e
 	if( pColor->GonnaSnap() ) m_previousColor = m_currentColor;
 	else m_previousColor = pColor->GetPreviousFinalColor();
 }
-
 void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEventData> & event_p )
 {
 	TransformComponent * pTrafo = event_p.GetDataAs<TransformComponent*>();
@@ -233,7 +124,6 @@ void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEven
 		m_previousTrafo = m_currentTrafo;
 	else m_previousTrafo = pTrafo->GetPreviousFinal();
 }
-
 void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData> & event_p )
 {
 	SpriteAnimationComponent * pAnim = event_p.GetDataAs<SpriteAnimationComponent*>();
@@ -327,6 +217,57 @@ game::SpriteComponent_::~SpriteComponent_()
 	if( m_pBuffer )m_pBuffer->Release();
 }
 
+void game::SpriteComponent_::InterpolateWorld( double dInterp_p )
+{
+	XMMATRIX mCurrentTrafo = XMLoadFloat4x4( &m_currentTrafo );
+	if( memcmp( &m_renderData.m_mWorld, &mCurrentTrafo, sizeof(XMMATRIX)) ){
+
+		// decompose matrices
+
+		XMVECTOR vPos, vScale, qRot; 
+		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
+
+		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
+		XMVECTOR vPrevPos, vPrevScale, qPrevRot;
+		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
+
+		// interpolate independent components
+
+		XMVECTOR vFactor = XMVectorReplicate( (float)dInterp_p); // do only once
+
+		XMVECTOR vlPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
+		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
+		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
+
+		// compose matrix again
+
+		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
+
+		// send to GPU?
+		m_renderData.m_bUpdate = true;
+	}
+}
+void game::SpriteComponent_::InterpolateColor( double dInterp )
+{
+	if( m_renderData.m_color.x != m_currentColor.x
+		||
+		m_renderData.m_color.y != m_currentColor.y
+		||
+		m_renderData.m_color.z != m_currentColor.z
+		||
+		m_renderData.m_color.w != m_currentColor.w  ){
+
+			XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
+			XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
+
+			colorCurrent = XMVectorLerp( colorPrevious, colorCurrent, (float)dInterp );
+
+			XMStoreFloat4( &m_renderData.m_color, colorCurrent );
+
+			m_renderData.m_bUpdate = true;
+	}
+}
+
 void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
 	m_pCamera = nullptr;
@@ -382,7 +323,6 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 	m_sortKey.bitfield.textureID = m_TextureID;
 	m_sortKey.bitfield.transparency = blendType_p;
 }
-
 void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
 	m_pCamera = nullptr;
@@ -447,7 +387,7 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 	//SpriteComponent_ * pSprite = m_pool.Allocate();
 	pool_SpriteCompo__ptr pSprite( m_pool );
 
-	float w, h;
+	float w = 0.0f, h = 0.0f;
 	XMFLOAT4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	sprite::E_BLENDTYPE eBlend = E_BLEND_NONE_DEFAULT;
 	sprite::E_SAMPLERTYPE eSampler = E_SAMPLER_NONE;
@@ -455,10 +395,10 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 
 	GfigElementA * pParam = nullptr;
 
-	keepAssert( pGFig_p->GetSubElement( "w", pParam ) );
-	w = (float)atof( pParam->m_value.c_str() );
-	keepAssert( pGFig_p->GetSubElement( "h", pParam ) );
-	h = (float)atof( pParam->m_value.c_str() );
+	if( pGFig_p->GetSubElement( "w", pParam ) )
+		w = (float)atof( pParam->m_value.c_str() );
+	if( pGFig_p->GetSubElement( "h", pParam ) )
+		h = (float)atof( pParam->m_value.c_str() );
 
 	if( pGFig_p->GetSubElement( "xoff", pParam ) ){
 
@@ -488,6 +428,13 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 	pSprite->m_renderData.m_padding.x = xOffset;
 	pSprite->m_renderData.m_padding.y = yOffset;
 	//return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );
+
+	if( w == 0.0f ){
+
+		TextureBinders::Resolution res = m_pRendererRef->m_tex2D_cache.GetTextureRes( pSprite->m_TextureID );
+		pSprite->m_renderData.m_res.x = (float)res.w;
+		pSprite->m_renderData.m_res.y = (float)res.h;
+	}
 
 	if( pGFig_p->GetSubElement( "color", pParam ) ){
 
@@ -789,13 +736,20 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 			GfigElementA( "texture", m_pRendererRef->m_tex2D_cache.GetTextureName( sprite.GetTextureID() ).c_str() )
 			);
 
-		gSpriteCompo.m_subElements.push_back(
-			GfigElementA( "w", std::to_string((long double)sprite.m_renderData.m_res.x).c_str() )
-			);
+		TextureBinders::Resolution res = m_pRendererRef->m_tex2D_cache.GetTextureRes( sprite.m_TextureID );
+		if( (float)res.w != sprite.m_renderData.m_res.x
+			||
+			(float)res.h != sprite.m_renderData.m_res.y ){
 
-		gSpriteCompo.m_subElements.push_back(
-			GfigElementA( "h", std::to_string((long double)sprite.m_renderData.m_res.y).c_str() )
-			);
+				gSpriteCompo.m_subElements.push_back(
+					GfigElementA( "w", std::to_string((long double)sprite.m_renderData.m_res.x).c_str() )
+					);
+
+				gSpriteCompo.m_subElements.push_back(
+					GfigElementA( "h", std::to_string((long double)sprite.m_renderData.m_res.y).c_str() )
+					);
+		}
+
 
 		GfigElementA gRect(	"uvRect" );
 		SerializeXYZW( sprite.m_renderData.m_uvRect, gRect );
@@ -825,25 +779,25 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 	}	
 }
 
-void game::SpriteComponent_Factory::SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p )
+void game::SpriteComponent_Factory::SerializeXYZW( const DirectX::XMFLOAT4 & xywh_p, text::GfigElementA & gFig_p )
 {
 	// check if values are different than default values, since default values dont need to be loaded
 
-	if( xyzw_p.x != 0.0f ){
+	if( xywh_p.x != 0.0f ){
 
-		gFig_p.m_subElements.push_back(GfigElementA("x", std::to_string((long double)xyzw_p.x ).c_str()) );
+		gFig_p.m_subElements.push_back(GfigElementA("x", std::to_string((long double)xywh_p.x ).c_str()) );
 	}
-	if( xyzw_p.y != 0.0f ){
-		//GfigElementA gY("y", std::to_string(xyzw_p.y ));
-		gFig_p.m_subElements.push_back(GfigElementA("y", std::to_string((long double)xyzw_p.y ).c_str()) );
+	if( xywh_p.y != 0.0f ){
+		//GfigElementA gY("y", std::to_string(xywh_p.y ));
+		gFig_p.m_subElements.push_back(GfigElementA("y", std::to_string((long double)xywh_p.y ).c_str()) );
 	}
-	if( xyzw_p.z != 1.0f ){
+	if( xywh_p.z != 1.0f ){
 
-		gFig_p.m_subElements.push_back(GfigElementA("z", std::to_string((long double)xyzw_p.z ).c_str()) );
+		gFig_p.m_subElements.push_back(GfigElementA("w", std::to_string((long double)xywh_p.z ).c_str()) );
 	}
-	if( xyzw_p.w != 1.0f ){
+	if( xywh_p.w != 1.0f ){
 
-		gFig_p.m_subElements.push_back(GfigElementA("w", std::to_string((long double)xyzw_p.w ).c_str()) );
+		gFig_p.m_subElements.push_back(GfigElementA("h", std::to_string((long double)xywh_p.w ).c_str()) );
 	}
 }
 

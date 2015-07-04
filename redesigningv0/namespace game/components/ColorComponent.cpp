@@ -158,15 +158,27 @@ void game::ColorComponentFactory::VSerialize( const Component * pCompo_p, text::
 
 	GfigElementA & gColorCompo = pGFig_p->m_subElements.back();
 	{
-		GfigElementA gLocal(	"local" );
-		SerializeRGBA( color.m_localColor, gLocal );
-		if( gLocal.m_subElements.size())
-			gColorCompo.m_subElements.push_back(std::move(gLocal));
 
 		GfigElementA gOffset(	"offset" );
 		SerializeRGBA( color.m_offsetColor, gOffset );
 		if( gOffset.m_subElements.size())
 			gColorCompo.m_subElements.push_back(std::move(gOffset));
+
+		if( gColorCompo.m_subElements.size() ){
+
+			GfigElementA gLocal(	"local" );
+			SerializeRGBA( color.m_localColor, gLocal );
+			if( gLocal.m_subElements.size())
+				gColorCompo.m_subElements.push_back(std::move(gLocal));
+		}
+		else{
+
+			// if there isnt an offset, no need to have a "local" subelement
+
+			SerializeRGBA( color.m_localColor, gColorCompo );
+		}
+
+		
 	}	
 }
 

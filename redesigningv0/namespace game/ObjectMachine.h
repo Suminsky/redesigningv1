@@ -22,9 +22,6 @@ namespace game{
 
 	class Layer;
 
-	typedef std::vector<shared_Object_ptr> Objects;
-	typedef std::vector<OBJECTINDEX> ObjectIndexes;
-
 	class ObjectMachine{
 
 		friend class Layer;
@@ -43,13 +40,16 @@ namespace game{
 		//------------------------------------------------------------------------
 		// objects
 		//------------------------------------------------------------------------
-		void AddObject( shared_Object_ptr && pObject_p );
-		void AddObject( const shared_Object_ptr & pObject_p );
+		void AddObject( pool_Object_ptr && pObject_p );
+		void AddObject( const pool_Object_ptr & pObject_p );
 		void RemoveObject( OBJECTINDEX objectCurrentIndex_p );
-		void RemoveObject( const shared_Object_ptr & pObject_p );
+		void RemoveObject( const pool_Object_ptr & pObject_p );
 		void RemoveObject( Object * pObject_p );
 
 		Layer * GetLayer() const { return m_pLayerRef; }
+
+		uint32_t GetSize() const { return (uint32_t)m_objects.size(); }
+		Object * GetITObject( const uint32_t it ) const { return m_objects[it].Get(); }
 
 	private:
 
@@ -67,11 +67,10 @@ namespace game{
 		void SetLayer( Layer * pLayer_p ){ m_pLayerRef = pLayer_p; }
 
 
-		Objects m_objects;
-		std::vector<Object*> m_removedObjects;
+		std::vector<pool_Object_ptr> m_objects;
+		std::vector<Object*>		m_removedObjects;
 
 		Layer * m_pLayerRef;
-
 	};
 
 	typedef std::shared_ptr<ObjectMachine> shared_ObjectMachine_ptr;

@@ -2,7 +2,7 @@
 
 using namespace game;
 
-void ObjectMachine::AddObject( shared_Object_ptr && pObject_p )
+void ObjectMachine::AddObject( pool_Object_ptr && pObject_p )
 {
 	assert( pObject_p->m_bDettached );
 
@@ -29,7 +29,7 @@ void ObjectMachine::AddObject( shared_Object_ptr && pObject_p )
 	}
 }
 
-void ObjectMachine::AddObject( const shared_Object_ptr & pObject_p )
+void ObjectMachine::AddObject( const pool_Object_ptr & pObject_p )
 {
 	assert( pObject_p->m_bDettached );
 
@@ -49,12 +49,12 @@ void ObjectMachine::AddObject( const shared_Object_ptr & pObject_p )
 
 void ObjectMachine::RemoveObject( OBJECTINDEX objectCurrentIndex_p )
 {
-	RemoveObject( m_objects[objectCurrentIndex_p].get() );
+	RemoveObject( m_objects[objectCurrentIndex_p].Get() );
 }
 
-void ObjectMachine::RemoveObject( const shared_Object_ptr & pObject_p )
+void ObjectMachine::RemoveObject( const pool_Object_ptr & pObject_p )
 {
-	RemoveObject(pObject_p.get());
+	RemoveObject(pObject_p.Get());
 }
 
 void ObjectMachine::RemoveObject( Object * pObject_p )

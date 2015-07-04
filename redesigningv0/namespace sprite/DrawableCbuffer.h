@@ -45,35 +45,7 @@ namespace sprite{
 		DirectX::XMFLOAT4 m_color;
 		
 
-		bool m_bUpdate;	// set to true to update the ID3D11Buffer
-						// IMPORTANT: this NEED to be placed after the above data, because this class itself is the one
-						// send to the buffer...theres no bool on that buffer, so the s_SIZE excludes it, if placed after
-						// 
-						// EXPLANATION:
-						// the whole point of that update is delegate the buffer update to the point where the bind cmd is
-						// executed, that way I can have objects share the same ID3D11Buffer, witch is awesome. If that where
-						// to be update in the game loop, the buffer would contain only the last objects data, and then Id be 
-						// obligated to use multiple buffers.
-						// ERRATA:
-						// if I have multiple objects sharing a ID3D11Buffer, than I NEED to update, even if the data didnt changed,
-						// because the data is always remaining from the last object, so setting update to false is like saying to
-						// use data from the last object, which is stupid..
-						// Updating always have the counter side of if an object have a unique ID3D11Buffer, it will update needlessly.
-						// Well, I`m already checking if the current bound ID3D11Buffer is the one to be bound, I can just use that and:
-						// -if its the same buffer, update regardless of this bool;
-						// -if its other buffer, update in accord to the bool; - WRONG (see errata 2)
-						// ERRATA 2:
-						// if its other buffer, it may set the new buffer without the renderable data, but with another one
-						// in it. Say current buffer bound is different, and current object buffer is shared among others.
-						// If object didnt change its data, the update flag will be false, but the current data in the buffer
-						// can be of any object! - solving this with another static for the data
-						// 
-						// 
-						// IMPORTANT 2:
-						// delegating to the bind cmd means that it will only be updated if the buffer/binder command is not
-						// already settled, otherwise the cache will skip it. Reseting the cache is not a good solution,
-						// because the buffer will be re settled just to be updated..the point of having the buffer shared
-						// becomes meaningless.
+		bool m_bUpdate;
 
 		//------------------------------------------------------------------------
 		// ctor
@@ -97,9 +69,7 @@ namespace sprite{
 			// need 2 flags, a dirt per object (did I changed since last time), and a dirt for the
 			// buffer (the shared buffer), (its my data on the buffer?)
 			
-			// TODO: first fullscreen switch doesnt improve performance!!! second and consecutives rise 1000 FPS
-							//havy text // normal // normal FS
-			if( m_bUpdate ){//1336 //2350 //3090	// same for map and updatesubresource
+			if( m_bUpdate ){
 	
 				D3D11_MAPPED_SUBRESOURCE mapped;// = {0};
 				pContext_p->Map( pConstantBuffer_p, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped );

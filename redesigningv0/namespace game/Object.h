@@ -22,10 +22,14 @@
 #include "Component.h"
 #include "EventMachine.h"
 
+namespace gen{
+	template<typename T>	class Pool;
+}
+
 namespace game{
 
 	class ObjectMachine;
-	class AObjectFactory;
+	class ObjectFactory;
 	class Layer;
 	class System;
 	class Component;
@@ -44,7 +48,9 @@ namespace game{
 
 		friend class Layer;
 		friend class ObjectMachine;
-		friend class AObjectFactory;
+		friend class ObjectFactory;
+
+		DCL_POOLELEMENT();
 
 	public:
 
@@ -60,9 +66,10 @@ namespace game{
 
 				static int s_count = 0;
 				m_ID = s_count++;
+				m_szName[0] = 0;
 			}
 
-		virtual ~Object(){
+		~Object(){
 
 			//TODO: dettach components?
 			//BREAKHERE;
@@ -143,6 +150,7 @@ namespace game{
 			return gen::pool_ptr<DerivedComponent>();
 		}
 		int GetID() const { return m_ID; }
+		const char* GetName()const{ return &m_szName[0]; }
 
 	protected:
 
@@ -173,8 +181,8 @@ namespace game{
 		// TODO: make obj a huge block of mem, using max compos, eves and eve handlers
 
 		int m_ID;
+		char m_szName[64];
 	};
 
-	typedef std::shared_ptr<Object> shared_Object_ptr;
-	typedef std::weak_ptr<Object> weak_Object_ptr;
+	typedef gen::pool_ptr<Object> pool_Object_ptr;
 }

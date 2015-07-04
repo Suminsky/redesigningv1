@@ -41,12 +41,12 @@ void game::Layer::Update( const double dDeltaTime_p )
 // objects
 //========================================================================
 
-void game::Layer::AddObject( shared_Object_ptr && pObject_p )
+void game::Layer::AddObject( pool_Object_ptr && pObject_p )
 {
 	m_objects.AddObject( std::move(pObject_p) );
 }
 
-void game::Layer::AddObject( const shared_Object_ptr & pObject_p )
+void game::Layer::AddObject( const pool_Object_ptr & pObject_p )
 {
 	m_objects.AddObject(pObject_p);
 }
@@ -56,7 +56,7 @@ void game::Layer::RemoveObject( OBJECTINDEX objectCurrentIndex_p )
 	m_objects.RemoveObject(objectCurrentIndex_p);
 }
 
-void game::Layer::RemoveObject( const shared_Object_ptr & pObject_p )
+void game::Layer::RemoveObject( const pool_Object_ptr & pObject_p )
 {
 	RemoveObject(pObject_p->m_currentObjectIndex);
 }
@@ -77,6 +77,17 @@ void game::Layer::Draw( const double dInterpolation_p, const double dDelta_p )
 
 	VOnDraw( dInterpolation_p, dDelta_p );
 }
+
+void game::Layer::SerializeAttachedObjs( text::GfigElementA *pGfig_p )
+{
+	for( int it = 0, nObjs = (int)m_objects.m_objects.size();
+		it < nObjs;
+		++it ){
+
+		m_objFactory.Serialize( m_objects.m_objects[it].Get(), pGfig_p );
+	}
+}
+
 //========================================================================
 // 
 //========================================================================

@@ -13,11 +13,11 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-#include <memory>
 #include <string>
 #include <vector>
 
 // private includes
+#include "Object.h"
 
 // forward dcls
 
@@ -28,20 +28,24 @@ namespace text{
 
 namespace game{
 
-	class Object; typedef std::shared_ptr<Object> shared_Object_ptr;
 	class Layer;
 
-	class AObjectFactory{
+	class ObjectFactory{
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		AObjectFactory()
+		ObjectFactory(unsigned int maxObjs_p)
 			:
+		m_pool(maxObjs_p),
 		m_pLayerOwner(nullptr)
-		{}
+		{
+
+			int x =7; x = x;
+		}
+		~ObjectFactory(){}
 
 		//------------------------------------------------------------------------
 		// 
@@ -51,35 +55,35 @@ namespace game{
 		//------------------------------------------------------------------------
 		// TODO:use a pool too
 		//------------------------------------------------------------------------
-		virtual shared_Object_ptr VCreateObject();
-		virtual shared_Object_ptr VCreateObject( text::GfigElementA * pGfig_p );
-		virtual shared_Object_ptr VCloneObject( const Object * pObj_p );
-		virtual void VSerialize( const Object * pObj_p, text::GfigElementA * pGFig_p );
+		pool_Object_ptr CreateObject();
+		pool_Object_ptr CreateObject( text::GfigElementA * pGfig_p );
+		pool_Object_ptr CloneObject( const Object * pObj_p );
+		void Serialize( const Object * pObj_p, text::GfigElementA * pGFig_p );
 
 		void LoadNewPrefab( const Object * pObj_p, const std::string & szName_p );
 		void LoadNewPrefab( text::GfigElementA * pGfig_p );
 		void UnLoadAllPrefabs(){ m_prefabs.clear(); }
 
 		unsigned int PrefabIndexFromName( const std::string & szName_p );
-		shared_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p );
-		shared_Object_ptr CreateObjectFromPrefab( const std::string & szName_p );
-		shared_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p, text::GfigElementA * pIntanceGfig_p );
-		shared_Object_ptr CreateObjectFromPrefab( const std::string & szName_p, text::GfigElementA * pIntanceGfig_p );
-		
+		pool_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p );
+		pool_Object_ptr CreateObjectFromPrefab( const std::string & szName_p );
+		pool_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p, text::GfigElementA * pIntanceGfig_p );
+		pool_Object_ptr CreateObjectFromPrefab( const std::string & szName_p, text::GfigElementA * pIntanceGfig_p );
 
 	private:
 
-		Layer * m_pLayerOwner;
+		gen::Pool<Object> m_pool;
+
+		Layer				* m_pLayerOwner;
 
 		struct Prefab{
 			std::string szName;
-			shared_Object_ptr pObj;
+			pool_Object_ptr pObj;
 		};
 
 		std::vector<Prefab> m_prefabs;
-
 	};
 
-	typedef std::shared_ptr<AObjectFactory> shared_AObjectFactory_ptr;
-	typedef std::weak_ptr<AObjectFactory> weak_AObjectFactory_ptr;
+	typedef std::shared_ptr<ObjectFactory> shared_ObjectFactory_ptr;
+	typedef std::weak_ptr<ObjectFactory> weak_ObjectFactory_ptr;
 }

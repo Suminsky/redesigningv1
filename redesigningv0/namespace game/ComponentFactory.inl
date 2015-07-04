@@ -3,7 +3,7 @@
 using namespace game;
 
 template< typename DerivedComponent >
-void game::ComponentFactory::RegisterFactory( const shared_AComponentFactory_ptr & pFactory_p )
+void game::ComponentFactory::RegisterFactory( const shared_IComponentFactory_ptr & pFactory_p )
 {
 	NDBG(
 	m_registry.emplace( std::make_pair( COMPONENT_TYPE(DerivedComponent), pFactory_p) );
@@ -24,7 +24,7 @@ gen::pool_ptr<DerivedComponent> ComponentFactory::CreateComponent()
 
 	assert( itFound != m_registry.end() );
 
-	shared_AComponentFactory_ptr & pFactory = itFound->second;
+	shared_IComponentFactory_ptr & pFactory = itFound->second;
 
 	return  pFactory->VCreateComponent();
 }
@@ -36,7 +36,7 @@ gen::pool_ptr<DerivedComponent> ComponentFactory::CreateComponent( text::GfigEle
 
 	assert( itFound != m_registry.end() );
 
-	shared_AComponentFactory_ptr & pFactory = itFound->second;
+	shared_IComponentFactory_ptr & pFactory = itFound->second;
 
 	return pFactory->VCreateComponent( pGFig_p );
 }
@@ -49,14 +49,14 @@ gen::pool_ptr<DerivedComponent> ComponentFactory::CloneComponent( const DerivedC
 
 	assert( itFound != m_registry.end() );
 
-	shared_AComponentFactory_ptr & pFactory = itFound->second;
+	shared_IComponentFactory_ptr & pFactory = itFound->second;
 
 	return pFactory->VCloneComponent( pCompo_p );
 }
 
 
 template< typename DerivedComponent >
-shared_AComponentFactory_ptr ComponentFactory::GetComponentFactory()
+shared_IComponentFactory_ptr ComponentFactory::GetComponentFactory()
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( COMPONENT_TYPE(DerivedComponent) );
 

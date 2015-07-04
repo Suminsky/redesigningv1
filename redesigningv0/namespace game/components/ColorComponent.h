@@ -98,7 +98,7 @@ namespace game{
 	// 
 	//========================================================================
 
-	class ColorComponentFactory: public AComponentFactory{
+	class ColorComponentFactory: public IComponentFactory{
 
 		friend class ColorSystem;
 

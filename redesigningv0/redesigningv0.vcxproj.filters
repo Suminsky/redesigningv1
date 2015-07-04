@@ -447,6 +447,9 @@
     <ClInclude Include="Legalia\SpriteDraggingSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Legalia\SpriteTextCompo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -798,6 +801,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\SpriteTextCompo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

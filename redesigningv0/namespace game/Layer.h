@@ -37,7 +37,7 @@ namespace game{
 	typedef unsigned int LAYERINDEX;
 	static const unsigned int INVALID_LAYERINDEX = (unsigned int)-1;
 
-	typedef std::vector<shared_Object_ptr> LayerObjects;
+	typedef std::vector<pool_Object_ptr> LayerObjects;
 	typedef std::vector<OBJECTINDEX> ObjectIndexes;
 
 	//========================================================================
@@ -53,21 +53,24 @@ namespace game{
 		bool m_bVisible;
 		Timer<double> m_timer;
 
+		ObjectFactory		m_objFactory;
 		SystemMachine		m_systems;
 		ComponentFactory	m_componentFactory;
 		ObjectMachine		m_objects;
-		shared_AObjectFactory_ptr m_pObjFactory;
+		
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Layer( bool bActive_p = true, bool bVisible_p = true )
+		Layer( uint32_t nMaxObjs_p, bool bActive_p = true, bool bVisible_p = true )
 			:
 			m_bActive(bActive_p), m_bVisible(bVisible_p),
 			m_currentLayerIndex(INVALID_LAYERINDEX),
 			m_pStateOwner(nullptr),
-			m_bDettached(true)
+			m_bDettached(true),
+			m_objFactory(nMaxObjs_p)
 			{
+				m_objFactory.SetLayer(this);
 				m_objects.SetLayer(this);
 				m_systems.SetLayer(this);
 			}
@@ -77,29 +80,19 @@ namespace game{
 		//------------------------------------------------------------------------
 		// objects (bridge for object machine)
 		//------------------------------------------------------------------------
-		void AddObject( shared_Object_ptr && pObject_p );
-		void AddObject( const shared_Object_ptr & pObject_p );
+		void AddObject( pool_Object_ptr && pObject_p );
+		void AddObject( const pool_Object_ptr & pObject_p );
 		void RemoveObject( OBJECTINDEX objectCurrentIndex_p );
-		void RemoveObject( const shared_Object_ptr & pObject_p );
+		void RemoveObject( const pool_Object_ptr & pObject_p );
 		void RemoveObject( const Object * pObject_p );
 
-		void SetObjectFactory( const shared_AObjectFactory_ptr & pObjFactory_p ){
+		pool_Object_ptr CreateObject(){
 
-			m_pObjFactory = pObjFactory_p;
-			m_pObjFactory->SetLayer( this );
+			return m_objFactory.CreateObject();
 		}
-		void SetObjectFactory( const shared_AObjectFactory_ptr && pObjFactory_p ){
+		pool_Object_ptr CreateObject( text::GfigElementA *pGfig_p ){
 
-			m_pObjFactory = std::move(pObjFactory_p);
-			m_pObjFactory->SetLayer( this );
-		}
-		shared_Object_ptr CreateObject(){
-
-			return m_pObjFactory->VCreateObject();
-		}
-		shared_Object_ptr CreateObject( text::GfigElementA *pGfig_p ){
-
-			return m_pObjFactory->VCreateObject(pGfig_p);
+			return m_objFactory.CreateObject(pGfig_p);
 		}
 
 		//------------------------------------------------------------------------
@@ -108,6 +101,11 @@ namespace game{
 		State * GetStateOwner() const { return m_pStateOwner; }
 
 		bool IsAttached() const { return !m_bDettached; }
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void SerializeAttachedObjs( text::GfigElementA *pGfig_p );
 
 	protected:
 
@@ -128,11 +126,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be overridden
 		//------------------------------------------------------------------------
-		virtual void VOnInit(){}
+		virtual void VOnAttach(){}
 		virtual void VOnUpdate(		const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called before objects update
 		virtual void VLateUpdate(	const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called after objects update
 		virtual void VOnDraw(		const double /*dInterpolation_p*/, const double /*dDelta_p = 0.0*/ ){}
-		virtual void VOnDestroy(){}
+		virtual void VOnRemove(){}
 
 		virtual void VOnResize( int /*W_p*/, int /*H_p*/ ){}		
 	};

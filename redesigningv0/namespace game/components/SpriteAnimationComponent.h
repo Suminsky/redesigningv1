@@ -23,9 +23,6 @@
 #include "../ComponentFactory.h"
 #include "../../namespace sprite/binders cache/TextureBinders.h"
 
-namespace gen{
-	template<typename T>	class Pool;
-}
 namespace sprite{
 
 	class SpriteRenderer;
@@ -257,7 +254,7 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class SpriteAnimationComponentFactory: public AComponentFactory{
+	class SpriteAnimationComponentFactory: public IComponentFactory{
 
 		friend class SpriteAnimationSystem;
 

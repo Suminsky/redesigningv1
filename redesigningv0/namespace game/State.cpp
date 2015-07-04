@@ -10,7 +10,7 @@ game::State::~State()
 
 }
 
-void game::State::VOnInit()
+void game::State::VOnAttach()
 {
 
 }
@@ -30,7 +30,7 @@ void game::State::VOnDraw()
 
 }
 
-void game::State::VOnDestroy()
+void game::State::VOnRemove()
 {
 
 }
@@ -57,7 +57,7 @@ void game::State::AddLayer( shared_Layer_ptr && pNewLayer_p )
 			pNewLayer_p->m_currentLayerIndex = (OBJECTINDEX)m_layers.size();
 			pNewLayer_p->m_pStateOwner = this;
 
-			pNewLayer_p->VOnInit();
+			pNewLayer_p->VOnAttach();
 
 			m_layers.push_back( std::move(pNewLayer_p) );
 	}
@@ -67,7 +67,7 @@ void game::State::AddLayer( shared_Layer_ptr && pNewLayer_p )
 		// if layer not yet cleaned then ondestroy was never called, so
 		// on init is called twice.. 
 
-		pNewLayer_p->VOnInit();
+		pNewLayer_p->VOnAttach();
 	}
 }
 
@@ -87,7 +87,7 @@ void game::State::AddLayer( const shared_Layer_ptr & pNewLayer_p )
 			m_layers.push_back( pNewLayer_p );
 	}
 
-	pNewLayer_p->VOnInit();
+	pNewLayer_p->VOnAttach();
 }
 
 void game::State::RemoveLayer( LAYERINDEX layerCurrentIndex_p )
@@ -152,14 +152,14 @@ void game::State::OnResize( int W_p, int H_p )
 	}
 }
 
-void game::State::Destroy()
+void game::State::Remove()
 {
 	for( int it = 0, itEnd = (int)m_layers.size(); it != itEnd; ++ it ){
 
-		m_layers[it]->VOnDestroy();
+		m_layers[it]->VOnRemove();
 	}
 
-	VOnDestroy();
+	VOnRemove();
 }
 
 void game::State::Draw( const double dInterpolation_p, const double dDelta_p )
@@ -191,7 +191,7 @@ void game::State::CleanRemovedLayers()
 
 		if( m_removedLayers[itR]->m_currentLayerIndex == itLast ){
 
-			m_removedLayers[itR]->VOnDestroy();
+			m_removedLayers[itR]->VOnRemove();
 			m_removedLayers[itR]->m_currentLayerIndex = INVALID_LAYERINDEX;
 			--itLast;
 			continue; // already "swapped"
@@ -208,7 +208,7 @@ void game::State::CleanRemovedLayers()
 		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
 		// can be discarded TODO
 
-		m_removedLayers[itR]->VOnDestroy();
+		m_removedLayers[itR]->VOnRemove();
 		m_removedLayers[itR]->m_currentLayerIndex = INVALID_LAYERINDEX;
 
 	}

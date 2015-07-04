@@ -13,7 +13,7 @@ game::StateMachine::~StateMachine()
 {
 	if( m_pCurrentState ){
 
-		m_pCurrentState->Destroy();
+		m_pCurrentState->Remove();
 	}
 }
 
@@ -61,7 +61,7 @@ void game::StateMachine::ResolveStateChange()
 
 	if( m_pCurrentState ){
 
-		m_pCurrentState->Destroy();
+		m_pCurrentState->Remove();
 	}
 
 	// assign new state
@@ -73,7 +73,7 @@ void game::StateMachine::ResolveStateChange()
 
 	if( m_pCurrentState ){
 
-		m_pCurrentState->VOnInit(); // TODO: give old state to new state
+		m_pCurrentState->VOnAttach(); // TODO: give old state to new state
 	}
 }
 
@@ -81,7 +81,7 @@ void game::StateMachine::Destroy()
 {
 	if( m_pCurrentState ){
 
-		m_pCurrentState->Destroy();
+		m_pCurrentState->Remove();
 		m_pCurrentState = nullptr;
 	}
 }

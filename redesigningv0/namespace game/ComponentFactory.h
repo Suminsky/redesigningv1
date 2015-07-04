@@ -37,11 +37,13 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class AComponentFactory{
+	class IComponentFactory{
 
 		friend class ComponentFactory;
 
 	public:
+
+		virtual ~IComponentFactory(){}
 
 	private:
 
@@ -62,14 +64,14 @@ namespace game{
 		//virtual void VSerialize( Component * pCompo_p, gen::DataStream * pData_p ) = 0;
 	};
 
-	typedef std::shared_ptr<AComponentFactory> shared_AComponentFactory_ptr;
-	typedef std::weak_ptr<AComponentFactory> weak_AComponentFactory_ptr;
+	typedef std::shared_ptr<IComponentFactory> shared_IComponentFactory_ptr;
+	typedef std::weak_ptr<IComponentFactory> weak_IComponentFactory_ptr;
 
 	//========================================================================
 	// 
 	//========================================================================
 	//TODO: use vector and binary search instead of map
-	typedef std::map<int, shared_AComponentFactory_ptr> ComponentFactoryRegistry;
+	typedef std::map<int, shared_IComponentFactory_ptr> ComponentFactoryRegistry;
 	typedef std::map<std::string, unsigned int> ComponentNameToTypeMap;
 
 	class ComponentFactory{
@@ -92,11 +94,13 @@ namespace game{
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CreateComponent( text::GfigElementA * pGFig_p );
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CloneComponent( const DerivedComponent * pCompo_p );
 
+		void Serialize( const Component * pComponent_p,  text::GfigElementA * pGFig_p );
+
 		//------------------------------------------------------------------------
 		// registers
 		//------------------------------------------------------------------------
 		template< typename DerivedComponent >
-		void RegisterFactory( const shared_AComponentFactory_ptr & pFactory_p );
+		void RegisterFactory( const shared_IComponentFactory_ptr & pFactory_p );
 
 		//------------------------------------------------------------------------
 		// 
@@ -107,9 +111,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		shared_AComponentFactory_ptr GetComponentFactory( int iType_p );
-		template< typename DerivedComponent > shared_AComponentFactory_ptr GetComponentFactory();
-
+		shared_IComponentFactory_ptr GetComponentFactory( int iType_p );
+		template< typename DerivedComponent > shared_IComponentFactory_ptr GetComponentFactory();
+		
 	private:
 
 		ComponentFactoryRegistry m_registry;

@@ -4,15 +4,18 @@
 #include "../namespace text/TextParser.h"
 
 using namespace game;
+using namespace text;
 
-shared_Object_ptr AObjectFactory::VCreateObject(){
+pool_Object_ptr ObjectFactory::CreateObject(){
 
-	return std::make_shared<Object>();
+	return pool_Object_ptr(m_pool);
 }
 
-shared_Object_ptr AObjectFactory::VCreateObject( text::GfigElementA * pGfig_p ){
+pool_Object_ptr ObjectFactory::CreateObject( text::GfigElementA * pGfig_p ){
 
-	shared_Object_ptr pObj = std::make_shared<Object>();
+	pool_Object_ptr pObj(m_pool);
+
+	strcpy_s<64>( pObj->m_szName, pGfig_p->m_name.c_str() );
 
 	for( int it = 0, iSize = (int)pGfig_p->m_subElements.size();
 		it<iSize;
@@ -32,9 +35,11 @@ shared_Object_ptr AObjectFactory::VCreateObject( text::GfigElementA * pGfig_p ){
 	return pObj;
 }
 
-game::shared_Object_ptr game::AObjectFactory::VCloneObject( const Object * pObj_p )
+pool_Object_ptr game::ObjectFactory::CloneObject( const Object * pObj_p )
 {
-	shared_Object_ptr pObj = std::make_shared<Object>();
+	pool_Object_ptr pObj(m_pool);
+
+	strcpy_s<64>( pObj->m_szName, pObj_p->m_szName );
 
 	for( int itCompo = 0, nCompos = (int)pObj_p->m_components.size(); itCompo < nCompos; ++itCompo ){
 
@@ -50,35 +55,37 @@ game::shared_Object_ptr game::AObjectFactory::VCloneObject( const Object * pObj_
 	return pObj;
 }
 
-void game::AObjectFactory::LoadNewPrefab( text::GfigElementA * pGfig_p )
+void game::ObjectFactory::LoadNewPrefab( text::GfigElementA * pGfig_p )
 {
-	Prefab newPrefab = { pGfig_p->m_value, VCreateObject( pGfig_p ) };
+	Prefab newPrefab = { pGfig_p->m_value, CreateObject( pGfig_p ) };
 
 	m_prefabs.push_back( std::move( newPrefab ) );
 }
 
-void game::AObjectFactory::LoadNewPrefab( const Object * pObj_p, const std::string & szName_p )
+void game::ObjectFactory::LoadNewPrefab( const Object * pObj_p, const std::string & szName_p )
 {
-	Prefab newPrefab = { szName_p, VCloneObject( pObj_p ) };
+	Prefab newPrefab = { szName_p, CloneObject( pObj_p ) };
 
 	m_prefabs.push_back( std::move( newPrefab ) );
 }
 
-game::shared_Object_ptr game::AObjectFactory::CreateObjectFromPrefab( unsigned int iPrefab_p )
+game::pool_Object_ptr game::ObjectFactory::CreateObjectFromPrefab( unsigned int iPrefab_p )
 {
 	assert( iPrefab_p < m_prefabs.size() );
 
-	return VCloneObject( m_prefabs[iPrefab_p].pObj.get() );
+	return CloneObject( m_prefabs[iPrefab_p].pObj.Get() );
 }
 
-game::shared_Object_ptr game::AObjectFactory::CreateObjectFromPrefab( const std::string & szName_p )
+game::pool_Object_ptr game::ObjectFactory::CreateObjectFromPrefab( const std::string & szName_p )
 {
 	return CreateObjectFromPrefab( PrefabIndexFromName(szName_p) );
 }
 
-game::shared_Object_ptr game::AObjectFactory::CreateObjectFromPrefab( unsigned int iPrefab_p, text::GfigElementA * pIntanceGfig_p )
+game::pool_Object_ptr game::ObjectFactory::CreateObjectFromPrefab( unsigned int iPrefab_p, text::GfigElementA * pIntanceGfig_p )
 {
-	shared_Object_ptr pObj = CreateObjectFromPrefab(iPrefab_p);
+	pool_Object_ptr pObj = CreateObjectFromPrefab(iPrefab_p);
+
+	strcpy_s<64>( pObj->m_szName, pIntanceGfig_p->m_name.c_str() );
 
 	for( int it = 0, iSize = (int)pIntanceGfig_p->m_subElements.size();
 		it<iSize;
@@ -110,12 +117,12 @@ game::shared_Object_ptr game::AObjectFactory::CreateObjectFromPrefab( unsigned i
 	return pObj;
 }
 
-game::shared_Object_ptr game::AObjectFactory::CreateObjectFromPrefab( const std::string & szName_p, text::GfigElementA * pIntanceGfig_p )
+game::pool_Object_ptr game::ObjectFactory::CreateObjectFromPrefab( const std::string & szName_p, text::GfigElementA * pIntanceGfig_p )
 {
 	return CreateObjectFromPrefab( PrefabIndexFromName(szName_p), pIntanceGfig_p );
 }
 
-unsigned int game::AObjectFactory::PrefabIndexFromName( const std::string & szName_p )
+unsigned int game::ObjectFactory::PrefabIndexFromName( const std::string & szName_p )
 {
 	for( unsigned int it = 0, nPrefabs = (unsigned)m_prefabs.size(); it < nPrefabs; ++it ){
 
@@ -129,7 +136,16 @@ unsigned int game::AObjectFactory::PrefabIndexFromName( const std::string & szNa
 //------------------------------------------------------------------------
 // 
 //------------------------------------------------------------------------
-void game::AObjectFactory::VSerialize( const Object * pObj_p, text::GfigElementA * pGFig_p )
+void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA * pGFig_p )
 {
+	pGFig_p->m_subElements.emplace_back( GfigElementA(pObj_p->m_szName) );
 
+	int nCompos = (int)pObj_p->m_components.size();
+
+	for( int itCompo = 0 ; itCompo < nCompos; ++itCompo ){
+
+		Component * pCompo = pObj_p->m_components[itCompo].Get();
+
+		m_pLayerOwner->m_componentFactory.Serialize( pCompo, &pGFig_p->m_subElements.back() );
+	}
 }

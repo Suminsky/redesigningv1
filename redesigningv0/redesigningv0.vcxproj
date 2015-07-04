@@ -148,7 +148,7 @@
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>false</Profile>
@@ -186,6 +186,7 @@
     <ClInclude Include="Legalia\ParallaxLayer.h" />
     <ClInclude Include="Legalia\SpriteDraggingSys.h" />
     <ClInclude Include="Legalia\SpringyFollowCamera.h" />
+    <ClInclude Include="Legalia\SpriteTextCompo.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
     <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
@@ -330,6 +331,7 @@
     <ClCompile Include="Legalia\ParallaxLayer.cpp" />
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
     <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />
+    <ClCompile Include="Legalia\SpriteTextCompo.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />

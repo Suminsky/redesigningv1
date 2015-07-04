@@ -21,6 +21,9 @@ void Game::FixedStepLoop(){
 	static double dFrameDeltaRemainingsAccumulated = 0.0;
 	dFrameDeltaRemainingsAccumulated += dDeltaSeconds;
 
+	//win::UniqueFileLogger()<<"deltaSec: "<<dDeltaSeconds<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"while: "<<dFrameDeltaRemainingsAccumulated<<" >= "<<m_dFixedTimeStep<<SZ_NEWLINE;
+
 	// perform updates by fixed steps, any time remaining will accumulate to the next iteration
 	// any time missing will skip the update till a fix step amount is reached
 	//int count = 0;

@@ -149,6 +149,7 @@ namespace text{
 		std::vector<GfigElementA> m_subElements;
 
 		GfigElementA(){}
+		GfigElementA( const std::string && szName_p) : m_name( std::move(szName_p) ){}
 		GfigElementA( const char * szName_p ) : m_name( szName_p ){}
 		GfigElementA( const char * szName_p, const char * szValue_p ) : m_name( szName_p ), m_value( szValue_p ){}
 

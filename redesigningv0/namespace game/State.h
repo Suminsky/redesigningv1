@@ -67,9 +67,9 @@ namespace game{
 		void OnResize( int W_p, int H_p);
 
 		//------------------------------------------------------------------------
-		// calls all layers VOnDestroy than state VOnDestroy
+		// calls all layers VOnRemove than state VOnRemove
 		//------------------------------------------------------------------------
-		void Destroy();
+		void Remove();
 
 		//------------------------------------------------------------------------
 		// traverse layer and call draw
@@ -88,11 +88,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		// to be override
 		//------------------------------------------------------------------------
-		virtual void VOnInit();
+		virtual void VOnAttach();
 		virtual void VOnUpdate(double, double);	// called before layers update
 		virtual void VLateUpdate(double, double);	// called after layers update
 		virtual void VOnDraw();					// called after layers draw (why I took interp param off?)
-		virtual void VOnDestroy();
+		virtual void VOnRemove();
 
 		virtual void VOnResize();
 	};

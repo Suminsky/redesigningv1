@@ -37,6 +37,8 @@ namespace sprite{
 
 	public:
 
+		struct Resolution{ uint32_t w, h;};
+
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
@@ -48,6 +50,8 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		void Init( dx::Device * pDevice_p, int size_p = 100 ){
 			m_cache.reserve(size_p);
+			m_names.reserve(size_p);
+			m_resolutions.reserve(size_p);
 			m_size = size_p;
 
 			m_pDevice = pDevice_p;
@@ -83,11 +87,18 @@ namespace sprite{
 
 			return m_names[iTexture_p];
 		}
+		const Resolution & GetTextureRes( UINT iTexture_p ) const{
+
+			assert( iTexture_p < m_cache.size());
+
+			return m_resolutions[iTexture_p];
+		}
 
 	private:
 
 		std::vector<dx::BindPSShaderResourceView> m_cache;
 		std::vector< std::string > m_names;
+		std::vector< Resolution > m_resolutions;
 		int m_size;
 
 		dx::Device * m_pDevice;

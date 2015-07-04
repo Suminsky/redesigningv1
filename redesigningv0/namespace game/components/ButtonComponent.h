@@ -94,7 +94,7 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	class SpriteButtonCompoFactory: public AComponentFactory{
+	class SpriteButtonCompoFactory: public IComponentFactory{
 
 	public:
 

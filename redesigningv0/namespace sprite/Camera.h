@@ -85,10 +85,8 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		void Update();
 		void ForceUpdate();
-		bool WillUpdate(){
-
-			return m_renderData.m_bUpdate;
-		}
+		bool WillUpdate() const { return m_renderData.m_bUpdate; }
+		void ClearDirt(){ m_renderData.m_bUpdate = false; }
 
 
 		void CarryWithCamera( DirectX::XMFLOAT2 & pos );

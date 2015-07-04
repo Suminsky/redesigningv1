@@ -471,15 +471,25 @@ void game::TransformComponentFactory::VSerialize( const Component * pCompo_p, te
 
 	GfigElementA & gTrafoCompo = pGFig_p->m_subElements.back();
 	{
-		GfigElementA gLocal(	"local" );
-		SerializeTrafo( trafo.m_local, gLocal );
-		if( gLocal.m_subElements.size())
-			gTrafoCompo.m_subElements.push_back(std::move(gLocal));
-
 		GfigElementA gOffset(	"offset" );
 		SerializeTrafo( trafo.m_offset, gOffset );
 		if( gOffset.m_subElements.size())
 			gTrafoCompo.m_subElements.push_back(std::move(gOffset));
+
+
+		if( gTrafoCompo.m_subElements.size() ){
+
+			GfigElementA gLocal( "local" );
+			SerializeTrafo( trafo.m_local, gLocal );
+			if( gLocal.m_subElements.size())
+				gTrafoCompo.m_subElements.push_back(std::move(gLocal));
+		}
+		else{
+
+			// if there isnt an offset, no need to have a "local" subelement
+
+			SerializeTrafo( trafo.m_local, gTrafoCompo );
+		}
 	}	
 }
 
@@ -497,24 +507,24 @@ void game::TransformComponentFactory::SerializeTrafo( const Trafo & trafo_p, tex
 
 
 	GfigElementA gScale("scale");
-	SerializeXYZW(trafo_p.scale, gScale);
+	SerializeXYZW(trafo_p.scale, gScale, 1.0f);
 	if( gScale.m_subElements.size() )
 		gFig_p.m_subElements.push_back(std::move(gScale));
 }
 
-void game::TransformComponentFactory::SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p )
+void game::TransformComponentFactory::SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p, const float fDefault_p )
 {
 	// check if values are different than default values, since default values dont need to be loaded
 
-	if( xyzw_p.x != 0.0f ){
+	if( xyzw_p.x != fDefault_p ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("x", std::to_string((long double)xyzw_p.x ).c_str()) );
 	}
-	if( xyzw_p.y != 0.0f ){
+	if( xyzw_p.y != fDefault_p ){
 		//GfigElementA gY("y", std::to_string(xyzw_p.y ));
 		gFig_p.m_subElements.push_back(GfigElementA("y", std::to_string((long double)xyzw_p.y ).c_str()) );
 	}
-	if( xyzw_p.z != 0.0f ){
+	if( xyzw_p.z != fDefault_p ){
 		
 		gFig_p.m_subElements.push_back(GfigElementA("z", std::to_string((long double)xyzw_p.z ).c_str()) );
 	}
