@@ -9,7 +9,8 @@ GameWindow2D_1::GameWindow2D_1( double dTimeStep_p, HINSTANCE hInst_p,
 								int winW_p, int winH_p, const char * szWinName_p )
 	:
 Window(hInst_p),
-Game( dTimeStep_p )
+Game( dTimeStep_p ),
+m_spriteText(&m_spriteRenderer.m_tex2D_cache)
 {
 
 	// create window

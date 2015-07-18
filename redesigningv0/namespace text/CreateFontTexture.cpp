@@ -377,7 +377,7 @@ bool text::ReadFontDescFromFile( const char * szFontDescFilename_p, BmpFontDesc 
 	fontDesc_p.iTextureHeight = data.GetChunkAs<int>(iByteIndex);
 
 
-	delete data.m_data;
+	delete [] data.m_data;
 
 	return true;
 }

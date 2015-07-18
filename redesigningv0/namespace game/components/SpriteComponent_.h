@@ -46,12 +46,12 @@ namespace game{
 			sprite::SpriteRenderer * pSpriteRenderer_p );
 		~SpriteComponent_();
 
-		void Init(dx::Device * pDevice_p,
+		void Initialize(dx::Device * pDevice_p,
 			const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p,
 			sprite::E_BLENDTYPE blendType_p,  sprite::E_SAMPLERTYPE sampler_p,
 			sprite::SpriteRenderer * pSpriteRenderer_p);
 
-		void SpriteComponent_::Init( dx::Device * pDevice_p,
+		void SpriteComponent_::Initialize( dx::Device * pDevice_p,
 			game::TextureID_Binder_Pair * texture_p,
 			float fWidth_p,
 			float fHeight_p,

@@ -9,11 +9,11 @@ using namespace DirectX;
 
 void game::SpriteSystem::VOnInit()
 {
-	shared_SpriteComponent_Factory_ptr pTrafoFactory = std::static_pointer_cast<SpriteComponent_Factory>(
+	shared_SpriteComponent_Factory_ptr pSpriteFactory = std::static_pointer_cast<SpriteComponent_Factory>(
 		m_pSysMachineOwner->GetLayer()->m_componentFactory.GetComponentFactory<SpriteComponent_>()
 		);
 
-	m_poolAccess = pTrafoFactory->m_pool.GetAccess();
+	m_poolAccess = pSpriteFactory->m_pool.GetAccess();
 }
 
 void game::SpriteSystem::VOnDraw( double dInterpolation_p )

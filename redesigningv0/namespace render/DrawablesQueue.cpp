@@ -1,5 +1,6 @@
 #include "DrawablesQueue.h"
 #include <algorithm>
+#include <stdint.h>
 
 
 void render::DrawablesQueue::Submit( Drawable & drawable_p )
@@ -32,7 +33,7 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 	// traverse "sorted drawables"
 
-	for(	int itSorted = 0, sortedSize = (int)m_sortqueue.size();
+	for(	uint32_t itSorted = 0, sortedSize = (uint32_t)m_sortqueue.size();
 			itSorted < sortedSize;
 			++ itSorted ){
 
@@ -42,7 +43,7 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 		UINT64 bindsSetMask = 0;
 
-		for(	int itStates = 0, statesSize = (int)stateGroup.size();
+		for(	uint32_t itStates = 0, statesSize = (uint32_t)stateGroup.size();
 				itStates < statesSize;
 				++ itStates ){
 
@@ -50,7 +51,7 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 			const dx::vBinderPtrs & binds = stateGroup[itStates]->m_vBinderPtrs;
 			
-			for(	int itBinds = 0, bindsSize = (int)binds.size();
+			for(	uint32_t itBinds = 0, bindsSize = (uint32_t)binds.size();
 					itBinds < bindsSize;
 					++itBinds ){
 
@@ -67,20 +68,13 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 							commandList_p.push_back( binds[itBinds] );
 						}
 					}
+					else{
 
-					// * NOTE that later binds are discarded, so to add default binds that may be discarded if drawable
-					// is setting a specific bind, it must came later on the states, not before
-					
-					// If a binderPtrs binds X, and later another bindersPtrs, of the same drawable, binds a
-					// diff X, the test will fail, but thats ok, cause it means the X bind (w precedence) is already cached.
-					// But, if the next drawable binds the same X, the test will fail (already cached), and the bindsSetMask
-					// will not be updated, meaning that if a later bindersPtrs binds a diff X, it will succeed even if
-					// it didnt have precedence.-> fixed (changed && for 2 ifs)
+						int x = 7; x = x;
+					}
 			}
 
 		}
-
-
 
 		// add draw call
 

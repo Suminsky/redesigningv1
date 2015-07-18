@@ -38,59 +38,72 @@ void sprite::SpriteRenderer::Init( dx::Device * pDevice_p, int maxInstances_p )
 
 void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p )
 {
-
-	static render::Drawable s_drawInst;
-	s_drawInst.Clear();
+	m_drawableAux.Clear();
 
 	pSprite_p->m_sortKey.bitfield.shaderID = 0;
-	s_drawInst.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
+	m_drawableAux.SetSortKey( pSprite_p->m_sortKey.intRepresentation );
 	// sprite
-	s_drawInst.AddPipelineState( &pSprite_p->m_pipeState );
+	m_drawableAux.AddPipelineState( &pSprite_p->m_pipeState );
 	// shader
-	s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
+	m_drawableAux.AddPipelineState( &m_spriteShaderRes.m_permutations[pSprite_p->m_iShaderPermutation].m_pipeState );
 	// vb
-	s_drawInst.AddPipelineState( &m_defaultVertexInput );
+	m_drawableAux.AddPipelineState( &m_defaultVertexInput );
 	// camera
-	s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
+	m_drawableAux.AddPipelineState( &pCamera_p->m_pipeState_vp_rt_cb );
 	
 
 	// draw call
-	s_drawInst.SetDrawCall( &m_drawIndexed );
+	m_drawableAux.SetDrawCall( &m_drawIndexed );
 
-	m_queue.Submit( s_drawInst );
+	m_queue.Submit( m_drawableAux );
 }
 
 void sprite::SpriteRenderer::Render( InstancedSprites * pInstSprites, Camera *pCamera_p )
 {
-	static render::Drawable s_drawInst;
 	SortMask sortKey;
 	sortKey.intRepresentation = pInstSprites->m_drawable.GetSortKey();
 	sortKey.bitfield.shaderID = 1;
 
 	if( pInstSprites->m_drawCall_warpException.GetNInstances() ){
 
-		s_drawInst = pInstSprites->m_drawable_warpException;
+		m_drawableAux = pInstSprites->m_drawable_warpException;
 
-		s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
-		s_drawInst.AddPipelineState( &m_instancedVertexInput );
-		s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
+		m_drawableAux.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
+		m_drawableAux.AddPipelineState( &m_instancedVertexInput );
+		m_drawableAux.AddPipelineState( &pCamera_p->m_pipeState_vp_rt_cb );
 
-		s_drawInst.SetSortKey( sortKey.intRepresentation );
+		m_drawableAux.SetSortKey( sortKey.intRepresentation );
 
-		m_queue.Submit( s_drawInst );
+		m_queue.Submit( m_drawableAux );
 	}
 	if( pInstSprites->m_drawCall.GetNInstances() ){
 
-		s_drawInst = pInstSprites->m_drawable;
+		m_drawableAux = pInstSprites->m_drawable;
 
-		s_drawInst.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
-		s_drawInst.AddPipelineState( &m_instancedVertexInput );
-		s_drawInst.AddPipelineState( &pCamera_p->m_pipeState );
+		m_drawableAux.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
+		m_drawableAux.AddPipelineState( &m_instancedVertexInput );
+		m_drawableAux.AddPipelineState( &pCamera_p->m_pipeState_vp_rt_cb );
 
-		s_drawInst.SetSortKey( sortKey.intRepresentation );
+		m_drawableAux.SetSortKey( sortKey.intRepresentation );
 
-		m_queue.Submit( s_drawInst );
+		m_queue.Submit( m_drawableAux );
 	}
+}
+
+void sprite::SpriteRenderer::Render( render::Drawable * pInstDrawable, Camera *pCamera_p )
+{	
+	SortMask sortKey;
+	sortKey.intRepresentation = pInstDrawable->GetSortKey();
+	sortKey.bitfield.shaderID = 1;
+	pInstDrawable->SetSortKey(sortKey.intRepresentation);
+
+	pInstDrawable->AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
+	pInstDrawable->AddPipelineState( &m_instancedVertexInput );
+	pInstDrawable->AddPipelineState( &pCamera_p->m_pipeState_vp_rt_cb );
+
+	m_queue.Submit( *pInstDrawable );
+
+	pInstDrawable->PopLastPipelineStates(3);
 }
 
 void sprite::SpriteRenderer::LoadShader( dx::Device *pDevice_p, UINT maxInstances_p )

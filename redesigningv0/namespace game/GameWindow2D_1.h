@@ -25,6 +25,7 @@
 #include "../namespace game/Game.h"
 
 #include "../namespace sprite/SpriteRenderer.h"
+#include "../namespace sprite/text/SpriteTextComposer.h"
 #include "../namespace text/TextRenderer.h"
 
 #include "../namespace sound/sound.h"
@@ -47,6 +48,7 @@ public:
 	dx::Device				m_device;
 	dx::SwapChain			m_swapChain;
 	sprite::SpriteRenderer	m_spriteRenderer;
+	sprite::SpriteTextComposer m_spriteText;
 	text::TextRenderer		m_textRenderer;
 
 protected:

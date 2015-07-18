@@ -76,9 +76,6 @@ SpriteComponent_::SpriteComponent_(
 
 void SpriteComponent_::VOnAttach()
 {
-	//gen::Delegate1Param<const game::Event<InGameEventData>&> eventHandlerDelegate =
-	//	gen::Delegate1Param<const game::Event<InGameEventData> &>::Build<CardsLayer, &CardsLayer::OnEvent>(this);
-
 	EventMachine<ComponentEventData>::EventHandler colorDelegate =
 		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnColorEventDelegate>(this);
 	m_pObjectOwner->RegisterForComponentEvent(colorDelegate, COMPONENT_TYPE(ColorComponent));
@@ -110,7 +107,6 @@ void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & e
 {
 	ColorComponent * pColor = event_p.GetDataAs<ColorComponent*>();
 
-	
 	m_currentColor = pColor->GetFinalColor();
 	if( pColor->GonnaSnap() ) m_previousColor = m_currentColor;
 	else m_previousColor = pColor->GetPreviousFinalColor();
@@ -120,8 +116,7 @@ void game::SpriteComponent_::OnTransformEventDelegate( const Event<ComponentEven
 	TransformComponent * pTrafo = event_p.GetDataAs<TransformComponent*>();
 	
 	m_currentTrafo = pTrafo->GetFinal();
-	if( pTrafo->GonnaSnap() )
-		m_previousTrafo = m_currentTrafo;
+	if( pTrafo->GonnaSnap() )	m_previousTrafo = m_currentTrafo;
 	else m_previousTrafo = pTrafo->GetPreviousFinal();
 }
 void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData> & event_p )
@@ -220,28 +215,34 @@ game::SpriteComponent_::~SpriteComponent_()
 void game::SpriteComponent_::InterpolateWorld( double dInterp_p )
 {
 	XMMATRIX mCurrentTrafo = XMLoadFloat4x4( &m_currentTrafo );
-	if( memcmp( &m_renderData.m_mWorld, &mCurrentTrafo, sizeof(XMMATRIX)) ){
 
-		// decompose matrices
+	//if( memcmp( &m_renderData.m_mWorld, &mCurrentTrafo, sizeof(XMMATRIX)) ){
+	if( XMVector4NotEqual(m_renderData.m_mWorld.r[0], mCurrentTrafo.r[0])
+		||
+		XMVector4NotEqual(m_renderData.m_mWorld.r[1], mCurrentTrafo.r[1])
+		||
+		XMVector4NotEqual(m_renderData.m_mWorld.r[2], mCurrentTrafo.r[2])
+		||
+		XMVector4NotEqual(m_renderData.m_mWorld.r[3], mCurrentTrafo.r[3]) ){
 
-		XMVECTOR vPos, vScale, qRot; 
+		XMVECTOR vScale, qRot, vPos; 
 		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
 
 		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
-		XMVECTOR vPrevPos, vPrevScale, qPrevRot;
+		XMVECTOR vPrevScale, qPrevRot, vPrevPos;
 		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
 
 		// interpolate independent components
 
 		XMVECTOR vFactor = XMVectorReplicate( (float)dInterp_p); // do only once
 
-		XMVECTOR vlPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
-		XMVECTOR vlOrient = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
-		XMVECTOR vlScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
-
+		vScale = XMVectorLerpV( vPrevScale, vScale, vFactor );
+		qRot = XMQuaternionSlerpV( qPrevRot, qRot, vFactor );
+		vPos =  XMVectorLerpV( vPrevPos, vPos, vFactor );
+		
 		// compose matrix again
 
-		m_renderData.m_mWorld = XMMatrixAffineTransformation(vlScale, g_XMZero, vlOrient, vlPos );
+		m_renderData.m_mWorld = XMMatrixAffineTransformation(vScale, g_XMZero, qRot, vPos );
 
 		// send to GPU?
 		m_renderData.m_bUpdate = true;
@@ -249,26 +250,22 @@ void game::SpriteComponent_::InterpolateWorld( double dInterp_p )
 }
 void game::SpriteComponent_::InterpolateColor( double dInterp )
 {
-	if( m_renderData.m_color.x != m_currentColor.x
-		||
-		m_renderData.m_color.y != m_currentColor.y
-		||
-		m_renderData.m_color.z != m_currentColor.z
-		||
-		m_renderData.m_color.w != m_currentColor.w  ){
+	XMVECTOR vRenderColor = XMLoadFloat4( & m_renderData.m_color );
+	XMVECTOR vCurrentColor = XMLoadFloat4( &m_currentColor );
 
-			XMVECTOR colorPrevious = XMLoadFloat4( &m_previousColor );
-			XMVECTOR colorCurrent = XMLoadFloat4( &m_currentColor );
+	if( XMVector4NotEqual( vRenderColor, vCurrentColor )  ){
 
-			colorCurrent = XMVectorLerp( colorPrevious, colorCurrent, (float)dInterp );
+		XMVECTOR vPreviousColor = XMLoadFloat4( &m_previousColor );
 
-			XMStoreFloat4( &m_renderData.m_color, colorCurrent );
+		vCurrentColor = XMVectorLerp( vPreviousColor, vCurrentColor, (float)dInterp );
 
-			m_renderData.m_bUpdate = true;
+		XMStoreFloat4( &m_renderData.m_color, vCurrentColor );
+
+		m_renderData.m_bUpdate = true;
 	}
 }
 
-void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
+void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
 	m_pCamera = nullptr;
 	m_sortKey.intRepresentation = 0LL;
@@ -323,7 +320,7 @@ void SpriteComponent_::Init( dx::Device * pDevice_p, const char * szTexture_p, f
 	m_sortKey.bitfield.textureID = m_TextureID;
 	m_sortKey.bitfield.transparency = blendType_p;
 }
-void SpriteComponent_::Init( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
+void SpriteComponent_::Initialize( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
 	m_pCamera = nullptr;
 	m_sortKey.intRepresentation = 0LL;
@@ -424,7 +421,7 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 
 	keepAssert( pGFig_p->GetSubElement( "texture", pParam ) );
 
-	pSprite->Init( m_pDeviceRef_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, m_pRendererRef );
+	pSprite->Initialize( m_pDeviceRef_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, m_pRendererRef );
 	pSprite->m_renderData.m_padding.x = xOffset;
 	pSprite->m_renderData.m_padding.y = yOffset;
 	//return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );
@@ -538,7 +535,7 @@ void game::SpriteComponent_Factory::CreateSprite( SpriteComponent_ & sprite_p, t
 
 	keepAssert( pGFig_p->GetSubElement( "texture", pParam ) );
 
-	sprite_p.Init( pDevice_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, pRendererRef );
+	sprite_p.Initialize( pDevice_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, pRendererRef );
 	sprite_p.m_renderData.m_padding.x = xOffset;
 	sprite_p.m_renderData.m_padding.y = yOffset;
 }

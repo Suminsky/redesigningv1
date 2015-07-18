@@ -146,6 +146,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -187,6 +188,7 @@
     <ClInclude Include="Legalia\SpriteDraggingSys.h" />
     <ClInclude Include="Legalia\SpringyFollowCamera.h" />
     <ClInclude Include="Legalia\SpriteTextCompo.h" />
+    <ClInclude Include="Legalia\SpriteTextSys.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
     <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
@@ -242,6 +244,10 @@
     <ClInclude Include="namespace render\dx\BinderCache.h" />
     <ClInclude Include="namespace render\dx\BinderCache.inl" />
     <ClInclude Include="namespace sprite\InstancedSprites.h" />
+    <ClInclude Include="namespace sprite\SortMask.h" />
+    <ClInclude Include="namespace sprite\text\BmpFont_.h" />
+    <ClInclude Include="namespace sprite\text\FontCache.h" />
+    <ClInclude Include="namespace sprite\text\SpriteTextComposer.h" />
     <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
@@ -332,6 +338,7 @@
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
     <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />
     <ClCompile Include="Legalia\SpriteTextCompo.cpp" />
+    <ClCompile Include="Legalia\SpriteTextSys.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
@@ -393,6 +400,9 @@
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
     <ClCompile Include="namespace sprite\InstancedSprites.cpp" />
+    <ClCompile Include="namespace sprite\text\BmpFont_.cpp" />
+    <ClCompile Include="namespace sprite\text\FontCache.cpp" />
+    <ClCompile Include="namespace sprite\text\SpriteTextComposer.cpp" />
     <ClCompile Include="namespace text\BmpFont.cpp" />
     <ClCompile Include="namespace text\CreateFontTexture.cpp" />
     <ClCompile Include="namespace text\SpriteInstancedTexts.cpp" />

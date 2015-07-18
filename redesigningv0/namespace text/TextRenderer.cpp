@@ -83,7 +83,7 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	drawable.SetPipelineStateGroup( m_textRenderStates ); // common data (vertex, IA, etc)
 	drawable.AddPipelineState( &m_textureState );
 	drawable.AddPipelineState( &m_fonts[iFontID_p].GetPipeState() );
-	drawable.AddPipelineState( &camera_p.m_pipeState );
+	drawable.AddPipelineState( &camera_p.m_pipeState_vp_rt_cb );
 
 	while( szText_p[itChar] != 0x0000 ){
 
@@ -238,7 +238,7 @@ void text::TextRenderer::Draw_Text( const wchar_t szText_p[], DirectX::XMFLOAT4 
 		pDrawableText_p[itGlyph].drawable.AddPipelineState( &m_textureState );
 		pDrawableText_p[itGlyph].drawable.AddPipelineState( &m_fonts[iFontID_p].GetPipeState() );
 		pDrawableText_p[itGlyph].drawable.AddPipelineState( &pDrawableText_p[itGlyph].renderData.pipeState );
-		pDrawableText_p[itGlyph].drawable.AddPipelineState( &camera_p.m_pipeState );
+		pDrawableText_p[itGlyph].drawable.AddPipelineState( &camera_p.m_pipeState_vp_rt_cb );
 
 		++itChar;
 		++itGlyph;

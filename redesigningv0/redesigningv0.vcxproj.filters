@@ -210,9 +210,6 @@
     <ClInclude Include="namespace text\CreateFontTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace text\BmpFont.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace text\TextRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -450,6 +447,24 @@
     <ClInclude Include="Legalia\SpriteTextCompo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace sprite\text\SpriteTextComposer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace text\BmpFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sprite\text\FontCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sprite\text\BmpFont_.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\SpriteTextSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace sprite\SortMask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -609,9 +624,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace text\CreateFontTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="namespace text\BmpFont.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace text\TextRenderer.cpp">
@@ -804,6 +816,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\SpriteTextCompo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace text\BmpFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sprite\text\FontCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sprite\text\BmpFont_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace sprite\text\SpriteTextComposer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\SpriteTextSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

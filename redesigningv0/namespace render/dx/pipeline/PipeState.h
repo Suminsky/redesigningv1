@@ -80,8 +80,8 @@ namespace dx{
 
 	private:
 
-		vBinderPtrs	m_vBinderPtrs;
-		UINT64		m_stateMask; // mark all binds it binds
+		std::vector<Binder*>	m_vBinderPtrs;
+		UINT64					m_stateMask; // mark all binds it binds
 	};
 
 

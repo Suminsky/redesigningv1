@@ -36,8 +36,13 @@ namespace render{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Drawable(){};
-		virtual ~Drawable(){};
+		Drawable(){}
+		Drawable( UINT64 sortKey_p, dx::DrawCall * pDrawCall_p )
+		:
+		m_sortKey(sortKey_p),
+		m_pDrawCall(pDrawCall_p)
+		{}
+		virtual ~Drawable(){}
 
 		//------------------------------------------------------------------------
 		// add a new state to the drawable
@@ -55,6 +60,10 @@ namespace render{
 		void PopLastPipelineState(){
 
 			m_vStatePtrs.pop_back();
+		}
+		void PopLastPipelineStates( UINT nStates ){
+
+			m_vStatePtrs.resize( m_vStatePtrs.size() - nStates );
 		}
 
 		//------------------------------------------------------------------------
@@ -96,8 +105,8 @@ namespace render{
 
 	private: // TODO
 
-		vStatePtrs		m_vStatePtrs;			// states w binder commands
-		dx::DrawCall *  m_pDrawCall;			// draw
+		std::vector<dx::PipeState*> 	m_vStatePtrs;			// states w binder commands
+		dx::DrawCall *					m_pDrawCall;			// draw
 
 		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
 	};

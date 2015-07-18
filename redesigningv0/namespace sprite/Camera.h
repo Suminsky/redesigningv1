@@ -100,7 +100,7 @@ namespace sprite{
 
 		float m_fZoom;
 	
-		dx::PipeState m_pipeState; //binds viewport, render target
+		dx::PipeState m_pipeState_vp_rt_cb; //binds viewport, render target, const buffer
 		BindVSCameraCBuffer m_bindVSCameraCbuffer;
 
 
@@ -111,8 +111,6 @@ namespace sprite{
 	private:
 		ID3D11Buffer * m_pBuffer;
 		CameraCbuffer  m_renderData;
-
-	
 
 		ALLIGN16ONLY;
 	};

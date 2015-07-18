@@ -8,7 +8,7 @@ using namespace DirectX;
 void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
 	UINT x_p /*= 0*/, UINT y_p /*= 0*/ )
 {
-	m_pipeState.Reset(); //m_binds.resize(0);
+	m_pipeState_vp_rt_cb.Reset(); //m_binds.resize(0);
 
 	// viewport
 
@@ -20,7 +20,7 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 	m_viewPort.MaxDepth = 1.0f;
 
 	//m_bindViewPort ( m_viewPort );
-	m_pipeState.AddBinderCommand( &m_bindViewPort );
+	m_pipeState_vp_rt_cb.AddBinderCommand( &m_bindViewPort );
 
 	// cbuffer
 
@@ -37,11 +37,11 @@ void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * p
 	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), params );
 
 	m_bindVSCameraCbuffer.Initialize( m_pBuffer, &m_renderData );
-	m_pipeState.AddBinderCommand( &m_bindVSCameraCbuffer );
+	m_pipeState_vp_rt_cb.AddBinderCommand( &m_bindVSCameraCbuffer );
 
 	// render target
 	m_bindOMRTVDS.Initialize(pRTV_p, nullptr );
-	m_pipeState.AddBinderCommand( &m_bindOMRTVDS );
+	m_pipeState_vp_rt_cb.AddBinderCommand( &m_bindOMRTVDS );
 }
 
 void sprite::Camera::Update()

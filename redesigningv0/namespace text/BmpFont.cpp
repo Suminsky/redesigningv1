@@ -45,9 +45,9 @@ bool text::BmpFont::InitFromFile( const char * szFontDescFilename_p, sprite::Tex
 
 		InitFromDesc(fontDesc, textureCache_p);
 
-		delete fontDesc.characteresIDs;
-		delete fontDesc.charUVRects;
-		delete fontDesc.szTextureFilename;
+		delete [] fontDesc.characteresIDs;
+		delete [] fontDesc.charUVRects;
+		delete [] fontDesc.szTextureFilename;
 
 		return true;
 	}

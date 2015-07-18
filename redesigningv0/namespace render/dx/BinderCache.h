@@ -54,7 +54,6 @@ namespace dx{
 		DeviceCache * m_pDeviceCache;
 		std::vector<dxTBinder>		m_cache;
 		std::vector<int>			m_IDs;
-
 	};
 
 
