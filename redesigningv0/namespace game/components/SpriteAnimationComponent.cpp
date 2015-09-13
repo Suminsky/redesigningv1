@@ -38,7 +38,7 @@ void game::SpriteAnimationComponent::Update( animTimeUnit delta_p )
 
 	AnimationClip * pCurrentClip = &m_vClips[m_iCurrentClip];
 
-	pCurrentClip->stateData.deltaAccum += delta_p;
+	pCurrentClip->stateData.deltaAccum += delta_p * pCurrentClip->stateData.speedMod;
 
 	while( pCurrentClip->stateData.deltaAccum > pCurrentClip->configData.SPF ){
 
@@ -153,6 +153,11 @@ void game::SpriteAnimationComponent::SetClipFrameIndex( unsigned int frameIndex_
 	AnimationClip & clip = m_vClips[m_iCurrentClip];
 
 	clip.stateData.itCurrentFrame = frameIndex_p;
+}
+
+void game::SpriteAnimationComponent::SetClipSpeedMod( animTimeUnit newMod_p )
+{
+	m_vClips[m_iCurrentClip].stateData.speedMod = newMod_p;
 }
 
 

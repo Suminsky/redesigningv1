@@ -18,7 +18,7 @@ void TreeNode<T>::RemoveNode( TreeNode * pNode_p )
 
 	int itLast = (int)m_vChilds.size()-1;
 
-	std::swap( m_vChilds[pNode_p->m_indexOnParent], m_vChilds[itLast] );
+	std::swap( m_vChilds[pNode_p->m_indexOnParent], m_vChilds[itLast] ); // TODO: no need to swap, just move one
 	 m_vChilds[pNode_p->m_indexOnParent]->m_indexOnParent = pNode_p->m_indexOnParent;
 
 	 pNode_p->m_pParent = nullptr;

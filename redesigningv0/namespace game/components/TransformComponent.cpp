@@ -1,5 +1,6 @@
 #include "TransformComponent.h"
 #include "../../namespace text/TextParser.h"
+#include "../Object.h"
 
 using namespace game;
 using namespace DirectX;
@@ -280,6 +281,24 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious()
 
 	// TODO: move snapping to here
 }
+
+TransformComponent * game::TransformComponent::FindChildByObjectName( const char * szObjName_p )
+{
+	for( int it = 0, n = m_node.GetNumberOfChilds(); it < n; ++it ){
+
+		if( gen::stringUtil::GCompareString(
+			m_node.GetChild(it)->GetData()->GetObjectOwner()->GetName(),
+			szObjName_p,
+			64) ){
+
+			return m_node.GetChild(it)->GetData();
+		}
+	}
+
+	return nullptr;
+}
+
+	
 
 //========================================================================
 // 

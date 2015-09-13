@@ -184,6 +184,7 @@
     <ClInclude Include="Legalia\LegaliaInGameLayer.h" />
     <ClInclude Include="Legalia\LegaliaState.h" />
     <ClInclude Include="Legalia\LegaliaWIndow.h" />
+    <ClInclude Include="Legalia\MovableSystem.h" />
     <ClInclude Include="Legalia\ParallaxLayer.h" />
     <ClInclude Include="Legalia\SpriteDraggingSys.h" />
     <ClInclude Include="Legalia\SpringyFollowCamera.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="Legalia\LegaliaMain.cpp" />
     <ClCompile Include="Legalia\LegaliaState.cpp" />
     <ClCompile Include="Legalia\LegaliaWindow.cpp" />
+    <ClCompile Include="Legalia\MovableSystem.cpp" />
     <ClCompile Include="Legalia\ParallaxLayer.cpp" />
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
     <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />

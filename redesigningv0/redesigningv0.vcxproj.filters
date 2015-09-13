@@ -465,6 +465,9 @@
     <ClInclude Include="namespace sprite\SortMask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Legalia\MovableSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -831,6 +834,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\SpriteTextSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\MovableSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -152,6 +152,14 @@ namespace game{
 		int GetID() const { return m_ID; }
 		const char* GetName()const{ return &m_szName[0]; }
 
+		//------------------------------------------------------------------------
+		// setters
+		//------------------------------------------------------------------------
+		void SetName( const char * newName_p ){
+
+			memcpy(m_szName, newName_p, sizeof(char)*(gen::stringUtil::CountString(newName_p,64)+1) );
+		}
+
 	protected:
 
 		Layer * m_pLayerOwner;

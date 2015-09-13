@@ -112,14 +112,14 @@ namespace dx{
 				loadInfo.Height = imgInfo.Height;
 				loadInfo.Depth = imgInfo.Depth;
 				loadInfo.FirstMipLevel = 0;
-				loadInfo.MipLevels = 1;
+				loadInfo.MipLevels = 1;//0;//
 				loadInfo.Usage = D3D11_USAGE_DEFAULT;
 				loadInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE ;
 				loadInfo.CpuAccessFlags = 0;
 				loadInfo.MiscFlags = 0;
 				loadInfo.Format = imgInfo.Format;
 				loadInfo.Filter = D3DX11_FILTER_NONE;
-				loadInfo.MipFilter = D3DX11_FILTER_NONE;
+				loadInfo.MipFilter = D3DX11_FILTER_NONE;//D3DX11_FILTER_LINEAR;//
 				loadInfo.pSrcInfo = &imgInfo;
 
 				if( FAILED(

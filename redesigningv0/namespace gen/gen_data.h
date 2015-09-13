@@ -151,7 +151,7 @@ namespace gen{
 		if( f_p > max_p ) f_p = max_p;
 	}
 
-//#include <mmintrin.h>
+//#include <xmmintrin.h>
 //
 //	float minss ( float a, float b )
 //	{

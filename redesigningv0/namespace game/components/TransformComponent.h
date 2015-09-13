@@ -116,14 +116,16 @@ namespace game{
 		DirectX::XMFLOAT4X4 GetFinal() const{ return m_final; }
 		DirectX::XMFLOAT4X4 GetPreviousFinal() const{ return m_previousFinal; }
 
+		void Snap(){ m_bSnap = true; }
+		bool GonnaSnap()const{ return m_bSnap; }
+
 		//------------------------------------------------------------------------
 		// parenting stuff
 		//------------------------------------------------------------------------
 		void AddChild( TransformComponent * pTrafo_p );
 		void RemoveChild( TransformComponent * pTrafo_p );
-		void Snap(){ m_bSnap = true; }
-		bool GonnaSnap()const{ return m_bSnap; }
 		TransformComponent * GetParent()const;
+		TransformComponent * FindChildByObjectName( const char * szObjName_p );
 
 		//------------------------------------------------------------------------
 		// stores local * parent world and offset * world
@@ -206,7 +208,6 @@ namespace game{
 	private:
 
 		gen::Pool<TransformComponent> m_pool;
-
 	};
 
 	typedef std::shared_ptr<TransformComponentFactory> shared_TransformComponentFactory_ptr;

@@ -69,6 +69,7 @@ namespace game{
 
 			unsigned int		itCurrentFrame;
 			animTimeUnit		deltaAccum;
+			animTimeUnit		speedMod;
 			E_ANIMSTATE			eState;
 
 			//------------------------------------------------------------------------
@@ -76,7 +77,7 @@ namespace game{
 			//------------------------------------------------------------------------
 			StateData()
 				:
-			itCurrentFrame(0),deltaAccum((animTimeUnit)0.0),eState(E_ANIMSTATE_STOPPED)
+			itCurrentFrame(0),deltaAccum((animTimeUnit)0.0),speedMod((animTimeUnit)1.0),eState(E_ANIMSTATE_STOPPED)
 			{}
 
 		}stateData;
@@ -194,6 +195,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		void SetSpriteFrame( frame frame_p, bool bPauseCurrent_dontStop_p = true );
 		void SetClipFrameIndex( unsigned int frameIndex_p );
+		void SetClipSpeedMod( animTimeUnit newMod_p );
 
 		//------------------------------------------------------------------------
 		// info

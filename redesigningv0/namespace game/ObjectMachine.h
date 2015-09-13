@@ -15,6 +15,7 @@
 // standard includes
 #include <memory>
 
+
 // private includes
 #include "Object.h"
 
@@ -49,7 +50,28 @@ namespace game{
 		Layer * GetLayer() const { return m_pLayerRef; }
 
 		uint32_t GetSize() const { return (uint32_t)m_objects.size(); }
-		Object * GetITObject( const uint32_t it ) const { return m_objects[it].Get(); }
+
+		Object * GetGameObject( const OBJECTINDEX it ) const { return m_objects[it].Get(); }
+		Object * GetGameObject( const char * szName ) const {
+
+			for( uint32_t it = 0, n = (uint32_t)m_objects.size(); it < n; ++it ){
+
+				if( gen::stringUtil::GCompareString( szName, m_objects[it]->m_szName, 64 ) )
+					return m_objects[it].Get();
+			}
+
+			return nullptr;
+		}
+		Object * GetGameObject( const int ID ) const {
+
+			for( uint32_t it = 0, n = (uint32_t)m_objects.size(); it < n; ++it ){
+
+				if( m_objects[it]->m_ID == ID )
+					return m_objects[it].Get();
+			}
+
+			return nullptr;
+		}
 
 	private:
 
