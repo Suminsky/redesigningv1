@@ -60,7 +60,7 @@ namespace gen{
 		// accessors
 		//------------------------------------------------------------------------
 		TreeNode * GetParent() const { return m_pParent; }
-		int GetNumberOfChilds() const { return (int)m_vChilds.size(); }
+		unsigned int GetNumberOfChilds() const { return (unsigned int)m_vChilds.size(); }
 		TreeNode * GetChild( INDEX_ONPARENT iIndex_p ) const { return m_vChilds[iIndex_p]; }
 
 	private:

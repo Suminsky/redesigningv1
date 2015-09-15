@@ -126,6 +126,9 @@ namespace game{
 		void RemoveChild( TransformComponent * pTrafo_p );
 		TransformComponent * GetParent()const;
 		TransformComponent * FindChildByObjectName( const char * szObjName_p );
+		TransformComponent * GetChild( uint32_t it)const;
+		bool HaveParent() const;
+		bool HaveChild( uint32_t it )const;
 
 		//------------------------------------------------------------------------
 		// stores local * parent world and offset * world
@@ -135,6 +138,7 @@ namespace game{
 		void UpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p );
 		bool BUpdateWorldAndFinalTransformation( const DirectX::XMMATRIX & mParentWorldTrafo_p );
 		void UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMMATRIX & mParentWorldTrafo_p );
+		void UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p );
 
 		//------------------------------------------------------------------------
 		// for the orfans ;D

@@ -92,7 +92,7 @@ void game::State::AddLayer( const shared_Layer_ptr & pNewLayer_p )
 
 void game::State::RemoveLayer( LAYERINDEX layerCurrentIndex_p )
 {
-	m_removedLayers.push_back( m_layers[layerCurrentIndex_p].get() );
+	RemoveLayer( m_layers[layerCurrentIndex_p].get() );
 }
 
 void game::State::RemoveLayer( const shared_Layer_ptr & pNewLayer_p )

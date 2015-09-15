@@ -236,10 +236,24 @@ void game::TransformComponent::RemoveChild( TransformComponent * pTrafo_p )
 {
 	m_node.RemoveNode( &pTrafo_p->m_node );
 }
+bool TransformComponent::HaveParent()const{
+
+	return m_node.GetParent() != nullptr;
+}
+
+bool game::TransformComponent::HaveChild( uint32_t it ) const
+{
+	return it < m_node.GetNumberOfChilds();
+}
 
 TransformComponent * game::TransformComponent::GetParent()const
 {
 	return m_node.GetParent()->GetData();
+}
+
+TransformComponent * game::TransformComponent::GetChild( uint32_t it ) const
+{
+	return m_node.GetChild(it)->GetData();
 }
 
 void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMMATRIX & mParentWorldTrafo_p )
@@ -254,6 +268,27 @@ void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious( con
 	// world
 
 	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorldTrafo_p );
+	XMStoreFloat4x4( &m_world, mWorld );
+
+	// final
+
+	XMStoreFloat4x4( &m_final, XMMatrixMultiply( mOffset, mWorld ) );
+
+	// TODO: move snapping to here
+}
+
+void game::TransformComponent::UpdateWorldAndFinalTransformation_NoPrevious( const DirectX::XMFLOAT4X4 & mParentWorldTrafo_p )
+{
+	//m_previousFinal = m_final;
+
+	// create matrices
+
+	XMMATRIX mLocal = m_local.DeriveMatrix();
+	XMMATRIX mOffset = m_offset.DeriveMatrix();
+
+	// world
+	XMMATRIX mParentWorldTrafo = XMLoadFloat4x4(&mParentWorldTrafo_p);
+	XMMATRIX mWorld = XMMatrixMultiply( mLocal, mParentWorldTrafo );
 	XMStoreFloat4x4( &m_world, mWorld );
 
 	// final
