@@ -4,7 +4,7 @@
 using namespace sprite;
 using namespace game;
 
-void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p )
+uint32_t sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p )
 {
 	BmpFont_ & font = m_fonts.Get(fontID_p);
 
@@ -12,6 +12,7 @@ void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstan
 
 	float fCharSpacing = 1.0f; // TODO, get ths from somewhere
 
+	uint32_t itDraw = 0;
 	for( uint32_t it = 0; szText_p != 0x00 && it < maxChars_p; ++it ){
 
 		// handle spaces
@@ -27,7 +28,7 @@ void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstan
 			continue;
 		}
 
-		game::spriteInstance & charInst = pInstances_p[it];
+		game::spriteInstance & charInst = pInstances_p[itDraw++];
 
 		// copy glyph uv to instance uv rect
 
@@ -49,9 +50,11 @@ void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstan
 
 		xPos += halfW + fCharSpacing;
 	}
+
+	return itDraw;
 }
 
-void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p, float & width_p, float & height_p )
+uint32_t sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p, float & width_p, float & height_p )
 {
 	BmpFont_ & font = m_fonts.Get(fontID_p);
 
@@ -63,6 +66,7 @@ void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstan
 
 	float fCharSpacing = 1.0f; // TODO, get this from somewhere
 
+	uint32_t itDraw = 0;
 	for( uint32_t it = 0; szText_p[it] != 0x0000 && it < maxChars_p; ++it ){
 
 		// handle spaces
@@ -86,7 +90,7 @@ void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstan
 			continue;
 		}
 
-		game::spriteInstance & charInst = pInstances_p[it];
+		game::spriteInstance & charInst = pInstances_p[itDraw++];
 
 		// copy glyph uv to instance uv rect
 
@@ -116,4 +120,6 @@ void sprite::SpriteTextComposer::Compose( wchar_t * szText_p, game::spriteInstan
 	if( lineW > width_p ) width_p = lineW;
 
 	height_p = font.GetMinNewLineHeight() * nLines;
+
+	return itDraw;
 }

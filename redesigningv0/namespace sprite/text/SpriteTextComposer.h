@@ -39,9 +39,10 @@ namespace sprite{
 
 		//------------------------------------------------------------------------
 		// compose sprite instances based on font info
+		// returns number of drawable chars (excludes white spaces)
 		//------------------------------------------------------------------------
-		void Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p );
-		void Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p,
+		uint32_t Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p );
+		uint32_t Compose( wchar_t * szText_p, game::spriteInstance * pInstances_p, uint32_t maxChars_p, uint32_t fontID_p,
 						float & width_p, float & height_p );
 
 
