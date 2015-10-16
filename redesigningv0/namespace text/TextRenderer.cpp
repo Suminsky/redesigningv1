@@ -136,7 +136,14 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 
 		// glyph pipeState ( bind cbuffer and texture ) should remain, so add to buffer here
 
-		m_glyphsRenderData().cbufferData = glyphCBuffer;
+		//m_glyphsRenderData().cbufferData = glyphCBuffer;
+		m_glyphsRenderData().cbufferData.m_bUpdate = glyphCBuffer.m_bUpdate;
+		m_glyphsRenderData().cbufferData.m_color = glyphCBuffer.m_color;
+		m_glyphsRenderData().cbufferData.m_mWorld = glyphCBuffer.m_mWorld;
+		m_glyphsRenderData().cbufferData.m_padding = glyphCBuffer.m_padding;
+		m_glyphsRenderData().cbufferData.m_res = glyphCBuffer.m_res;
+		m_glyphsRenderData().cbufferData.m_uvRect = glyphCBuffer.m_uvRect;
+
 		drawable.AddPipelineState( &m_glyphsRenderData().pipeState );
 
 		m_pSpriteRendererRef->m_queue.Submit( drawable );

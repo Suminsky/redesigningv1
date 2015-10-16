@@ -13,6 +13,7 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
+#include <new>
 #include <assert.h>
 
 // private includes

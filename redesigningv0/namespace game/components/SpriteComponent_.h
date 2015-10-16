@@ -13,8 +13,10 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
+#include <new>
 #include <memory>
 #include <DirectXMath.h>
+
 
 // private includes
 #include "../Component.h"

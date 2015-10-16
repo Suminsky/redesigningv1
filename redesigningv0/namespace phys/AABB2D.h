@@ -127,7 +127,7 @@ namespace phys{
 			normal.x = normal.y = 0.0f;
 			for( int it = 0; it < 4; ++it ){
 
-				// ignore if theres no penetration between any of the opposing faces
+				// ignore if theres no penetration between any of the opposing faces (SAT)
 				if( distances[it] >= fNoPenTolerance_p ) return false;
 
 				// skip if face is blocked
@@ -340,6 +340,53 @@ namespace phys{
 				cMask |= 0x01 << 2;
 			if( dir.y >= 0.0f )
 				cMask |= 0x01 << 3;
+		}
+
+		static void GetPrevSeparationMask(
+			AABB2D a_p, DirectX::XMFLOAT2 Adir,
+			AABB2D b_p, DirectX::XMFLOAT2 Bdir,
+			char & cMask,
+			float fNoPenTolerance_p = 0.0f ){
+
+				// Logic: if it was "penetrating" on the previous pos at an axis (no separation at an axis),
+				// cant be penetrating at that axis on current pos, even if penetration happens to be smaller on the
+				// axis.
+				// This is due:
+				// #1) it wasnt colliding before, the code needs to assure 100% penetration free after leaving the
+				// collisions test.
+				// #2) if it wasnt colliding at the issuing axis (and so wasnt colliding at all(SAT fail)),
+				// and now it is colliding, means the collision happens at an ortho axis.
+				// Consider visualizing 2 AABB colliding for better understanding, in the prev step of a collision,
+				// the axis at witch the collision happen will never be one that was previously already intercepting.
+				// A --- B, A and B separated by axis X, theyre already intercepting in Y
+				// --- AB, A hits B on X, its impossible to be colliding on Y, even if the penetration is smaller on Y for
+				// whatever reason (its possible and not that rare, consider platformer death leaps (hard jumps), where character
+				// reachs the other platformer by a few pixels)
+
+				// put on prev pos:
+
+				a_p.m_pos.x -= Adir.x;
+				a_p.m_pos.y -= Adir.y;
+				b_p.m_pos.x -= Bdir.x;
+				b_p.m_pos.y -= Bdir.y;
+
+				// check separating axis, mark axis with no separation:
+
+				// get penetration
+
+				const float distances[] = {
+					b_p.Left() - a_p.Right(),
+					a_p.Left() - b_p.Right(),
+					b_p.Down() - a_p.Up(),
+					a_p.Down() - b_p.Up() };
+
+				for( int it = 0; it < 4; ++it ){
+
+					// if theres penetration, mark as invalid
+
+					if( distances[it] < fNoPenTolerance_p )
+						cMask |= 0x01 << it;
+				}
 		}
 
 	private:

@@ -37,6 +37,8 @@ namespace text{
 		sprite::BindVSDrawableCBuffer bindDrawableCbuffer;
 		
 		dx::PipeState pipeState;
+
+		ALLIGN16ONLY;
 	};
 	struct DrawableGlyph{
 

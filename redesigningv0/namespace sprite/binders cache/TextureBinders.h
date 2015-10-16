@@ -99,7 +99,7 @@ namespace sprite{
 		std::vector<dx::BindPSShaderResourceView> m_cache;
 		std::vector< std::string > m_names;
 		std::vector< Resolution > m_resolutions;
-		int m_size;
+		unsigned int m_size;
 
 		dx::Device * m_pDevice;
 

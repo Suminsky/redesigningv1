@@ -60,6 +60,7 @@ void game::TransformSystem::RecursiveUpdate( TransformComponent & currentParent_
 		++itChild ){
 
 			TransformComponent & childTransform = (*currentParent_p.m_node.GetChild(itChild)->GetData());
+			if( !childTransform.GetObjectOwner()->IsAttached() ) continue;
 			// compute final trafo
 
 			//childTransform.UpdateWorldAndFinalTransformation(currentParent_p.GetWorld());

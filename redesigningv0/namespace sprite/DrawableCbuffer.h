@@ -22,7 +22,7 @@
 //#include <boost/shared_ptr.hpp>
 
 // private headers
-
+#include "../namespace gen/gen_macros.h"
 #include "../namespace render/dx/pipeline/Binder.h"
 
 namespace sprite{
@@ -80,6 +80,8 @@ namespace sprite{
 				m_bUpdate = false;
 			}
 		}
+
+		//ALLIGN16ONLY;
 	};
 
 #pragma warning(pop)

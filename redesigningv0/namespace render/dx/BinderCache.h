@@ -50,7 +50,7 @@ namespace dx{
 
 	private:
 
-		int m_size;
+		unsigned int m_size;
 		DeviceCache * m_pDeviceCache;
 		std::vector<dxTBinder>		m_cache;
 		std::vector<int>			m_IDs;

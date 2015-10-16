@@ -37,6 +37,7 @@
 #endif // _DEBUG
 
 #include <exception>
+#include <new>
 //------------------------------------------------------------------------
 // this macro simply implements aligned malloc overloaded new and delete
 // but only if its not a x64 build, on x64 builds align is already by 16
@@ -57,7 +58,15 @@
 						}												\
 						void operator delete(void* p_p){				\
 							_aligned_free(p_p);							\
-						}												
+						}												//\
+						//void* operator new(size_t /*size_p*/, void * pAdd_p){				\
+						//	if( pAdd_p == NULL)							\
+						//		throw std::bad_alloc();					\
+						//	return pAdd_p;								\
+						//}												\
+						//void operator delete( void * pAdd_p, void * /*pAdd_p*/){		\
+						//	pAdd_p = pAdd_p;							\
+						//}												
 						
 
 //------------------------------------------------------------------------
