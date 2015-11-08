@@ -64,6 +64,19 @@ namespace sprite{
 			return m_cache[eBlend_p];
 		}
 
+		E_SAMPLERTYPE InfereSamplerType( dx::BindPSSampler * pBinder_p ){
+
+			return E_SAMPLERTYPE(pBinder_p - &m_cache[0]);
+
+			/*for( int it = 0; it < E_SAMPLER_MAX; ++it){
+
+				if( pBinder_p == &m_cache[it] )
+					return (E_SAMPLERTYPE)it;
+			}
+
+			return E_SAMPLER_MAX;*/
+		}
+
 	private:
 
 		dx::BindPSSampler m_cache[E_SAMPLER_MAX];

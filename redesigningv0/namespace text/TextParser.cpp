@@ -792,7 +792,8 @@ bool text::GfigElementA::FindFirstElementDFS( const char * szName_p, GfigElement
 void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::string & header_p,
 										gen::DataStream & buffer_p, const char cNewLine, const char cTab ){
 
-	
+	//new
+	header_p += '\r';// /new
 	header_p += '\n';
 
 	// create formated string
@@ -831,7 +832,9 @@ void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::strin
 	// [name = value\n\t
 	// [name]\n
 	// [name\n\t
-
+	
+	// new testing
+	formated_p += '\r';// /new testing
 	formated_p += cNewLine;
 	for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
 		formated_p += cTab;
@@ -847,10 +850,22 @@ void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::strin
 
 		if( Parser::NeedQuotes(  gfig_p.m_value[0], gfig_p.m_value[(int)gfig_p.m_value.size()-1], " \n\t\r" ) ){
 
-			formated_p += szQUotedValue + gfig_p.m_value + '"';
+			//formated_p += szQUotedValue + gfig_p.m_value + '"';
+
+			//new
+			formated_p += szQUotedValue;
+			AdjustNewLineTabFormatting( gfig_p.m_value, formated_p, currentTabIndentation_p, cTab, cNewLine );
+			formated_p += '"';
 		}
-		else 
-		formated_p += " = " + gfig_p.m_value; // [name = value
+		else{
+
+			//formated_p += " = " + gfig_p.m_value; // [name = value
+
+			//new
+			formated_p += " = ";
+			AdjustNewLineTabFormatting( gfig_p.m_value, formated_p, currentTabIndentation_p, cTab, cNewLine );
+		}
+		
 	}
 
 	int nChildElements = (int)gfig_p.m_subElements.size();
@@ -865,6 +880,8 @@ void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::strin
 
 		--currentTabIndentation_p;
 
+		// new testing
+		formated_p += '\r';// /new testing
 		formated_p += cNewLine;
 		for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
 			formated_p += cTab;
@@ -874,5 +891,37 @@ void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::strin
 	else{
 
 		formated_p += ']'; // [name]\n or  [name = value]\n
+	}
+}
+
+void text::GfigElementA::AdjustNewLineTabFormatting( const std::string & szIn_p, std::string & formated_p, int currentTabIndentation_p, const char cTab /*= '\t'*/, const char cNewLine /*= '\n'*/ )
+{
+
+	// NOTE: sz.size() =  (null)
+	// sz.size-1 = last char
+	
+	int itLastChar = (int)szIn_p.size()-1;
+
+	bool bOpenedNewLine = false;
+	for( int itC = 0; itC <= itLastChar; ++itC ){
+
+		if( szIn_p[itC] == cNewLine ){
+
+			formated_p += '\\';
+			formated_p += '\r';formated_p += cNewLine;
+			for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
+				formated_p += cTab;
+			bOpenedNewLine = true;
+		}
+		else{
+			
+			if( bOpenedNewLine ){
+
+				formated_p += '\\';
+				bOpenedNewLine = false;
+			}
+
+			formated_p += szIn_p[itC];
+		}
 	}
 }

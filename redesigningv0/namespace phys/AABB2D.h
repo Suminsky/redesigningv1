@@ -141,7 +141,9 @@ namespace phys{
 				}
 			}
 
-			return true;
+			return (normal.x != 0.0f || normal.y != 0.0f );//penetration == (std::numeric_limits<float>::lowest)())//
+
+			//return true;
 		}
 
 		//------------------------------------------------------------------------

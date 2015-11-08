@@ -185,10 +185,12 @@ namespace game{
 		void PlayClip( unsigned int iClip_p, bool bPauseCurrent_dontStop_p = false );
 		void StopClip( unsigned int iClip_p );
 		void PauseClip( unsigned int iClip_p );
+		void ResumeClip( unsigned int iClip_p, bool bPauseCurrent_dontStop_p = false );
 
 		void Play(){ PlayClip(m_iCurrentClip);}
 		void Stop(){ StopClip(m_iCurrentClip);}
 		void Pause(){ PauseClip(m_iCurrentClip);}
+		void Resume(){ ResumeClip(m_iCurrentClip);}
 
 		//------------------------------------------------------------------------
 		// meticulous ctrl
@@ -238,7 +240,7 @@ namespace game{
 		// return true if needs to quit updating
 		//------------------------------------------------------------------------
 		bool OnFrameWrap( AnimationClip *& currentClip );
-
+		
 		unsigned int								m_iCurrentClip;
 		unsigned int								m_iPreviousClip;
 		frame										m_currentFrame;

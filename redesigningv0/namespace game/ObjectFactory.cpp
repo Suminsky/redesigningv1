@@ -16,6 +16,7 @@ pool_Object_ptr ObjectFactory::CreateObject( text::GfigElementA * pGfig_p ){
 	pool_Object_ptr pObj(m_pool);
 
 	strcpy_s<64>( pObj->m_szName, pGfig_p->m_name.c_str() );
+	pObj->m_prefab = atoi(pGfig_p->m_value.c_str());
 
 	for( int it = 0, iSize = (int)pGfig_p->m_subElements.size();
 		it<iSize;
@@ -40,6 +41,7 @@ pool_Object_ptr game::ObjectFactory::CloneObject( const Object * pObj_p )
 	pool_Object_ptr pObj(m_pool);
 
 	strcpy_s<64>( pObj->m_szName, pObj_p->m_szName );
+	pObj->m_prefab = pObj_p->m_prefab;
 
 	for( int itCompo = 0, nCompos = (int)pObj_p->m_components.size(); itCompo < nCompos; ++itCompo ){
 
@@ -86,6 +88,7 @@ game::pool_Object_ptr game::ObjectFactory::CreateObjectFromPrefab( unsigned int 
 	pool_Object_ptr pObj = CreateObjectFromPrefab(iPrefab_p);
 
 	strcpy_s<64>( pObj->m_szName, pIntanceGfig_p->m_name.c_str() );
+	pObj->m_prefab = (int)iPrefab_p;
 
 	for( int it = 0, iSize = (int)pIntanceGfig_p->m_subElements.size();
 		it<iSize;
@@ -138,7 +141,7 @@ unsigned int game::ObjectFactory::PrefabIndexFromName( const std::string & szNam
 //------------------------------------------------------------------------
 void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA * pGFig_p )
 {
-	pGFig_p->m_subElements.emplace_back( GfigElementA(pObj_p->m_szName) );
+	pGFig_p->m_subElements.emplace_back( GfigElementA(pObj_p->m_szName, std::to_string((_ULonglong)pObj_p->m_prefab).c_str() )  );
 
 	int nCompos = (int)pObj_p->m_components.size();
 

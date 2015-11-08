@@ -114,6 +114,28 @@ void game::SpriteAnimationComponent::PlayClip( unsigned int iClip_p, bool bPause
 	m_iPreviousClip = m_iCurrentClip;
 	m_iCurrentClip = iClip_p;
 
+	// new
+	m_vClips[m_iCurrentClip].stateData.deltaAccum = (animTimeUnit)0.0;
+	m_vClips[m_iCurrentClip].stateData.itCurrentFrame = 0;
+	// new
+
+	m_vClips[m_iCurrentClip].stateData.eState = E_ANIMSTATE_PLAYING;
+}
+
+void game::SpriteAnimationComponent::ResumeClip( unsigned int iClip_p, bool bPauseCurrent_dontStop_p /*= false */ )
+{
+	if( bPauseCurrent_dontStop_p ){
+
+		Pause();
+	}
+	else{
+
+		Stop();
+	}
+
+	m_iPreviousClip = m_iCurrentClip;
+	m_iCurrentClip = iClip_p;
+
 	m_vClips[m_iCurrentClip].stateData.eState = E_ANIMSTATE_PLAYING;
 }
 

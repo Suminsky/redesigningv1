@@ -190,6 +190,7 @@ namespace game{
 
 		int m_ID;
 		char m_szName[64];
+		int m_prefab;
 	};
 
 	typedef gen::pool_ptr<Object> pool_Object_ptr;

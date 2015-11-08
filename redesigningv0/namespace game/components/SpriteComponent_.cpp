@@ -773,6 +773,13 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 		if( sprite.m_sortKey.bitfield.Zdepth != 0.0f ){
 			gSpriteCompo.m_subElements.push_back(GfigElementA("d", std::to_string((_ULonglong)sprite.m_sortKey.bitfield.Zdepth).c_str()) );
 		}
+
+		GfigElementA gColor("color");
+		ColorComponentFactory::SerializeRGBA(sprite.m_currentColor, gColor);
+		if( gColor.m_subElements.size() ){
+
+			gSpriteCompo.m_subElements.push_back(std::move(gColor));
+		}
 	}	
 }
 

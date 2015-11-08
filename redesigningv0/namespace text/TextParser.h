@@ -62,7 +62,7 @@ namespace text{
 		// example:
 		//	desc = "line 1
 		//			line 2"
-		//	# is this sample, theres 2 tabs after new line
+		//	# in this sample, theres 2 tabs after new line
 		//	
 		//	desc = "line 1
 		//	line 2"
@@ -113,6 +113,8 @@ namespace text{
 		static void GetSectionBetweenInvalidsOnTipsW( const wchar_t * szInvalids_p, gen::DataStreamW & buffer_p, int & iValidStartPos, unsigned int & nValidPortion_p );
 
 		inline static bool NeedQuotes( const char cFirst_p, const char cLast_p, const char * szInvalids_p );
+
+		
 		
 		//------------------------------------------------------------------------
 		// an entire section replaced by a char
@@ -188,6 +190,15 @@ namespace text{
 		// removes spaces from ends, remove quotes if any
 		//------------------------------------------------------------------------
 		static void ParseAssign( gen::DataStream & buffer_p, std::string & szOut_p );
+
+		//------------------------------------------------------------------------
+		// ads quotes and '\' pairs for new lines,
+		// putting the current number of tabs inbetween for better formatting on the file
+		//------------------------------------------------------------------------
+		static void AdjustNewLineTabFormatting(
+			const std::string & szIn_p, std::string & formated_p,
+			int currentTabIndentation_p,
+			const char cTab = '\t', const char cNewLine = '\n');
 	};
 
 	//========================================================================
