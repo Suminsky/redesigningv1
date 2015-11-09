@@ -146,6 +146,41 @@ namespace phys{
 			//return true;
 		}
 
+		bool CollisionData_Touching( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration ) const{
+
+			const DirectX::XMFLOAT2 normals[] = {
+				DirectX::XMFLOAT2( -1.0f,  0.0f ),
+				DirectX::XMFLOAT2(  1.0f,  0.0f ),
+				DirectX::XMFLOAT2(  0.0f, -1.0f ),
+				DirectX::XMFLOAT2(  0.0f,  1.0f ) };
+
+			// get penetration
+
+			const float distances[] = {	other_p.Left()	- Right(),
+				Left()			- other_p.Right(),
+				other_p.Down()	- Up(),
+				Down()			- other_p.Up() };
+
+			penetration = (std::numeric_limits<float>::lowest)();
+			normal.x = normal.y = 0.0f;
+			for( int it = 0; it < 4; ++it ){
+
+				// ignore if theres no penetration between any of the opposing faces (SAT)
+				if( distances[it] > 0.0f ) return false;
+
+				// keep the normal with least penetration (pen is negative)
+				if( distances[it] > penetration ){
+
+					penetration = distances[it];
+					normal = normals[it];
+				}
+			}
+
+			return (normal.x != 0.0f || normal.y != 0.0f );//penetration == (std::numeric_limits<float>::lowest)())//
+
+			//return true;
+		}
+
 		//------------------------------------------------------------------------
 		// otherr is stationary UNTESTED
 		//------------------------------------------------------------------------
@@ -344,9 +379,66 @@ namespace phys{
 				cMask |= 0x01 << 3;
 		}
 
+		static void GetIgnoredDueBLockedFacesMask(
+			const DirectX::XMFLOAT2 & relDir, 
+			const DirectX::XMFLOAT2 & Adir,	const DirectX::XMFLOAT2 & Bdir,
+			char aMask_p, char bMask_p,
+			char & cMask ){
+
+				bool goingDir[] = {
+					relDir.x < 0.0f, // left
+					relDir.x > 0.0f, // rit
+					relDir.y < 0.0f, // down
+					relDir.y > 0.0f // up
+				};
+
+				char otherMask[] = {
+					Adir.x < Bdir.x ? bMask_p : aMask_p,
+					Adir.x > Bdir.x ? bMask_p : aMask_p,
+					Adir.y < Bdir.y ? bMask_p : aMask_p,
+					Adir.y > Bdir.y ? bMask_p : aMask_p,
+				};
+				char otherFaceMask[] = {
+					0x01 << 1, // rit
+					0x01 << 0, // left
+					0x01 << 3, // up
+					0x01 << 2 // down
+				};
+
+				for( int it = 0; it < 4; ++it ){
+
+					if( goingDir[it] ){
+
+						if( otherMask[it] & otherFaceMask[it] )
+							cMask |= otherFaceMask[it];//(0x01 << it);//
+					}
+				}
+
+				//if( relDir.x < 0.0f ){
+
+				//	// going left
+
+				//	char otherMask = Adir.x < Bdir.x ? bMask_p : aMask_p;
+
+				//	// if one is going left
+				//	if( otherMask & (0x01 << 1) ){
+
+				//		// and other have the right face blocked, cant collide on the right:
+				//		cMask |= 0x01 << 1;
+				//	}
+				//}
+				/*if( relDir.x >= 0.0f )
+					cMask |= 0x01 << 1;
+
+				if( relDir.y <= 0.0f )
+					cMask |= 0x01 << 2;
+				if( relDir.y >= 0.0f )
+					cMask |= 0x01 << 3;*/
+		}
+
 		static void GetPrevSeparationMask(
-			AABB2D a_p, DirectX::XMFLOAT2 Adir,
-			AABB2D b_p, DirectX::XMFLOAT2 Bdir,
+			AABB2D a_p, const DirectX::XMFLOAT2 & Adir,
+			AABB2D b_p, const DirectX::XMFLOAT2 & Bdir,
 			char & cMask,
 			float fNoPenTolerance_p = 0.0f ){
 
