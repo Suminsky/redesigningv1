@@ -15,66 +15,30 @@
 
 namespace dx{
 
-	typedef ResourceCache<RenderTargetView, 1>	RTVCache;
-	typedef ResourceCache<Texture2DResource, 22> Tex2DCache;
-	typedef ResourceCache<VertexShader, 1>		VSCache;
-	typedef ResourceCache<PixelShader, 1>		PSCache;
-	typedef ResourceCache<BufferResource, 5>	BufferCache;
-	typedef ResourceCache<BlendState, 2>		BlendStateCache;
-	typedef ResourceCache<ShaderResourceView, 22> ShaderResourceViewCache;
-	typedef ResourceCache<InputLayout, 1>		InputLayoutCache;
-	typedef ResourceCache<SamplerState, 3>		SamplerStateCache;
+	typedef ResourceCache<RenderTargetView,		1>	RTVCache;
+	typedef ResourceCache<Texture2DResource,	30>	Tex2DCache;
+	typedef ResourceCache<VertexShader,			3>	VSCache;
+	typedef ResourceCache<PixelShader,			3>	PSCache;
+	typedef ResourceCache<BufferResource,		7>	BufferCache;
+	typedef ResourceCache<BlendState,			2>	BlendStateCache;
+	typedef ResourceCache<ShaderResourceView,	30>	ShaderResourceViewCache;
+	typedef ResourceCache<InputLayout,			2>	InputLayoutCache;
+	typedef ResourceCache<SamplerState,			3>	SamplerStateCache;
 
 	class Device{
-
-		ID3D11Device * m_pDevice;
-		ID3D11DeviceContext * m_pContext;
-
-		//render::DrawablesQueue m_drawableQueue;
-
-		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
-
-		D3D_FEATURE_LEVEL m_featureLVLavailable;
-
-		public:
-		RTVCache * m_pCacheRTV;
-		Tex2DCache * m_pCacheTex2D;
-		VSCache * m_pCacheVS;
-		PSCache * m_pCachePS;
-		BufferCache * m_pCacheBuffer;
-		BlendStateCache * m_pCacheBlendState;
-		ShaderResourceViewCache * m_pCacheSRV;
-		InputLayoutCache * m_pCacheInputLayout;
-		SamplerStateCache * m_pCacheSamplerState;
-
-		private:
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		void InitCaches(){
-
-			m_pCacheRTV = new RTVCache(m_pDevice);
-			m_pCacheTex2D = new Tex2DCache(m_pDevice);
-			m_pCacheVS = new VSCache(m_pDevice);
-			m_pCachePS = new PSCache(m_pDevice);
-			m_pCacheBuffer = new BufferCache(m_pDevice);
-			m_pCacheBlendState = new BlendStateCache(m_pDevice);
-			m_pCacheSRV = new ShaderResourceViewCache(m_pDevice);
-			m_pCacheInputLayout = new InputLayoutCache(m_pDevice);
-			m_pCacheSamplerState = new SamplerStateCache(m_pDevice);
-		}
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Device(): m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
-					m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
-					m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
+		Device()
+			:
+			m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
+			m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
+			m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
 
-			InitCaches();
+				InitCaches();
 		};
 		virtual ~Device(){
 
@@ -103,16 +67,52 @@ namespace dx{
 		// Creates a device and a device immediate context.
 		//
 		//------------------------------------------------------------------------
-		void InitDevice(	//in:
-							IDXGIAdapter1 *pAdapter_p,
-							const BOOL bSingleThreaded_p,
-							//in/holded:
-							IDXGIFactory1 *pFactory_p, //not used only holded
-							const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p	);
+		void InitDevice(
+			//in:
+			IDXGIAdapter1 *pAdapter_p,
+			const BOOL bSingleThreaded_p,
+			//in/holded:
+			IDXGIFactory1 *pFactory_p, //not used only holded
+			const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p	);
 
 		//------------------------------------------------------------------------
 		// Executes a list of render commands
 		//------------------------------------------------------------------------
 		void ExecutePipelineCommands( const render::RenderCommands & commandList_p );
+
+		RTVCache				* m_pCacheRTV;
+		Tex2DCache				* m_pCacheTex2D;
+		VSCache					* m_pCacheVS;
+		PSCache					* m_pCachePS;
+		BufferCache				* m_pCacheBuffer;
+		BlendStateCache			* m_pCacheBlendState;
+		ShaderResourceViewCache * m_pCacheSRV;
+		InputLayoutCache		* m_pCacheInputLayout;
+		SamplerStateCache		* m_pCacheSamplerState;
+
+		private:
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void InitCaches(){
+
+			m_pCacheRTV = new RTVCache(m_pDevice);
+			m_pCacheTex2D = new Tex2DCache(m_pDevice);
+			m_pCacheVS = new VSCache(m_pDevice);
+			m_pCachePS = new PSCache(m_pDevice);
+			m_pCacheBuffer = new BufferCache(m_pDevice);
+			m_pCacheBlendState = new BlendStateCache(m_pDevice);
+			m_pCacheSRV = new ShaderResourceViewCache(m_pDevice);
+			m_pCacheInputLayout = new InputLayoutCache(m_pDevice);
+			m_pCacheSamplerState = new SamplerStateCache(m_pDevice);
+		}
+
+		ID3D11Device * m_pDevice;
+		ID3D11DeviceContext * m_pContext;
+
+		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
+
+		D3D_FEATURE_LEVEL m_featureLVLavailable;
 	};
 }

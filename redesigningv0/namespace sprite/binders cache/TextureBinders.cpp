@@ -2,6 +2,9 @@
 
 int sprite::TextureBinders::Add( const char* szTexture_p )
 {
+
+	assert( m_cache.size() < m_size );
+
 	// create texture
 
 	dx::Texture2DResource::CreationParams params;
@@ -37,6 +40,10 @@ int sprite::TextureBinders::Add( const char* szTexture_p )
 
 	m_names.push_back( szTexture_p );
 
+	// add res
+	Resolution tmp = {desc.Width,desc.Height};
+	m_resolutions.push_back( tmp );
+
 	// returns the index
 
 	return (int)(m_cache.size()-1);
@@ -48,6 +55,7 @@ dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTextur
 	{
 		if( m_names[it] == szTexture_p )
 		{
+			*pIndexID_p = it;
 			return m_cache[it];
 		}
 	}

@@ -19,6 +19,8 @@
 				hig lvl class.
 
 				I think the resourceCache must have a specialization for BufferResource..
+				TODO
+				or maybe just give a szName to the buffer..why not
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
@@ -32,7 +34,7 @@
 #pragma comment( lib, "D3DX11.lib")
 
 // system/standard headers
-
+#include <string>
 #include <D3Dcommon.h>
 #include <D3D11.h>
 #include <D3DX11core.h>	//including because of D3DERR_INVALIDCALL
@@ -64,6 +66,7 @@ namespace dx{
 		//------------------------------------------------------------------------
 		struct Description{
 
+			//std::string szName;
 			D3D11_BUFFER_DESC bufferDesc;
 
 			//------------------------------------------------------------------------
@@ -71,14 +74,19 @@ namespace dx{
 			//------------------------------------------------------------------------
 			bool operator == ( const Description & anotherDesc_p ){
 
-				return (
-							bufferDesc.BindFlags == anotherDesc_p.bufferDesc.BindFlags
+				//if( !szName.empty() )
+				//	return szName == anotherDesc_p.szName;
+				//else
+
+				bool bReturn = 
+							(bufferDesc.BindFlags == anotherDesc_p.bufferDesc.BindFlags
 						&& bufferDesc.ByteWidth == anotherDesc_p.bufferDesc.ByteWidth
 						&& bufferDesc.CPUAccessFlags == anotherDesc_p.bufferDesc.CPUAccessFlags
 						&& bufferDesc.MiscFlags == anotherDesc_p.bufferDesc.MiscFlags
 						&& bufferDesc.StructureByteStride == anotherDesc_p.bufferDesc.StructureByteStride
-						&& bufferDesc.Usage == anotherDesc_p.bufferDesc.Usage
-						);
+						&& bufferDesc.Usage == anotherDesc_p.bufferDesc.Usage );
+
+				return bReturn;
 			}
 		};
 

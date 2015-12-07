@@ -49,9 +49,10 @@ namespace render{
 		//------------------------------------------------------------------------
 		ConstantBuffer( const UINT size_p, const UINT nVariables_p, const UINT * pVariablesSizes_p );
 		ConstantBuffer( const UINT size_p, const UINT nVariables_p )
-			:	m_variablesBuffer(new BYTE[size_p]()),
-			m_variablesOffsets(new byteoffset[nVariables_p]),
-			m_variablesSizes(new UINT[nVariables_p]){
+			:
+			m_variablesBuffer(	new BYTE[size_p]()),
+			m_variablesOffsets(	new byteoffset[nVariables_p]),
+			m_variablesSizes(	new UINT[nVariables_p]){
 
 				m_nBytes = size_p;
 				m_nVariables = nVariables_p;

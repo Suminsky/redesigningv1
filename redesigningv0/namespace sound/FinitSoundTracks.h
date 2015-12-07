@@ -207,6 +207,67 @@ namespace sound{
 			return true;
 		}
 
+		bool PlayTrack( UINT32 iTrack_p, XAUDIO2_BUFFER * pAudioBuffer_p, UINT32 iOperationSet_p = 1, UINT32 iFlags_p = 0 ){
+
+			XAUDIO2_VOICE_STATE state = {0};
+			m_pVoices[iTrack_p]->GetState(&state);
+			if( state.BuffersQueued > 0 ){
+
+				m_pVoices[iTrack_p]->Stop();
+				m_pVoices[iTrack_p]->FlushSourceBuffers();
+				m_pVoices[iTrack_p]->SubmitSourceBuffer( pAudioBuffer_p );
+			}
+			else{
+
+				m_pVoices[iTrack_p]->Stop();
+				m_pVoices[iTrack_p]->SubmitSourceBuffer( pAudioBuffer_p );
+			}
+
+			HRESULT hr =
+				m_pVoices[iTrack_p]->Start( iFlags_p, iOperationSet_p );
+
+			if( hr == S_OK ) return true;
+
+			assert( hr != XAUDIO2_E_INVALID_CALL );
+			assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+			assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+			// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+			assert (hr == XAUDIO2_E_DEVICE_INVALIDATED
+				||
+				hr == ERROR_NOT_FOUND );
+
+			return false;
+		}
+		bool StopTrack( UINT32 iTrack_p, UINT32 iOperationSet_p = 1, UINT32 iFlags_p = 0 ){
+		
+			HRESULT hr =
+				m_pVoices[iTrack_p]->Stop( iFlags_p, iOperationSet_p );
+
+			if( hr == S_OK ){
+			
+				// TODO: without flushing it will NOT stop if called in the same frame play was called,
+				// XAUDIO2_COMMIT_NOW does not solve the problem (makes sense, since play only applies after commiting,
+				// and stop would be called first)
+				// Setting a greater operation set actually works
+				// But I think I should have a stop and a Pause, as well as a Play and a Resume.
+				//m_pVoices[iTrack_p]->FlushSourceBuffers();
+				return true;
+			}
+
+			assert( hr != XAUDIO2_E_INVALID_CALL );
+			assert( hr != XAUDIO2_E_XMA_DECODER_ERROR ); // XBOX specific
+			assert( hr != XAUDIO2_E_XAPO_CREATION_FAILED ); // an effect failed to instantiate
+
+			// gotta be	XAUDIO2_E_DEVICE_INVALIDATED
+			assert (hr == XAUDIO2_E_DEVICE_INVALIDATED
+				||
+				hr == ERROR_NOT_FOUND );
+
+			return false;
+		}
+
+
 		//------------------------------------------------------------------------
 		// vol ctrl
 		//------------------------------------------------------------------------

@@ -16,7 +16,6 @@ void dx::ShaderResource::LoadShaderProgram( dx::E_BIND type_p, dx::Device * pDev
 	// compile shader
 
 	UINT iCompileFlags = DBG(D3DCOMPILE_DEBUG)NDBG(D3DCOMPILE_OPTIMIZATION_LEVEL3)|(bRowMajor_p?D3DCOMPILE_PACK_MATRIX_ROW_MAJOR:0);
-	//if( bRowMajor_p ) iCompileFlags |= D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 	ID3DBlob * pErrorMsg = NULL;
 	ID3DBlob * pShaderBytes = NULL;
 
@@ -43,14 +42,10 @@ void dx::ShaderResource::LoadShaderProgram( dx::E_BIND type_p, dx::Device * pDev
 		xsDesc.desc.szHLSL = m_szName;
 		xsDesc.desc.szProgramName = szXS_p;
 
-		ID3D11VertexShader * pVS;
-		pDevice_p->m_pCacheVS->Acquire(xsDesc, pVS);
-
 		// set permutation
 
 		m_permutations[iPermutationIndex_p].m_optionsBitMask = iPermutationMask_p;
-		static BindVSVertexShader s_bindVS(pVS); // TODO: cache
-		m_permutations[iPermutationIndex_p].m_pipeState.AddBinderCommand( &s_bindVS );
+		m_permutations[iPermutationIndex_p].m_pipeState.AddBinderCommand( &m_VSCache.GetFromID( pDevice_p->m_pCacheVS->Acquire(xsDesc) ) );
 
 						}break;
 	case E_PixelShader:{
@@ -61,14 +56,10 @@ void dx::ShaderResource::LoadShaderProgram( dx::E_BIND type_p, dx::Device * pDev
 		xsDesc.desc.szHLSL = m_szName;
 		xsDesc.desc.szProgramName = szXS_p;
 
-		ID3D11PixelShader * pPS;
-		pDevice_p->m_pCachePS->Acquire( xsDesc, pPS );
-
 		// set permutation
 
 		m_permutations[iPermutationIndex_p].m_optionsBitMask = iPermutationMask_p;
-		static BindPSPixelShader s_bindPS(pPS);  // TODO: cache
-		m_permutations[iPermutationIndex_p].m_pipeState.AddBinderCommand( &s_bindPS );
+		m_permutations[iPermutationIndex_p].m_pipeState.AddBinderCommand( &m_PSCache.GetFromID( pDevice_p->m_pCachePS->Acquire(xsDesc) ) );
 
 					   }break;
 	}

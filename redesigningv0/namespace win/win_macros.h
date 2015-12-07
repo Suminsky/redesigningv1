@@ -22,8 +22,8 @@
 #define MB( cap, txt, mb ) MessageBox( NULL, TEXT( txt ), TEXT (cap), mb )	// default messagebox
 #define _MB( cap, bfr, mb) MessageBox( NULL, bfr, TEXT (cap), mb )			// default messagebox for srting buffer
 #define _MBA( cap, bfr, mb) MessageBoxA(NULL, (LPCSTR)bfr, cap, mb)			// mb for ansi string buffer
-#define MB_E ( MB_OK|MB_ICONEXCLAMATION )	//MB exclamation
-#define MB_I ( MB_OK|MB_ICONINFORMATION )	//MB info
+#define MB_E ( MB_OK|MB_ICONEXCLAMATION|MB_SYSTEMMODAL )	//MB exclamation
+#define MB_I ( MB_OK|MB_ICONINFORMATION|MB_SYSTEMMODAL )	//MB info
 
 // automatic error MB
 

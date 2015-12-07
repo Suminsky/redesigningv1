@@ -8,10 +8,7 @@
 	file ext:	h
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
-	purpose:	!!!SUPER IMPORTANT MASTER FUCKER!!!
-				all textures should be initialized at once, OR the vector should reserve the exactly quantity needed,
-				otherwise the vector can reallocate, and than any pointer pointing to the binder command will became shit
-				TODO: create a definitive cache class
+	purpose:	TODO: create a definitive cache class
 
 	© Icebone1000 (Giuliano SUminsky Pieta) , rights reserved.
 */
@@ -22,7 +19,6 @@
 // system/standard headers
 
 #include <vector>
-//#include <boost/smart_ptr.hpp>
 
 // private headers
 
@@ -41,6 +37,8 @@ namespace sprite{
 
 	public:
 
+		struct Resolution{ uint32_t w, h;};
+
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
@@ -50,8 +48,11 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// "delayed" ctor
 		//------------------------------------------------------------------------
-		void Init( dx::Device * pDevice_p ){
-			m_cache.reserve(100);
+		void Init( dx::Device * pDevice_p, int size_p = 100 ){
+			m_cache.reserve(size_p);
+			m_names.reserve(size_p);
+			m_resolutions.reserve(size_p);
+			m_size = size_p;
 
 			m_pDevice = pDevice_p;
 		}
@@ -77,11 +78,28 @@ namespace sprite{
 			return m_cache[iTexture_p];
 		}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		const std::string & GetTextureName( UINT iTexture_p ) const{
+
+			assert( iTexture_p < m_cache.size());
+
+			return m_names[iTexture_p];
+		}
+		const Resolution & GetTextureRes( UINT iTexture_p ) const{
+
+			assert( iTexture_p < m_cache.size());
+
+			return m_resolutions[iTexture_p];
+		}
 
 	private:
 
 		std::vector<dx::BindPSShaderResourceView> m_cache;
 		std::vector< std::string > m_names;
+		std::vector< Resolution > m_resolutions;
+		unsigned int m_size;
 
 		dx::Device * m_pDevice;
 

@@ -10,7 +10,7 @@ void KeyboardAsyncInput::UpdateKeyStates(){
 
 	for( USHORT i = 0; i < 256; i++ ){
 
-		m_keysStatus[i] = GetAsyncKeyState( i );		
+		m_keysStatus[i] = GetAsyncKeyState( i );
 	}
 }
 //----------
@@ -38,6 +38,13 @@ bool KeyboardAsyncInput::IsKeyToogledON( const USHORT VK ) const{
 
 	return (GetKeyState( VK ) & 0x0001);
 }
+
+bool KeyboardAsyncInput::WasKeyPressed( const USHORT VK ) const
+{
+	return (m_prevKeysStatus[ VK ] & 0x8000 ) != 0;
+}
+
+
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 namespace win{

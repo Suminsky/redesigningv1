@@ -12,7 +12,7 @@ namespace win{
 	//------------------------------------------------------------------------
 	// this allocates mem!
 	//------------------------------------------------------------------------
-	inline bool OpenFile( const char * szFilename_p, gen::DataStream & buffer_p  )
+	inline bool ReadEntireFile( const char * szFilename_p, gen::DataStream & buffer_p  )
 	{
 		HANDLE hFile = CreateFileA( szFilename_p,
 									GENERIC_READ, 0, NULL, OPEN_EXISTING,
@@ -41,7 +41,7 @@ namespace win{
 		return true;
 	}
 
-	inline static bool SaveToFile( const char * szFilename_p,  gen::DataStream & buffer_p  ){
+	inline static bool SaveEntireFile( const char * szFilename_p,  gen::DataStream & buffer_p  ){
 
 		HANDLE hFile = CreateFileA( szFilename_p, GENERIC_WRITE, 0,
 									NULL, OPEN_ALWAYS,
@@ -58,14 +58,9 @@ namespace win{
 			TESTBOOLNULL(SetEndOfFile( hFile ));
 		}
 
-		OVERLAPPED fileOffset;
-		fileOffset.Offset = fileOffset.OffsetHigh = 0xFFFFFFFF; // == append data
-		fileOffset.hEvent = NULL;
-		fileOffset.Internal = fileOffset.InternalHigh = NULL;
-
 		DWORD nBytesWritten = 0;
 
-		TESTBOOLNULL(WriteFile( hFile, (LPCVOID)buffer_p.m_data, buffer_p.m_size, (LPDWORD)&nBytesWritten, &fileOffset ));
+		TESTBOOLNULL(WriteFile( hFile, (LPCVOID)buffer_p.m_data, buffer_p.m_size*sizeof(char), (LPDWORD)&nBytesWritten, nullptr ));
 		TESTBOOLNULL(CloseHandle( hFile ));
 
 		return true;
@@ -115,7 +110,9 @@ namespace win{
 			ToRECT( rect );
 			return rect;
 		}
-
+		//------------------------------------------------------------------------
+		// assumes coordinate space from 0 to left (infinite)
+		//------------------------------------------------------------------------
 		inline void AnchoredResize( int w_p, int h_p, gen::Anchor anchor_p ){
 
 			// cache
@@ -143,7 +140,7 @@ namespace win{
 
 			// vert
 
-			switch( anchor_p.h ){
+			switch( anchor_p.v ){
 
 			//case gen::EVERTALIGN_TOP:
 

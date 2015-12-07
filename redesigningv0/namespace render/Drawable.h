@@ -18,14 +18,14 @@
 // system/standard headers
 
 // private headers
-#include "dx/pipeline/State.h"
+#include "dx/pipeline/PipeState.h"
 #include "dx/pipeline/DrawCall.h"
 
 namespace render{
 
 	class DrawablesQueue;
 
-	typedef std::vector<dx::State*> StatesPtrsVec;
+	typedef std::vector<dx::PipeState*> vStatePtrs;
 
 	class Drawable{
 
@@ -36,15 +36,20 @@ namespace render{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Drawable(){};
-		virtual ~Drawable(){};
+		Drawable(){}
+		Drawable( UINT64 sortKey_p, dx::DrawCall * pDrawCall_p )
+		:
+		m_sortKey(sortKey_p),
+		m_pDrawCall(pDrawCall_p)
+		{}
+		virtual ~Drawable(){}
 
 		//------------------------------------------------------------------------
 		// add a new state to the drawable
 		//------------------------------------------------------------------------
-		void AddPipelineState( dx::State * pState_p ){
+		void AddPipelineState( dx::PipeState * pState_p ){
 
-			m_pipeStateGroup.push_back( pState_p );
+			m_vStatePtrs.push_back( pState_p );
 		}
 
 		//------------------------------------------------------------------------
@@ -54,15 +59,19 @@ namespace render{
 		//------------------------------------------------------------------------
 		void PopLastPipelineState(){
 
-			m_pipeStateGroup.pop_back();
+			m_vStatePtrs.pop_back();
+		}
+		void PopLastPipelineStates( UINT nStates ){
+
+			m_vStatePtrs.resize( m_vStatePtrs.size() - nStates );
 		}
 
 		//------------------------------------------------------------------------
 		// add a group of states to the drawable
 		//------------------------------------------------------------------------
-		void AddPipelineStateGroup( const StatesPtrsVec & pipeStateGroup_p ){
+		void AddPipelineStateGroup( const vStatePtrs & vStatePtrs_p ){
 
-			m_pipeStateGroup.insert( m_pipeStateGroup.cend(), pipeStateGroup_p.cbegin(), pipeStateGroup_p.cend() );
+			m_vStatePtrs.insert( m_vStatePtrs.cend(), vStatePtrs_p.cbegin(), vStatePtrs_p.cend() );
 		}
 
 		//------------------------------------------------------------------------
@@ -73,9 +82,9 @@ namespace render{
 		//------------------------------------------------------------------------
 		// setters
 		//------------------------------------------------------------------------
-		void SetPipelineStateGroup( const StatesPtrsVec & pipeStateGroup_p ){
+		void SetPipelineStateGroup( const vStatePtrs & vStatePtrs_p ){
 
-			m_pipeStateGroup = pipeStateGroup_p; // copy all states from the given state group
+			m_vStatePtrs = vStatePtrs_p; // copy all states from the given state group
 		}
 		void SetDrawCall( dx::DrawCall * pDrawCall_p ){
 
@@ -91,13 +100,13 @@ namespace render{
 		//------------------------------------------------------------------------
 		void Clear(){
 
-			m_pipeStateGroup.clear();
+			m_vStatePtrs.clear();
 		}
 
 	private: // TODO
 
-		StatesPtrsVec m_pipeStateGroup;			// states w binder commands
-		dx::DrawCall * m_pDrawCall;				// draw
+		std::vector<dx::PipeState*> 	m_vStatePtrs;			// states w binder commands
+		dx::DrawCall *					m_pDrawCall;			// draw
 
 		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
 	};

@@ -21,22 +21,23 @@
 #define COMMA ,
 #define DBG(param) param
 //remember of COMMA() in the case of future problems
-#define BREAKHERE {int breakhere = 7; breakhere = breakhere;}
+#define BREAKHERE {int breakhere = 7; breakhere = breakhere; }
 #define NDBG(param)
 #else
 #define COMMA
 #define DBG(param)
-#define BREAKHERE
+#define BREAKHERE {}
 #define NDBG(param) param
 #endif
 
-#ifdef IDIOTSPROOFOFF
-#define IDIOTSPROOF(p)
+#ifdef _DEBUG
+#define keepAssert(x) assert(x)
 #else
-#define IDIOTSPROOF(p) p
-#endif
+#define keepAssert(x) x
+#endif // _DEBUG
 
 #include <exception>
+#include <new>
 //------------------------------------------------------------------------
 // this macro simply implements aligned malloc overloaded new and delete
 // but only if its not a x64 build, on x64 builds align is already by 16
@@ -57,7 +58,15 @@
 						}												\
 						void operator delete(void* p_p){				\
 							_aligned_free(p_p);							\
-						}												
+						}												//\
+						//void* operator new(size_t /*size_p*/, void * pAdd_p){				\
+						//	if( pAdd_p == NULL)							\
+						//		throw std::bad_alloc();					\
+						//	return pAdd_p;								\
+						//}												\
+						//void operator delete( void * pAdd_p, void * /*pAdd_p*/){		\
+						//	pAdd_p = pAdd_p;							\
+						//}												
 						
 
 //------------------------------------------------------------------------

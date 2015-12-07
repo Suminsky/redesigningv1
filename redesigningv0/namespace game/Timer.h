@@ -79,9 +79,10 @@ public:
 	//------------------------------------------------------------------------
 	// getters
 	//------------------------------------------------------------------------
-	ClockType GetDelta(){ return m_deltaTime;}
-	ClockType GetTime(){ return m_accumTime; }
-	float GetSpeed(){ return m_fSpeed;}
+	ClockType GetDelta() const{ return m_deltaTime;}
+	ClockType GetTime() const{ return m_accumTime; }
+	float GetSpeed() const{ return m_fSpeed;}
+	bool IsPaused() const{ return m_bPaused; }
 
 	//------------------------------------------------------------------------
 	// setters

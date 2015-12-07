@@ -7,125 +7,191 @@
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
 	purpose:	The game object, the rice of the game.
-				NOTE:
-				Cache friendly idea:
-				store all components (derived from Component) instances in a contiguous block (std::vector)
-				and make objects point to then based on a pointer to type plus a pointer to the right instance.
-				To update the actors, instead of iterating actors, one would update all components of the same
-				type, till all types.
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-
+#include <assert.h>
 #include <memory>
-#include <unordered_map>
+#include <vector>
 
 // private includes
 
 #include "Component.h"
+#include "EventMachine.h"
+
+namespace gen{
+	template<typename T>	class Pool;
+}
 
 namespace game{
 
+	class ObjectMachine;
+	class ObjectFactory;
 	class Layer;
+	class System;
 	class Component;
 
-	typedef unsigned int ObjectID;
-	typedef unsigned int OBJECT_LAYERINDEX;
-	static const unsigned int INVALID_LAYERINDEX = (unsigned int)-1;
+	//typedef unsigned int ObjectID;
+
+	typedef unsigned int OBJECTINDEX;
+	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
 	
-	typedef std::vector<shared_Component_ptr> ObjectComponents;
+	typedef std::vector<pool_Component_ptr> ObjectComponents;
 
 	//========================================================================
 	// 
 	//========================================================================
-	class Object{
+	class Object: public gen::NonCopyable{
 
-		friend class State;
 		friend class Layer;
+		friend class ObjectMachine;
+		friend class ObjectFactory;
+
+		DCL_POOLELEMENT();
 
 	public:
-
-		bool m_bActive;
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Object( bool bActive_p = true ):m_bActive(bActive_p), m_currentLayerIndex(INVALID_LAYERINDEX), m_pLayerOwner(nullptr){}
-		virtual ~Object(){}
+		Object()
+			:
+			m_currentObjectIndex(INVALID_OBJECTINDEX),
+			m_pLayerOwner(nullptr),
+			m_pObjMachineOwner(nullptr),
+			m_bDettached(true){
 
-		//------------------------------------------------------------------------
-		// update the object components
-		//------------------------------------------------------------------------
-		void Update( double dTime_p, double dDelta_p ){
-
-			for( ObjectComponents::iterator it = m_components.begin(), itEnd = m_components.end();
-					it != itEnd; ++ it ){
-
-				(*it)->VOnUpdate( dTime_p, dDelta_p );
+				static int s_count = 0;
+				m_ID = s_count++;
+				m_szName[0] = 0;
 			}
-		}
 
-		//------------------------------------------------------------------------
-		// get id
-		//------------------------------------------------------------------------
-		/*ObjectID ID() const{
+		~Object(){
 
-			return m_ID;
-		}*/
+			//TODO: dettach components?
+			//BREAKHERE;
+			// 
+			for( int it = 0, nCompo = (int)m_components.size(); it < nCompo; ++it ){
 
-		//------------------------------------------------------------------------
-		// get component by id (the id is the index on the object)
-		//------------------------------------------------------------------------
-		template<class DerivedComponent>
-		std::weak_ptr<DerivedComponent> GetComponent( COMPONENT_OBJECTINDEX index_p ) const {
-
-			return m_components[index_p];
+				m_components[it]->m_bDettached = true;
+			}
 		}
 
 		//------------------------------------------------------------------------
 		// component stuff
 		//------------------------------------------------------------------------
-		void AddComponent( shared_Component_ptr && pComponent_p ){
+		void AttachComponent( pool_Component_ptr && pComponent_p );
+		void AttachComponent( const pool_Component_ptr & pComponent_p );
+		void DettachComponent( COMPONENTINDEX componentCurrentIndex_p );
+		void DettachComponent( const pool_Component_ptr & pComponent_p );
+		void DettachComponent( Component * pComponent_p );
 
-			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size();
-			pComponent_p->m_pObjectOwner = this;
-
-			m_components.push_back( std::move(pComponent_p) );	
-		}
-		void AddComponent( const shared_Component_ptr & pComponent_p ){
-
-			pComponent_p->m_currentObjectIndex = (COMPONENT_OBJECTINDEX)m_components.size();
-			pComponent_p->m_pObjectOwner = this;
-
-			m_components.push_back( pComponent_p );	
-		}
-		void RemoveComponent( COMPONENT_OBJECTINDEX /*componentCurrentIndex_p*/ ){
-
-			// TODO
-			//std::swap( m_components[componentCurrentIndex_p], m_components[m_components.size()-1] );
-			//m_components[componentCurrentIndex_p]->m_currentObjectIndex = componentCurrentIndex_p; // update index
-			//m_components.pop_back();
-		}
+		//------------------------------------------------------------------------
+		// event/message stuff
+		//------------------------------------------------------------------------
+		void RegisterForComponentEvent( EventMachine<ComponentEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p );
+		void UnregisterForComponentEvent( EventMachine<ComponentEventData>::EventHandler eveHandlerDelegate_p, EventType eveType_p );
+		void AddComponentEvent( EventType eveType_p, ComponentEventData eveData_p );
+		void DispatchComponentEventImmediately( EventType eveType_p, ComponentEventData eveData_p );
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
 		Layer * GetLayerOwner() const { return m_pLayerOwner; }
-		OBJECT_LAYERINDEX GetLayerIndex() const { return m_currentLayerIndex; }
+		ObjectComponents & GetComponents(){	return m_components; }
+		bool IsAttached() const { return !m_bDettached; }
+		template< typename DerivedComponent >
+		gen::pool_ptr<DerivedComponent> GetFirstOfComponent(){
+
+			for( int it = 0, iSize = (int)m_components.size();
+		         it < iSize;
+				 ++it ){
+
+				if( m_components[it]->GetType() == COMPONENT_TYPE(DerivedComponent) ){
+				
+					return m_components[it];
+				}
+			}
+
+			return gen::pool_ptr<DerivedComponent>();
+		}
+		pool_Component_ptr GetFirstOfComponent( const unsigned int iType_p ){
+
+			for( int it = 0, iSize = (int)m_components.size();
+				it < iSize;
+				++it ){
+
+					if( m_components[it]->GetType() == iType_p ){
+
+						return m_components[it];
+					}
+			}
+
+			return pool_Component_ptr();
+		}
+		template< typename DerivedComponent >
+		gen::pool_ptr<DerivedComponent> GetNthOfComponent( int nth_p ){
+
+			for( int it = 0, currentTH = 0, iSize = (int)m_components.size();
+				it < iSize;
+				++it ){
+
+					if( m_components[it]->GetType() == COMPONENT_TYPE(DerivedComponent) ){
+
+						if( currentTH == nth_p ) return m_components[it];
+
+						++currentTH;
+					}
+			}
+
+			return gen::pool_ptr<DerivedComponent>();
+		}
+		int GetID() const { return m_ID; }
+		const char* GetName()const{ return &m_szName[0]; }
+
+		//------------------------------------------------------------------------
+		// setters
+		//------------------------------------------------------------------------
+		void SetName( const char * newName_p ){
+
+			memcpy(m_szName, newName_p, sizeof(char)*(gen::stringUtil::CountString(newName_p,64)+1) );
+		}
 
 	protected:
 
 		Layer * m_pLayerOwner;
+		ObjectMachine * m_pObjMachineOwner;
 
 	private:
 
-		//ObjectID m_ID;
-		OBJECT_LAYERINDEX m_currentLayerIndex;
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void DispatchComponentEvents();
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void CleanRemovedComponents();
+
+
+		OBJECTINDEX m_currentObjectIndex;
+		bool m_bDettached;
+
 		ObjectComponents m_components;
+		std::vector<Component*> m_removedComponents;
+
+		EventMachine<ComponentEventData> m_objectEventMachine;
+
+		// TODO: make obj a huge block of mem, using max compos, eves and eve handlers
+
+		int m_ID;
+		char m_szName[64];
+		int m_prefab;
 	};
 
-	typedef std::shared_ptr<Object> shared_Object_ptr;
+	typedef gen::pool_ptr<Object> pool_Object_ptr;
 }

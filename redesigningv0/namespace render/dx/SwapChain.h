@@ -30,6 +30,7 @@ namespace dx{
 	class SwapChain{
 
 	public:
+
 		struct ModePriority{
 
 			int iResolution,
@@ -50,27 +51,16 @@ namespace dx{
 				: pAdapter(adapter_p), pOutput(outputMode_p), mode(mode_p){}
 		};
 
-		IDXGISwapChain * m_pSwapChain;
-
-		DXGI_MODE_DESC m_BackBufferDisplayMode;	//current display(pOutput) mode being used
-		IDXGIOutput * m_pOutput;				//setted by param when creating the swap chain, for convenience
-
-		ID3D11RenderTargetView * m_pBackBufferRTV;		// i dont see why a swap chain would be created if you do not get a view from its bbuffer??
-
-		UINT m_iPresentFlags;
-		UINT m_nBuffers;
-		UINT m_iSyncInterval;				//vsync = 1
-		UINT m_iFlags;
-		UINT m_nMSAA;
-		UINT m_iMSAAQuality;
-		BOOL m_bWindowed;
-
-	public:
-
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		SwapChain() : m_pSwapChain(NULL), m_pOutput(NULL), m_pBackBufferRTV(NULL){};
+		SwapChain()
+			:
+		m_pSwapChain(nullptr), m_pOutput(nullptr), m_pBackBufferRTV(nullptr),
+		m_iSyncInterval(1),
+		m_bWindowed(false)
+		{}
+
 		virtual ~SwapChain(){
 
 			if(!m_bWindowed)
@@ -88,17 +78,17 @@ namespace dx{
 		// creates the swap chain
 		//------------------------------------------------------------------------
 		void CreateTheSwapChain(	//in:
-									ID3D11Device *pDevice_p,
-									IDXGIFactory1 *pFactory_p,
-									const HWND hWnd_p,//reqired
-									const BOOL bChangeResolutionWhenResizingInFullscreen_p,
-									//in / holded:
-									const BOOL bWindowed_p,
-									const UINT nMSAA_p, const UINT iMSAAqlty_p,
-									const DXGI_MODE_DESC OutputMode_p,//used also to check MSAA for the format								
-									const UINT nBuffer_p,
-									IDXGIOutput *pOutput_p	 //not used only holded
-									);
+			ID3D11Device *pDevice_p,
+			IDXGIFactory1 *pFactory_p,
+			const HWND hWnd_p,//reqired
+			const BOOL bChangeResolutionWhenResizingInFullscreen_p,
+			//in / holded:
+			const BOOL bWindowed_p,
+			const UINT nMSAA_p, const UINT iMSAAqlty_p,
+			const DXGI_MODE_DESC OutputMode_p,//used also to check MSAA for the format								
+			const UINT nBuffer_p,
+			IDXGIOutput *pOutput_p	 //not used only holded
+			);
 
 		//------------------------------------------------------------------------
 		// resize buffers
@@ -151,16 +141,47 @@ namespace dx{
 		//			GF_FIND_CLOSE if find one that doesnt satisfies all requests.
 		//------------------------------------------------------------------------
 		int GetCapableAdapterAndOutputAndModeClosestMatch(	//in:
-															DXGI_MODE_DESC &desiredFSDisplayMode_p,
-															//in/out:
-															GpuAndMode &gpuAndMode_p, //in only thepriorities
-															//out:
-															IDXGIFactory1 *& pFactory_p );
+			DXGI_MODE_DESC &desiredFSDisplayMode_p,
+			//in/out:
+			GpuAndMode &gpuAndMode_p, //in only thepriorities
+			//out:
+			IDXGIFactory1 *& pFactory_p );
 
 		//------------------------------------------------------------------------
 		// get a view from from the swap chain back buffer.
 		// makes the back buffer drawable
 		//------------------------------------------------------------------------
 		void CreateRTVFromBackBuffer( ID3D11Device * pDevice_p );
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Present()const{
+
+			m_pSwapChain->Present( m_iSyncInterval, 0 );
+		}
+		void Present( int iSyncInterval_p )const{
+
+			m_pSwapChain->Present( iSyncInterval_p, 0 );
+		}
+
+	public:
+
+		IDXGISwapChain * m_pSwapChain;
+
+		DXGI_MODE_DESC m_BackBufferDisplayMode;	//current display(pOutput) mode being used
+		IDXGIOutput * m_pOutput;				//setted by param when creating the swap chain, for convenience
+
+		ID3D11RenderTargetView * m_pBackBufferRTV;		// i dont see why a swap chain would be created if you do not get a view from its bbuffer??
+
+		UINT m_iPresentFlags;
+		UINT m_nBuffers;
+		UINT m_iSyncInterval;				//vsync = 1
+		UINT m_iFlags;
+		UINT m_nMSAA;
+		UINT m_iMSAAQuality;
+		BOOL m_bWindowed;
+
+	
 	};
 }

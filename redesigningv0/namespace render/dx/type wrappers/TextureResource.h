@@ -104,7 +104,7 @@ namespace dx{
 			}
 			else
 			{
-				/*D3DX11_IMAGE_INFO imgInfo;
+				D3DX11_IMAGE_INFO imgInfo;
 				D3DX11_IMAGE_LOAD_INFO loadInfo;
 
 				D3DX11GetImageInfoFromFileA(params_p.desc.szFilename.c_str(), NULL, &imgInfo, nullptr);
@@ -112,18 +112,18 @@ namespace dx{
 				loadInfo.Height = imgInfo.Height;
 				loadInfo.Depth = imgInfo.Depth;
 				loadInfo.FirstMipLevel = 0;
-				loadInfo.MipLevels = 1;
+				loadInfo.MipLevels = 1;//0;//
 				loadInfo.Usage = D3D11_USAGE_DEFAULT;
 				loadInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE ;
 				loadInfo.CpuAccessFlags = 0;
 				loadInfo.MiscFlags = 0;
 				loadInfo.Format = imgInfo.Format;
 				loadInfo.Filter = D3DX11_FILTER_NONE;
-				loadInfo.MipFilter = D3DX11_FILTER_NONE;
-				loadInfo.pSrcInfo = &imgInfo;*/
+				loadInfo.MipFilter = D3DX11_FILTER_NONE;//D3DX11_FILTER_LINEAR;//
+				loadInfo.pSrcInfo = &imgInfo;
 
 				if( FAILED(
-				D3DX11CreateTextureFromFileA( pDeviceRef_p, params_p.desc.szFilename.c_str(), NULL, NULL, (ID3D11Resource**)&pTex2D, NULL )
+				D3DX11CreateTextureFromFileA( pDeviceRef_p, params_p.desc.szFilename.c_str(), /*nullptr*/&loadInfo, nullptr, (ID3D11Resource**)&pTex2D, NULL )
 				)){
 
 					throw std::exception("render:dx create tex2D failed");

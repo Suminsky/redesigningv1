@@ -53,7 +53,7 @@ VOID HighPerformanceTimer::Cronometer::EndCountMilliseconds( DOUBLE &msec ){
 	msec = (nCounts_sinceStartCount * m_counterFrequency_inverse)*1000.0;
 
 	//reset m_startCount_cache
-	m_startCount_cache.QuadPart = 0LL;
+	//m_startCount_cache.QuadPart = 0LL;
 }
 VOID HighPerformanceTimer::Cronometer::EndCountFrameCount(LONGLONG &nCount){
 
@@ -67,7 +67,7 @@ VOID HighPerformanceTimer::Cronometer::EndCountFrameCount(LONGLONG &nCount){
 	nCount = endCount.QuadPart - m_startCount_cache.QuadPart;
 
 	//reset m_startCount_cache
-	m_startCount_cache.QuadPart = 0L;
+	//m_startCount_cache.QuadPart = 0L;
 }
 //=====================================================================================================================
 //=====================================================================================================================
@@ -114,7 +114,7 @@ BOOL HighPerformanceTimer::FPI::FpI( const DOUBLE &deltaMS ){
 	//check if interval is over:
 	if( m_nTimeElapsed_accum_ms_tmp >= m_timeInterval_ms ){
 
-		m_nTimeElapsed_accum_ms_tmp -= m_timeInterval_ms;
+		m_nTimeElapsed_accum_ms_tmp = 0.0;//-= m_timeInterval_ms;
 		return TRUE;
 	}
 	return FALSE;
@@ -126,17 +126,6 @@ BOOL HighPerformanceTimer::FPI::FpI( const DOUBLE &deltaMS ){
 //gatters:
 //=======================================
 DOUBLE HighPerformanceTimer::GetDeltaSeconds()const{
-
-		/*LONGLONG freqInv = 1ULL/m_counterFrequency.QuadPart;
-	
-		LONGLONG llSec = m_nDeltaCounts/m_counterFrequency.QuadPart;
-		LONGLONG llSecInv = m_nDeltaCounts*m_counterFrequency_inverse;
-
-		DOUBLE dSec = m_nDeltaCounts/m_counterFrequency.QuadPart;
-		DOUBLE dSecInv = m_nDeltaCounts*m_counterFrequency_inverse;
-
-		DOUBLE dSecConv = (DOUBLE)m_nDeltaCounts/(DOUBLE)m_counterFrequency.QuadPart;
-		DOUBLE dSecInvConv = (DOUBLE)m_nDeltaCounts*(DOUBLE)m_counterFrequency_inverse;*/
 
 	return m_nDeltaCounts * m_counterFrequency_inverse;
 }

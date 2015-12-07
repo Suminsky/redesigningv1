@@ -46,7 +46,9 @@ namespace net{
 		E_PACKET_HEADER_NDATACHUNKS_OFFSET	= sizeof(int)*4,
 
 		E_PACKET_CHANNEL_CONNECT			= -1,  // using negative numbers to interpret as keepalive or connection attempt packets
-		E_PACKET_CHANNEL_KEEPALIVE			= -2			
+		E_PACKET_CHANNEL_KEEPALIVE			= -2,
+		E_PACKET_CHANNEL_DISCONNECT			= -3,
+		E_PACKET_MINVALIDCHANNEL			= -3
 	};	
 
 	//========================================================================
@@ -229,7 +231,7 @@ namespace net{
 
 			if( outHeader_p.iID == m_iID ){
 
-				if( outHeader_p.iChannel >= -2 ){
+				if( outHeader_p.iChannel >= E_PACKET_MINVALIDCHANNEL ){
 
 					return true;
 				}

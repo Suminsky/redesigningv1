@@ -69,6 +69,35 @@ namespace dx{
 
 	typedef std::shared_ptr<DrawCall> shared_DrawCall_ptr;
 
+	//========================================================================
+	// 
+	//========================================================================
+	class Draw: public DrawCall{
+
+		UINT m_nVertices;		// how much indexes from the bound buffer to use
+		UINT m_iStartIndex;
+
+	public:
+
+		Draw( UINT nVertices_p, UINT iStartIndex_p = 0 )
+			:
+		DrawCall(E_Normal),
+		m_nVertices(nVertices_p), m_iStartIndex(iStartIndex_p){}
+
+		void UpdateNumberOfVertices( UINT nVertices_p ){
+
+			m_nVertices = nVertices_p;
+		}
+
+		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
+
+			pDeviceContext_p->Draw( m_nVertices, m_iStartIndex );
+		}
+	};
+
+	//========================================================================
+	// 
+	//========================================================================
 	class DrawIndexed: public DrawCall{
 
 		UINT m_nIndexes;		// how much indexes from the bound buffer to use
@@ -89,4 +118,44 @@ namespace dx{
 	};
 
 	typedef std::shared_ptr<DrawIndexed> shared_DrawIndexed_ptr;
+
+	//========================================================================
+	// 
+	//========================================================================
+	class DrawIndexedInstanced: public DrawCall{
+
+		UINT	m_nIndexPerInstance;		// Number of indices read from the index buffer for each instance.
+		UINT	m_nInstances;
+		UINT	m_iStartIndexLocation;
+		int		m_iBaseVertexLocation;
+		UINT	m_iStartInstanceLocation;	// A value added to each index before reading per-instance data from a vertex buffer.
+
+	public:
+
+		DrawIndexedInstanced( UINT nIndexPerInstance_p, UINT nInstances_p = 0,
+								UINT iStartIndexLocation_p = 0, int iBaseVertexLocation_p = 0, UINT iStartInstanceLocation_p = 0 )
+			:
+		DrawCall(E_IndexedInstanced),
+		m_nIndexPerInstance(nIndexPerInstance_p), m_nInstances(nInstances_p),
+		m_iStartIndexLocation(iStartIndexLocation_p),
+		m_iBaseVertexLocation(iBaseVertexLocation_p),
+		m_iStartInstanceLocation(iStartInstanceLocation_p){}
+
+		void UpdateNumberOfInstances( UINT nInstances_p ){
+
+			m_nInstances = nInstances_p;
+		}
+		void UpdateInstanceOffset( UINT iOffset_p ){
+
+			m_iStartInstanceLocation = iOffset_p;
+		}
+
+		UINT GetInstanceOffset() const { return m_iStartInstanceLocation; }
+		UINT GetNInstances() const { return m_nInstances; }
+
+		virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
+
+			pDeviceContext_p->DrawIndexedInstanced( m_nIndexPerInstance, m_nInstances, m_iStartIndexLocation, m_iBaseVertexLocation, m_iStartInstanceLocation );
+		}
+	};
 }

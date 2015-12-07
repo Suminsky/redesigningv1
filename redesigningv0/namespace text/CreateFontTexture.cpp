@@ -1,4 +1,4 @@
-#include "CreateFontTexture.h"
+﻿#include "CreateFontTexture.h"
 
 using namespace Gdiplus;
 
@@ -343,6 +343,12 @@ bool text::ReadFontDescFromFile( const char * szFontDescFilename_p, BmpFontDesc 
 	memcpy( (void*)fontDesc_p.characteresIDs,  &data.m_data[iByteIndex], fontDesc_p.nCharacteres*sizeof(WCHAR) );
 	iByteIndex += fontDesc_p.nCharacteres*sizeof(WCHAR);
 
+	// dbg stuff
+	for( int charac = 0; charac < fontDesc_p.nCharacteres; ++charac ){
+
+		fontDesc_p.characteresIDs[charac] = fontDesc_p.characteresIDs[charac];
+	}
+
 	// read glyph rects
 
 	assert( sizeof(GlyphRect) == sizeof(float)*4 );
@@ -371,7 +377,7 @@ bool text::ReadFontDescFromFile( const char * szFontDescFilename_p, BmpFontDesc 
 	fontDesc_p.iTextureHeight = data.GetChunkAs<int>(iByteIndex);
 
 
-	delete data.m_data;
+	delete [] data.m_data;
 
 	return true;
 }

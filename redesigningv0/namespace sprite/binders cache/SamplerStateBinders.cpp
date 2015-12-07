@@ -24,7 +24,7 @@ void sprite::SamplerStateBinders::Init( dx::Device * pDevice_p )
 	params.desc.samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP ;
 	params.desc.samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP ;
 	params.desc.samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP ;
-	params.desc.samplerDesc.MaxAnisotropy = 1;//16;
+	params.desc.samplerDesc.MaxAnisotropy = 1;//16;//
 	params.desc.samplerDesc.MaxLOD = 0;//D3D11_FLOAT32_MAX; // TODO
 
 	pSampler = NULL;

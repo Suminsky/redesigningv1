@@ -9,26 +9,36 @@
 	purpose:	a state is composed of layers (in game, HUD, pause menu, debug console, fade splash..)
 				the layer is the last "stage", where the game objects needs to lie to be updated
 
+				a layer have objects and systems, systems do work on specific objects components.
+				so the layer work is to inform systems about components changes
+
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
 #include <algorithm>
-#include <assert.h>
 
 // private includes
 #include "Timer.h"
-#include "Object.h"
+#include "ObjectMachine.h"
+#include "SystemMachine.h"
+#include "ComponentFactory.h"
+#include "ObjectFactory.h"
 
 namespace game{
 
+	// forward dcls
+
 	class State;
 
-	typedef unsigned int LAYER_STATEINDEX;
-	typedef std::vector<OBJECT_LAYERINDEX> ObjectIndexes;
-	static const unsigned int INVALID_STATEINDEX = (unsigned int)-1;
-	typedef std::vector<shared_Object_ptr> LayerObjects;
+	// new types
+
+	typedef unsigned int LAYERINDEX;
+	static const unsigned int INVALID_LAYERINDEX = (unsigned int)-1;
+
+	typedef std::vector<pool_Object_ptr> LayerObjects;
+	typedef std::vector<OBJECTINDEX> ObjectIndexes;
 
 	//========================================================================
 	// 
@@ -38,49 +48,66 @@ namespace game{
 		friend State;
 
 	public:
+
 		bool m_bActive;
+		bool m_bVisible;
 		Timer<double> m_timer;
+
+		ComponentFactory	m_componentFactory;
+		ObjectFactory		m_objFactory;
+		ObjectMachine		m_objects;
+		SystemMachine		m_systems;
+		
+		
+		
 
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Layer( bool bActive_p = true ):m_bActive(bActive_p), m_currentStateIndex(INVALID_STATEINDEX), m_pStateOwner(nullptr){}
+		Layer( uint32_t nMaxObjs_p, bool bActive_p = true, bool bVisible_p = true )
+			:
+			m_bActive(bActive_p), m_bVisible(bVisible_p),
+			m_currentLayerIndex(INVALID_LAYERINDEX),
+			m_pStateOwner(nullptr),
+			m_bDettached(true),
+			m_objFactory(nMaxObjs_p)
+			{
+				m_objFactory.SetLayer(this);
+				m_objects.SetLayer(this);
+				m_systems.SetLayer(this);
+			}
+
 		virtual ~Layer(){}
 
 		//------------------------------------------------------------------------
-		// object to be updated per loop
+		// objects (bridge for object machine)
 		//------------------------------------------------------------------------
-		void AddObject( shared_Object_ptr && object_p ){
+		void AddObject( pool_Object_ptr && pObject_p );
+		void AddObject( const pool_Object_ptr & pObject_p );
+		void RemoveObject( OBJECTINDEX objectCurrentIndex_p );
+		void RemoveObject( const pool_Object_ptr & pObject_p );
+		void RemoveObject( const Object * pObject_p );
 
-			assert( object_p->m_currentLayerIndex == INVALID_OBJECTINDEX );
+		pool_Object_ptr CreateObject(){
 
-			object_p->m_pLayerOwner = this;
-			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
-			m_objects.push_back(std::move(object_p));
+			return m_objFactory.CreateObject();
 		}
-		void AddObject( const shared_Object_ptr & object_p ){
+		pool_Object_ptr CreateObject( text::GfigElementA *pGfig_p ){
 
-			assert( object_p->m_currentLayerIndex == INVALID_OBJECTINDEX );
-
-			object_p->m_pLayerOwner = this;
-			object_p->m_currentLayerIndex = (OBJECT_LAYERINDEX)m_objects.size();
-			m_objects.push_back(object_p);
-		}
-		//
-		void RemoveObject( OBJECT_LAYERINDEX objectCurrentIndex_p ){
-
-			m_removedObjects.push_back( objectCurrentIndex_p );
+			return m_objFactory.CreateObject(pGfig_p);
 		}
 
 		//------------------------------------------------------------------------
-		// return index of this layer in the state layers container
+		// getters
 		//------------------------------------------------------------------------
-		LAYER_STATEINDEX GetStateIndex(){return m_currentStateIndex;}
+		State * GetStateOwner() const { return m_pStateOwner; }
+
+		bool IsAttached() const { return !m_bDettached; }
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		State * GetStateOwner(){ return m_pStateOwner; }
+		void SerializeAttachedObjs( text::GfigElementA *pGfig_p );
 
 	protected:
 
@@ -88,85 +115,28 @@ namespace game{
 
 	private:
 
-		LAYER_STATEINDEX m_currentStateIndex;
-		LayerObjects m_objects;
-		ObjectIndexes m_removedObjects;
-		
-
 		//------------------------------------------------------------------------
 		// updates state timer and call updates with timer time
 		//------------------------------------------------------------------------
-		void Update( const double dDeltaTime_p ){
+		void Update( const double dDeltaTime_p );
+		void Draw( const double /*dInterpolation_p*/, const double dDelta_p = 0.0 );
 
-			m_timer.Update( dDeltaTime_p );
-
-			VOnUpdate( m_timer.GetTime(), m_timer.GetDelta() );
-
-			// update game::Objects
-
-			for( int it = 0, itEnd = (int)m_objects.size(); it != itEnd; ++it ){
-
-				if( m_objects[it]->m_bActive ){
-						 
-					m_objects[it]->Update( m_timer.GetTime(), m_timer.GetDelta() );
-				}
-			}
-
-			VLateUpdate( m_timer.GetTime(), m_timer.GetDelta() );
-
-			// clean removed objects
-
-			if( ! m_removedObjects.empty() )
-				CleanRemovedObjects();
-		}
+		LAYERINDEX m_currentLayerIndex;
+		bool m_bDettached;
 		
-		//------------------------------------------------------------------------
-		// to be override
-		//------------------------------------------------------------------------
-		virtual void VOnInit(){}
-		virtual void VOnUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called before objects update
-		virtual void VLateUpdate( const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called after objects update
-		virtual void VOnDraw( const double /*dInterpolation_p*/ ){}
-		virtual void VOnDestroy(){}
-
-		virtual void VOnResize( int /*W_p*/, int /*H_p*/ ){}
 
 		//------------------------------------------------------------------------
-		// 
+		// to be overridden
 		//------------------------------------------------------------------------
-		void CleanRemovedObjects(){
+		virtual void VOnAttach(){}
+		virtual void VOnUpdate(		const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called before objects update
+		virtual void VLateUpdate(	const double /*dTime_p*/, const double /*dDeltaTime_p*/ ){} // called after objects update
+		virtual void VOnDraw(		const double /*dInterpolation_p*/, const double /*dDelta_p = 0.0*/ ){}
+		virtual void VOnRemove(){}
 
-			// swap all destroyed layers to the end of the vector than resizes
-
-			unsigned int nDestroyed = (unsigned int)m_removedObjects.size(); // cache
-			unsigned int nObjects = (unsigned int)m_objects.size();
-
-			for( unsigned int it = 0, itLast = nObjects - 1; it < nDestroyed; ++it ){
-
-				m_objects[m_removedObjects[it]]->m_currentLayerIndex = INVALID_OBJECTINDEX;
-				m_objects[m_removedObjects[it]]->m_pLayerOwner = nullptr;
-
-				// check if "to be removed" already at end
-
-				if( m_removedObjects[it] == itLast - it){ // increment here
-
-					continue;
-				}
-
-				std::swap( m_objects[m_removedObjects[it]], m_objects[itLast - it] ); // size - 1, size -2, size -3
-
-				if( m_objects[m_removedObjects[it]]->m_currentLayerIndex != INVALID_OBJECTINDEX ){
-				
-					m_objects[m_removedObjects[it]]->m_currentLayerIndex = m_removedObjects[it]; // update index
-				}
-			}
-
-			// "trim"
-			m_objects.resize(nObjects - nDestroyed);
-
-			m_removedObjects.clear();
-		}
+		virtual void VOnResize( int /*W_p*/, int /*H_p*/ ){}		
 	};
 
 	typedef std::shared_ptr<Layer> shared_Layer_ptr;
+	typedef std::weak_ptr<Layer> weak_Layer_ptr;
 }

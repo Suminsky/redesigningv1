@@ -26,7 +26,10 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Game(): m_dFixedTimeStep(1.0/30.0), m_dMaxFrameTimeDelay(1.0/3.0){}
+		Game( double dFixedTimeStep = 1.0/30.0, double dMaxFrameTimeDelay = 1.0/3.0 )
+			:
+		m_dFixedTimeStep(dFixedTimeStep),
+		m_dMaxFrameTimeDelay(dMaxFrameTimeDelay){}
 		virtual ~Game(){}
 
 		//------------------------------------------------------------------------
@@ -52,6 +55,10 @@ namespace game{
 		// skipping, and then calls draw passing the interpolation amount
 		//------------------------------------------------------------------------
 		void FixedStepLoop();
+		void SmoothedFixedStepLoop( double dVsyncRefreshRate_p );
+		void LooseStepLoop();
+
+		void SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p );
 
 	protected:
 

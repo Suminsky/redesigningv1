@@ -91,6 +91,75 @@ namespace dx{
 			//memset( m_slotsInfo, 0, fixedSize*sizeof(SlotInfo));	// (leaks due std stuff on the descs)
 		}
 
+		//------------------------------------------------------------------------
+		// Releases all non null pointers in the cache.
+		//------------------------------------------------------------------------
+		virtual ~ResourceCache()
+		{
+			for( UINT it = 0; it < fixedSize; it++ )
+			{
+				if( m_cache[it] != NULL )
+					m_cache[it]->Release();
+			}
+		}
+
+		//------------------------------------------------------------------------
+		// Acquire by desc, if not found (cache miss), creates one
+		//------------------------------------------------------------------------
+		UINT Acquire( const typename T::CreationParams & params_p,  typename T::pRes & pResource_p ){
+
+			for( UINT it = 0; it < fixedSize; it++ )
+			{
+				if( m_slotsInfo[it].desc == params_p.desc)
+				{
+					pResource_p = m_cache[it];
+					DBG(++m_slotsInfo[it].nUseCount;);
+					return it;
+				}
+			}
+
+			// cache miss:
+			return CreateResource( params_p, pResource_p );
+		}
+
+		//------------------------------------------------------------------------
+		// Main function to return stored resources.
+		//------------------------------------------------------------------------
+		typename T::pRes Acquire( const UINT id_p )
+		{
+			assert(id_p < fixedSize);
+			assert(id_p <= m_iCurrentIndex );
+			DBG(assert(m_slotsInfo[id_p].nUseCount != 0));
+
+			DBG(++m_slotsInfo[id_p].nUseCount);
+
+			return m_cache[id_p];
+		}
+
+		//------------------------------------------------------------------------
+		// Acquire by desc, if not found (cache miss), creates one
+		//------------------------------------------------------------------------
+		UINT Acquire( const typename T::CreationParams & params_p ){
+
+			for( UINT it = 0; it < fixedSize; it++ )
+			{
+				if( m_slotsInfo[it].desc == params_p.desc)
+				{
+					DBG(++m_slotsInfo[it].nUseCount);
+					return it;
+				}
+			}
+
+			// cache miss:
+			return CreateResource( params_p );
+		}
+
+		UINT Clone(const typename T::CreationParams & params_p ){
+
+			// cache miss:
+
+		}
+
 	private:
 
 		//------------------------------------------------------------------------
@@ -134,7 +203,7 @@ namespace dx{
 			m_cache[m_iCurrentIndex] = T::Create(m_pDeviceRef, params_p);
 
 			// update slot info:
-			m_slotsInfo[m_iCurrentIndex].nUseCount = 1;
+			DBG(m_slotsInfo[m_iCurrentIndex].nUseCount = 1);
 			m_slotsInfo[m_iCurrentIndex].desc = params_p.desc;
 
 			// points to next element:
@@ -142,78 +211,6 @@ namespace dx{
 
 			// return new element index/ID:
 			return (m_iCurrentIndex-1);
-		}
-
-	public:
-
-		//------------------------------------------------------------------------
-		// Acquire by desc, if not found (cache miss), creates one
-		//------------------------------------------------------------------------
-		UINT Acquire( const typename T::CreationParams & params_p,  typename T::pRes & pResource_p ){
-
-			for( UINT it = 0; it < fixedSize; it++ )
-			{
-				if( m_slotsInfo[it].desc == params_p.desc)
-				{
-					pResource_p = m_cache[it];
-					DBG(++m_slotsInfo[it].nUseCount;);
-					return it;
-				}
-			}
-
-			// cache miss:
-			return CreateResource( params_p, pResource_p );
-		}
-
-		//------------------------------------------------------------------------
-		// Main function to return stored resources.
-		//------------------------------------------------------------------------
-		typename T::pRes Acquire( const UINT id_p )
-		{
-			assert(id_p < fixedSize);
-			assert(id_p <= m_iCurrentIndex );
-			assert(m_slotsInfo[id_p].nUseCount != 0);
-
-			++m_slotsInfo[id_p].nUseCount;
-
-			return m_cache[id_p];
-		}
-
-		//------------------------------------------------------------------------
-		// Acquire by desc, if not found (cache miss), creates one
-		//------------------------------------------------------------------------
-		UINT Acquire( const typename T::CreationParams & params_p ){
-
-			for( UINT it = 0; it < fixedSize; it++ )
-			{
-				if( m_slotsInfo[it].desc == params_p.desc)
-				{
-					++m_slotsInfo[it].nUseCount;
-					return it;
-				}
-			}
-
-			// cache miss:
-			return CreateResource( params_p );
-		}
-
-		UINT Clone(const typename T::CreationParams & params_p ){
-
-			// cache miss:
-			
-		}
-
-
-		//------------------------------------------------------------------------
-		// Releases all non null pointers in the cache.
-		//------------------------------------------------------------------------
-		virtual ~ResourceCache()
-		{
-			for( UINT it = 0; it < fixedSize; it++ )
-			{
-				if( m_cache[it] != NULL )
-					m_cache[it]->Release();
-			}
 		}
 	};
 

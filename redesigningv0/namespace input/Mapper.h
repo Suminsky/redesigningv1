@@ -17,7 +17,7 @@
 				some details I believe be the best way:
 				- raw input is provided under my engine side as enums..a value for each of them all ._.
 				- actions, states and ranges are provided as...NO IDEA
-				- user pool for actions, ranges and states..callback is for pussies
+				- user pool for actions, ranges and states..
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

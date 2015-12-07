@@ -14,7 +14,7 @@
 
 // standard includes
 #include <memory>
-#include <map>
+#include <vector>
 #include "../namespace render/dx/Device.h"
 
 // private includes
@@ -23,10 +23,14 @@
 
 namespace text{
 
+	struct GlyphIDRect{
+
+		wchar_t szChar;
+		GlyphRect rect;
+	};
+
 
 	class BmpFont{
-
-		typedef std::map<wchar_t, GlyphRect> GlyphMap;
 
 	public:
 
@@ -38,69 +42,20 @@ namespace text{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void InitFromDesc( BmpFontDesc & fontDesc_p, sprite::TextureBinders & textureCache_p ){
-
-			m_fSpaceWidth = fontDesc_p.fSpaceWidth;
-			m_fNewLineMinHeight = fontDesc_p.fNewLineMinHeight;
-			m_iTextureW = fontDesc_p.iTextureWidth;
-			m_iTextureH = fontDesc_p.iTextureHeight;
-
-			// TODO:
-			m_notSupportedGlyph.Width = (float)m_iTextureW;
-			m_notSupportedGlyph.Height = (float)m_iTextureH;
-			m_notSupportedGlyph.X = 0.0f;
-			m_notSupportedGlyph.Y = 0.0f;
-
-			for( int it = 0; it < fontDesc_p.nCharacteres; ++it ){
-
-				m_glyphUVs[ fontDesc_p.characteresIDs[it] ] = fontDesc_p.charUVRects[it];
-			}
-
-			// get texture
-
-			m_pTextureSRVBinder = &textureCache_p.Get(fontDesc_p.szTextureFilename, &m_iTextureID);
-			m_pipeState.AddBinderCommand( m_pTextureSRVBinder );
-			BREAKHERE;
-		}
-		bool InitFromFile( const char * szFontDescFilename_p, sprite::TextureBinders & textureCache_p ){
-
-			BmpFontDesc fontDesc;
-			if( ReadFontDescFromFile( szFontDescFilename_p, fontDesc ) == true ){
-
-				InitFromDesc(fontDesc, textureCache_p);
-
-				delete fontDesc.characteresIDs;
-				delete fontDesc.charUVRects;
-				delete fontDesc.szTextureFilename;
-
-				return true;
-			}
-
-			return false;
-		}
+		void InitFromDesc( BmpFontDesc & fontDesc_p, sprite::TextureBinders & textureCache_p );
+		bool InitFromFile( const char * szFontDescFilename_p, sprite::TextureBinders & textureCache_p );
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		float GetSpaceWidth()const{ return m_fSpaceWidth; }
-		float GetMinNewLineHeight()const{ return m_fNewLineMinHeight; }
-		GlyphRect GetGlyphUV( const wchar_t id )const{
-
-			 GlyphMap::const_iterator element = m_glyphUVs.find( id );
-			 if( element != m_glyphUVs.end() ){
-
-				 return element->second;
-			 }
-			 else{
-
-				 // return not supported char glyph
-				return m_notSupportedGlyph;
-			 }
-		}
-		dx::Binder *& GetTextureBinder(){ return m_pTextureSRVBinder; }
-		dx::State & GetPipeState(){ return m_pipeState; }
-		int GetTextureWidth()  const{ return m_iTextureW; }
-		int GetTextureHeight() const{ return m_iTextureH; }
+		GlyphRect GetGlyphUV( const wchar_t id ) const;
+		float GetSpaceWidth() const{ return m_fSpaceWidth; }
+		float GetMinNewLineHeight() const { return m_fNewLineMinHeight; }
+		int GetTabMultiple() const { return m_tabMultiple; }
+		dx::BindPSShaderResourceView *& GetTextureBinder(){ return m_pTextureSRVBinder; }
+		dx::PipeState & GetPipeState(){ return m_pipeState; }
+		int GetTextureWidth()  const { return m_iTextureW; }
+		int GetTextureHeight() const { return m_iTextureH; }
 		int GetTextureID() const {return m_iTextureID;}
 
 
@@ -108,14 +63,15 @@ namespace text{
 
 		float m_fSpaceWidth;
 		float m_fNewLineMinHeight;
+		int m_tabMultiple; // todo, save on file
 		int m_iTextureW, m_iTextureH;
 		GlyphRect m_notSupportedGlyph;
 
-		dx::Binder * m_pTextureSRVBinder;
-		dx::State	m_pipeState;
-		int m_iTextureID;
+		std::vector<GlyphIDRect> m_vGlyphUVs;
 
-		GlyphMap m_glyphUVs;
+		dx::BindPSShaderResourceView * m_pTextureSRVBinder;
+		dx::PipeState	m_pipeState;
+		int m_iTextureID;
 	};
 
 	typedef std::shared_ptr<BmpFont> shared_BmpFont_ptr;

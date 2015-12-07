@@ -1,4 +1,5 @@
 #include "WaveCache.h"
+#include "../namespace gen/gen_macros.h"
 
 
 using namespace sound;
@@ -7,7 +8,7 @@ int sound::WaveCache::AddWave( const wchar_t * szWaveFileName_p )
 {
 	SourceReader m_reader;
 
-	assert( m_reader.Initialize( szWaveFileName_p ) == true );
+	keepAssert( m_reader.Initialize( szWaveFileName_p ) );
 
 	WaveData data = {0};
 
@@ -18,7 +19,7 @@ int sound::WaveCache::AddWave( const wchar_t * szWaveFileName_p )
 	data.pData = new BYTE[data.nBytes];
 
 	UINT nBytesWritten = 0;
-	assert( m_reader.ReadAllWaveData( data.pData, data.nBytes, nBytesWritten ) == true );
+	keepAssert( m_reader.ReadAllWaveData( data.pData, data.nBytes, nBytesWritten ) );
 
 	// just for testing
 	if( nBytesWritten != data.nBytes ){

@@ -105,8 +105,15 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;SOUND;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
+      <StringPooling>true</StringPooling>
+      <PrecompiledHeaderFile>stdIncludes</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -132,71 +139,119 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINSOCKAPI_;SOUND; %(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <Profile>true</Profile>
+      <Profile>false</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Mentle\InGame\AudioHandler.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\StorySlideState.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
+    <ClInclude Include="Legalia\AABB2DColliderComponent.h" />
+    <ClInclude Include="Legalia\AABB2DCollisionSys.h" />
+    <ClInclude Include="Legalia\InterpolatedCamera.h" />
+    <ClInclude Include="Legalia\LegaliaEvents.h" />
+    <ClInclude Include="Legalia\LegaliaInGameLayer.h" />
+    <ClInclude Include="Legalia\LegaliaState.h" />
+    <ClInclude Include="Legalia\LegaliaWIndow.h" />
+    <ClInclude Include="Legalia\MovableSystem.h" />
+    <ClInclude Include="Legalia\ParallaxLayer.h" />
+    <ClInclude Include="Legalia\SpriteDraggingSys.h" />
+    <ClInclude Include="Legalia\SpringyFollowCamera.h" />
+    <ClInclude Include="Legalia\SpriteResizingSys.h" />
+    <ClInclude Include="Legalia\SpriteTextCompo.h" />
+    <ClInclude Include="Legalia\SpriteTextSys.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
-    <ClInclude Include="Mentle\InGame\CardsLayer.h" />
-    <ClInclude Include="Mentle\InGame\CursorLayer.h" />
-    <ClInclude Include="Mentle\InGame\EnergyBarLayer.h" />
-    <ClInclude Include="Mentle\InGame\InGame.h" />
-    <ClInclude Include="Mentle\InGame\InGameEventData.h" />
-    <ClInclude Include="Mentle\InGame\InputMapper.h" />
-    <ClInclude Include="Mentle\InGame\MentleCardComponent.h" />
-    <ClInclude Include="Mentle\InGame\MentleCardDesc.h" />
-    <ClInclude Include="Mentle\InGame\MentleLogic.h" />
-    <ClInclude Include="Mentle\InGame\NetworkHandler.h" />
-    <ClInclude Include="Mentle\InGame\PanelLayer.h" />
-    <ClInclude Include="Mentle\InGame\StatusBarLayer.h" />
-    <ClInclude Include="Mentle\InGame\TutorialLayer.h" />
-    <ClInclude Include="Mentle\InGame\TutorialPart.h" />
-    <ClInclude Include="Mentle\MainMenu\FadeLayer.h" />
-    <ClInclude Include="Mentle\MainMenu\InsertIPLayer.h" />
-    <ClInclude Include="Mentle\MainMenu\MainMenuButtonsLayer.h" />
-    <ClInclude Include="Mentle\MainMenu\PlayOptionsLayer.h" />
-    <ClInclude Include="Mentle\MatchConfig.h" />
+    <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
-    <ClInclude Include="Mentle\MainMenu\MainMenu.h" />
-    <ClInclude Include="Mentle\VictoryDefeat\VictoryDefeat.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\FramesLayer.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimTool.h" />
+    <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimToolEvents.h" />
+    <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
     <ClInclude Include="namespace game\Component.h" />
+    <ClInclude Include="namespace game\ComponentFactory.h" />
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
-    <ClInclude Include="namespace game\components\ButtonComponent.inl" />
-    <ClInclude Include="namespace game\components\MovableComponent.h" />
-    <ClInclude Include="namespace game\components\SpriteComponent.h" />
+    <ClInclude Include="namespace game\components\ColorComponent.h" />
+    <ClInclude Include="namespace game\components\SpriteAnimationComponent.h" />
+    <ClInclude Include="namespace game\components\SpriteComponent_.h" />
+    <ClInclude Include="namespace game\GameWindow2D_1.h" />
+    <ClInclude Include="namespace game\ObjectFactory.h" />
+    <ClInclude Include="namespace game\systems\SpriteAnimationSystem.h" />
+    <ClInclude Include="namespace game\systems\SpriteSystem.h" />
+    <ClInclude Include="namespace game\systems\TransformSystem.h" />
+    <ClInclude Include="namespace gen\Pool.h" />
+    <ClInclude Include="namespace game\ComponentTypes.h" />
+    <ClInclude Include="namespace game\components\ParentingComponent.h" />
+    <ClInclude Include="namespace game\components\TransformComponent.h" />
     <ClInclude Include="namespace game\Event.h" />
-    <ClInclude Include="namespace game\EventHandler.h" />
     <ClInclude Include="namespace game\EventMachine.h" />
     <ClInclude Include="namespace game\Game.h" />
     <ClInclude Include="namespace game\Layer.h" />
     <ClInclude Include="namespace game\Object.h" />
+    <ClInclude Include="namespace game\ObjectMachine.h" />
+    <ClInclude Include="namespace game\System.h" />
+    <ClInclude Include="namespace game\SystemMachine.h" />
+    <ClInclude Include="namespace game\systems\ColorSystem.h" />
     <ClInclude Include="namespace game\Task.h" />
     <ClInclude Include="namespace game\TaskMachine.h" />
     <ClInclude Include="namespace game\tasks\AlarmTask.h" />
     <ClInclude Include="namespace game\tasks\OnUpdateDelegateTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace gen\Delegate.h" />
+    <ClInclude Include="namespace gen\TreeNode.h" />
     <ClInclude Include="namespace gen\Tweening.h" />
     <ClInclude Include="namespace input\Mapper.h" />
+    <ClInclude Include="namespace mem\Allocator.h" />
+    <ClInclude Include="namespace mem\LinearAllocator.h" />
     <ClInclude Include="namespace net\Address.h" />
     <ClInclude Include="namespace net\net.h" />
     <ClInclude Include="namespace net\Packet.h" />
-    <ClInclude Include="namespace net\PeerHost.h" />
+    <ClInclude Include="namespace net\P2PConnection.h" />
     <ClInclude Include="namespace net\Socket.h" />
-    <ClInclude Include="namespace render\dx\pipeline\State.h" />
+    <ClInclude Include="namespace phys\AABB2D.h" />
+    <ClInclude Include="namespace phys\AABB3D.h" />
+    <ClInclude Include="namespace phys\Circle.h" />
+    <ClInclude Include="namespace render\dx\pipeline\PipeState.h" />
+    <ClInclude Include="namespace render\dx\BinderCache.h" />
+    <ClInclude Include="namespace render\dx\BinderCache.inl" />
+    <ClInclude Include="namespace sprite\InstancedSprites.h" />
+    <ClInclude Include="namespace sprite\SortMask.h" />
+    <ClInclude Include="namespace sprite\text\BmpFont_.h" />
+    <ClInclude Include="namespace sprite\text\FontCache.h" />
+    <ClInclude Include="namespace sprite\text\SpriteTextComposer.h" />
     <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
@@ -224,12 +279,14 @@
     <ClInclude Include="namespace sprite\binders cache\BlendStateBinders.h" />
     <ClInclude Include="namespace sprite\CameraCbuffer.h" />
     <ClInclude Include="namespace sprite\DrawableCbuffer.h" />
-    <ClInclude Include="namespace sprite\Movable.h" />
+    <ClInclude Include="namespace text\SpriteInstancedTexts.h" />
     <ClInclude Include="namespace text\TextRenderer.h" />
     <ClInclude Include="namespace win\FileLogger.h" />
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
+    <ClInclude Include="namespace win\KeyboardInput.h" />
     <ClInclude Include="namespace win\MouseInput.h" />
+    <ClInclude Include="namespace win\OpenDialog.h" />
     <ClInclude Include="namespace win\Window.h" />
     <ClInclude Include="namespace win\win_genData.h" />
     <ClInclude Include="namespace win\win_IDs.h" />
@@ -245,55 +302,89 @@
     <ClInclude Include="namespace sprite\SpriteRenderer.h" />
     <ClInclude Include="namespace render\dx\SwapChain.h" />
     <ClInclude Include="namespace render\dx\Device.h" />
-    <ClInclude Include="namespace sprite\Sprite.h" />
     <ClInclude Include="namespace sprite\binders cache\TextureBinders.h" />
     <ClInclude Include="namespace sprite\binders cache\SamplerStateBinders.h" />
     <ClInclude Include="namespace game\State.h" />
     <ClInclude Include="namespace game\StateMachine.h" />
-    <ClInclude Include="namespace game\tasks\FadeTask.h" />
+    <ClInclude Include="namespace game\tasks\LerpValueTask.h" />
     <ClInclude Include="namespace text\TextParser.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Mentle\InGame\AudioHandler.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\MovableComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\StorySlideState.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
+    <ClCompile Include="Legalia\AABB2DColliderComponent.cpp" />
+    <ClCompile Include="Legalia\AABB2DCollisionSys.cpp" />
+    <ClCompile Include="Legalia\InterpolatedCamera.cpp" />
+    <ClCompile Include="Legalia\LegaliaInGameLayer.cpp" />
+    <ClCompile Include="Legalia\LegaliaMain.cpp" />
+    <ClCompile Include="Legalia\LegaliaState.cpp" />
+    <ClCompile Include="Legalia\LegaliaWindow.cpp" />
+    <ClCompile Include="Legalia\MovableSystem.cpp" />
+    <ClCompile Include="Legalia\ParallaxLayer.cpp" />
+    <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
+    <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />
+    <ClCompile Include="Legalia\SpriteResizingSys.cpp" />
+    <ClCompile Include="Legalia\SpriteTextCompo.cpp" />
+    <ClCompile Include="Legalia\SpriteTextSys.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\CardsLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\CursorLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\EnergyBarLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\InGame.cpp" />
-    <ClCompile Include="Mentle\InGame\InputMapper.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleCardComponent.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleCardDesc.cpp" />
-    <ClCompile Include="Mentle\InGame\MentleLogic.cpp" />
-    <ClCompile Include="Mentle\InGame\NetworkHandler.cpp" />
-    <ClCompile Include="Mentle\InGame\PanelLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\StatusBarLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\TutorialLayer.cpp" />
-    <ClCompile Include="Mentle\InGame\TutorialPart.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
-    <ClCompile Include="Mentle\MainMenu\InsertIPLayer.cpp" />
-    <ClCompile Include="Mentle\MainMenu\MainMenuButtonsLayer.cpp" />
-    <ClCompile Include="Mentle\MainMenu\PlayOptionsLayer.cpp" />
-    <ClCompile Include="Mentle\MatchConfig.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
-    <ClCompile Include="Mentle\MainMenu\MainMenu.cpp" />
-    <ClCompile Include="Mentle\VictoryDefeat\VictoryDefeat.cpp" />
+    <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp" />
+    <ClCompile Include="Mentle\SpriteAnimTool\FramesLayer.cpp" />
+    <ClCompile Include="Mentle\SpriteAnimTool\SpriteAnimTool.cpp" />
+    <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
+    <ClCompile Include="namespace game\ComponentFactory.cpp" />
     <ClCompile Include="namespace game\components\ButtonComponent.cpp" />
-    <ClCompile Include="namespace game\components\SpriteComponent.cpp" />
+    <ClCompile Include="namespace game\components\ColorComponent.cpp" />
+    <ClCompile Include="namespace game\components\ParentingComponent.cpp" />
+    <ClCompile Include="namespace game\components\SpriteAnimationComponent.cpp" />
+    <ClCompile Include="namespace game\components\SpriteComponent_.cpp" />
+    <ClCompile Include="namespace game\components\TransformComponent.cpp" />
     <ClCompile Include="namespace game\EventMachine.cpp" />
     <ClCompile Include="namespace game\Game.cpp" />
+    <ClCompile Include="namespace game\GameWindow2D_1.cpp" />
+    <ClCompile Include="namespace game\Layer.cpp" />
     <ClCompile Include="namespace game\Object.cpp" />
+    <ClCompile Include="namespace game\ObjectFactory.cpp" />
+    <ClCompile Include="namespace game\ObjectMachine.cpp" />
+    <ClCompile Include="namespace game\SystemMachine.cpp" />
+    <ClCompile Include="namespace game\systems\ColorSystem.cpp" />
+    <ClCompile Include="namespace game\systems\SpriteAnimationSystem.cpp" />
+    <ClCompile Include="namespace game\systems\SpriteSystem.cpp" />
+    <ClCompile Include="namespace game\systems\TransformSystem.cpp" />
     <ClCompile Include="namespace game\Task.cpp" />
     <ClCompile Include="namespace game\TaskMAchine.cpp" />
     <ClCompile Include="namespace game\tasks\AlarmTask.cpp" />
     <ClCompile Include="namespace game\tasks\OnUpdateDelegateTask.cpp" />
     <ClCompile Include="namespace game\Timer.cpp" />
+    <ClCompile Include="namespace gen\TreeNode.cpp" />
     <ClCompile Include="namespace net\Address.cpp" />
     <ClCompile Include="namespace net\net.cpp" />
-    <ClCompile Include="namespace net\PeerHost.cpp" />
+    <ClCompile Include="namespace net\P2PConnection.cpp" />
     <ClCompile Include="namespace net\Socket.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
-    <ClCompile Include="namespace render\dx\pipeline\State.cpp" />
+    <ClCompile Include="namespace render\dx\pipeline\PipeState.cpp" />
+    <ClCompile Include="namespace render\dx\BinderCache.cpp" />
     <ClCompile Include="namespace sound\FinitSoundTracks.cpp" />
     <ClCompile Include="namespace sound\sound.cpp" />
     <ClCompile Include="namespace sound\SoundScreamer.cpp" />
@@ -311,19 +402,22 @@
     <ClCompile Include="namespace render\dx\type wrappers\BlendState.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\BufferResource.cpp" />
     <ClCompile Include="namespace render\dx\type wrappers\InputLayout.cpp" />
-    <ClCompile Include="namespace game\tasks\FadeTask.cpp" />
-    <ClCompile Include="Mentle\main.cpp">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NETWORK;SOUND;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
+    <ClCompile Include="namespace game\tasks\LerpValueTask.cpp" />
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
-    <ClCompile Include="namespace sprite\Movable.cpp" />
+    <ClCompile Include="namespace sprite\InstancedSprites.cpp" />
+    <ClCompile Include="namespace sprite\text\BmpFont_.cpp" />
+    <ClCompile Include="namespace sprite\text\FontCache.cpp" />
+    <ClCompile Include="namespace sprite\text\SpriteTextComposer.cpp" />
     <ClCompile Include="namespace text\BmpFont.cpp" />
     <ClCompile Include="namespace text\CreateFontTexture.cpp" />
+    <ClCompile Include="namespace text\SpriteInstancedTexts.cpp" />
+    <ClCompile Include="namespace text\TextParserW.cpp" />
     <ClCompile Include="namespace text\TextRenderer.cpp" />
     <ClCompile Include="namespace win\FileLogger.cpp" />
     <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
     <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />
+    <ClCompile Include="namespace win\KeyboardInput.cpp" />
     <ClCompile Include="namespace win\MouseInput.cpp" />
     <ClCompile Include="namespace win\Window.cpp" />
     <ClCompile Include="namespace render\dx\ResourceCache.cpp" />
@@ -337,7 +431,6 @@
     <ClCompile Include="namespace sprite\SpriteRenderer.cpp" />
     <ClCompile Include="namespace render\dx\SwapChain.cpp" />
     <ClCompile Include="namespace render\dx\Device.cpp" />
-    <ClCompile Include="namespace sprite\Sprite.cpp" />
     <ClCompile Include="namespace sprite\binders cache\TextureBinders.cpp" />
     <ClCompile Include="namespace sprite\binders cache\SamplerStateBinders.cpp" />
     <ClCompile Include="namespace game\State.cpp" />
@@ -346,9 +439,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico" />
+    <None Include="namespace game\ComponentFactory.inl" />
+    <None Include="namespace gen\TreeNode.inl" />
+    <None Include="namespace text\SpriteInstancedTexts.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="RC_SpriteAnimDialogs.rc" />
     <ResourceCompile Include="RC_icon.rc" />
+    <ResourceCompile Include="RC_FrameEditDialogs.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

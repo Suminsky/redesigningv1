@@ -75,8 +75,9 @@ namespace win{
 		//------------------------------------------------------------------------
 		// change monitor resolution
 		//------------------------------------------------------------------------
-		bool ChangeResolution( UINT W_p, UINT H_p );
-		bool ResetMonitorResolution();
+		static bool ChangeResolution( UINT W_p, UINT H_p );
+		static bool ResetMonitorResolution();
+		static bool GetCurrentScreenResolution(UINT & W_p, UINT & H_p);
 
 		//------------------------------------------------------------------------
 		// Updates the window style
@@ -121,6 +122,10 @@ namespace win{
 		bool IsActive(){
 			return (GetActiveWindow() == m_hWnd);
 		}
+		bool HaveKeyboardFocus(){
+
+			return (GetFocus() == m_hWnd);
+		}
 
 		//------------------------------------------------------------------------
 		// Sets a menu bar to the window
@@ -143,6 +148,7 @@ namespace win{
 		// getters
 		//------------------------------------------------------------------------
 		inline HWND GetHWND(){ return m_hWnd;}
+		inline HINSTANCE GetHINSTANCE(){ return m_hAppInstance; }
 		inline const TCHAR* GetTitle(){ return m_szTitle_p; }
 		inline Rect GetCLientRect(){ return m_cliRect; }
 		inline Rect GetWindowRect(){ return m_rect; }
@@ -173,7 +179,7 @@ namespace win{
 		//------------------------------------------------------------------------
 		// Override to handle windows messages
 		//------------------------------------------------------------------------
-		virtual LRESULT CALLBACK WndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p ) = 0;
+		virtual LRESULT CALLBACK VWndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p ) = 0;
 
 		//------------------------------------------------------------------------
 		// call this when the HWND changes to automatically set the rects
@@ -195,7 +201,7 @@ namespace win{
 				m_cliRect.y = cliPos.y;		
 			}	
 
-	private:
+	public:
 
 		//------------------------------------------------------------------------
 		// Message Handler
@@ -210,9 +216,11 @@ namespace win{
 
 			if( pThis ){
 
-				return pThis->WndProcHandler( hWnd_p, Msg_p, wParam_p, lParam_p );
+				return pThis->VWndProcHandler( hWnd_p, Msg_p, wParam_p, lParam_p );
 			}
 			else if( Msg_p == WM_NCCREATE ){
+
+				assert( ((CREATESTRUCT*)lParam_p)->lpCreateParams );
 
 				// initialize wnd handle
 				((Window*)

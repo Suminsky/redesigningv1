@@ -47,11 +47,11 @@ namespace win{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		MouseInput(): m_fScrollDelta(0.0f), m_bCaptured(false){}
+		MouseInput(): m_iWheelPrevAmount(0), m_iWheelAmount(0), m_iWheelDelta(0), m_bCaptured(false){}
 
 		//------------------------------------------------------------------------
 		// call per frame
-		// must be called before wndproc or after game logic
+		// must be called after wndproc, before game logic
 		//------------------------------------------------------------------------
 		void Update(){
 
@@ -60,12 +60,19 @@ namespace win{
 
 			m_prevPos = m_pos;
 
-			//m_downButtons.Reset();
-			//m_releasedButtons.Reset();
+			
+
+			m_iWheelDelta = m_iWheelAmount - m_iWheelPrevAmount;
+			m_iWheelPrevAmount = m_iWheelAmount;
+		}
+		//------------------------------------------------------------------------
+		// call per frame
+		// must be called after game logic
+		//------------------------------------------------------------------------
+		void LateUpdate(){
+
 			m_pressedButtons.Reset();
 			m_releasedButtons.Reset();
-
-			m_fScrollDelta = 0.0f;
 		}
 
 		//------------------------------------------------------------------------
@@ -132,7 +139,7 @@ namespace win{
 		//------------------------------------------------------------------------
 		void OnWM_MOUSEWHEEL( WPARAM wParam_p ){
 
-			m_fScrollDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam_p)/(float)WHEEL_DELTA;
+			m_iWheelAmount += GET_WHEEL_DELTA_WPARAM(wParam_p);
 		}
 
 		//------------------------------------------------------------------------
@@ -203,7 +210,8 @@ namespace win{
 		Buttons GetReleasedButtons()const{return m_releasedButtons;}
 		Pos GetPos()const{return m_pos;}
 		Pos GetDelta()const{return m_deltaPos;}
-		float GetWheelNormalizedAmount()const{return m_fScrollDelta;}
+		float GetWheelNormalizedAmount()const{return (float)m_iWheelAmount/(float)WHEEL_DELTA;}
+		float GetWheelNormalizedDelta()const{ return (float)m_iWheelDelta/(float)WHEEL_DELTA; }
 		bool IsCaptured()const{return m_bCaptured;}
 
 	private:
@@ -212,7 +220,37 @@ namespace win{
 		Buttons m_downButtons;
 		Buttons m_pressedButtons;
 		Buttons m_releasedButtons;
-		float m_fScrollDelta;
+		int m_iWheelDelta;
+		int m_iWheelPrevAmount, m_iWheelAmount;
 		bool m_bCaptured;
 	};
 }
+
+#define MOUSE_MSG_HANDLING( MouseInput_INSTANCE )\
+			case WM_MOUSEMOVE:\
+				MouseInput_INSTANCE.OnWM_MOUSEMOVE(lParam_p);\
+				return 0;\
+			case WM_MOUSEWHEEL:\
+				MouseInput_INSTANCE.OnWM_MOUSEWHEEL(wParam_p);\
+				return 0;\
+			case WM_LBUTTONDOWN:\
+				MouseInput_INSTANCE.OnWM_LBUTTONDOWN();\
+				return 0;\
+			case WM_MBUTTONDOWN:\
+				MouseInput_INSTANCE.OnWM_MBUTTONDOWN();\
+				return 0;\
+			case WM_RBUTTONDOWN:\
+				MouseInput_INSTANCE.OnWM_RBUTTONDOWN();\
+				return 0;\
+			case WM_LBUTTONUP:\
+				MouseInput_INSTANCE.OnWM_LBUTTONUP();\
+				return 0;\
+			case WM_MBUTTONUP:\
+				MouseInput_INSTANCE.OnWM_MBUTTONUP();\
+				return 0;\
+			case WM_RBUTTONUP:\
+				MouseInput_INSTANCE.OnWM_RBUTTONUP();\
+				return 0;\
+			case WM_CAPTURECHANGED:\
+				MouseInput_INSTANCE.OnWM_CAPTURECHANGED();\
+				return 0

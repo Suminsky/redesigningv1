@@ -289,6 +289,7 @@ void Parser::GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, DataStr
 			if( buffer_p.m_data[iByteIndex] == szInvalids_p[itInv] ){
 				
 				bInvalid = true;
+				break;
 			}
 		}
 
@@ -319,7 +320,8 @@ void Parser::GetSectionBetweenInvalidsOnTips( const char * szInvalids_p, DataStr
 
 			if( buffer_p.m_data[iByteIndex] == szInvalids_p[itInv] ){
 
-				bInvalid = true;
+				bInvalid = true; //todo: insert break
+				break;
 			}
 		}
 
@@ -355,6 +357,9 @@ void text::Parser::ReplaceSectionBy( const char cDelimiter_p, gen::DataStream & 
 
 void text::Parser::AdjustQuotedNewLines( gen::DataStream & buffer_p, const char cForNewLineOpen_p /*= '\\'*/, const char cForNewLineClose_p /*= '\\'*/, const char cReplacement_p /*= '\n' */, const char cNewLine )
 {
+	// TODO, detect if newlines are only \n or \r\n,
+	// currently assuming \r\n
+
 	unsigned int iByteIndex = 0;
 	int iForNewLineStartPos = -1;
 
@@ -424,11 +429,26 @@ void text::Parser::AdjustQuotedNewLines( gen::DataStream & buffer_p, const char 
 	return;
 }
 
+bool text::Parser::NeedQuotes( const char cFirst_p, const char cLast_p, const char * szInvalids_p )
+{
+	// traverse invalids string
+	for( int it = 0; szInvalids_p[it]; ++it ){
+
+		//check if first or last char is invalid
+		if( cFirst_p == szInvalids_p[it] )
+			return true;
+		if( cLast_p == szInvalids_p[it] )
+			return true;
+	}
+
+	return false;
+}
+
 //========================================================================
 // 
 //========================================================================
 
-void GfigElement::ParseGfigFile( DataStream & buffer_p, GfigElement & parsed_p ){
+void GfigElementA::ParseGfigFile( DataStream & buffer_p, GfigElementA & parsed_p ){
 
 	// remove comments
 
@@ -441,13 +461,16 @@ void GfigElement::ParseGfigFile( DataStream & buffer_p, GfigElement & parsed_p )
 	ParseCleanGfigFile( buffer_p, parsed_p );
 }
 
-void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parsed_p /*, int nOpenBracketsAbove_p = 0*/ )
+void GfigElementA::ParseCleanGfigFile( DataStream & buffer_p, GfigElementA & parsed_p /*, int nOpenBracketsAbove_p = 0*/ )
 {
 	//unsigned int iByteIndex = buffer_p.m_currentByteIndex;
 
 	int iOpenBracketPos = -1;
 	int iEqualsPos = -1;
 	bool bIgnoringDueQuote = false;
+
+	// test
+	bool bNameHandled = false;
 
 	while( buffer_p.m_currentByteIndex < buffer_p.m_size ){
 
@@ -506,10 +529,16 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 
 						iEqualsPos = -1;
 					}
-					else if( parsed_p.m_name.empty() ){
+					else if( !bNameHandled /*parsed_p.m_name.empty()*/ ){
+
+						bNameHandled = true;
+
 
 					// if didnt got a name yet
 					// get all data between this open bracket and the previous one
+					// 
+					// problem: this can be the second child of a nameless bracket, means it
+					// will get the first child as name!
 
 						unsigned int nCharsBetweenOpenBrackets = (buffer_p.m_currentByteIndex - iOpenBracketPos) -1;
 
@@ -526,7 +555,7 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 
 					// this new open bracket is a new element
 
-					GfigElement subElement;
+					GfigElementA subElement;
 
 					//++nOpenBracketsAbove_p;
 
@@ -556,6 +585,8 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 					// note that here is not needed to test if name is empty, cause
 					// there cant be a name already set between '[' and '=', that
 					// would require 2 or more equals..
+					// 
+					bNameHandled = true;
 				
 					unsigned int nCharsBetweenOpenBracketAndEquals = (iEqualsPos - iOpenBracketPos) -1;
 
@@ -604,7 +635,9 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 					}
 					else{
 
-						if( parsed_p.m_name.empty() ){
+						if( !bNameHandled/*parsed_p.m_name.empty()*/ ){
+
+							bNameHandled = true;
 
 							unsigned int nCharsBetweenBrackets = (iCloseBracketPos - iOpenBracketPos) -1; // [#,4,5], 5-4 = 1, -1 = 0
 
@@ -630,7 +663,7 @@ void GfigElement::ParseCleanGfigFile( DataStream & buffer_p, GfigElement & parse
 	}
 }
 
-void GfigElement:: ParseAssign( DataStream & buffer_p, std::string & szOut_p )
+void GfigElementA:: ParseAssign( DataStream & buffer_p, std::string & szOut_p )
 {
 	assert( szOut_p.empty() );
 
@@ -663,7 +696,7 @@ void GfigElement:: ParseAssign( DataStream & buffer_p, std::string & szOut_p )
 	szOut_p.assign( (const char*)&buffer_p.m_data[buffer_p.m_currentByteIndex], buffer_p.m_size );
 }
 
-bool GfigElement::GetSubElement( const char * szName_p, GfigElement *& pElement_p )
+bool GfigElementA::GetSubElement( const char * szName_p, GfigElementA *& pElement_p )
 {
 	for( int it = 0, itEnd = (int)m_subElements.size(); it != itEnd; ++it ){
 
@@ -676,4 +709,219 @@ bool GfigElement::GetSubElement( const char * szName_p, GfigElement *& pElement_
 	}
 
 	return false;
+}
+
+bool text::GfigElementA::FindFirstElementBFS( const char * szName_p, GfigElementA *& pElement_p )
+{
+	std::vector<GfigElementA*> vCandidates;
+
+	vCandidates.push_back( pElement_p );
+	int itFront = 0;
+
+	while( vCandidates.size() - itFront > 0 ){
+
+		GfigElementA * pCurrent = vCandidates[itFront];
+
+		if( pCurrent->m_name == szName_p ){
+
+			pElement_p = pCurrent;
+			return true;
+		}
+
+		++itFront;
+
+		for( int it = 0, itEnd = (int)pCurrent->m_subElements.size(); it != itEnd; ++it ){
+
+			vCandidates.push_back( &pCurrent->m_subElements[it] );
+		}
+	}
+
+	return false;
+}
+bool text::GfigElementA::FindLastElementDFS( const char * szName_p, GfigElementA *& pElement_p )
+{
+	std::vector<GfigElementA*> vCandidates;
+
+	vCandidates.push_back( pElement_p );
+
+	while( vCandidates.size() > 0 ){
+
+		GfigElementA * pCurrent = vCandidates.back();
+		vCandidates.pop_back();
+
+		if( pCurrent->m_name == szName_p ){
+
+			pElement_p = pCurrent;
+			return true;
+		}
+
+		for( int it = 0, itEnd = (int)pCurrent->m_subElements.size(); it != itEnd; ++it ){
+
+			vCandidates.push_back( &pCurrent->m_subElements[it] );
+		}
+	}
+
+	return false;
+}
+bool text::GfigElementA::FindFirstElementDFS( const char * szName_p, GfigElementA *& pElement_p )
+{
+	std::vector<GfigElementA*> vCandidates;
+
+	vCandidates.push_back( pElement_p );
+
+	while( vCandidates.size() > 0 ){
+
+		GfigElementA * pCurrent = vCandidates.back();
+		vCandidates.pop_back();
+
+		if( pCurrent->m_name == szName_p ){
+
+			pElement_p = pCurrent;
+			return true;
+		}
+
+		for( int it = (int)pCurrent->m_subElements.size()-1; it > -1; --it ){
+
+			vCandidates.push_back( &pCurrent->m_subElements[it] );
+		}
+	}
+
+	return false;
+}
+
+void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::string & header_p,
+										gen::DataStream & buffer_p, const char cNewLine, const char cTab ){
+
+	//new
+	header_p += '\r';// /new
+	header_p += '\n';
+
+	// create formated string
+
+	SaveGfigToFile( gfig_p, header_p, 0, cNewLine, cTab );
+
+	// allocate bigger buffer if needed
+
+	int size = (int)header_p.size();
+
+	if( buffer_p.m_currentByteIndex + size > buffer_p.m_size ){
+
+		int sizeNeed = buffer_p.m_currentByteIndex + size;
+
+		DataStream newBuffer_p;
+		newBuffer_p.m_data = new unsigned char[sizeNeed];
+		newBuffer_p.m_size = sizeNeed;
+		newBuffer_p.Set( buffer_p.m_data, buffer_p.m_currentByteIndex );
+		if( buffer_p.m_size ) delete [] buffer_p.m_data;
+		buffer_p = newBuffer_p;
+	}
+
+	// copy data to buffer
+
+	memcpy( (void*)buffer_p.m_data, (void*)header_p.data(), sizeof(char)*size );
+}
+
+void text::GfigElementA::SaveGfigToFile( const GfigElementA & gfig_p, std::string & formated_p, int currentTabIndentation_p, const char cNewLine, const char cTab ){
+
+	const char szQuotedName[] = { '[', '"', 0 };
+	const char szQUotedValue[] = { '=', '"', 0 };
+
+	// save element header
+	// variations:
+	// [name = value]\n
+	// [name = value\n\t
+	// [name]\n
+	// [name\n\t
+	
+	// new testing
+	formated_p += '\r';// /new testing
+	formated_p += cNewLine;
+	for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
+		formated_p += cTab;
+
+	if( Parser::NeedQuotes(  gfig_p.m_name[0], gfig_p.m_name[(int)gfig_p.m_name.size()-1], " \n\t\r" ) ){
+
+		formated_p += szQuotedName + gfig_p.m_name + '"';
+	}
+	else 
+	formated_p += '[' + gfig_p.m_name; // [name
+
+	if( !gfig_p.m_value.empty() ){
+
+		if( Parser::NeedQuotes(  gfig_p.m_value[0], gfig_p.m_value[(int)gfig_p.m_value.size()-1], " \n\t\r" ) ){
+
+			//formated_p += szQUotedValue + gfig_p.m_value + '"';
+
+			//new
+			formated_p += szQUotedValue;
+			AdjustNewLineTabFormatting( gfig_p.m_value, formated_p, currentTabIndentation_p, cTab, cNewLine );
+			formated_p += '"';
+		}
+		else{
+
+			//formated_p += " = " + gfig_p.m_value; // [name = value
+
+			//new
+			formated_p += " = ";
+			AdjustNewLineTabFormatting( gfig_p.m_value, formated_p, currentTabIndentation_p, cTab, cNewLine );
+		}
+		
+	}
+
+	int nChildElements = (int)gfig_p.m_subElements.size();
+	if( nChildElements != 0 ){
+
+		++currentTabIndentation_p;
+
+		for( int itChild = 0; itChild < nChildElements; ++ itChild ){
+
+			SaveGfigToFile( gfig_p.m_subElements[itChild], formated_p, currentTabIndentation_p, cNewLine, cTab );
+		}
+
+		--currentTabIndentation_p;
+
+		// new testing
+		formated_p += '\r';// /new testing
+		formated_p += cNewLine;
+		for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
+			formated_p += cTab;
+
+		formated_p += ']';
+	}
+	else{
+
+		formated_p += ']'; // [name]\n or  [name = value]\n
+	}
+}
+
+void text::GfigElementA::AdjustNewLineTabFormatting( const std::string & szIn_p, std::string & formated_p, int currentTabIndentation_p, const char cTab /*= '\t'*/, const char cNewLine /*= '\n'*/ )
+{
+
+	// NOTE: sz.size() =  (null)
+	// sz.size-1 = last char
+	
+	int itLastChar = (int)szIn_p.size()-1;
+
+	bool bOpenedNewLine = false;
+	for( int itC = 0; itC <= itLastChar; ++itC ){
+
+		if( szIn_p[itC] == cNewLine ){
+
+			formated_p += '\\';
+			formated_p += '\r';formated_p += cNewLine;
+			for( int itTab = 0; itTab < currentTabIndentation_p; ++ itTab )
+				formated_p += cTab;
+			bOpenedNewLine = true;
+		}
+		else{
+			
+			if( bOpenedNewLine ){
+
+				formated_p += '\\';
+				bOpenedNewLine = false;
+			}
+
+			formated_p += szIn_p[itC];
+		}
+	}
 }

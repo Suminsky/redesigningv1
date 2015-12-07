@@ -50,6 +50,10 @@ namespace game{
 			m_onUpdateCallback = delegate_p;
 			m_pChainedTask = pChainedTask_p;
 		}
+		void SetChain( shared_Task_ptr pChainedTask_p = nullptr ){
+
+			m_pChainedTask = pChainedTask_p;
+		}
 
 		void Stop(){
 			if( Running() ) 	Abort();

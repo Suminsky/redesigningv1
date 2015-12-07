@@ -3,70 +3,101 @@
 /*
 	created:	2013/04/14
 	created:	14:4:2013   19:49
-	file:		IObjectComponent.h
+	file:		Component.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	the life items that compose a game object
+	purpose:	compose a game object
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 #include <memory>
+#include "ComponentTypes.h"
+#include "../namespace gen/Pool.h"
+#include "../namespace gen/gen_data.h"
 
 namespace game{
 
-	class Object;
-	typedef unsigned int COMPONENT_OBJECTINDEX;
-	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
-	typedef unsigned int ComponentID;
+	// froward dcls
 
-	typedef unsigned int OBJECT_LAYERINDEX;
+	class Object;
+	class System;
+	class IComponentFactory;
+
+	// new types
+
+	typedef unsigned int COMPONENTINDEX;
+	static const unsigned int INVALID_COMPONENTINDEX = (unsigned int)-1;
+
+	typedef unsigned int COMPONENTTYPE;
+	static const unsigned int INVALID_COMPONENTTYPE = (unsigned int)-1;
+
+	typedef void* ComponentEventData; // event data used on the object event machine
 
 	//========================================================================
 	// 
 	//========================================================================
-	class Component{
+	class Component: public gen::NonCopyable{
 
 		friend class Object;
+		friend class System;
+		friend class IComponentFactory;
+
+		DCL_POOLELEMENT();
 
 	public:
 
 		//------------------------------------------------------------------------
-		// dctor
+		// ctor/dctor
 		//------------------------------------------------------------------------
-		Component():m_currentObjectIndex(INVALID_OBJECTINDEX), m_pObjectOwner(nullptr){}
+		Component()
+			:
+		//m_iCurrentRosterIndex((unsigned int)-1),
+		m_type(INVALID_COMPONENTTYPE),
+		m_currentComponentObjectIndex(INVALID_COMPONENTINDEX),
+		m_pObjectOwner(nullptr),
+		m_bDettached(true){
+
+			static int s_count = 0;
+			m_ID = s_count++;
+		}
+
 		virtual ~Component(){}
-		
-		//------------------------------------------------------------------------
-		// get id
-		//------------------------------------------------------------------------
-		/*ComponentID ID(){
-
-			return m_ID;
-		}*/
 
 		//------------------------------------------------------------------------
-		// get owner object
+		// 
+		//------------------------------------------------------------------------
+		bool IsAttached() const { return !m_bDettached; }
+
+		//------------------------------------------------------------------------
+		// getters
 		//------------------------------------------------------------------------
 		Object *  GetObjectOwner(){ return m_pObjectOwner; }
-		COMPONENT_OBJECTINDEX GetObjectIndex() const { return m_currentObjectIndex; }
+		COMPONENTTYPE GetType() const { return m_type; }
+		COMPONENTINDEX GetIndexOnObject() const { return m_currentComponentObjectIndex; }
 
 	protected:
 
-		//ComponentID m_ID;
 		Object * m_pObjectOwner;
+		COMPONENTTYPE m_type;
 
 	private:
 
 		//------------------------------------------------------------------------
-		// to be override
+		// to be overridden
 		//------------------------------------------------------------------------
-		virtual void VOnUpdate( double /*dTime_p*/, double /*dDeltaTime_p*/ ){}
-		//virtual void VOnEvent( Event event_p ) = 0;
+		virtual void VOnAttach();
+		virtual void VOnDetach();
 
-		COMPONENT_OBJECTINDEX m_currentObjectIndex;
+		COMPONENTINDEX m_currentComponentObjectIndex;
+
+		bool m_bDettached;
+
+		int m_ID;
 	};
 
+	typedef gen::pool_ptr<Component> pool_Component_ptr;
 	typedef std::shared_ptr<Component> shared_Component_ptr;
+	typedef std::weak_ptr<Component> weak_Component_ptr;
 }
