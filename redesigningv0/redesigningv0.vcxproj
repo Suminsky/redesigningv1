@@ -190,6 +190,7 @@
     <ClInclude Include="Legalia\ParallaxLayer.h" />
     <ClInclude Include="Legalia\SpriteDraggingSys.h" />
     <ClInclude Include="Legalia\SpringyFollowCamera.h" />
+    <ClInclude Include="Legalia\SpriteResizingSys.h" />
     <ClInclude Include="Legalia\SpriteTextCompo.h" />
     <ClInclude Include="Legalia\SpriteTextSys.h" />
     <ClInclude Include="Mentle\InGame\BGLayer.h" />
@@ -341,6 +342,7 @@
     <ClCompile Include="Legalia\ParallaxLayer.cpp" />
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
     <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />
+    <ClCompile Include="Legalia\SpriteResizingSys.cpp" />
     <ClCompile Include="Legalia\SpriteTextCompo.cpp" />
     <ClCompile Include="Legalia\SpriteTextSys.cpp" />
     <ClCompile Include="Mentle\InGame\BGLayer.cpp" />

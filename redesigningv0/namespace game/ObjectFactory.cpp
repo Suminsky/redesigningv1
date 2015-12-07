@@ -16,7 +16,8 @@ pool_Object_ptr ObjectFactory::CreateObject( text::GfigElementA * pGfig_p ){
 	pool_Object_ptr pObj(m_pool);
 
 	strcpy_s<64>( pObj->m_szName, pGfig_p->m_name.c_str() );
-	pObj->m_prefab = atoi(pGfig_p->m_value.c_str());
+	pObj->m_prefab = -1;
+	//pObj->m_prefab = pGfig_p->m_value.c_str() ? atoi(pGfig_p->m_value.c_str()) : -1;
 
 	for( int it = 0, iSize = (int)pGfig_p->m_subElements.size();
 		it<iSize;
@@ -59,7 +60,8 @@ pool_Object_ptr game::ObjectFactory::CloneObject( const Object * pObj_p )
 
 void game::ObjectFactory::LoadNewPrefab( text::GfigElementA * pGfig_p )
 {
-	Prefab newPrefab = { pGfig_p->m_value, CreateObject( pGfig_p ) };
+	Prefab newPrefab = { pGfig_p->m_name, CreateObject( pGfig_p ) };
+	newPrefab.pObj->m_prefab = (int)m_prefabs.size();
 
 	m_prefabs.push_back( std::move( newPrefab ) );
 }
@@ -67,6 +69,7 @@ void game::ObjectFactory::LoadNewPrefab( text::GfigElementA * pGfig_p )
 void game::ObjectFactory::LoadNewPrefab( const Object * pObj_p, const std::string & szName_p )
 {
 	Prefab newPrefab = { szName_p, CloneObject( pObj_p ) };
+	newPrefab.pObj->m_prefab = (int)m_prefabs.size();
 
 	m_prefabs.push_back( std::move( newPrefab ) );
 }
@@ -141,7 +144,9 @@ unsigned int game::ObjectFactory::PrefabIndexFromName( const std::string & szNam
 //------------------------------------------------------------------------
 void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA * pGFig_p )
 {
-	pGFig_p->m_subElements.emplace_back( GfigElementA(pObj_p->m_szName, std::to_string((_ULonglong)pObj_p->m_prefab).c_str() )  );
+	pGFig_p->m_subElements.emplace_back(
+		GfigElementA(pObj_p->m_szName,  (pObj_p->m_prefab == -1 ? "" : std::to_string((_ULonglong)pObj_p->m_prefab).c_str() ) )
+		);
 
 	int nCompos = (int)pObj_p->m_components.size();
 
@@ -150,5 +155,14 @@ void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA *
 		Component * pCompo = pObj_p->m_components[itCompo].Get();
 
 		m_pLayerOwner->m_componentFactory.Serialize( pCompo, &pGFig_p->m_subElements.back() );
+	}
+}
+
+void game::ObjectFactory::SerializePrefabs( text::GfigElementA * pGFig_p )
+{
+	for( uint32_t it = 0, n = (uint32_t)m_prefabs.size();
+		it < n; ++ it ){
+
+		Serialize( m_prefabs[it].pObj.Get(), pGFig_p );
 	}
 }

@@ -45,7 +45,10 @@ namespace game{
 
 			int x =7; x = x;
 		}
-		~ObjectFactory(){}
+		~ObjectFactory(){
+
+			BREAKHERE;
+		}
 
 		//------------------------------------------------------------------------
 		// 
@@ -59,6 +62,7 @@ namespace game{
 		pool_Object_ptr CreateObject( text::GfigElementA * pGfig_p );
 		pool_Object_ptr CloneObject( const Object * pObj_p );
 		void Serialize( const Object * pObj_p, text::GfigElementA * pGFig_p );
+		void SerializePrefabs( text::GfigElementA * pGFig_p);
 
 		void LoadNewPrefab( const Object * pObj_p, const std::string & szName_p );
 		void LoadNewPrefab( text::GfigElementA * pGfig_p );
@@ -77,10 +81,9 @@ namespace game{
 		Layer				* m_pLayerOwner;
 
 		struct Prefab{
-			std::string szName;
+			std::string szName; // TODOL obsolete, name now on obj
 			pool_Object_ptr pObj;
 		};
-
 		std::vector<Prefab> m_prefabs;
 	};
 

@@ -468,6 +468,9 @@
     <ClInclude Include="Legalia\MovableSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Legalia\SpriteResizingSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -837,6 +840,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\MovableSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\SpriteResizingSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

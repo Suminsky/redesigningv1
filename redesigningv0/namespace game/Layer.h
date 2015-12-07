@@ -53,10 +53,12 @@ namespace game{
 		bool m_bVisible;
 		Timer<double> m_timer;
 
-		ObjectFactory		m_objFactory;
-		SystemMachine		m_systems;
 		ComponentFactory	m_componentFactory;
+		ObjectFactory		m_objFactory;
 		ObjectMachine		m_objects;
+		SystemMachine		m_systems;
+		
+		
 		
 
 		//------------------------------------------------------------------------
