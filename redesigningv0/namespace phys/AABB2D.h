@@ -74,7 +74,7 @@ namespace phys{
 			return true;
 		}
 
-		bool CollisionData( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration ) const{
+		bool CollisionData( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration, float fNoPenTolerance_p = 0.0f ) const{
 
 			const DirectX::XMFLOAT2 normals[] = {	DirectX::XMFLOAT2( -1.0f,  0.0f ),
 													DirectX::XMFLOAT2(  1.0f,  0.0f ),
@@ -88,15 +88,15 @@ namespace phys{
 										other_p.Down()	- Up(),
 										Down()			- other_p.Up() };
 
-			penetration = 0.0;
+			penetration = (std::numeric_limits<float>::lowest)();
 			normal.x = normal.y = 0.0f;
 			for( int it = 0; it < 4; ++it ){
 
 				// ignore if theres no penetration
-				if( distances[it] >= 0.0f ) return false;
+				if( distances[it] >= fNoPenTolerance_p ) return false;
 
 				// keep the normal with least penetration
-				if( penetration == 0 || distances[it] > penetration ){
+				if( distances[it] > penetration ){
 
 					penetration = distances[it];
 					normal = normals[it];
@@ -176,9 +176,9 @@ namespace phys{
 				}
 			}
 
-			return (normal.x != 0.0f || normal.y != 0.0f );//penetration == (std::numeric_limits<float>::lowest)())//
+			//return (normal.x != 0.0f || normal.y != 0.0f );//penetration == (std::numeric_limits<float>::lowest)())//
 
-			//return true;
+			return true;
 		}
 
 		//------------------------------------------------------------------------

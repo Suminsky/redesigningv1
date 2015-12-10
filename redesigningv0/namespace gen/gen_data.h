@@ -737,6 +737,9 @@ namespace gen{
 		}*/
 	};
 
+	//------------------------------------------------------------------------
+	// da fuck did I do this for? TODO
+	//------------------------------------------------------------------------
 	struct DataStreamW{
 
 		unsigned int m_size;
@@ -786,7 +789,8 @@ namespace gen{
 			:
 		m_data(nullptr){
 
-			Initialize( size_p );
+			m_data = new T[size_p];
+			m_size = size_p;
 		}
 		~Array(){
 
@@ -814,7 +818,7 @@ namespace gen{
 
 	};
 
-	template<typename T, int SIZE>
+	template<typename T, uint32_t SIZE>
 	class Stack{
 
 	public:

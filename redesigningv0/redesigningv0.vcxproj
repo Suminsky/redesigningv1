@@ -181,6 +181,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Legalia\AABB2DColliderComponent.h" />
     <ClInclude Include="Legalia\AABB2DCollisionSys.h" />
+    <ClInclude Include="Legalia\ImageLookupCollision.h" />
     <ClInclude Include="Legalia\InterpolatedCamera.h" />
     <ClInclude Include="Legalia\LegaliaEvents.h" />
     <ClInclude Include="Legalia\LegaliaInGameLayer.h" />
@@ -333,6 +334,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Legalia\AABB2DColliderComponent.cpp" />
     <ClCompile Include="Legalia\AABB2DCollisionSys.cpp" />
+    <ClCompile Include="Legalia\ImageLookupCollision.cpp" />
     <ClCompile Include="Legalia\InterpolatedCamera.cpp" />
     <ClCompile Include="Legalia\LegaliaInGameLayer.cpp" />
     <ClCompile Include="Legalia\LegaliaMain.cpp" />
