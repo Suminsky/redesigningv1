@@ -96,6 +96,10 @@ namespace game{
 
 			return m_objFactory.CreateObject(pGfig_p);
 		}
+		pool_Object_ptr CreateObjectFromPrefab( unsigned int prefab, text::GfigElementA *pGfig_p ){
+
+			return m_objFactory.CreateObjectFromPrefab( prefab, pGfig_p);
+		}
 
 		//------------------------------------------------------------------------
 		// getters

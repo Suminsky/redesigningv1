@@ -81,7 +81,7 @@ namespace dx{
 			ID3D11Device *pDevice_p,
 			IDXGIFactory1 *pFactory_p,
 			const HWND hWnd_p,//reqired
-			const BOOL bChangeResolutionWhenResizingInFullscreen_p,
+			const BOOL bChangeResolutionWhenResizingToFullscreen_p,
 			//in / holded:
 			const BOOL bWindowed_p,
 			const UINT nMSAA_p, const UINT iMSAAqlty_p,

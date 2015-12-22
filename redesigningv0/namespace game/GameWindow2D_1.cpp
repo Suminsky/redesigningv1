@@ -134,14 +134,14 @@ void GameWindow2D_1::ResizeIfNeed()
 			// set scissor so that sprites dont bleed to outside the
 			// background image (a centralized 1280 x 720 rect )
 			
-			/*D3D11_RECT scissor;
-			 // TODO: this is external info...
-			scissor.left = (newCliRect.w - WINDOW_W)/2;
-			scissor.right = WINDOW_W + scissor.left;
-			scissor.top = (newCliRect.h - WINDOW_H)/2;
-			scissor.bottom = WINDOW_H + scissor.top;
+			//D3D11_RECT scissor;
+			// // TODO: this is external info...
+			//scissor.left = (newCliRect.w - 1366)/2;
+			//scissor.right = 1366 + scissor.left;
+			//scissor.top = (newCliRect.h - 768)/2;
+			//scissor.bottom = 768 + scissor.top;
 
-			m_device.GetContext()->RSSetScissorRects( 1, &scissor );*/
+			//m_device.GetContext()->RSSetScissorRects( 1, &scissor );
 
 			m_stateControl.OnResize( newCliRect.w, newCliRect.h );
 		}
@@ -192,7 +192,7 @@ LRESULT CALLBACK GameWindow2D_1::OnWM_CREATE( HWND hWnd_p )
 
 		m_device.InitDevice( gpuAndMode.pAdapter, true, pFactory, &featureLVL, 1  );
 		UINT nRenderBuffers = 3;
-		m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, true, true, 1,0, windowMode, nRenderBuffers, gpuAndMode.pOutput );
+		m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, nRenderBuffers, gpuAndMode.pOutput );
 		m_swapChain.CreateRTVFromBackBuffer( m_device.GetDevice() );
 
 		//---

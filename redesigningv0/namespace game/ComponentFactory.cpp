@@ -57,6 +57,7 @@ game::pool_Component_ptr game::ComponentFactory::CreateComponent( const char * s
 	}
 }
 
+
 shared_IComponentFactory_ptr game::ComponentFactory::GetComponentFactory( int iType_p )
 {
 	ComponentFactoryRegistry::iterator itFound = m_registry.find( iType_p );
@@ -65,6 +66,7 @@ shared_IComponentFactory_ptr game::ComponentFactory::GetComponentFactory( int iT
 
 	return itFound->second;
 }
+
 
 game::pool_Component_ptr game::ComponentFactory::CloneComponent( const Component * pComponent_p )
 {

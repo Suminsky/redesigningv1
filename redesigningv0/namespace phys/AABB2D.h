@@ -156,7 +156,8 @@ namespace phys{
 
 			// get penetration
 
-			const float distances[] = {	other_p.Left()	- Right(),
+			const float distances[] = {
+				other_p.Left()	- Right(),
 				Left()			- other_p.Right(),
 				other_p.Down()	- Up(),
 				Down()			- other_p.Up() };

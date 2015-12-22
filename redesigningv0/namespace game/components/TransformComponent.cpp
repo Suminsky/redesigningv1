@@ -361,6 +361,7 @@ Trafo TransformComponentFactory::GetTrafoFromGfig( GfigElementA * pGFig_p )
 	if( pGFig_p->GetSubElement( "pos", pPropertie ) ){
 
 		trafo.position = GetXYZWFromGfig(pPropertie);
+		//trafo.position.w = 1.0f; // test
 	}
 	else{
 
@@ -456,6 +457,7 @@ void game::TransformComponentFactory::UpdateTrafoFromGfig( Trafo & trafo_p, text
 	if( pGFig_p->GetSubElement( "pos", pPropertie ) ){
 
 		 UpdateXYZWFromGfig( trafo_p.position, pPropertie);
+		 //trafo_p.position.w = 1.0f; //test
 	}
 	if( pGFig_p->GetSubElement( "rotation", pPropertie ) ){
 

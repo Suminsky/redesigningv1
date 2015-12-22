@@ -144,6 +144,21 @@ unsigned int game::ObjectFactory::PrefabIndexFromName( const std::string & szNam
 //------------------------------------------------------------------------
 void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA * pGFig_p )
 {
+
+	// NOTE:
+	// saving an object that uses a prefab should optmize out data that equals the prefab.
+	// currently, data discarded on the gfigs consider only the defaults..
+	// so, for example:
+	// default color = rgba(1,1,1,1)
+	// prefab color = rgba(1,1,0.5,0.5)
+	// obj color = rgba(1,1,0.5,1)
+	// 
+	// prefab gfig = ba(0.5,0.5)
+	// obj gfig = a(1)
+	// the only way is create a new factory function for components, that receives a prefab compo for reference
+	// TODO
+
+
 	pGFig_p->m_subElements.emplace_back(
 		GfigElementA(pObj_p->m_szName,  (pObj_p->m_prefab == -1 ? "" : std::to_string((_ULonglong)pObj_p->m_prefab).c_str() ) )
 		);
