@@ -287,21 +287,24 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTextur
 	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
 	m_previousTrafo = m_currentTrafo;
 
-	// creates a ID3DBuffer for the vs constant buffer
+	if( !m_pBuffer ){
+	
+		// creates a ID3DBuffer for the vs constant buffer
 
-	BufferResource::CreationParams cbufferParams;
-	ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
-	cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
-	cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
-	cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
-	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
-	cbufferParams.desc.bufferDesc.MiscFlags = 0;
+		BufferResource::CreationParams cbufferParams;
+		ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
+		cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
+		cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
+		cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
+		cbufferParams.desc.bufferDesc.StructureByteStride = 0;
+		cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
-	//ID3D11Buffer * pBuffer = NULL;
-	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	if( !m_pBuffer )
+		//ID3D11Buffer * pBuffer = NULL;
+		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	
 		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+	}
 
 	// initialize pipe state for this sprite
 
@@ -344,18 +347,22 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, game::TextureID_Binde
 
 	// creates a ID3DBuffer for the vs constant buffer
 
-	BufferResource::CreationParams cbufferParams;
-	ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
-	cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
-	cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
-	cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
-	cbufferParams.desc.bufferDesc.StructureByteStride = 0;
-	cbufferParams.desc.bufferDesc.MiscFlags = 0;
+	if( !m_pBuffer ){
+	
+		BufferResource::CreationParams cbufferParams;
+		ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
+		cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
+		cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
+		cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
+		cbufferParams.desc.bufferDesc.StructureByteStride = 0;
+		cbufferParams.desc.bufferDesc.MiscFlags = 0;
 
-	//ID3D11Buffer * pBuffer = NULL;
-	//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+		//ID3D11Buffer * pBuffer = NULL;
+		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+	
+		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+	}
 
 	// initialize pipe state for this sprite
 
