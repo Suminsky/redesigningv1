@@ -44,9 +44,6 @@ namespace game{
 		};
 		
 		typedef std::vector<RegisteredHandlers> EventHandlerRegister;
-		struct RegisterIt{
-			int itR, itH;
-		};
 
 		typedef std::vector<Event> EventQueue;
 
@@ -200,8 +197,6 @@ namespace game{
 						int itUnreg = FindHandlerInHandlers( m_register[it].vHandlers, handler_p );
 						assert( it != -1 );
 
-						//RegisterIt toRemove = { it, itUnreg };
-						//m_removedHandlers.push_back( toRemove );
 						int iHandlersLast = (int)m_register[it].vHandlers.size() -1;
 						m_register[it].vHandlers[itUnreg] = m_register[it].vHandlers[iHandlersLast];
 						m_register[it].vHandlers.pop_back();
@@ -234,10 +229,6 @@ namespace game{
 		unsigned int m_iCurrentBuffer;
 		EventQueue m_events[2]; // double buffering
 		EventHandlerRegister m_register;
-		//std::vector<RegisterIt> m_removedHandlers;
 
 	};
-
-	//typedef std::shared_ptr<EventMachine> shared_EventMachine_ptr;
-	//typedef std::weak_ptr<EventMachine> weak_EventMachine_ptr;
 }

@@ -67,6 +67,7 @@ namespace game{
 				static int s_count = 0;
 				m_ID = s_count++;
 				m_szName[0] = 0;
+				m_prefab = -1;
 			}
 
 		~Object(){
@@ -151,6 +152,7 @@ namespace game{
 		}
 		int GetID() const { return m_ID; }
 		const char* GetName()const{ return &m_szName[0]; }
+		int GetPrefab() const{ return m_prefab;}
 
 		//------------------------------------------------------------------------
 		// setters

@@ -75,7 +75,7 @@ namespace sprite{
 		Formating m_formating;
 		GlyphUV m_notSupportedGlyph;
 		
-		int m_iTextureID;
+		unsigned int m_iTextureID;
 		int m_iTextureW, m_iTextureH;
 		dx::BindPSShaderResourceView * m_pTextureSRVBinder;
 

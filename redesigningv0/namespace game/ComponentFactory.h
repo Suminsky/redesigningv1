@@ -15,6 +15,7 @@
 // standard includes
 #include <memory>
 #include <map>
+#include <vector>
 #include <assert.h>
 
 // private includes
@@ -70,9 +71,13 @@ namespace game{
 	//========================================================================
 	// 
 	//========================================================================
-	//TODO: use vector and binary search instead of map
-	typedef std::map<int, shared_IComponentFactory_ptr> ComponentFactoryRegistry;
-	typedef std::map<std::string, unsigned int> ComponentNameToTypeMap;
+	struct RegisteredFactory{
+
+		unsigned int compoType;
+		shared_IComponentFactory_ptr pCompoFactory;
+		const char * szCompoName;
+	};
+	typedef std::vector<RegisteredFactory> ComponentFactoryRegistry;
 
 	class ComponentFactory{
 
@@ -83,9 +88,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// creators
 		//------------------------------------------------------------------------
-		pool_Component_ptr CreateComponent( int iType_p );
+		pool_Component_ptr CreateComponent( unsigned int iType_p );
 		pool_Component_ptr CreateComponent( const char * szComponent_p );
-		pool_Component_ptr CreateComponent( int iType_p, text::GfigElementA * pGFig_p );
+		pool_Component_ptr CreateComponent( unsigned int iType_p, text::GfigElementA * pGFig_p );
 		pool_Component_ptr CreateComponent( const char * szComponent_p, text::GfigElementA * pGFig_p );
 		pool_Component_ptr CloneComponent( const Component * pComponent_p );
 		void UpdateComponent( Component * pComponent_p, text::GfigElementA * pGFig_p );
@@ -111,13 +116,12 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		shared_IComponentFactory_ptr GetComponentFactory( int iType_p );
+		shared_IComponentFactory_ptr GetComponentFactory( unsigned int iType_p );
 		template< typename DerivedComponent > shared_IComponentFactory_ptr GetComponentFactory();
 		
 	private:
 
 		ComponentFactoryRegistry m_registry;
-		ComponentNameToTypeMap m_nameToType;
 	};
 }
 

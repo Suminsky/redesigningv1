@@ -202,8 +202,12 @@ game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCreateComponent
 
 	GfigElementA * pGFigParam = nullptr;
 
+	if( pGFig_p->GetSubElement( "state", pGFigParam ) ){
+		LoadStateFromGFig(pGFigParam, pAnimCompo.Get() );
+	}
+
 	keepAssert( pGFig_p->GetSubElement( "sprites", pGFigParam ) );
-	LoadSpritesFromGFig( pGFigParam, pAnimCompo.Get() );
+	LoadSpritesFromGFig( pGFigParam, pAnimCompo.Get(), m_pSpriteRenderer );
 
 	keepAssert( pGFig_p->GetSubElement( "frames", pGFigParam ) );
 	LoadFramesFromGFig( pGFigParam, pAnimCompo.Get() );
@@ -215,7 +219,7 @@ game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCreateComponent
 	return pAnimCompo;
 }
 
-void game::SpriteAnimationComponentFactory::LoadSpritesFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p )
+void game::SpriteAnimationComponentFactory::LoadSpritesFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p, SpriteRenderer * pSpriteRenderer_p )
 {
 	for( int it = 0, nSprites = (int)pGFig_p->m_subElements.size();
 		 it < nSprites;
@@ -224,7 +228,7 @@ void game::SpriteAnimationComponentFactory::LoadSpritesFromGFig( text::GfigEleme
 			 GfigElementA & spriteGFig = pGFig_p->m_subElements[it];
 
 			 TextureID_Binder_Pair spriteUsed;
-			 spriteUsed.pBindPSSRV = &m_pSpriteRenderer->m_tex2D_cache.Get( spriteGFig.m_name.c_str(), &spriteUsed.iID );
+			 spriteUsed.pBindPSSRV = &pSpriteRenderer_p->m_tex2D_cache.Get( spriteGFig.m_name.c_str(), &spriteUsed.iID );
 			 compo_p->m_vSprites.push_back(spriteUsed);
 	}
 }
@@ -285,6 +289,7 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 {
 	// to work as state machine, the params are holded, so if they not present in some, the same
 	// previous value is used
+	// EXCEPT FOR STATE DATA
 	
 	AnimationClip animClip;
 	animClip.configData.eWrapMode = E_ANIMWRAPMODE_LOOP;
@@ -300,6 +305,9 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 
 			animClip.configData.szName = clipGFig.m_name;
 
+			memset( &animClip.stateData, 0, sizeof(AnimationClip::StateData));
+			animClip.stateData.speedMod = 1.0f;
+
 			if( clipGFig.GetSubElement( "wrap", pGFigParam ) ){
 
 				animClip.configData.eWrapMode = GetWrapModeFromGFig( pGFigParam );
@@ -310,6 +318,9 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 				animClip.configData.SPF = (animTimeUnit)atof( pGFigParam->m_value.c_str() );
 			}
 			//
+			if( clipGFig.GetSubElement( "state", pGFigParam ) ){
+				LoadClipStateDataFromGfig(pGFigParam, animClip.stateData);
+			}
 
 			keepAssert( clipGFig.GetSubElement( "frames", pGFigParam ) );
 
@@ -328,27 +339,42 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 	}
 }
 
+
+void game::SpriteAnimationComponentFactory::LoadStateFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p )
+{
+	GfigElementA * pGFigParam;
+
+	if( pGFig_p->GetSubElement("clip", pGFigParam ) ){
+		compo_p->m_iCurrentClip = atoi(pGFigParam->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement("prev clip", pGFigParam ) ){
+		compo_p->m_iPreviousClip = atoi(pGFigParam->m_value.c_str());
+	}
+
+	if( pGFig_p->GetSubElement("frame", pGFigParam ) ){
+		compo_p->m_currentFrame = atoi(pGFigParam->m_value.c_str());
+	}
+	if( pGFig_p->GetSubElement("prev frame", pGFigParam ) ){
+		compo_p->m_previousFrame = atoi(pGFigParam->m_value.c_str());
+	}
+}
+
+
 game::E_ANIMWRAPMODE game::SpriteAnimationComponentFactory::GetWrapModeFromGFig( text::GfigElementA * pGFig_p )
 {
-	if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_LOOP] ){
+	E_ANIMWRAPMODE wrapmodes[] = {
+		E_ANIMWRAPMODE_LOOP,
+		E_ANIMWRAPMODE_CLAMPLAST,
+		E_ANIMWRAPMODE_CLAMFIRST,
+		E_ANIMWRAPMODE_ONCE
+	};
 
-		return E_ANIMWRAPMODE_LOOP;
-	}
-	/*else if( pGFig_p->m_value == "pingpong" ){
+	for( int it = 0; it < 4; ++it ){
 
-		return E_ANIMWRAPMODE_PINGPONG;
-	}*/
-	else if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_ONCE] ){
+		if( pGFig_p->m_value == s_szAnimWrapModes[it] ){
 
-		return E_ANIMWRAPMODE_ONCE;
-	}
-	else if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_CLAMFIRST] ){
-
-		return E_ANIMWRAPMODE_CLAMFIRST;
-	}
-	else if( pGFig_p->m_value == s_szAnimWrapModes[E_ANIMWRAPMODE_CLAMPLAST] ){
-
-		return E_ANIMWRAPMODE_CLAMPLAST;
+			return wrapmodes[it];
+		}
 	}
 
 	return E_ANIMWRAPMODE_LOOP;
@@ -498,6 +524,48 @@ void game::SpriteAnimationComponentFactory::ReplaceSprites( SpriteAnimationCompo
 	compo_p->m_vSprites = std::move( vSprites_p );
 }
 
+E_ANIMSTATE game::SpriteAnimationComponentFactory::GetClipStateFromGfig( text::GfigElementA * pGFig_p )
+{
+	E_ANIMSTATE states[] = {
+		E_ANIMSTATE_STOPPED,
+		E_ANIMSTATE_PLAYING,
+		E_ANIMSTATE_PAUSED
+	};
+
+	for( int it = 0; it < 3; ++it ){
+
+		if( pGFig_p->m_value == s_szAnimClipStates[it] ){
+
+			return states[it];
+		}
+	}
+
+	return E_ANIMSTATE_STOPPED;
+}
+
+void game::SpriteAnimationComponentFactory::LoadClipStateDataFromGfig( text::GfigElementA * pGFig_p, AnimationClip::StateData & stateData_p )
+{
+	//unsigned int		itCurrentFrame;
+	//animTimeUnit		deltaAccum;
+	//animTimeUnit		speedMod;
+	//E_ANIMSTATE			eState;
+
+	GfigElementA * pGFigParam;
+
+	if( pGFig_p->GetSubElement( "frame", pGFigParam ) ){
+		stateData_p.itCurrentFrame = atoi( pGFigParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "delta", pGFigParam ) ){
+		stateData_p.deltaAccum = (animTimeUnit)atof( pGFigParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "speed", pGFigParam ) ){
+		stateData_p.deltaAccum = (animTimeUnit)atof( pGFigParam->m_value.c_str() );
+	}
+	if( pGFig_p->GetSubElement( "state", pGFigParam ) ){
+		stateData_p.eState = GetClipStateFromGfig(pGFigParam);
+	}
+}
+
 game::pool_Component_ptr game::SpriteAnimationComponentFactory::VCloneComponent( const Component * pCompo_p )
 {
 	pool_SpriteAnimCompo_ptr pAnimCompo( m_pool );
@@ -524,17 +592,26 @@ void game::SpriteAnimationComponentFactory::VUpdateComponent( Component * pCompo
 	// TODO
 	// not sure how this should work, sprites and frames are added, clips too, but clips reference to frames and frames ref
 	// to sprites are all on the gfig...so if the user doesnt take in account that the sprites and frames will be ADDED, not
-	// replaced, shit will happen
+	// replaced, shit will happen...
+	// For now Im updating only state data
+	
+	if( pGFig_p->GetSubElement( "state", pGFigParam ) )
+		LoadStateFromGFig( pGFigParam, pAnimCompo );
+	if( pGFig_p->GetSubElement( "clips", pGFigParam ) )
+		LoadClipsStateDataOnlyFromGFig(pGFigParam, pAnimCompo );
 
-	if( pGFig_p->GetSubElement( "sprites", pGFigParam ) )
-		LoadSpritesFromGFig( pGFigParam, pAnimCompo );
+	/*if( pGFig_p->GetSubElement( "sprites", pGFigParam ) )
+		LoadSpritesFromGFig( pGFigParam, pAnimCompo, m_pSpriteRenderer );
 
 	if( pGFig_p->GetSubElement( "frames", pGFigParam ) )
 		LoadFramesFromGFig( pGFigParam, pAnimCompo );
 
 	if( pGFig_p->GetSubElement( "clips", pGFigParam ) )
-		LoadClipsFromGFig( pGFigParam, pAnimCompo );
+		LoadClipsFromGFig( pGFigParam, pAnimCompo );*/
 }
+
+
+
 //------------------------------------------------------------------------
 // 
 //------------------------------------------------------------------------
@@ -542,6 +619,10 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 {
 	/*
 	[SpriteAnimationComponent
+		[state
+			[clip][prev clip]
+			[frame] [prev frame]
+		]
 		[sprites
 			["PunkContents\Sonna.png"]
 		]
@@ -558,6 +639,12 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 		]
 		[clips
 			[1
+				[state
+					[frame]
+					[delta]
+					[speed]
+					[state]
+				]
 				[wrap = loop]
 				[spf = 0.1]
 				[frames[0][1][2]]
@@ -572,16 +659,45 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 
 	pGFig_p->m_subElements.emplace_back( GfigElementA(COMPONENT_NAME(SpriteAnimationComponent)) );
 
+
+	GfigElementA gState("state");
+	if( anim.m_iCurrentClip ){
+
+		gState.m_subElements.push_back( GfigElementA("clip", std::to_string((_Longlong)anim.m_iCurrentClip).c_str() ) );
+	}
+	if( anim.m_iPreviousClip ){
+
+		gState.m_subElements.push_back( GfigElementA("prev clip", std::to_string((_Longlong)anim.m_iPreviousClip).c_str() ) );
+	}
+	if( anim.m_currentFrame != (unsigned)-1){
+
+		gState.m_subElements.push_back( GfigElementA("frame", std::to_string((_Longlong)anim.m_currentFrame).c_str() ) );
+	}
+	if( anim.m_previousFrame != (unsigned)-1){
+
+		gState.m_subElements.push_back( GfigElementA("prev frame", std::to_string((_Longlong)anim.m_previousFrame).c_str() ) );
+	}
+
+	unsigned int iSize = 3;
+	if( gState.m_subElements.size() != 0 )
+		iSize = 4;
+
 	GfigElementA & gAnimCompo = pGFig_p->m_subElements.back();
-	gAnimCompo.m_subElements.reserve(3);
+	gAnimCompo.m_subElements.reserve(iSize);
+
+	if( iSize == 4 ){
+		gAnimCompo.m_subElements.push_back(std::move(gState));
+	}
+
+
 
 	// add used sprites
 
 	gAnimCompo.m_subElements.push_back( GfigElementA(	"sprites" ) );
-	gAnimCompo.m_subElements[0].m_subElements.reserve( (int)anim.GetNSprites() );
+	gAnimCompo.m_subElements.back().m_subElements.reserve( (int)anim.GetNSprites() );
 	for( int it = 0, nSprites = (int)anim.GetNSprites(); it < nSprites; ++it ){	
 
-		gAnimCompo.m_subElements[0].m_subElements.push_back(
+		gAnimCompo.m_subElements.back().m_subElements.push_back(
 			GfigElementA( m_pSpriteRenderer->m_tex2D_cache.GetTextureName( anim.GetNTHSprite( it ).iID ).c_str() )
 			);
 	}
@@ -589,7 +705,7 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 	// add used frames
 	
 	gAnimCompo.m_subElements.push_back( GfigElementA(	"frames" ) );
-	gAnimCompo.m_subElements[1].m_subElements.reserve( (int)anim.GetNFrames() );
+	gAnimCompo.m_subElements.back().m_subElements.reserve( (int)anim.GetNFrames() );
 	for( int it = 0, nFrames = (int)anim.GetNFrames(); it < nFrames; ++it ){
 
 		GfigElementA gFrame;
@@ -628,38 +744,79 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 		gFrame.m_subElements[4].m_value = to_string( (long double) frame.xOffset );
 		gFrame.m_subElements[5].m_value = to_string( (long double) frame.yOffset );
 
-		gAnimCompo.m_subElements[1].m_subElements.push_back( std::move(gFrame) );
+		gAnimCompo.m_subElements.back().m_subElements.push_back( std::move(gFrame) );
 	}
 
 	// add clips
 		
 	gAnimCompo.m_subElements.push_back( GfigElementA(	"clips" ) );
-	gAnimCompo.m_subElements[2].m_subElements.reserve( (int)anim.GetNClips() );
+	gAnimCompo.m_subElements.back().m_subElements.reserve( (int)anim.GetNClips() );
 	for( int it = 0, nCLips = (int)anim.GetNClips(); it < nCLips; ++it ){
-
-		GfigElementA gClip;
-		{
-			GfigElementA gWarp("wrap");
-			GfigElementA gSPF("spf");
-			GfigElementA gClipFrames("frames");
-			gClip.m_subElements.push_back( gWarp );
-			gClip.m_subElements.push_back( gSPF );
-			gClip.m_subElements.push_back( gClipFrames );
-		}
 
 		AnimationClip clip = anim.GetNTHClip(it);
 
-		gClip.m_name = clip.configData.szName;
+		/*[state
+			[frame]
+			[delta]
+			[speed]
+			[state]
+		]*/
+		GfigElementA gClipState("state");
+		if( clip.stateData.itCurrentFrame ){
 
-		gClip.m_subElements[0].m_value = s_szAnimWrapModes[ clip.configData.eWrapMode ];
-		gClip.m_subElements[1].m_value = to_string( (long double)clip.configData.SPF );
+			gClipState.m_subElements.push_back( GfigElementA("frame", std::to_string((_Longlong)clip.stateData.itCurrentFrame).c_str()));
+		}
+		if( clip.stateData.deltaAccum ){
 
-		gClip.m_subElements[2].m_subElements.resize( (int)clip.configData.vFrames.size() );
-		for( int itF = 0, nFrames = (int)clip.configData.vFrames.size(); itF < nFrames; ++itF ){
+			gClipState.m_subElements.push_back( GfigElementA("delta", std::to_string((long double)clip.stateData.deltaAccum).c_str()));
+		}
+		if( clip.stateData.speedMod != 1.0f ){
 
-			gClip.m_subElements[2].m_subElements[itF].m_name = to_string( (_Longlong) clip.configData.vFrames[itF] );
+			gClipState.m_subElements.push_back( GfigElementA("speed", std::to_string((long double)clip.stateData.speedMod).c_str()));
+		}
+		if( clip.stateData.eState != E_ANIMSTATE_STOPPED ){
+
+			gClipState.m_subElements.push_back( GfigElementA("state", s_szAnimClipStates[clip.stateData.eState] ));
 		}
 
-		gAnimCompo.m_subElements[2].m_subElements.push_back( std::move(gClip) );
+		GfigElementA gClip(clip.configData.szName.c_str());
+		{
+			if( gClipState.m_subElements.size() != 0 ){
+				gClip.m_subElements.push_back( std::move(gClipState) );
+			}
+			
+			gClip.m_subElements.push_back( GfigElementA("wrap", s_szAnimWrapModes[ clip.configData.eWrapMode ]) );
+			gClip.m_subElements.push_back( GfigElementA("spf", to_string( (long double)clip.configData.SPF).c_str() ) );
+
+			GfigElementA gClipFrames("frames");
+			gClipFrames.m_subElements.resize( (int)clip.configData.vFrames.size() );
+			for( int itF = 0, nFrames = (int)clip.configData.vFrames.size(); itF < nFrames; ++itF ){
+
+				gClipFrames.m_subElements[itF].m_name = to_string( (_Longlong) clip.configData.vFrames[itF] );
+			}
+			gClip.m_subElements.push_back(std::move(gClipFrames));
+		}
+
+		gAnimCompo.m_subElements.back().m_subElements.push_back( std::move(gClip) );
 	}
 }
+
+void game::SpriteAnimationComponentFactory::LoadClipsStateDataOnlyFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p )
+{
+
+	assert((int)pGFig_p->m_subElements.size() == compo_p->m_vClips.size());
+
+	for( int it = 0, nClips = (int)pGFig_p->m_subElements.size();
+		it < nClips;
+		++it ){
+
+			GfigElementA & clipGFig = pGFig_p->m_subElements[it];
+
+			GfigElementA * pGFigParam;
+
+			if( clipGFig.GetSubElement( "state", pGFigParam ) ){
+				LoadClipStateDataFromGfig(pGFigParam, compo_p->m_vClips[it].stateData);
+			}
+	}
+}
+

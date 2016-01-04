@@ -6,7 +6,7 @@
 	file:		LerpValueTask.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	this is actually a float interpolation task, needs a better name (TODO)
+	purpose:
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

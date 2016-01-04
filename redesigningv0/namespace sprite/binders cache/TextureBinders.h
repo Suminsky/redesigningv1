@@ -48,7 +48,7 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		// "delayed" ctor
 		//------------------------------------------------------------------------
-		void Init( dx::Device * pDevice_p, int size_p = 100 ){
+		void Init( dx::Device * pDevice_p, unsigned int size_p = 100 ){
 			m_cache.reserve(size_p);
 			m_names.reserve(size_p);
 			m_resolutions.reserve(size_p);
@@ -59,14 +59,15 @@ namespace sprite{
 
 		//------------------------------------------------------------------------
 		// add new texture to the cache, given the texture filepath name
+		// shouldnt this be private? TODO
 		//------------------------------------------------------------------------
-		int Add( const char* szTexture_p );
+		UINT Add( const char* szTexture_p );
 
 		//------------------------------------------------------------------------
 		// Get the texture by name, if name is not found, it adds a new texture
 		// to the cache
 		//------------------------------------------------------------------------
-		dx::BindPSShaderResourceView & Get( const char* szTexture_p, int * pIndexID_p = nullptr );
+		dx::BindPSShaderResourceView & Get( const char* szTexture_p, UINT * pIndexID_p );
 
 		//------------------------------------------------------------------------
 		// get texture by index

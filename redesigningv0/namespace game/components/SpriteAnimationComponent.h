@@ -52,10 +52,15 @@ namespace game{
 		"clampfirst",
 		"once"
 	};
+	static const char* s_szAnimClipStates[] = {
 
+		"stopped",
+		"playing",
+		"paused"
+	};
 	enum E_ANIMSTATE{
 
-		E_ANIMSTATE_STOPPED,
+		E_ANIMSTATE_STOPPED = 0,
 		E_ANIMSTATE_PLAYING,
 		E_ANIMSTATE_PAUSED,
 	};
@@ -151,7 +156,7 @@ namespace game{
 	struct TextureID_Binder_Pair{
 
 		dx::BindPSShaderResourceView *	pBindPSSRV;
-		int								iID;
+		unsigned int					iID;
 
 		bool operator == ( const TextureID_Binder_Pair & other_p ) const{
 
@@ -275,14 +280,20 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void LoadSpritesFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
-		void LoadFramesFromGFig(  text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
-		void LoadClipsFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
+		static void LoadSpritesFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p, sprite::SpriteRenderer * pSpriteRenderer_p );
+		static void LoadFramesFromGFig(  text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
+		static void LoadClipsFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
+		static void LoadStateFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
+
+		
 		static E_ANIMWRAPMODE GetWrapModeFromGFig( text::GfigElementA * pGFig_p );
 		//void LoadClipFramesFromGFig(   text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
 		static void LoadXYWHFromGfig( text::GfigElementA * pGFig_p, DirectX::XMFLOAT4 & rect_p );
 
+		static void LoadClipsStateDataOnlyFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p );
+		static void LoadClipStateDataFromGfig(text::GfigElementA * pGFig_p, AnimationClip::StateData & stateData_p );
 		static void LoadFrameFromGfig( text::GfigElementA * pGFig_p, SpriteFrame & spriteFrame_p );
+		static E_ANIMSTATE GetClipStateFromGfig( text::GfigElementA * pGFig_p );
 
 		static void LoadSprite( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p );
 		static int LoadSpriteIfNew( TextureID_Binder_Pair & ID_Binder_p, SpriteAnimationComponent * compo_p );

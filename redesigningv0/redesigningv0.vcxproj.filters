@@ -471,7 +471,16 @@
     <ClInclude Include="Legalia\SpriteResizingSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Legalia\ImageLookupCollision.h">
+    <ClInclude Include="Legalia\ImageColliderCompo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\ImageLookup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\ImageColliderAnimationCompo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\ImageCollisionSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -848,7 +857,13 @@
     <ClCompile Include="Legalia\SpriteResizingSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Legalia\ImageLookupCollision.cpp">
+    <ClCompile Include="Legalia\ImageColliderCompo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\ImageColliderAnimationCompo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\ImageCollisionSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

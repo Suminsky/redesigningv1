@@ -1,6 +1,6 @@
 #include "TextureBinders.h"
 
-int sprite::TextureBinders::Add( const char* szTexture_p )
+UINT sprite::TextureBinders::Add( const char* szTexture_p )
 {
 
 	assert( m_cache.size() < m_size );
@@ -46,11 +46,13 @@ int sprite::TextureBinders::Add( const char* szTexture_p )
 
 	// returns the index
 
-	return (int)(m_cache.size()-1);
+	return (UINT)(m_cache.size()-1);
 }
 
-dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTexture_p, int * pIndexID_p /*= nullptr*/ )
+dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTexture_p, UINT * pIndexID_p )
 {
+	assert( pIndexID_p );
+
 	for( int it = 0, size = (int)m_cache.size();	it < size;		++it)
 	{
 		if( m_names[it] == szTexture_p )
@@ -62,10 +64,9 @@ dx::BindPSShaderResourceView & sprite::TextureBinders::Get( const char* szTextur
 
 	// cache miss:
 
-	int index = Add( szTexture_p );
+	unsigned int index = Add( szTexture_p );
 
-	if( pIndexID_p )
-		*pIndexID_p = index;
+	*pIndexID_p = index;
 
 	return m_cache[index];
 }

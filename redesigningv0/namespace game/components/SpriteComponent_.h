@@ -103,7 +103,7 @@ namespace game{
 
 
 
-		int m_TextureID, m_BlendModeID, m_SamplerModeID, m_ShaderID;
+		unsigned int m_TextureID, m_BlendModeID, m_SamplerModeID, m_ShaderID;
 		int m_iShaderPermutation;
 
 		bool m_bHFlip, m_bVFlip;

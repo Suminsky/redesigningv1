@@ -19,6 +19,7 @@
 #include <string> // memcpy
 #include <stdint.h>
 #include <math.h>
+#include "gen_macros.h"
 
 namespace gen{
 
@@ -863,6 +864,11 @@ namespace gen{
 		// accessors operators
 		//------------------------------------------------------------------------
 		T & operator[]( uint32_t index_p ){
+
+			assert( index_p < m_topIndex );
+			return m_data[index_p];
+		}
+		const T & operator[]( uint32_t index_p )const{
 
 			assert( index_p < m_topIndex );
 			return m_data[index_p];

@@ -62,7 +62,7 @@ SpriteComponent_::SpriteComponent_(
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
-	int iTextureID;
+	unsigned int iTextureID;
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
@@ -312,7 +312,7 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTextur
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer/*pBuffer*/, &m_renderData );
 	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
-	int iTextureID;
+	unsigned int iTextureID;
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
 	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
@@ -640,7 +640,7 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 	
 		sprite::E_BLENDTYPE eBlend = GetBlendType( pParam );
 	
-		if( pSprite->m_BlendModeID != eBlend ){
+		if( pSprite->m_BlendModeID != (unsigned)eBlend ){
 
 			pSprite->m_BlendModeID = eBlend;
 			pSprite->m_sortKey.bitfield.transparency = eBlend;
@@ -654,7 +654,7 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 
 		sprite::E_SAMPLERTYPE eSampler = GetSamplerType( pParam );
 
-		if( pSprite->m_SamplerModeID != eSampler ){
+		if( pSprite->m_SamplerModeID != (unsigned)eSampler ){
 
 			pSprite->m_SamplerModeID = eSampler;
 

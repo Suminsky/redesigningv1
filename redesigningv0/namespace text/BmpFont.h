@@ -71,7 +71,7 @@ namespace text{
 
 		dx::BindPSShaderResourceView * m_pTextureSRVBinder;
 		dx::PipeState	m_pipeState;
-		int m_iTextureID;
+		unsigned int m_iTextureID;
 	};
 
 	typedef std::shared_ptr<BmpFont> shared_BmpFont_ptr;

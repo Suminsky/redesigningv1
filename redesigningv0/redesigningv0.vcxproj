@@ -72,6 +72,8 @@
     <ExecutablePath>$(ProgramFiles)\Windows Kits\8.0\bin\x86;$(ProgramFiles)\Windows Kits\8.0\bin\x64;$(ExecutablePath)</ExecutablePath>
     <LibraryPath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(ProgramFiles)\Windows Kits\8.0\lib\win8\um\x64;$(LibraryPath)</LibraryPath>
     <ExcludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;$(ExcludePath)</ExcludePath>
+    <LinkIncremental>
+    </LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProgramFiles)\Windows Kits\8.0\Include\um;$(ProgramFiles)\Windows Kits\8.0\Include\shared;C:\Users\Gateway\Desktop\boost_1_50_0;$(IncludePath)</IncludePath>
@@ -149,6 +151,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -181,7 +184,10 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Legalia\AABB2DColliderComponent.h" />
     <ClInclude Include="Legalia\AABB2DCollisionSys.h" />
-    <ClInclude Include="Legalia\ImageLookupCollision.h" />
+    <ClInclude Include="Legalia\ImageColliderAnimationCompo.h" />
+    <ClInclude Include="Legalia\ImageColliderCompo.h" />
+    <ClInclude Include="Legalia\ImageCollisionSys.h" />
+    <ClInclude Include="Legalia\ImageLookup.h" />
     <ClInclude Include="Legalia\InterpolatedCamera.h" />
     <ClInclude Include="Legalia\LegaliaEvents.h" />
     <ClInclude Include="Legalia\LegaliaInGameLayer.h" />
@@ -334,7 +340,9 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Legalia\AABB2DColliderComponent.cpp" />
     <ClCompile Include="Legalia\AABB2DCollisionSys.cpp" />
-    <ClCompile Include="Legalia\ImageLookupCollision.cpp" />
+    <ClCompile Include="Legalia\ImageColliderAnimationCompo.cpp" />
+    <ClCompile Include="Legalia\ImageColliderCompo.cpp" />
+    <ClCompile Include="Legalia\ImageCollisionSys.cpp" />
     <ClCompile Include="Legalia\InterpolatedCamera.cpp" />
     <ClCompile Include="Legalia\LegaliaInGameLayer.cpp" />
     <ClCompile Include="Legalia\LegaliaMain.cpp" />
