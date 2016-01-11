@@ -168,7 +168,7 @@ bool text::CreateFontFiles(	const char* szFilenmae_p,
 		if (currentX + charWidth >= (int)iTextureWidth_p){
 
 			currentX = 0;
-			currentY += static_cast<int>(charHeight + 0.5f);// + 1;
+			currentY += static_cast<int>(charHeight + 0.5f);// + 1; // TODO:+1..why +0.5? the chars are touching on the texture...
 		}
 
 		// Fill out the structure describing the character position

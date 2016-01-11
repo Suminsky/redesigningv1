@@ -271,26 +271,51 @@ namespace phys{
 				return true;
 		}
 
-		bool IsColliding( const AABB2D & other_p )const{
+		bool IsColliding( const AABB2D & other_p, float fNoPenTolerance_p = 0.0f )const{
 
-			if( XDistance( other_p) > 0.0f ) return false;
-			if( YDistance( other_p) > 0.0f ) return false;
+			if( XDistance( other_p) > fNoPenTolerance_p) return false;
+			if( YDistance( other_p) > fNoPenTolerance_p ) return false;
 
 			return true;
 		}
-		//bool IsColliding_e( const AABB2D & other_p ){
-
-		//	if( XDistance( other_p) >= 0.0f ) return false;
-		//	if( YDistance( other_p) >= 0.0f ) return false;
-
-		//	return true;
-		//}
 		bool IsColliding_e( const AABB2D & other_p, float fNoPenTolerance_p = 0.0f ) const{
 
 			if( XDistance(other_p) >= fNoPenTolerance_p ) return false;
 			if( YDistance(other_p) >= fNoPenTolerance_p ) return false;
 
 			return true;
+		}
+		//------------------------------------------------------------------------
+		// the XMFLOAT4 is x = left, y = right, z = down, w = up
+		//------------------------------------------------------------------------
+		bool IsColliding( const AABB2D & other_p, DirectX::XMFLOAT4 & outIntersectionRect_p, float fNoPenTolerance_p = 0.0f ){
+
+			if( IsColliding( other_p, fNoPenTolerance_p ) ){
+
+				// if the AABBs are intersecting
+
+				// get the intersect rect
+
+				outIntersectionRect_p = GetIntersectionRect(other_p);
+				
+				return true;
+			}
+
+			return false;
+		}
+
+		//------------------------------------------------------------------------
+		// assumes colliding
+		// the XMFLOAT4 is x = left, y = right, z = down, w = up
+		//------------------------------------------------------------------------
+		DirectX::XMFLOAT4 GetIntersectionRect( const AABB2D & other_p )const{
+
+			return DirectX::XMFLOAT4(
+				gen::Max( Left(), other_p.Left() ),
+				gen::Min( Right(), other_p.Right() ),
+				gen::Max( Down(), other_p.Down() ),
+				gen::Min( Up(), other_p.Up() )
+				);
 		}
 
 		void RelativeDirection( const AABB2D & other_p, DirectX::XMFLOAT2 & dir_p )const{
