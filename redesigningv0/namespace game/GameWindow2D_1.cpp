@@ -44,6 +44,8 @@ m_spriteText(&m_spriteRenderer.m_tex2D_cache)
 	m_device.GetContext()->RSSetState( pRS );
 	pRS->Release();
 
+	// NOTE: setting scissor to true and not setting a scissor fucks things up..I have no idea why
+
 	D3D11_RECT scissor;
 	scissor.left = 0;
 	scissor.right = winW_p;
@@ -183,12 +185,12 @@ LRESULT CALLBACK GameWindow2D_1::OnWM_CREATE( HWND hWnd_p )
 		windowMode.Height = m_cliRect.h;
 		
 
-		UINT scW, scH;
+		/*UINT scW, scH;
 		GetCurrentScreenResolution( scW, scH );
 		if( scW == (UINT)m_cliRect.w && scH == (UINT)m_cliRect.h )
 			windowMode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		else
-			windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;
+			windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;*/
 
 		m_device.InitDevice( gpuAndMode.pAdapter, true, pFactory, &featureLVL, 1  );
 		UINT nRenderBuffers = 3;
@@ -241,7 +243,7 @@ LRESULT CALLBACK GameWindow2D_1::OnWM_SIZE( HWND hWnd_p )
 
 	ResizeIfNeed();
 
-	m_spriteRenderer.Raster(m_device.GetContext());
+	//m_spriteRenderer.Raster(m_device.GetContext()); // unhandled exception on release launched from vs
 	m_swapChain.m_pSwapChain->Present(0, 0);
 
 	BREAKHERE;

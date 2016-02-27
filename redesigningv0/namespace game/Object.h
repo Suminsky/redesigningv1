@@ -153,6 +153,7 @@ namespace game{
 		int GetID() const { return m_ID; }
 		const char* GetName()const{ return &m_szName[0]; }
 		int GetPrefab() const{ return m_prefab;}
+		void SetPrefab(int prefab){ m_prefab = prefab;}//HACK, TODO remove
 
 		//------------------------------------------------------------------------
 		// setters

@@ -297,28 +297,10 @@
     <ClInclude Include="namespace win\OpenDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace phys\AABB2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace phys\Circle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace net\P2PConnection.h">
@@ -327,40 +309,16 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\StorySlideState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace win\KeyboardInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace text\SpriteInstancedTexts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mentle\MentleWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\InGame\BGLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mentle\mainmenu\fadelayer.h">
@@ -381,31 +339,7 @@
     <ClInclude Include="Mentle\TextureTool\TextureTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace phys\AABB3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Legalia\AABB2DColliderComponent.h">
@@ -481,6 +415,66 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Legalia\ImageCollisionSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -710,52 +704,16 @@
     <ClCompile Include="namespace sprite\InstancedSprites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace net\P2PConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\StorySlideState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace win\KeyboardInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace text\SpriteInstancedTexts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\MentleWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\InGame\BGLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp">
@@ -771,30 +729,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\TextureTool\TextureTool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\MovableComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\AABB2DColliderComponent.cpp">
@@ -864,6 +798,60 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\ImageCollisionSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\MovableComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

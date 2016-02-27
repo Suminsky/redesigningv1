@@ -149,7 +149,7 @@
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>false</MinimalRebuild>
+      <MinimalRebuild>true</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h" />
+    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h" />
@@ -174,10 +175,8 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\StorySlideState.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
@@ -200,7 +199,6 @@
     <ClInclude Include="Legalia\SpriteResizingSys.h" />
     <ClInclude Include="Legalia\SpriteTextCompo.h" />
     <ClInclude Include="Legalia\SpriteTextSys.h" />
-    <ClInclude Include="Mentle\InGame\BGLayer.h" />
     <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h" />
@@ -333,7 +331,6 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\StorySlideState.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
@@ -355,7 +352,6 @@
     <ClCompile Include="Legalia\SpriteResizingSys.cpp" />
     <ClCompile Include="Legalia\SpriteTextCompo.cpp" />
     <ClCompile Include="Legalia\SpriteTextSys.cpp" />
-    <ClCompile Include="Mentle\InGame\BGLayer.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp" />
@@ -440,7 +436,9 @@
     <ClCompile Include="namespace render\DrawablesQueue.cpp" />
     <ClCompile Include="namespace sprite\SpriteRenderer.cpp" />
     <ClCompile Include="namespace render\dx\SwapChain.cpp" />
-    <ClCompile Include="namespace render\dx\Device.cpp" />
+    <ClCompile Include="namespace render\dx\Device.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_DEBUG;SOUND;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="namespace sprite\binders cache\TextureBinders.cpp" />
     <ClCompile Include="namespace sprite\binders cache\SamplerStateBinders.cpp" />
     <ClCompile Include="namespace game\State.cpp" />

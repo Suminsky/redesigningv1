@@ -50,8 +50,8 @@ void Game::FixedStepLoop(){
 
 	// draw
 
-	if( dInterpolationAmount > 1.0 )
-		dInterpolationAmount = 1.0;
+	/*if( dInterpolationAmount > 1.0 )
+		dInterpolationAmount = 1.0;*/
 
 	m_stateControl.Draw( dInterpolationAmount, dDeltaSeconds );
 
@@ -88,7 +88,7 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 	// get time since last timer update
 	double dDeltaSeconds = m_timer.GetDeltaSeconds();
 
-	win::UniqueFileLogger()<<"O DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"O DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
 
 	SmoothDelta( dDeltaSeconds, dVsyncRefreshRate_p );
 
@@ -96,7 +96,7 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 	if( dDeltaSeconds > m_dMaxFrameTimeDelay )
 		dDeltaSeconds = m_dMaxFrameTimeDelay;
 
-	win::UniqueFileLogger()<<"S DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"S DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
 
 	// add the delta to the delta remained from previous updates (deltas not used)
 	static double dFrameDeltaRemainingsAccumulated = 0.0;
@@ -115,13 +115,13 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 
 		m_stateControl.Update( m_dFixedTimeStep );
 
-		win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
-		win::UniqueFileLogger()<<"FIX: "<<m_dFixedTimeStep<<SZ_NEWLINE;
+		//win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
+		//win::UniqueFileLogger()<<"FIX: "<<m_dFixedTimeStep<<SZ_NEWLINE;
 	}
 
-	if( count > 1 ){
+	/*if( count > 1 ){
 		win::UniqueFileLogger()<<"COUNT"<<SZ_NEWLINE;
-	}
+	}*/
 
 	// compute the interpolation factor based on the remaining timing
 	// the interpolation is used to fix rendering motion across the discrete update steps
@@ -129,15 +129,15 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 
 	// draw
 
-	if( dInterpolationAmount > 1.0 )
-		dInterpolationAmount = 1.0;
+	/*if( dInterpolationAmount > 1.0 )
+		dInterpolationAmount = 1.0;*/
 
 	m_stateControl.Draw( dInterpolationAmount, dDeltaSeconds );
 
 	// scream?
 
-	win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
-	win::UniqueFileLogger()<<"i:  "<<dInterpolationAmount<<SZ_NEWLINE<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
+	//win::UniqueFileLogger()<<"i:  "<<dInterpolationAmount<<SZ_NEWLINE<<SZ_NEWLINE;
 
 	m_stateControl.ResolveStateChange();
 }

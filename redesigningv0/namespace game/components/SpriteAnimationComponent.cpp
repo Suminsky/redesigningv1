@@ -804,7 +804,7 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 void game::SpriteAnimationComponentFactory::LoadClipsStateDataOnlyFromGFig( text::GfigElementA * pGFig_p, SpriteAnimationComponent * compo_p )
 {
 
-	assert((int)pGFig_p->m_subElements.size() == compo_p->m_vClips.size());
+	assert((int)pGFig_p->m_subElements.size() <= compo_p->m_vClips.size());
 
 	for( int it = 0, nClips = (int)pGFig_p->m_subElements.size();
 		it < nClips;

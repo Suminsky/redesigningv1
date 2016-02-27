@@ -42,8 +42,6 @@ namespace game{
 		m_pool(maxObjs_p),
 		m_pLayerOwner(nullptr)
 		{
-
-			int x =7; x = x;
 		}
 		~ObjectFactory(){
 
@@ -56,7 +54,7 @@ namespace game{
 		void SetLayer( Layer * pLayer_p ){ m_pLayerOwner = pLayer_p; }
 
 		//------------------------------------------------------------------------
-		// TODO:use a pool too
+		//
 		//------------------------------------------------------------------------
 		pool_Object_ptr CreateObject();
 		pool_Object_ptr CreateObject( text::GfigElementA * pGfig_p );
@@ -73,6 +71,15 @@ namespace game{
 		pool_Object_ptr CreateObjectFromPrefab( const std::string & szName_p );
 		pool_Object_ptr CreateObjectFromPrefab( unsigned int iPrefab_p, text::GfigElementA * pIntanceGfig_p );
 		pool_Object_ptr CreateObjectFromPrefab( const std::string & szName_p, text::GfigElementA * pIntanceGfig_p );
+
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		pool_Object_ptr GetPrefab( const uint32_t prefabIdx )const {
+
+			return m_prefabs[prefabIdx].pObj;
+		}
 
 	private:
 
