@@ -6,7 +6,7 @@
 	file:		SpriteAnimationComponent.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	TODO: stack on factory instead of vectors
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

@@ -236,6 +236,7 @@
     <ClInclude Include="namespace game\tasks\OnUpdateDelegateTask.h" />
     <ClInclude Include="namespace game\Timer.h" />
     <ClInclude Include="namespace gen\Delegate.h" />
+    <ClInclude Include="namespace gen\Stack.h" />
     <ClInclude Include="namespace gen\TreeNode.h" />
     <ClInclude Include="namespace gen\Tweening.h" />
     <ClInclude Include="namespace input\Mapper.h" />

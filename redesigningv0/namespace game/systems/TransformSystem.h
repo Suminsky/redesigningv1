@@ -24,6 +24,8 @@ namespace game{
 
 	class TransformSystem: public System{
 
+		static const uint32_t E_MAX_NONROOTTRAFOS = 1024;
+
 	public:
 
 		//------------------------------------------------------------------------
@@ -45,7 +47,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void VOnUpdate( double , double );
+		void VOnUpdate_oldRecursive( double , double );
+		void VOnUpdate( double, double);
+
+		inline void UpdateWorldAndFinalAndDispatchEveIfNeeded(TransformComponent & trafo_p);
+		void UpdateWorldAndFinalAndDispatchEveIfNeeded(TransformComponent & trafo_p, DirectX::XMFLOAT4X4 & parentWorld_p );
 
 		//------------------------------------------------------------------------
 		// 

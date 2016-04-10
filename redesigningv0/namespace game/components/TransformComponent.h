@@ -95,6 +95,8 @@ namespace game{
 	//========================================================================
 	class TransformComponent : public Component{
 
+		static const int E_MAXCHILDREN = 3;
+
 		friend class TransformSystem;
 		friend class TransformComponentFactory;
 
@@ -112,9 +114,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		DirectX::XMFLOAT4X4 GetWorld() const{ return m_world; }
-		DirectX::XMFLOAT4X4 GetFinal() const{ return m_final; }
-		DirectX::XMFLOAT4X4 GetPreviousFinal() const{ return m_previousFinal; }
+		const DirectX::XMFLOAT4X4 & GetWorld() const{ return m_world; }
+		const DirectX::XMFLOAT4X4 & GetFinal() const{ return m_final; }
+		const DirectX::XMFLOAT4X4 & GetPreviousFinal() const{ return m_previousFinal; }
 
 		void Snap(){ m_bSnap = true; }
 		bool GonnaSnap()const{ return m_bSnap; }
@@ -155,7 +157,7 @@ namespace game{
 
 		bool m_bSnap; // hack
 
-		gen::TreeNode<TransformComponent*> m_node;
+		gen::TreeNode_MC<TransformComponent*, E_MAXCHILDREN> m_node;
 	};
 
 	typedef gen::pool_ptr<TransformComponent> pool_TransformCompo_ptr;
