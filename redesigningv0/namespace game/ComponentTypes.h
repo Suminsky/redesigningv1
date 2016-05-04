@@ -53,8 +53,19 @@ namespace game{
 	NEW_COMPONENT_TYPE(SpriteComponent_);
 	NEW_COMPONENT_TYPE(SpriteAnimationComponent);
 	NEW_COMPONENT_TYPE(SpriteButtonCompo);
+	NEW_COMPONENT_TYPE(SpriteTextCompo);
+	NEW_COMPONENT_TYPE(MovableComponent);
 
 	enum E_COMPONENTTYPE{
 		E_USERTYPE = __LINE__
 	};
 }
+//------------------------------------------------------------------------
+// macro to make specialization easier
+//------------------------------------------------------------------------
+#define NEW_COMPONENT_USERTYPE( type ) \
+	class type;\
+	template<> const unsigned int   game::ComponentType<type>::s_value = __LINE__;\
+	template<> const char *			game::ComponentType<type>::s_szName = #type
+#define COMPONENT_USERTYPE( type ) \
+	game::ComponentType<type>::s_value

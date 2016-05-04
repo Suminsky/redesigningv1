@@ -449,7 +449,7 @@ namespace gen{
 
 			return counter;
 		}
-		inline bool GCompareString( const char* string1_p, const char* string2_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
+		inline bool IsEqual( const char* string1_p, const char* string2_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
 		{
 			// the G is due name claching on stupid WinNIS.h or something
 
@@ -802,6 +802,11 @@ namespace gen{
 		// accessors operators
 		//------------------------------------------------------------------------
 		T & operator[]( uint32_t index_p ){
+
+			assert( index_p < m_size );
+			return m_data[index_p];
+		}
+		const T & operator[]( uint32_t index_p )const{
 
 			assert( index_p < m_size );
 			return m_data[index_p];

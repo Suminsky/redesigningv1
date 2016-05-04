@@ -321,7 +321,7 @@ TransformComponent * game::TransformComponent::FindChildByObjectName( const char
 {
 	for( int it = 0, n = m_node.GetNumberOfChilds(); it < n; ++it ){
 
-		if( gen::stringUtil::GCompareString(
+		if( gen::stringUtil::IsEqual(
 			m_node.GetChild(it)->GetData()->GetObjectOwner()->GetName(),
 			szObjName_p,
 			64) ){

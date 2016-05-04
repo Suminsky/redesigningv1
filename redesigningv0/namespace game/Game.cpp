@@ -155,7 +155,7 @@ void game::Game::SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p )
 	//double frameCount = (dDelta_p * dVsyncRefreshRate_p + 0.5);
 
 	// if less then a full frame, increase delta to cover the extra
-	if( frameCount <= 0 )	frameCount = 1;
+	//if( frameCount <= 0 )	frameCount = 1;
 
 	// save off the delta, we will need it later to update the buffer
 	const double dOldDelta = dDelta_p;

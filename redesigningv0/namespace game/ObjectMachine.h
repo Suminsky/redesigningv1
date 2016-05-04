@@ -56,7 +56,7 @@ namespace game{
 
 			for( uint32_t it = 0, n = (uint32_t)m_objects.size(); it < n; ++it ){
 
-				if( gen::stringUtil::GCompareString( szName, m_objects[it]->m_szName, 64 ) )
+				if( gen::stringUtil::IsEqual( szName, m_objects[it]->m_szName, 64 ) )
 					return m_objects[it];
 			}
 

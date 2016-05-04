@@ -139,3 +139,8 @@ void game::Object::DispatchComponentEventImmediately( EventType eveType_p, Compo
 	m_objectEventMachine.DispatchEventImmetiately( eveType_p, eveData_p );
 }
 
+void game::Object::Dettach()
+{
+	assert( m_pLayerOwner );
+	m_pLayerOwner->RemoveObject(this);
+}

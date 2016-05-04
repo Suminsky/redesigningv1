@@ -17,9 +17,9 @@
 
 // private includes
 #include <DirectXMath.h>
+#include "../namespace gen/gen_data.h"
 
 namespace phys{
-
 
 	//========================================================================
 	// 
@@ -27,6 +27,22 @@ namespace phys{
 	class AABB2D{
 
 	public:
+
+		enum E_BLOCKEDFACE{
+
+			E_BLOCKEDFACE_LEFT = 0x01 << 0,
+			E_BLOCKEDFACE_RIGHT = 0x01 << 1,
+			E_BLOCKEDFACE_DOWN = 0x01 << 2,
+			E_BLOCKEDFACE_UP = 0x01 << 3,
+			E_BLOCKEDFACE_HORZ = E_BLOCKEDFACE_LEFT | E_BLOCKEDFACE_RIGHT,
+			E_BLOCKEDFACE_VERT = E_BLOCKEDFACE_UP | E_BLOCKEDFACE_DOWN,
+			E_BLOCKEDFACE_ALLBUT_UP = E_BLOCKEDFACE_HORZ | E_BLOCKEDFACE_DOWN,
+			E_BLOCKEDFACE_ALLBUT_DOWN = E_BLOCKEDFACE_HORZ | E_BLOCKEDFACE_UP,
+			E_BLOCKEDFACE_ALLBUT_LEFT = E_BLOCKEDFACE_VERT | E_BLOCKEDFACE_RIGHT,
+			E_BLOCKEDFACE_ALLBUT_RIGHT = E_BLOCKEDFACE_VERT | E_BLOCKEDFACE_LEFT
+		};
+
+		static const DirectX::XMFLOAT2 s_left, s_right, s_up, s_down;
 
 		DirectX::XMFLOAT2 m_pos;
 		float m_halfW, m_halfH;
@@ -76,10 +92,11 @@ namespace phys{
 
 		bool CollisionData( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration, float fNoPenTolerance_p = 0.0f ) const{
 
-			const DirectX::XMFLOAT2 normals[] = {	DirectX::XMFLOAT2( -1.0f,  0.0f ),
-													DirectX::XMFLOAT2(  1.0f,  0.0f ),
-													DirectX::XMFLOAT2(  0.0f, -1.0f ),
-													DirectX::XMFLOAT2(  0.0f,  1.0f ) };
+			const DirectX::XMFLOAT2 normals[] = {
+				DirectX::XMFLOAT2 (-1.0f, 0.0f ),
+				DirectX::XMFLOAT2( 1.0f,  0.0f ),
+				DirectX::XMFLOAT2(  0.0f, -1.0f ),
+				DirectX::XMFLOAT2(  0.0f,  1.0f )};
 
 			// get penetration
 
@@ -111,10 +128,13 @@ namespace phys{
 		//------------------------------------------------------------------------
 		bool CollisionData_Btests( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration, char blockedFace_p, float fNoPenTolerance_p = 0.0f ) const{
 
-			const DirectX::XMFLOAT2 normals[] = {	DirectX::XMFLOAT2( -1.0f,  0.0f ),
-													DirectX::XMFLOAT2(  1.0f,  0.0f ),
-													DirectX::XMFLOAT2(  0.0f, -1.0f ),
-													DirectX::XMFLOAT2(  0.0f,  1.0f ) };
+			const DirectX::XMFLOAT2 normals[] = {
+				DirectX::XMFLOAT2 (-1.0f, 0.0f ),
+				DirectX::XMFLOAT2( 1.0f,  0.0f ),
+				DirectX::XMFLOAT2(  0.0f, -1.0f ),
+				DirectX::XMFLOAT2(  0.0f,  1.0f )};
+			// NOTE!!!!
+			// INCREDIBLE performance drop when using static XMFLOAT2 for the normals
 
 			// get penetration
 
@@ -149,10 +169,10 @@ namespace phys{
 		bool CollisionData_Touching( const AABB2D & other_p, DirectX::XMFLOAT2 & normal, float & penetration ) const{
 
 			const DirectX::XMFLOAT2 normals[] = {
-				DirectX::XMFLOAT2( -1.0f,  0.0f ),
-				DirectX::XMFLOAT2(  1.0f,  0.0f ),
+				DirectX::XMFLOAT2 (-1.0f, 0.0f ),
+				DirectX::XMFLOAT2( 1.0f,  0.0f ),
 				DirectX::XMFLOAT2(  0.0f, -1.0f ),
-				DirectX::XMFLOAT2(  0.0f,  1.0f ) };
+				DirectX::XMFLOAT2(  0.0f,  1.0f )};
 
 			// get penetration
 
@@ -395,14 +415,14 @@ namespace phys{
 			// if going right, can only collide with left faces of other block, not right faces, etc.
 
 			if( dir.x <= 0.0f )
-				cMask |= 0x01 << 0;
+				cMask |= E_BLOCKEDFACE_LEFT;// 0x01 << 0;
 			if( dir.x >= 0.0f )
-				cMask |= 0x01 << 1;
+				cMask |= E_BLOCKEDFACE_RIGHT;//0x01 << 1;
 
 			if( dir.y <= 0.0f )
-				cMask |= 0x01 << 2;
+				cMask |= E_BLOCKEDFACE_DOWN;//0x01 << 2;
 			if( dir.y >= 0.0f )
-				cMask |= 0x01 << 3;
+				cMask |= E_BLOCKEDFACE_UP;//0x01 << 3;
 		}
 
 		static void GetIgnoredDueBLockedFacesMask(

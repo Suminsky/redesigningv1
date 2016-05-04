@@ -5,7 +5,9 @@
 using namespace sprite;
 using namespace DirectX;
 
-void sprite::Camera::BuildPipeState( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
+void sprite::Camera::BuildPipeState(
+	UINT width_p, UINT height_p,
+	dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
 	UINT x_p /*= 0*/, UINT y_p /*= 0*/ )
 {
 	m_pipeState_vp_rt_cb.Reset(); //m_binds.resize(0);

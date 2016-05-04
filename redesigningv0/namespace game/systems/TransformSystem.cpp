@@ -49,9 +49,9 @@ void game::TransformSystem::VOnUpdate_oldRecursive( double , double )
 	}
 }
 
-void game::TransformSystem::VOnUpdate( double, double )
+void game::TransformSystem::VOnUpdate/*_newBFS*/( double, double )
 {
-	// dfs version
+	// bfs version
 	
 	//	for all root trafos
 	//		update every world final

@@ -148,7 +148,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINSOCKAPI_;SOUND; %(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <MinimalRebuild>true</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -172,7 +172,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h" />
+    <ClInclude Include="namespace game\components\MovableComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
@@ -183,6 +183,7 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Legalia\AABB2DColliderComponent.h" />
     <ClInclude Include="Legalia\AABB2DCollisionSys.h" />
+    <ClInclude Include="Legalia\CompoTypes.h" />
     <ClInclude Include="Legalia\ImageColliderAnimationCompo.h" />
     <ClInclude Include="Legalia\ImageColliderCompo.h" />
     <ClInclude Include="Legalia\ImageCollisionSys.h" />
@@ -192,13 +193,15 @@
     <ClInclude Include="Legalia\LegaliaInGameLayer.h" />
     <ClInclude Include="Legalia\LegaliaState.h" />
     <ClInclude Include="Legalia\LegaliaWIndow.h" />
+    <ClInclude Include="Legalia\MidaPlayer.h" />
     <ClInclude Include="Legalia\MovableSystem.h" />
     <ClInclude Include="Legalia\ParallaxLayer.h" />
+    <ClInclude Include="Legalia\PickupCompo.h" />
     <ClInclude Include="Legalia\SpriteDraggingSys.h" />
     <ClInclude Include="Legalia\SpringyFollowCamera.h" />
     <ClInclude Include="Legalia\SpriteResizingSys.h" />
-    <ClInclude Include="Legalia\SpriteTextCompo.h" />
-    <ClInclude Include="Legalia\SpriteTextSys.h" />
+    <ClInclude Include="namespace game\components\SpriteTextCompo.h" />
+    <ClInclude Include="namespace game\systems\SpriteTextSys.h" />
     <ClInclude Include="mentle\mainmenu\fadelayer.h" />
     <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h" />
@@ -328,7 +331,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\MovableComponent.cpp" />
+    <ClCompile Include="namespace game\components\MovableComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
@@ -346,13 +349,15 @@
     <ClCompile Include="Legalia\LegaliaMain.cpp" />
     <ClCompile Include="Legalia\LegaliaState.cpp" />
     <ClCompile Include="Legalia\LegaliaWindow.cpp" />
+    <ClCompile Include="Legalia\MidaPlayer.cpp" />
     <ClCompile Include="Legalia\MovableSystem.cpp" />
     <ClCompile Include="Legalia\ParallaxLayer.cpp" />
+    <ClCompile Include="Legalia\PickupCompo.cpp" />
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
     <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />
     <ClCompile Include="Legalia\SpriteResizingSys.cpp" />
-    <ClCompile Include="Legalia\SpriteTextCompo.cpp" />
-    <ClCompile Include="Legalia\SpriteTextSys.cpp" />
+    <ClCompile Include="namespace game\components\SpriteTextCompo.cpp" />
+    <ClCompile Include="namespace game\systems\SpriteTextSys.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
     <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp" />
@@ -389,6 +394,7 @@
     <ClCompile Include="namespace net\net.cpp" />
     <ClCompile Include="namespace net\P2PConnection.cpp" />
     <ClCompile Include="namespace net\Socket.cpp" />
+    <ClCompile Include="namespace phys\AABB2D.cpp" />
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
     <ClCompile Include="namespace render\dx\pipeline\PipeState.cpp" />
     <ClCompile Include="namespace render\dx\BinderCache.cpp" />
@@ -447,6 +453,7 @@
     <ClCompile Include="namespace text\TextParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="gsp_Icons.ico" />
     <None Include="namespace game\ComponentFactory.inl" />
     <None Include="namespace gen\TreeNode.inl" />

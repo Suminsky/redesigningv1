@@ -163,6 +163,11 @@ namespace game{
 			memcpy(m_szName, newName_p, sizeof(char)*(gen::stringUtil::CountString(newName_p,64)+1) );
 		}
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Dettach();
+
 	protected:
 
 		Layer * m_pLayerOwner;

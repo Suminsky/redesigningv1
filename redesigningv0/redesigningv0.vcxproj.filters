@@ -378,9 +378,6 @@
     <ClInclude Include="Legalia\SpriteDraggingSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Legalia\SpriteTextCompo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace sprite\text\SpriteTextComposer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -391,9 +388,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace sprite\text\BmpFont_.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Legalia\SpriteTextSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace sprite\SortMask.h">
@@ -450,9 +444,6 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\MovableComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -478,6 +469,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace gen\Stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\PickupCompo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\CompoTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\MidaPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\components\SpriteTextCompo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\systems\SpriteTextSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\components\MovableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -770,9 +779,6 @@
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Legalia\SpriteTextCompo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace text\BmpFont.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -783,9 +789,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace sprite\text\SpriteTextComposer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Legalia\SpriteTextSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\MovableSystem.cpp">
@@ -833,9 +836,6 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\MovableComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -857,6 +857,24 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="namespace phys\AABB2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\PickupCompo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\MidaPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\components\SpriteTextCompo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\systems\SpriteTextSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\components\MovableComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico">
@@ -871,6 +889,7 @@
     <None Include="namespace text\SpriteInstancedTexts.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RC_icon.rc">

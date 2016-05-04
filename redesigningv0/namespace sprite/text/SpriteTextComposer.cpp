@@ -1,5 +1,5 @@
 #include "SpriteTextComposer.h"
-#include "../../Legalia/SpriteTextCompo.h"
+#include "../../namespace game/components/SpriteTextCompo.h"
 
 using namespace sprite;
 using namespace game;

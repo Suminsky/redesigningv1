@@ -48,7 +48,7 @@ namespace game{
 		// 
 		//------------------------------------------------------------------------
 		void VOnUpdate_oldRecursive( double , double );
-		void VOnUpdate( double, double);
+		void VOnUpdate/*_newBFS*/( double, double);
 
 		inline void UpdateWorldAndFinalAndDispatchEveIfNeeded(TransformComponent & trafo_p);
 		void UpdateWorldAndFinalAndDispatchEveIfNeeded(TransformComponent & trafo_p, DirectX::XMFLOAT4X4 & parentWorld_p );

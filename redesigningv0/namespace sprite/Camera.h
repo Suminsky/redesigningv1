@@ -100,10 +100,8 @@ namespace sprite{
 
 		float m_fZoom;
 	
-		dx::PipeState m_pipeState_vp_rt_cb; //binds viewport, render target, const buffer
+		dx::PipeState m_pipeState_vp_rt_cb;
 		BindVSCameraCBuffer m_bindVSCameraCbuffer;
-
-
 		//TODO put those on a cache
 		dx::BindRSViewPort m_bindViewPort;
 		dx::BindOMRenderTargetDepthStencil m_bindOMRTVDS;

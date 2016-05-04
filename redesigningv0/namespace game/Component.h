@@ -77,6 +77,11 @@ namespace game{
 		COMPONENTTYPE GetType() const { return m_type; }
 		COMPONENTINDEX GetIndexOnObject() const { return m_currentComponentObjectIndex; }
 
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Dettach();
+
 	protected:
 
 		Object * m_pObjectOwner;

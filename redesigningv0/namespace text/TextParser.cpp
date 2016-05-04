@@ -738,31 +738,7 @@ bool text::GfigElementA::FindFirstElementBFS( const char * szName_p, GfigElement
 
 	return false;
 }
-bool text::GfigElementA::FindLastElementDFS( const char * szName_p, GfigElementA *& pElement_p )
-{
-	std::vector<GfigElementA*> vCandidates;
 
-	vCandidates.push_back( pElement_p );
-
-	while( vCandidates.size() > 0 ){
-
-		GfigElementA * pCurrent = vCandidates.back();
-		vCandidates.pop_back();
-
-		if( pCurrent->m_name == szName_p ){
-
-			pElement_p = pCurrent;
-			return true;
-		}
-
-		for( int it = 0, itEnd = (int)pCurrent->m_subElements.size(); it != itEnd; ++it ){
-
-			vCandidates.push_back( &pCurrent->m_subElements[it] );
-		}
-	}
-
-	return false;
-}
 bool text::GfigElementA::FindFirstElementDFS( const char * szName_p, GfigElementA *& pElement_p )
 {
 	std::vector<GfigElementA*> vCandidates;
