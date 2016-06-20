@@ -823,8 +823,6 @@ namespace gen{
 		T *m_data;
 
 	};
-
-	
 }
 
 #include "Tweening.h"

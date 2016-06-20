@@ -889,7 +889,6 @@
     <None Include="namespace text\SpriteInstancedTexts.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RC_icon.rc">

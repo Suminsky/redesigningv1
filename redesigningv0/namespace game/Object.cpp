@@ -9,16 +9,16 @@ void game::Object::AttachComponent( pool_Component_ptr && pComponent_p )
 
 	pComponent_p->m_bDettached = false;
 
-	if( pComponent_p->m_currentComponentObjectIndex == INVALID_COMPONENTINDEX 
+	if( pComponent_p->m_currentIndexOnObject == INVALID_COMPONENTINDEX 
 		||
 		pComponent_p->m_pObjectOwner != this ){
 
-			pComponent_p->m_currentComponentObjectIndex = (COMPONENTINDEX)m_components.size();
+			pComponent_p->m_currentIndexOnObject = (COMPONENTINDEX)m_components.Size();
 			pComponent_p->m_pObjectOwner = this;
 
 			pComponent_p->VOnAttach();
 
-			m_components.push_back( std::move(pComponent_p) );
+			m_components.PushBack( std::move(pComponent_p) );
 	}
 }
 
@@ -28,16 +28,16 @@ void game::Object::AttachComponent( const pool_Component_ptr & pComponent_p )
 
 	pComponent_p->m_bDettached = false;
 
-	if( pComponent_p->m_currentComponentObjectIndex == INVALID_COMPONENTINDEX 
+	if( pComponent_p->m_currentIndexOnObject == INVALID_COMPONENTINDEX 
 		||
 		pComponent_p->m_pObjectOwner != this ){
 
-			pComponent_p->m_currentComponentObjectIndex = (COMPONENTINDEX)m_components.size();
+			pComponent_p->m_currentIndexOnObject = (COMPONENTINDEX)m_components.Size();
 			pComponent_p->m_pObjectOwner = this;
 
 			pComponent_p->VOnAttach();
 
-			m_components.push_back( pComponent_p );
+			m_components.PushBack( pComponent_p );
 
 			//m_pLayerOwner->InformSystemsAboutComponentAddedToObject(pComponent_p);
 	}
@@ -55,13 +55,13 @@ void game::Object::DettachComponent( const pool_Component_ptr & pComponent_p )
 
 void game::Object::DettachComponent( Component * pComponent_p )
 {
-	assert( pComponent_p->m_currentComponentObjectIndex != INVALID_COMPONENTINDEX );
+	assert( pComponent_p->m_currentIndexOnObject != INVALID_COMPONENTINDEX );
 	assert( !pComponent_p->m_bDettached );
 
 	pComponent_p->m_bDettached = true;
 	pComponent_p->VOnDetach(); // new
 
-	m_removedComponents.push_back(pComponent_p);
+	m_removedComponents.PushBack(pComponent_p);
 }
 
 //------------------------------------------------------------------------
@@ -69,8 +69,8 @@ void game::Object::DettachComponent( Component * pComponent_p )
 //------------------------------------------------------------------------
 void game::Object::CleanRemovedComponents()
 {
-	unsigned int nRemoved =	(unsigned int)m_removedComponents.size(); // cache
-	unsigned int nCompos =		(unsigned int)m_components.size();
+	unsigned int nRemoved =	(unsigned int)m_removedComponents.Size(); // cache
+	unsigned int nCompos =		(unsigned int)m_components.Size();
 
 	int nSkipped = 0;
 	for( unsigned int itR = 0, itLast = (nCompos-1); itR < nRemoved; ++itR ){
@@ -81,34 +81,37 @@ void game::Object::CleanRemovedComponents()
 			continue;
 		}
 
-		if( m_removedComponents[itR]->m_currentComponentObjectIndex == itLast ){
+		if( m_removedComponents[itR]->m_currentIndexOnObject == itLast ){
 
-			m_removedComponents[itR]->m_currentComponentObjectIndex = INVALID_OBJECTINDEX;
+			m_removedComponents[itR]->m_currentIndexOnObject = INVALID_OBJECTINDEX;
+			m_components[itLast].Release();
 			--itLast;
 			continue; // already "swapped"
 		}
 
-		std::swap( m_components[m_removedComponents[itR]->m_currentComponentObjectIndex], m_components[itLast] );
+		std::swap( m_components[m_removedComponents[itR]->m_currentIndexOnObject], m_components[itLast] );
+		m_components[itLast].Release();
 		--itLast;
 
 		// update the index of the swapped object (not the one sent to pop)
 
-		m_components[m_removedComponents[itR]->m_currentComponentObjectIndex]->m_currentComponentObjectIndex = m_removedComponents[itR]->m_currentComponentObjectIndex;
+		m_components[m_removedComponents[itR]->m_currentIndexOnObject]->m_currentIndexOnObject =
+			m_removedComponents[itR]->m_currentIndexOnObject;
 
 		// since the removed vector store pointers, theres no dirt data to update
 		// but we need to invalidate the discarded, cause its used as check when adding and removing..that
 		// can be discarded TODO
 
-		m_removedComponents[itR]->m_currentComponentObjectIndex = INVALID_OBJECTINDEX;
+		m_removedComponents[itR]->m_currentIndexOnObject = INVALID_OBJECTINDEX;
 		//m_removedComponents[itR]->VOnDetach();
 	}
 
 	// "trim"
 
 	nRemoved -= nSkipped;
-	m_components.resize(nCompos - nRemoved);
+	m_components.Unstack(nRemoved);
 
-	m_removedComponents.clear();
+	m_removedComponents.Reset();
 }
 
 //------------------------------------------------------------------------

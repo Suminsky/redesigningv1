@@ -8,11 +8,11 @@ void ObjectMachine::AddObject( pool_Object_ptr && pObject_p )
 
 	pObject_p->m_bDettached = false;
 
-	if( pObject_p->m_currentObjectIndex == INVALID_OBJECTINDEX
+	if( pObject_p->m_currentIndexOnLayer == INVALID_OBJECTINDEX
 		||
 		pObject_p->m_pObjMachineOwner != this ){
 
-			pObject_p->m_currentObjectIndex = (OBJECTINDEX)m_objects.size();
+			pObject_p->m_currentIndexOnLayer = (OBJECTINDEX)m_objects.size();
 			pObject_p->m_pObjMachineOwner = this;
 			pObject_p->m_pLayerOwner = m_pLayerRef;
 
@@ -20,7 +20,7 @@ void ObjectMachine::AddObject( pool_Object_ptr && pObject_p )
 
 			m_objects.push_back( std::move(pObject_p) );
 
-			//InformSystemsAboutObjectAdded( pObject_p->m_currentObjectIndex );
+			//InformSystemsAboutObjectAdded( pObject_p->m_currentIndexOnLayer );
 			// 
 			// TODO: is adding on the same frame..shouldnt it be at the end of frame?
 			// that worked before, but now systems updates components, not objects, so
@@ -35,11 +35,11 @@ void ObjectMachine::AddObject( const pool_Object_ptr & pObject_p )
 
 	pObject_p->m_bDettached = false;
 
-	if( pObject_p->m_currentObjectIndex == INVALID_OBJECTINDEX
+	if( pObject_p->m_currentIndexOnLayer == INVALID_OBJECTINDEX
 		||
 		pObject_p->m_pObjMachineOwner != this ){
 
-			pObject_p->m_currentObjectIndex = (OBJECTINDEX)m_objects.size();
+			pObject_p->m_currentIndexOnLayer = (OBJECTINDEX)m_objects.size();
 			pObject_p->m_pObjMachineOwner = this;
 			pObject_p->m_pLayerOwner = m_pLayerRef;
 
@@ -59,7 +59,7 @@ void ObjectMachine::RemoveObject( const pool_Object_ptr & pObject_p )
 
 void ObjectMachine::RemoveObject( Object * pObject_p )
 {
-	assert( pObject_p->m_currentObjectIndex != INVALID_OBJECTINDEX );
+	assert( pObject_p->m_currentIndexOnLayer != INVALID_OBJECTINDEX );
 	assert( !pObject_p->m_bDettached );
 
 	pObject_p->m_bDettached = true;
@@ -87,8 +87,8 @@ void ObjectMachine::CleanRemovedObjects()
 		// but we need to invalidate the discarded, cause its used as check (assertions) when adding and removing..that
 		// can be discarded TODO
 		
-		OBJECTINDEX removedIndex = m_removedObjects[itR]->m_currentObjectIndex;
-		m_removedObjects[itR]->m_currentObjectIndex = INVALID_OBJECTINDEX;
+		OBJECTINDEX removedIndex = m_removedObjects[itR]->m_currentIndexOnLayer;
+		m_removedObjects[itR]->m_currentIndexOnLayer = INVALID_OBJECTINDEX;
 
 		if( removedIndex == itLast ){
 			
@@ -96,12 +96,12 @@ void ObjectMachine::CleanRemovedObjects()
 			continue; // already "swapped"
 		}
 
-		std::swap( m_objects[removedIndex], m_objects[itLast] );// assertion triggered TWICE: m_removedObjects[itR]->m_currentObjectIndex was INVALID_OBJECTINDEX here(how the fuk can that be possible)
+		std::swap( m_objects[removedIndex], m_objects[itLast] );// assertion triggered TWICE: m_removedObjects[itR]->m_currentIndexOnLayer was INVALID_OBJECTINDEX here(how the fuk can that be possible)
 		--itLast;
 
 		// update the index of the swapped object (not the one sent to pop)
 
-		m_objects[removedIndex]->m_currentObjectIndex = removedIndex;
+		m_objects[removedIndex]->m_currentIndexOnLayer = removedIndex;
 	}
 
 	// "trim"
@@ -118,7 +118,7 @@ void ObjectMachine::CleanRemovedObjectComponents()
 		itObject < itSize;
 		++itObject ){
 
-			if( !m_objects[itObject]->m_removedComponents.empty() )
+			if( m_objects[itObject]->m_removedComponents.Size() != 0 )
 				m_objects[itObject]->CleanRemovedComponents();
 	}
 }

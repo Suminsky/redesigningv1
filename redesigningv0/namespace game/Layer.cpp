@@ -58,12 +58,12 @@ void game::Layer::RemoveObject( OBJECTINDEX objectCurrentIndex_p )
 
 void game::Layer::RemoveObject( const pool_Object_ptr & pObject_p )
 {
-	RemoveObject(pObject_p->m_currentObjectIndex);
+	RemoveObject(pObject_p->m_currentIndexOnLayer);
 }
 
 void game::Layer::RemoveObject( const Object * pObject_p )
 {
-	RemoveObject(pObject_p->m_currentObjectIndex);
+	RemoveObject(pObject_p->m_currentIndexOnLayer);
 }
 
 void game::Layer::Draw( const double dInterpolation_p, const double dDelta_p )

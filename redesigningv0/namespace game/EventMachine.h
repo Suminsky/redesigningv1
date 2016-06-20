@@ -6,7 +6,7 @@
 	file:		EventMachine.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	TODO, test if holding a single vector of handles is faster
+	purpose:	TODO, test if holding a single vector of handlers is faster
 				(instead of handlers per event type)
 				(so when dispatching, all handlers would be traversed and checked).
 
@@ -229,6 +229,5 @@ namespace game{
 		unsigned int m_iCurrentBuffer;
 		EventQueue m_events[2]; // double buffering
 		EventHandlerRegister m_register;
-
 	};
 }

@@ -65,8 +65,4 @@ namespace game{
 		EventType m_type;
 		DATA m_data;
 	};
-
-	//typedef std::shared_ptr<Event> shared_Event_ptr;
-	//typedef std::weak_ptr<Event> weak_Event_ptr;
 }
-

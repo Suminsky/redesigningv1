@@ -65,7 +65,7 @@ namespace game{
 //------------------------------------------------------------------------
 #define NEW_COMPONENT_USERTYPE( type ) \
 	class type;\
-	template<> const unsigned int   game::ComponentType<type>::s_value = __LINE__;\
+	template<> const unsigned int   game::ComponentType<type>::s_value = E_USERTYPE + __LINE__;\
 	template<> const char *			game::ComponentType<type>::s_szName = #type
 #define COMPONENT_USERTYPE( type ) \
 	game::ComponentType<type>::s_value

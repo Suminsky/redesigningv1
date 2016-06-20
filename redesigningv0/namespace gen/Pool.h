@@ -15,6 +15,7 @@
 // standard includes
 #include <new>
 #include <assert.h>
+#include <type_traits>
 
 // private includes
 #include "Delegate.h"
@@ -86,9 +87,6 @@ namespace gen{
 		// sorta like an iterator..but it doesnt hold a "current"
 		//------------------------------------------------------------------------
 		class PoolAccessor{
-
-			
-
 		public:
 
 			//------------------------------------------------------------------------
@@ -154,12 +152,9 @@ namespace gen{
 			:
 		m_roster(size_p), m_size(size_p){
 
-			//m_pool = new T[m_size];
-			m_pool = (T*)malloc( sizeof(T) * size_p );
+			m_pool = (T*)_aligned_malloc( sizeof(T) * size_p, __alignof(T) );
 
 			for( uint it = 0; it < m_size;++it ){
-
-				//new (&m_pool[it]) T();
 
 				m_pool[it].m_iCurrentRosterIndex = it;
 			}
@@ -168,13 +163,7 @@ namespace gen{
 		}
 		~Pool(){
 
-			/*for( uint it = 0; it < m_size;++it ){
-
-				m_pool[it].~T();
-			}*/
-
-			//delete [] m_pool;
-			free( m_pool );
+			_aligned_free( m_pool );
 		}
 
 		//------------------------------------------------------------------------
@@ -185,8 +174,6 @@ namespace gen{
 			assert( m_roster.m_iFreeIndexesStart < m_size );
 
 			return new (&m_pool[m_roster.m_elements[m_roster.m_iFreeIndexesStart++].iPoolIndex]) T();
-
-			//return &m_pool[m_roster.m_elements[m_roster.m_iFreeIndexesStart++].iPoolIndex];
 		}
 
 		//------------------------------------------------------------------------

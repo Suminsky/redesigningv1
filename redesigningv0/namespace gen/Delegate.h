@@ -96,6 +96,82 @@ namespace gen{
 		void (*m_pFuncMemberFuncInvoker)( void * );
 	};
 
+	//========================================================================
+	// no param delegate
+	// returns R
+	//========================================================================
+	template< typename RETURN >
+	class DelegateR{
+		
+	public:
+		//------------------------------------------------------------------------
+		// ctor/dctor
+		//------------------------------------------------------------------------
+		DelegateR()
+			:
+		m_pCallerInstance(nullptr),
+		m_pFuncMemberFuncInvoker(nullptr){}
+
+		~DelegateR(){}
+					//------------------------------------------------------------------------
+		// Sugar for creating a delegate at once
+		//------------------------------------------------------------------------
+		template< class InstanceClass, RETURN (InstanceClass::*Method)() >
+		static DelegateR Build( InstanceClass * pInstance_p){
+
+			DelegateR newDelegate;
+			newDelegate.Set<InstanceClass, Method>( pInstance_p );
+
+			return newDelegate;
+		}
+
+		//------------------------------------------------------------------------
+		// holds obj instance and generates static templated invoker func,
+		// holding its address on the func ptr.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, RETURN (InstanceClass::*Method)() >
+		void Set( InstanceClass * pInstance_p){
+
+			m_pCallerInstance = pInstance_p;
+			m_pFuncMemberFuncInvoker = &MemberFuncInvoker<InstanceClass, Method>;
+		}
+
+		//------------------------------------------------------------------------
+		// test if the delegate is initialized
+		//------------------------------------------------------------------------
+		operator bool() const{
+
+			return m_pFuncMemberFuncInvoker != nullptr;
+		}
+
+		//------------------------------------------------------------------------
+		// Delegate callers, explicit and function calling syntax
+		//------------------------------------------------------------------------
+		RETURN Execute() const{
+
+			return (*m_pFuncMemberFuncInvoker)(m_pCallerInstance);
+		}
+		RETURN operator()() const{
+
+			return (*m_pFuncMemberFuncInvoker)(m_pCallerInstance);
+		}
+
+	private:
+
+		//------------------------------------------------------------------------
+		// this func main objective is have the same signature of the func ptr
+		// holded by this class, the second objective is be templated so it
+		// can "generate" any func matching the template args given.
+		//------------------------------------------------------------------------
+		template< class InstanceClass, RETURN (InstanceClass::*Method)() >
+		static RETURN MemberFuncInvoker( void * pInstanceCaller_p ){
+
+			return ( ((InstanceClass*)pInstanceCaller_p)->*(Method) )();
+		}
+
+		void * m_pCallerInstance;
+		RETURN (*m_pFuncMemberFuncInvoker)(void*);
+	};
 
 	//========================================================================
 	// delegate with binds/holds a param at creation, always calling it with

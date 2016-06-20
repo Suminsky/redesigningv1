@@ -31,7 +31,7 @@ namespace gen{
 			:
 		m_topIndex(0){}
 
-		uint32_t MaxSize() const{
+		static uint32_t MaxSize(){
 
 			return SIZE;
 		}
@@ -78,6 +78,15 @@ namespace gen{
 
 			assert( index_p < m_topIndex );
 			return m_data[index_p];
+		}
+
+		T & Last(){
+			assert( m_topIndex > 0 );
+			return m_data[m_topIndex-1];
+		}
+		const T & Last()const{
+			assert( m_topIndex > 0 );
+			return m_data[m_topIndex-1];
 		}
 
 	private:

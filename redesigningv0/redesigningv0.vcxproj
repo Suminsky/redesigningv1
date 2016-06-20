@@ -453,7 +453,6 @@
     <ClCompile Include="namespace text\TextParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="gsp_Icons.ico" />
     <None Include="namespace game\ComponentFactory.inl" />
     <None Include="namespace gen\TreeNode.inl" />

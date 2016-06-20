@@ -44,7 +44,7 @@ pool_Object_ptr game::ObjectFactory::CloneObject( const Object * pObj_p )
 	strcpy_s<64>( pObj->m_szName, pObj_p->m_szName );
 	pObj->m_prefab = pObj_p->m_prefab;
 
-	for( int itCompo = 0, nCompos = (int)pObj_p->m_components.size(); itCompo < nCompos; ++itCompo ){
+	for( int itCompo = 0, nCompos = (int)pObj_p->m_components.Size(); itCompo < nCompos; ++itCompo ){
 
 		pool_Component_ptr pCompo = m_pLayerOwner->m_componentFactory.CloneComponent( pObj_p->m_components[itCompo].Get() );
 		if( pCompo ){
@@ -163,7 +163,7 @@ void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA *
 		GfigElementA(pObj_p->m_szName,  (pObj_p->m_prefab == -1 ? "" : std::to_string((_ULonglong)pObj_p->m_prefab).c_str() ) )
 		);
 
-	int nCompos = (int)pObj_p->m_components.size();
+	int nCompos = (int)pObj_p->m_components.Size();
 
 	for( int itCompo = 0 ; itCompo < nCompos; ++itCompo ){
 

@@ -329,7 +329,8 @@ namespace game{
 		const float GetMaxVel() const { return m_config.fMaxVel; }
 		const float GetStopVel() const{ return m_config.fVelStopThreshold;}
 		const float GetDeccel() const{ return m_config.fDeccel;}
-
+		const float GetJumpSpeed() const{ return m_config.fJumpSpeed;}
+		const float GetXVelDir() const{ return m_state.vVel.x == 0.0f ? 0.0f : (m_state.vVel.x > 0.0f ? 1.0f : -1.0f);}
 		bool IsGrounded() const { return m_state.bGrounded; }
 
 		const DirectX::XMFLOAT4& GetPos() const{ return pTrafoRef->m_local.position;}

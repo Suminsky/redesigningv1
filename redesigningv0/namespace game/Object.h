@@ -15,7 +15,6 @@
 // standard includes
 #include <assert.h>
 #include <memory>
-#include <vector>
 
 // private includes
 
@@ -38,13 +37,22 @@ namespace game{
 
 	typedef unsigned int OBJECTINDEX;
 	static const unsigned int INVALID_OBJECTINDEX = (unsigned int)-1;
+
+	enum{
+		E_MAXOBJCOMPOS = 12
+	};
 	
-	typedef std::vector<pool_Component_ptr> ObjectComponents;
+	/*typedef std::vector<pool_Component_ptr> ObjectComponents;*/
+	typedef gen::Stack<pool_Component_ptr,E_MAXOBJCOMPOS> ObjectComponents;
 
 	//========================================================================
 	// 
 	//========================================================================
 	class Object: public gen::NonCopyable{
+
+		enum{
+			E_MAXNAMELEN = 64
+		};
 
 		friend class Layer;
 		friend class ObjectMachine;
@@ -59,7 +67,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		Object()
 			:
-			m_currentObjectIndex(INVALID_OBJECTINDEX),
+			m_currentIndexOnLayer(INVALID_OBJECTINDEX),
 			m_pLayerOwner(nullptr),
 			m_pObjMachineOwner(nullptr),
 			m_bDettached(true){
@@ -75,11 +83,13 @@ namespace game{
 			//TODO: dettach components?
 			//BREAKHERE;
 			// 
-			for( int it = 0, nCompo = (int)m_components.size(); it < nCompo; ++it ){
+			for( int it = 0, nCompo = (int)m_components.Size(); it < nCompo; ++it ){
 
 				m_components[it]->m_bDettached = true;
 			}
 		}
+
+		bool IsAttached() const { return !m_bDettached; }
 
 		//------------------------------------------------------------------------
 		// component stuff
@@ -103,11 +113,11 @@ namespace game{
 		//------------------------------------------------------------------------
 		Layer * GetLayerOwner() const { return m_pLayerOwner; }
 		ObjectComponents & GetComponents(){	return m_components; }
-		bool IsAttached() const { return !m_bDettached; }
+
 		template< typename DerivedComponent >
 		gen::pool_ptr<DerivedComponent> GetFirstOfComponent(){
 
-			for( int it = 0, iSize = (int)m_components.size();
+			for( int it = 0, iSize = (int)m_components.Size();
 		         it < iSize;
 				 ++it ){
 
@@ -119,9 +129,10 @@ namespace game{
 
 			return gen::pool_ptr<DerivedComponent>();
 		}
+
 		pool_Component_ptr GetFirstOfComponent( const unsigned int iType_p ){
 
-			for( int it = 0, iSize = (int)m_components.size();
+			for( int it = 0, iSize = (int)m_components.Size();
 				it < iSize;
 				++it ){
 
@@ -133,10 +144,11 @@ namespace game{
 
 			return pool_Component_ptr();
 		}
+
 		template< typename DerivedComponent >
 		gen::pool_ptr<DerivedComponent> GetNthOfComponent( int nth_p ){
 
-			for( int it = 0, currentTH = 0, iSize = (int)m_components.size();
+			for( int it = 0, currentTH = 0, iSize = (int)m_components.Size();
 				it < iSize;
 				++it ){
 
@@ -150,10 +162,10 @@ namespace game{
 
 			return gen::pool_ptr<DerivedComponent>();
 		}
+
 		int GetID() const { return m_ID; }
 		const char* GetName()const{ return &m_szName[0]; }
 		int GetPrefab() const{ return m_prefab;}
-		void SetPrefab(int prefab){ m_prefab = prefab;}//HACK, TODO remove
 
 		//------------------------------------------------------------------------
 		// setters
@@ -162,6 +174,7 @@ namespace game{
 
 			memcpy(m_szName, newName_p, sizeof(char)*(gen::stringUtil::CountString(newName_p,64)+1) );
 		}
+		void SetPrefab(int prefab){ m_prefab = prefab;}//HACK, TODO remove
 
 		//------------------------------------------------------------------------
 		// 
@@ -186,18 +199,18 @@ namespace game{
 		void CleanRemovedComponents();
 
 
-		OBJECTINDEX m_currentObjectIndex;
+		OBJECTINDEX m_currentIndexOnLayer;
 		bool m_bDettached;
 
 		ObjectComponents m_components;
-		std::vector<Component*> m_removedComponents;
+		gen::Stack<Component*, E_MAXOBJCOMPOS> m_removedComponents;
 
 		EventMachine<ComponentEventData> m_objectEventMachine;
 
 		// TODO: make obj a huge block of mem, using max compos, eves and eve handlers
 
 		int m_ID;
-		char m_szName[64];
+		char m_szName[E_MAXNAMELEN];
 		int m_prefab;
 	};
 
