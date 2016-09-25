@@ -110,10 +110,10 @@
       <PreprocessorDefinitions>_DEBUG;SOUND;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <StringPooling>true</StringPooling>
-      <PrecompiledHeaderFile>stdIncludes</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>PCHF.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <ExceptionHandling>Async</ExceptionHandling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
@@ -152,6 +152,8 @@
       <MinimalRebuild>true</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCHF.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -172,6 +174,8 @@
     <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
+    <ClInclude Include="Legalia\AlienPlayer.h" />
+    <ClInclude Include="Legalia\LedgeHang.h" />
     <ClInclude Include="namespace game\components\MovableComponent.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
     <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
@@ -317,6 +321,7 @@
     <ClInclude Include="namespace game\StateMachine.h" />
     <ClInclude Include="namespace game\tasks\LerpValueTask.h" />
     <ClInclude Include="namespace text\TextParser.h" />
+    <ClInclude Include="PCHF.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
   </ItemGroup>
@@ -331,6 +336,7 @@
     <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
+    <ClCompile Include="Legalia\AlienPlayer.cpp" />
     <ClCompile Include="namespace game\components\MovableComponent.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
     <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
@@ -451,6 +457,9 @@
     <ClCompile Include="namespace game\State.cpp" />
     <ClCompile Include="namespace game\StateMachine.cpp" />
     <ClCompile Include="namespace text\TextParser.cpp" />
+    <ClCompile Include="PCHF.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico" />

@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include <algorithm>
 #include "InstancedSprites.h"
 #include "../namespace game/components/SpriteComponent_.h"

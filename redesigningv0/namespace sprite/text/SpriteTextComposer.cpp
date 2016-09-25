@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "SpriteTextComposer.h"
 #include "../../namespace game/components/SpriteTextCompo.h"
 

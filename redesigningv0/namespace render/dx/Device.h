@@ -23,7 +23,7 @@ namespace dx{
 	typedef ResourceCache<BlendState,			2>	BlendStateCache;
 	typedef ResourceCache<ShaderResourceView,	60>	ShaderResourceViewCache;
 	typedef ResourceCache<InputLayout,			2>	InputLayoutCache;
-	typedef ResourceCache<SamplerState,			3>	SamplerStateCache;
+	typedef ResourceCache<SamplerState,			2>	SamplerStateCache;
 
 	class Device{
 

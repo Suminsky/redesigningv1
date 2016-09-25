@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "ButtonComponent.h"
 
 using namespace game;

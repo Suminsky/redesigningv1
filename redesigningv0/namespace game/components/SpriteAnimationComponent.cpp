@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "SpriteAnimationComponent.h"
 #include "../../namespace sprite/SpriteRenderer.h"
 #include "../../namespace text/TextParser.h"
@@ -819,4 +820,3 @@ void game::SpriteAnimationComponentFactory::LoadClipsStateDataOnlyFromGFig( text
 			}
 	}
 }
-

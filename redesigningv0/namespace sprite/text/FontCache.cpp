@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "FontCache.h"
 
 #include "../../namespace text/CreateFontTexture.h"

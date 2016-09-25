@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "ComponentFactory.h"
 #include "Component.h"
 

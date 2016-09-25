@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "Game.h"
 #include "../namespace win/FileLogger.h"
 

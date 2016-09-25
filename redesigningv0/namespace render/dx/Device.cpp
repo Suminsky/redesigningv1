@@ -1,3 +1,5 @@
+#include "PCHF.h"
+
 #include "Device.h"
 
 #include "../../namespace gen/gen_macros.h"

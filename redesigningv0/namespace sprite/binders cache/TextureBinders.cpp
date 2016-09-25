@@ -1,3 +1,5 @@
+#include "PCHF.h"
+
 #include "TextureBinders.h"
 
 UINT sprite::TextureBinders::Add( const char* szTexture_p )

@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "Layer.h"
 
 using namespace game;
@@ -91,4 +92,3 @@ void game::Layer::SerializeAttachedObjs( text::GfigElementA *pGfig_p )
 //========================================================================
 // 
 //========================================================================
-

@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "TransformComponent.h"
 #include "../../namespace text/TextParser.h"
 #include "../Object.h"

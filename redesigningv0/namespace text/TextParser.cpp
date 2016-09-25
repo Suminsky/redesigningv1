@@ -1,3 +1,5 @@
+#include "PCHF.h"
+
 #include "TextParser.h"
 
 #include <memory>

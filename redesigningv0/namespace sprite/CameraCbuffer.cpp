@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "CameraCbuffer.h"
 
 using namespace sprite;

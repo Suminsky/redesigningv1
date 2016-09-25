@@ -489,6 +489,15 @@
     <ClInclude Include="namespace game\components\MovableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PCHF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\AlienPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Legalia\LedgeHang.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -873,6 +882,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace game\components\MovableComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PCHF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\AlienPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

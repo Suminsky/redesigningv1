@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "WaveCache.h"
 #include "../namespace gen/gen_macros.h"
 

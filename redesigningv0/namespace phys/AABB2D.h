@@ -431,55 +431,56 @@ namespace phys{
 			char aMask_p, char bMask_p,
 			char & cMask ){
 
-				bool goingDir[] = {
-					relDir.x < 0.0f, // left
-					relDir.x > 0.0f, // rit
-					relDir.y < 0.0f, // down
-					relDir.y > 0.0f // up
+				const bool goingDir[] = {
+					relDir.x < 0.0f, // left, will collide in right
+					relDir.x > 0.0f, // rit, will collide in left
+					relDir.y < 0.0f, // down, will collide in up
+					relDir.y > 0.0f // up, will collide in down
 				};
 
-				char otherMask[] = {
+				// this array is meant to be "whos going to hit who", but I think its wrong
+
+				const char otherMask[] = {
 					Adir.x < Bdir.x ? bMask_p : aMask_p,
 					Adir.x > Bdir.x ? bMask_p : aMask_p,
 					Adir.y < Bdir.y ? bMask_p : aMask_p,
 					Adir.y > Bdir.y ? bMask_p : aMask_p,
 				};
-				char otherFaceMask[] = {
-					0x01 << 1, // rit
-					0x01 << 0, // left
-					0x01 << 3, // up
-					0x01 << 2 // down
+
+				const char counterOtherMask[] = {
+					Adir.x < Bdir.x ? aMask_p : bMask_p,
+					Adir.x > Bdir.x ? aMask_p : bMask_p,
+					Adir.y < Bdir.y ? aMask_p : bMask_p,
+					Adir.y > Bdir.y ? aMask_p : bMask_p,
+				};
+
+				// TODO, ta horrivel, mas funcia, dar um jeito de iniciar esses array melhor
+
+				const char otherFaceMask[] = {
+					E_BLOCKEDFACE_RIGHT, // rit
+					E_BLOCKEDFACE_LEFT, // left
+					E_BLOCKEDFACE_UP, // up
+					E_BLOCKEDFACE_DOWN // down
+				};
+
+				const char counterOtherFaceMask[] = {
+					E_BLOCKEDFACE_LEFT, // rit
+					E_BLOCKEDFACE_RIGHT, // left
+					E_BLOCKEDFACE_DOWN, // up
+					E_BLOCKEDFACE_UP // down
 				};
 
 				for( int it = 0; it < 4; ++it ){
 
 					if( goingDir[it] ){
 
-						if( otherMask[it] & otherFaceMask[it] )
+						if( otherMask[it] & otherFaceMask[it]
+							||
+							counterOtherMask[it] & counterOtherFaceMask[it] )
+
 							cMask |= otherFaceMask[it];//(0x01 << it);//
 					}
 				}
-
-				//if( relDir.x < 0.0f ){
-
-				//	// going left
-
-				//	char otherMask = Adir.x < Bdir.x ? bMask_p : aMask_p;
-
-				//	// if one is going left
-				//	if( otherMask & (0x01 << 1) ){
-
-				//		// and other have the right face blocked, cant collide on the right:
-				//		cMask |= 0x01 << 1;
-				//	}
-				//}
-				/*if( relDir.x >= 0.0f )
-					cMask |= 0x01 << 1;
-
-				if( relDir.y <= 0.0f )
-					cMask |= 0x01 << 2;
-				if( relDir.y >= 0.0f )
-					cMask |= 0x01 << 3;*/
 		}
 
 		static void GetPrevSeparationMask(

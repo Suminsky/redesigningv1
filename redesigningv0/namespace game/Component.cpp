@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "Component.h"
 
 #include "Object.h"

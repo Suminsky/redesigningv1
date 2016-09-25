@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "MovableComponent.h"
 
 #include "../Object.h"

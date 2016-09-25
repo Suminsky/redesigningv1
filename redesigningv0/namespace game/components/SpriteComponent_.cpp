@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "SpriteComponent_.h"
 #include "../Object.h"
 #include "ColorComponent.h"

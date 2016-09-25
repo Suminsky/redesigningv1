@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "ObjectMachine.h"
 
 using namespace game;

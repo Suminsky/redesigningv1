@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "ColorComponent.h"
 #include "../../namespace text/TextParser.h"
 

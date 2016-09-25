@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "ParentingComponent.h"
 
 using namespace game;

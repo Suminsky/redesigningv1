@@ -1,3 +1,5 @@
+#include "PCHF.h"
+
 #include "SpriteRenderer.h"
 
 #include <D3D11Shader.h>

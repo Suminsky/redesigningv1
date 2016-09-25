@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "BlendStateBinders.h"
 
 void sprite::BlendStateBinders::Init( dx::Device * pDevice_p )

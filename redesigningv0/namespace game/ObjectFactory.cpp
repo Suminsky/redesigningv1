@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "ObjectFactory.h"
 #include "Object.h"
 #include "Layer.h"

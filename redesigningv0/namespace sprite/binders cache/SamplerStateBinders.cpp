@@ -1,3 +1,5 @@
+#include "PCHF.h"
+
 #include "SamplerStateBinders.h"
 
 void sprite::SamplerStateBinders::Init( dx::Device * pDevice_p )

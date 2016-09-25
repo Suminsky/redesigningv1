@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "HighPerformanceTimer.h"
 
 #include <assert.h>

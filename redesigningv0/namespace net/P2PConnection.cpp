@@ -1,3 +1,4 @@
+#include "PCHF.h"
 #include "P2PConnection.h"
 
 using namespace net;
