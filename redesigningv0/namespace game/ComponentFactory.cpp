@@ -100,3 +100,31 @@ void game::ComponentFactory::Serialize( const Component * pComponent_p, text::Gf
 
 	return pFactory->VSerialize(pComponent_p, pGFig_p);
 }
+
+void game::ComponentFactory::Serialize( const Component * pComponent_p, const Component * pDefaults_p, text::GfigElementA * pGFig_p )
+{
+	IComponentFactory * pFactory = GetComponentFactory(pComponent_p->GetType()).get();
+
+	assert( pFactory );
+
+	return pFactory->VSerialize(pComponent_p, pDefaults_p, pGFig_p);
+}
+
+Component* game::ComponentFactory::GetDefaultCompo( unsigned int iType_p )
+{
+	IComponentFactory * pFactory = GetComponentFactory(iType_p).get();
+
+	assert( pFactory );
+
+	return pFactory->VGetDefaultCompo();
+}
+
+void game::IComponentFactory::VSerialize( const Component * /*pCompo_p*/, const Component * /*pDefaults_p*/, text::GfigElementA * /*pGFig_p*/ )
+{
+
+}
+
+Component* game::IComponentFactory::VGetDefaultCompo()
+{
+	return nullptr;
+}

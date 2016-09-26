@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Layer.h"
 #include "../namespace text/TextParser.h"
+#include "../Legalia/AABB2DColliderComponent.h"
 
 using namespace game;
 using namespace text;
@@ -101,19 +102,16 @@ game::pool_Object_ptr game::ObjectFactory::CreateObjectFromPrefab( unsigned int 
 			text::GfigElementA & gfigComponent = pIntanceGfig_p->m_subElements[it];
 			
 			unsigned int iCompoType = m_pLayerOwner->m_componentFactory.GetCompoTypeFromName( gfigComponent.m_name );
-			
 			pool_Component_ptr pCompo = pObj->GetFirstOfComponent( iCompoType );
 
 			if( pCompo ){
 
 				// update
-
 				m_pLayerOwner->m_componentFactory.UpdateComponent( pCompo.Get(), &gfigComponent );
 			}
 			else{
 
 				// create
-
 				pCompo = m_pLayerOwner->m_componentFactory.CreateComponent( iCompoType, &gfigComponent );
 				assert(pCompo );
 
@@ -159,18 +157,61 @@ void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA *
 	// the only way is create a new factory function for components, that receives a prefab compo for reference
 	// TODO
 
-
-	pGFig_p->m_subElements.emplace_back(
-		GfigElementA(pObj_p->m_szName,  (pObj_p->m_prefab == -1 ? "" : std::to_string((_ULonglong)pObj_p->m_prefab).c_str() ) )
-		);
-
+	
 	int nCompos = (int)pObj_p->m_components.Size();
 
-	for( int itCompo = 0 ; itCompo < nCompos; ++itCompo ){
+	if( pObj_p->m_prefab == -1 ){
 
-		Component * pCompo = pObj_p->m_components[itCompo].Get();
+		pGFig_p->m_subElements.emplace_back(
+			GfigElementA(pObj_p->m_szName,  "" )
+			);
 
-		m_pLayerOwner->m_componentFactory.Serialize( pCompo, &pGFig_p->m_subElements.back() );
+		for( int itCompo = 0 ; itCompo < nCompos; ++itCompo ){
+
+			Component * pCompo = pObj_p->m_components[itCompo].Get();
+
+			m_pLayerOwner->m_componentFactory.Serialize( pCompo, &pGFig_p->m_subElements.back() );
+		}
+	}
+	else{
+
+		pGFig_p->m_subElements.emplace_back(
+			GfigElementA(pObj_p->m_szName,   std::to_string((_ULonglong)pObj_p->m_prefab).c_str() )
+			);
+
+		Object * pPrefab = m_prefabs[pObj_p->m_prefab].pObj.Get();
+		//int nPrefCompos = (int)pPrefab->m_components.Size();
+
+		for( int itCompo = 0 ; itCompo < nCompos; ++itCompo ){
+
+			Component * pCompo = pObj_p->m_components[itCompo].Get();
+			Component * pPrefCompo = pPrefab->GetFirstOfComponent(pCompo->GetType()).Get();				
+
+			// how to solve multiple of the same compo type? new int on compo?
+
+			if( pCompo->GetType() == COMPONENT_TYPE(AABB2DColliderComponent)
+				||
+				pCompo->GetType() == COMPONENT_TYPE(TransformComponent)
+				||
+				pCompo->GetType() == COMPONENT_TYPE(SpriteComponent_)){ // testing just with AABB2d
+
+				if( pPrefCompo != nullptr ){
+
+					m_pLayerOwner->m_componentFactory.Serialize( pCompo, pPrefCompo, &pGFig_p->m_subElements.back() );
+				}
+				else{
+
+					m_pLayerOwner->m_componentFactory.Serialize(
+						pCompo,
+						m_pLayerOwner->m_componentFactory.GetDefaultCompo(pCompo->GetType()),
+						&pGFig_p->m_subElements.back() );
+				}
+			}
+			else{
+
+				m_pLayerOwner->m_componentFactory.Serialize( pCompo, &pGFig_p->m_subElements.back() );
+			}
+		}
 	}
 }
 
@@ -179,6 +220,21 @@ void game::ObjectFactory::SerializePrefabs( text::GfigElementA * pGFig_p )
 	for( uint32_t it = 0, n = (uint32_t)m_prefabs.size();
 		it < n; ++ it ){
 
-		Serialize( m_prefabs[it].pObj.Get(), pGFig_p );
+		//Serialize( m_prefabs[it].pObj.Get(), pGFig_p );
+
+		const Object * pObj_p = m_prefabs[it].pObj.Get();
+
+		pGFig_p->m_subElements.emplace_back(
+			GfigElementA(pObj_p->m_szName,  std::to_string((_ULonglong)it).c_str() )
+			);
+
+		int nCompos = (int)pObj_p->m_components.Size();
+
+		for( int itCompo = 0 ; itCompo < nCompos; ++itCompo ){
+
+			Component * pCompo = pObj_p->m_components[itCompo].Get();
+
+			m_pLayerOwner->m_componentFactory.Serialize( pCompo, &pGFig_p->m_subElements.back() );
+		}
 	}
 }

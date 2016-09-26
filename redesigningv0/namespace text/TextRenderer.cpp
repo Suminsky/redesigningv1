@@ -77,7 +77,7 @@ void text::TextRenderer::RenderText( const wchar_t szText_p[], DirectX::XMFLOAT4
 	sorMask.bitfield.layer = 2;
 	sorMask.bitfield.viewportLayer = 3;
 	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
-	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
+	sorMask.bitfield.blending = sprite::E_BLEND_ALPHA_BLENDED;
 
 	drawable.SetSortKey( sorMask.intRepresentation );
 	drawable.SetDrawCall( m_pTextDrawCall );
@@ -166,7 +166,7 @@ void text::TextRenderer::Draw_Text( const wchar_t szText_p[], DirectX::XMFLOAT4 
 	sorMask.bitfield.viewportLayer = 3;
 	//sorMask.bitfield.Zdepth = 10;
 	sorMask.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
-	sorMask.bitfield.transparency = sprite::E_BLEND_ALPHA_BLENDED;
+	sorMask.bitfield.blending = sprite::E_BLEND_ALPHA_BLENDED;
 
 	float fPosOffsetX = 0.0f;
 	float fPosOffsetY = 0.0f;
@@ -369,7 +369,7 @@ void text::TextRenderer::RenderText(
 	}
 
 	sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
-	sortKey_p.bitfield.transparency = eBlendType_p;
+	sortKey_p.bitfield.blending = eBlendType_p;
 	m_perFrameText.ConcludeInstancesBuffering_NoSort( pDContext_p, sortKey_p.intRepresentation );
 
 	m_pSpriteRendererRef->Render( &m_perFrameText, &camera_p );
@@ -443,7 +443,7 @@ void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_
 	}
 
 	sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
-	sortKey_p.bitfield.transparency = eBlendType_p;
+	sortKey_p.bitfield.blending = eBlendType_p;
 	instancedSprites_p.ConcludeInstancesBuffering_NoSort( pDContext_p, sortKey_p.intRepresentation );
 }
 
@@ -511,7 +511,7 @@ void text::TextRenderer::Draw_Text( sprite::InstancedSprites & instancedSprites_
 	}
 
 	//sortKey_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
-	//sortKey_p.bitfield.transparency = eBlendType_p;
+	//sortKey_p.bitfield.blending = eBlendType_p;
 	instancedSprites_p.ConcludeInstancesBuffering_NoSort( pDContext_p, sortKey_p.intRepresentation );
 }
 
@@ -524,5 +524,5 @@ void text::TextRenderer::InitializeSpriteInstances( sprite::InstancedSprites & i
 		instVB_p	);
 
 	sortMask_p.bitfield.textureID = m_fonts[iFontID_p].GetTextureID();
-	sortMask_p.bitfield.transparency = eBlendType_p;
+	sortMask_p.bitfield.blending = eBlendType_p;
 }

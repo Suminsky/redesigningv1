@@ -132,11 +132,9 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		SpriteComponent_Factory( unsigned int maxComponents_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pSpriteRenderer_p )
-			:
-		m_pool(maxComponents_p),
-		m_pDeviceRef_p(pDevice_p), m_pRendererRef(pSpriteRenderer_p)
-		{}
+		SpriteComponent_Factory( unsigned int maxComponents_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pSpriteRenderer_p );
+
+		SpriteComponent_ m_defaults;
 
 		gen::Pool<SpriteComponent_> m_pool;
 		dx::Device * m_pDeviceRef_p;
@@ -163,13 +161,15 @@ namespace game{
 		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
 		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
+		virtual void VSerialize( const Component * pCompo_p, const Component * pDefaults_p, text::GfigElementA * pGFig_p );
+		virtual Component * VGetDefaultCompo();
 
 		//------------------------------------------------------------------------
 		// those 2 must receive an already named gfig
 		//------------------------------------------------------------------------
-		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p );
-		static bool SerializeBlendType( const sprite::E_BLENDTYPE eBlend_p, text::GfigElementA & gFig_p );
-		static bool SerializeSamplerType( const sprite::E_SAMPLERTYPE eSampler_p, text::GfigElementA & gFig_p );
+		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, const DirectX::XMFLOAT4 & defs_p, text::GfigElementA & gFig_p );
+		static bool SerializeBlendType( const sprite::E_BLENDTYPE eBlend_p, const sprite::E_BLENDTYPE def_p, text::GfigElementA & gFig_p );
+		static bool SerializeSamplerType( const sprite::E_SAMPLERTYPE eSampler_p, const sprite::E_SAMPLERTYPE def_p, text::GfigElementA & gFig_p );
 	};
 
 	typedef std::shared_ptr<SpriteComponent_Factory> shared_SpriteComponent_Factory_ptr;

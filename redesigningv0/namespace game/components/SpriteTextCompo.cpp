@@ -63,7 +63,7 @@ void game::SpriteTextCompo::Initialize(
 	m_pipeState_texture_blend_sampler.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(eBlend_p) );
 	m_pipeState_texture_blend_sampler.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(eSampler_p) );
 
-	m_sortKey.bitfield.transparency = eBlend_p;
+	m_sortKey.bitfield.blending = eBlend_p;
 }
 
 
@@ -404,7 +404,8 @@ void game::SpriteTextCompoFactory::VSerialize( const Component * pCompo_p, text:
 		}
 
 		GfigElementA gColor("color");
-		ColorComponentFactory::SerializeRGBA(text.m_currentColor, gColor);
+		XMFLOAT4 defColor(1.0f, 1.0f, 1.0f, 1.0f);
+		ColorComponentFactory::SerializeRGBA(text.m_currentColor, defColor, gColor);
 		if( gColor.m_subElements.size() ){
 
 			gTextCompo.m_subElements.push_back(
@@ -413,14 +414,14 @@ void game::SpriteTextCompoFactory::VSerialize( const Component * pCompo_p, text:
 		}
 
 		GfigElementA gBlend("blend");
-		if(	SerializeBlendType((E_BLENDTYPE)text.m_sortKey.bitfield.transparency, gBlend ) ){
+		if(	SerializeBlendType((E_BLENDTYPE)text.m_sortKey.bitfield.blending, gBlend ) ){
 
 			gTextCompo.m_subElements.push_back(std::move(gBlend));
 		}
 
 		GfigElementA gSample("sampler");
 		E_SAMPLERTYPE eSampler = m_pSpriteRenderer->m_samplers_cache.InfereSamplerType( (dx::BindPSSampler *)*(text.m_pipeState_texture_blend_sampler.Begin()+2));
-		if( SpriteComponent_Factory::SerializeSamplerType( eSampler, gSample) ){
+		if( SpriteComponent_Factory::SerializeSamplerType( eSampler, E_SAMPLER_NONE, gSample) ){
 
 			gTextCompo.m_subElements.push_back(std::move(gSample));
 		}

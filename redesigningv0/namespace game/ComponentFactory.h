@@ -56,13 +56,24 @@ namespace game{
 
 		virtual pool_Component_ptr VCreateComponent( text::GfigElementA * pGFig_p ) = 0;
 		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p ) = 0;
-		// TODO
-		// serialize should pushback a gfig on pGfig_p->m_subelements
+
 		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p ) = 0;
+		virtual void VSerialize( const Component * pCompo_p, const Component * pDefaults_p, text::GfigElementA * pGFig_p );
+
+		virtual Component* VGetDefaultCompo();
 
 		//virtual pool_Component_ptr VCreateComponent( gen::DataStream * pData_p ) = 0;
 		//virtual void VUpdateComponent( Component * pCompo_p, gen::DataStream * pData_p ) = 0;
 		//virtual void VSerialize( Component * pCompo_p, gen::DataStream * pData_p ) = 0;
+		
+		// TODO:
+		// Every create compo will receive a defaults compo with pre initialized data
+		// So this will be cloned, and updated...
+		// so there will be no need for a "create" that sets defaults (althou it do less work than cloning and (re)updating)
+		// This will also allow for initialization from prefab automatically
+		// Each factory will have a local compo with the default value
+		// Serialze will always compare against a compo, and the default serialize will serialize everything with no comparison
+		// (cause it doesnt make sense to keep another one that compares against fixed values)
 	};
 
 	typedef std::shared_ptr<IComponentFactory> shared_IComponentFactory_ptr;
@@ -100,7 +111,9 @@ namespace game{
 		template< typename DerivedComponent > gen::pool_ptr<DerivedComponent> CloneComponent( const DerivedComponent * pCompo_p );
 
 		void Serialize( const Component * pComponent_p,  text::GfigElementA * pGFig_p );
+		void Serialize( const Component * pComponent_p, const Component * pDefaults_p, text::GfigElementA * pGFig_p );
 
+		Component* GetDefaultCompo( unsigned int iType_p );
 		//------------------------------------------------------------------------
 		// registers
 		//------------------------------------------------------------------------

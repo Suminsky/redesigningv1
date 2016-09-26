@@ -176,12 +176,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		TransformComponentFactory(unsigned int maxComponents_p)
-			:
-		m_pool(maxComponents_p){
-
-			BREAKHERE;
-		}
+		TransformComponentFactory(unsigned int maxComponents_p);
 
 		//------------------------------------------------------------------------
 		// 
@@ -204,15 +199,18 @@ namespace game{
 		virtual pool_Component_ptr VCloneComponent( const Component * pCompo_p );
 		virtual void VUpdateComponent( Component * pCompo_p, text::GfigElementA * pGFig_p );
 		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
+		virtual void VSerialize( const Component * pCompo_p, const Component * pDefault_p, text::GfigElementA * pGFig_p );
+		virtual Component* VGetDefaultCompo();
 
 		//------------------------------------------------------------------------
 		// those 2 must receive an already named gfig
 		//------------------------------------------------------------------------
-		static void SerializeTrafo( const Trafo & trafo_p, text::GfigElementA & gFig_p );
-		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p, const float fDefault_p = 0.0f );
+		static void SerializeTrafo( const Trafo & trafo_p, const Trafo & default_p, text::GfigElementA & gFig_p );
+		static void SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p, const DirectX::XMFLOAT4 & fDefault_p );
 
 	private:
 
+		TransformComponent m_defaults;
 		gen::Pool<TransformComponent> m_pool;
 	};
 

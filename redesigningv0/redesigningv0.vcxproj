@@ -459,9 +459,11 @@
     <ClCompile Include="namespace text\TextParser.cpp" />
     <ClCompile Include="PCHF.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin1.bin" />
     <None Include="gsp_Icons.ico" />
     <None Include="namespace game\ComponentFactory.inl" />
     <None Include="namespace gen\TreeNode.inl" />

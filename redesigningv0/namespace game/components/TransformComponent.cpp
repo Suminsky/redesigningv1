@@ -339,6 +339,18 @@ TransformComponent * game::TransformComponent::FindChildByObjectName( const char
 //========================================================================
 // 
 //========================================================================
+
+game::TransformComponentFactory::TransformComponentFactory( unsigned int maxComponents_p ) :
+m_pool(maxComponents_p)
+{
+	BREAKHERE;
+}
+
+Component* game::TransformComponentFactory::VGetDefaultCompo()
+{
+	return &m_defaults;
+}
+
 game::pool_Component_ptr game::TransformComponentFactory::VCreateComponent()
 {
 	return pool_Component_ptr(m_pool);
@@ -529,7 +541,7 @@ void game::TransformComponentFactory::VSerialize( const Component * pCompo_p, te
 	GfigElementA & gTrafoCompo = pGFig_p->m_subElements.back();
 	{
 		GfigElementA gOffset(	"offset" );
-		SerializeTrafo( trafo.m_offset, gOffset );
+		SerializeTrafo( trafo.m_offset, m_defaults.m_offset, gOffset );
 		if( gOffset.m_subElements.size())
 			gTrafoCompo.m_subElements.push_back(std::move(gOffset));
 
@@ -537,7 +549,7 @@ void game::TransformComponentFactory::VSerialize( const Component * pCompo_p, te
 		if( gTrafoCompo.m_subElements.size() ){
 
 			GfigElementA gLocal( "local" );
-			SerializeTrafo( trafo.m_local, gLocal );
+			SerializeTrafo( trafo.m_local, m_defaults.m_local, gLocal );
 			if( gLocal.m_subElements.size())
 				gTrafoCompo.m_subElements.push_back(std::move(gLocal));
 		}
@@ -545,47 +557,81 @@ void game::TransformComponentFactory::VSerialize( const Component * pCompo_p, te
 
 			// if there isnt an offset, no need to have a "local" subelement
 
-			SerializeTrafo( trafo.m_local, gTrafoCompo );
+			SerializeTrafo( trafo.m_local, m_defaults.m_local, gTrafoCompo );
 		}
 	}	
 }
 
-void game::TransformComponentFactory::SerializeTrafo( const Trafo & trafo_p, text::GfigElementA & gFig_p )
+void game::TransformComponentFactory::VSerialize( const Component * pCompo_p, const Component * pDefault_p, text::GfigElementA * pGFig_p )
+{
+	TransformComponent & trafo = *((TransformComponent*)pCompo_p);
+	TransformComponent & def = *((TransformComponent*)pDefault_p);
+
+	pGFig_p->m_subElements.emplace_back( GfigElementA(COMPONENT_NAME(TransformComponent)) );
+
+	GfigElementA & gTrafoCompo = pGFig_p->m_subElements.back();
+	{
+		GfigElementA gOffset(	"offset" );
+		SerializeTrafo( trafo.m_offset, def.m_offset, gOffset );
+		if( gOffset.m_subElements.size())
+			gTrafoCompo.m_subElements.push_back(std::move(gOffset));
+
+
+		if( gTrafoCompo.m_subElements.size() ){
+
+			GfigElementA gLocal( "local" );
+			SerializeTrafo( trafo.m_local, def.m_local, gLocal );
+			if( gLocal.m_subElements.size())
+				gTrafoCompo.m_subElements.push_back(std::move(gLocal));
+		}
+		else{
+
+			// if there isnt an offset, no need to have a "local" subelement
+
+			SerializeTrafo( trafo.m_local, def.m_local, gTrafoCompo );
+		}
+	}
+
+	if( gTrafoCompo.m_subElements.size() == 0 ) pGFig_p->m_subElements.pop_back();
+}
+
+void game::TransformComponentFactory::SerializeTrafo( const Trafo & trafo_p, const Trafo & default_p, text::GfigElementA & gFig_p )
 {
 	GfigElementA gPos("pos");
-	SerializeXYZW(trafo_p.position, gPos);
+	SerializeXYZW(trafo_p.position, gPos, default_p.position);
 	if( gPos.m_subElements.size())
 		gFig_p.m_subElements.push_back(std::move(gPos));
 
 	GfigElementA gRotation("rotation");
-	SerializeXYZW(trafo_p.qRotation, gRotation);
+	SerializeXYZW(trafo_p.qRotation, gRotation, default_p.qRotation );
 	if( gRotation.m_subElements.size() )
 		gFig_p.m_subElements.push_back(std::move(gRotation));
 
 
 	GfigElementA gScale("scale");
-	SerializeXYZW(trafo_p.scale, gScale, 1.0f);
+	SerializeXYZW(trafo_p.scale, gScale, default_p.scale );
 	if( gScale.m_subElements.size() )
 		gFig_p.m_subElements.push_back(std::move(gScale));
 }
 
-void game::TransformComponentFactory::SerializeXYZW( const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p, const float fDefault_p )
+void game::TransformComponentFactory::SerializeXYZW(
+	const DirectX::XMFLOAT4 & xyzw_p, text::GfigElementA & gFig_p, const DirectX::XMFLOAT4 & fDefault_p )
 {
 	// check if values are different than default values, since default values dont need to be loaded
 
-	if( xyzw_p.x != fDefault_p ){
+	if( xyzw_p.x != fDefault_p.x ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("x", std::to_string((long double)xyzw_p.x ).c_str()) );
 	}
-	if( xyzw_p.y != fDefault_p ){
-		//GfigElementA gY("y", std::to_string(xyzw_p.y ));
+	if( xyzw_p.y != fDefault_p.y ){
+
 		gFig_p.m_subElements.push_back(GfigElementA("y", std::to_string((long double)xyzw_p.y ).c_str()) );
 	}
-	if( xyzw_p.z != fDefault_p ){
+	if( xyzw_p.z != fDefault_p.z ){
 		
 		gFig_p.m_subElements.push_back(GfigElementA("z", std::to_string((long double)xyzw_p.z ).c_str()) );
 	}
-	if( xyzw_p.w != 1.0f ){
+	if( xyzw_p.w != fDefault_p.w ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("w", std::to_string((long double)xyzw_p.w ).c_str()) );
 	}

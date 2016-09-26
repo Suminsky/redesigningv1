@@ -120,7 +120,7 @@ namespace game{
 		//------------------------------------------------------------------------
 		// must receive an already named gfig
 		//------------------------------------------------------------------------
-		static void SerializeRGBA( const DirectX::XMFLOAT4 & rgba_p, text::GfigElementA & gFig_p );
+		static void SerializeRGBA( const DirectX::XMFLOAT4 & rgba_p, const DirectX::XMFLOAT4 & defs_p, text::GfigElementA & gFig_p );
 
 	private:
 

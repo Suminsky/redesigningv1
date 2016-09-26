@@ -904,6 +904,9 @@
     <None Include="namespace text\SpriteInstancedTexts.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="bin1.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RC_icon.rc">

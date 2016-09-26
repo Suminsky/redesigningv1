@@ -159,16 +159,16 @@ void game::ColorComponentFactory::VSerialize( const Component * pCompo_p, text::
 
 	GfigElementA & gColorCompo = pGFig_p->m_subElements.back();
 	{
-
+		XMFLOAT4 defColor(1.0f, 1.0f, 1.0f, 1.0f);
 		GfigElementA gOffset(	"offset" );
-		SerializeRGBA( color.m_offsetColor, gOffset );
+		SerializeRGBA( color.m_offsetColor, defColor, gOffset );
 		if( gOffset.m_subElements.size())
 			gColorCompo.m_subElements.push_back(std::move(gOffset));
 
 		if( gColorCompo.m_subElements.size() ){
 
 			GfigElementA gLocal(	"local" );
-			SerializeRGBA( color.m_localColor, gLocal );
+			SerializeRGBA( color.m_localColor, defColor, gLocal );
 			if( gLocal.m_subElements.size())
 				gColorCompo.m_subElements.push_back(std::move(gLocal));
 		}
@@ -176,30 +176,28 @@ void game::ColorComponentFactory::VSerialize( const Component * pCompo_p, text::
 
 			// if there isnt an offset, no need to have a "local" subelement
 
-			SerializeRGBA( color.m_localColor, gColorCompo );
-		}
-
-		
+			SerializeRGBA( color.m_localColor, defColor, gColorCompo );
+		}	
 	}	
 }
 
-void game::ColorComponentFactory::SerializeRGBA( const DirectX::XMFLOAT4 & rgba_p, text::GfigElementA & gFig_p )
+void game::ColorComponentFactory::SerializeRGBA( const DirectX::XMFLOAT4 & rgba_p, const DirectX::XMFLOAT4 & defs_p, text::GfigElementA & gFig_p )
 {
 	// check if values are different than default values, since default values dont need to be loaded
 
-	if( rgba_p.x != 1.0f ){
+	if( rgba_p.x != defs_p.x ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("r", std::to_string((long double)rgba_p.x ).c_str()) );
 	}
-	if( rgba_p.y != 1.0f ){
+	if( rgba_p.y !=  defs_p.y ){
 	
 		gFig_p.m_subElements.push_back(GfigElementA("g", std::to_string((long double)rgba_p.y ).c_str()) );
 	}
-	if( rgba_p.z != 1.0f ){
+	if( rgba_p.z !=  defs_p.z ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("b", std::to_string((long double)rgba_p.z ).c_str()) );
 	}
-	if( rgba_p.w != 1.0f ){
+	if( rgba_p.w !=  defs_p.w ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("a", std::to_string((long double)rgba_p.w ).c_str()) );
 	}

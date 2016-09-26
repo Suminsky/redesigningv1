@@ -72,7 +72,7 @@ SpriteComponent_::SpriteComponent_(
 	m_BlendModeID = blendType_p;
 	m_SamplerModeID = sampler_p;
 	m_sortKey.bitfield.textureID = m_TextureID;
-	m_sortKey.bitfield.transparency = blendType_p;
+	m_sortKey.bitfield.blending = blendType_p;
 }
 
 void SpriteComponent_::VOnAttach()
@@ -322,7 +322,7 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTextur
 	m_BlendModeID = blendType_p;
 	m_SamplerModeID = sampler_p;
 	m_sortKey.bitfield.textureID = m_TextureID;
-	m_sortKey.bitfield.transparency = blendType_p;
+	m_sortKey.bitfield.blending = blendType_p;
 }
 void SpriteComponent_::Initialize( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
 {
@@ -380,12 +380,22 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, game::TextureID_Binde
 	m_BlendModeID = blendType_p;
 	m_SamplerModeID = sampler_p;
 	m_sortKey.bitfield.textureID = m_TextureID;
-	m_sortKey.bitfield.transparency = blendType_p;
+	m_sortKey.bitfield.blending = blendType_p;
 }
 
 //========================================================================
 // 
 //========================================================================
+
+game::SpriteComponent_Factory::SpriteComponent_Factory( unsigned int maxComponents_p, dx::Device * pDevice_p, sprite::SpriteRenderer * pSpriteRenderer_p ) :
+m_pool(maxComponents_p),
+	m_pDeviceRef_p(pDevice_p), m_pRendererRef(pSpriteRenderer_p)
+{
+	m_defaults.Initialize(
+		pDevice_p, "default.png", 100.0f, 100.0f, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
+		E_BLEND_NONE_DEFAULT, E_SAMPLER_NONE,
+		pSpriteRenderer_p);
+}
 
 pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA * pGFig_p )
 {
@@ -644,7 +654,7 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 		if( pSprite->m_BlendModeID != (unsigned)eBlend ){
 
 			pSprite->m_BlendModeID = eBlend;
-			pSprite->m_sortKey.bitfield.transparency = eBlend;
+			pSprite->m_sortKey.bitfield.blending = eBlend;
 
 			auto pipeIt = pSprite->m_pipeState.Begin();
 			pipeIt+=3;
@@ -757,18 +767,18 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 
 
 		GfigElementA gRect(	"uvRect" );
-		SerializeXYZW( sprite.m_renderData.m_uvRect, gRect );
+		SerializeXYZW( sprite.m_renderData.m_uvRect, m_defaults.m_renderData.m_uvRect, gRect );
 		if( gRect.m_subElements.size())
 			gSpriteCompo.m_subElements.push_back(std::move(gRect));
 
 
 		GfigElementA gBlend( "blend" );
-		if( SerializeBlendType( (E_BLENDTYPE)sprite.m_sortKey.bitfield.transparency, gBlend ) ){
+		if( SerializeBlendType( (E_BLENDTYPE)sprite.m_BlendModeID, (E_BLENDTYPE)m_defaults.m_BlendModeID, gBlend ) ){
 			gSpriteCompo.m_subElements.push_back(std::move(gBlend));
 		}
 
 		GfigElementA gSampler( "sampler" );
-		if( SerializeSamplerType( (E_SAMPLERTYPE)sprite.m_SamplerModeID, gSampler ) ){
+		if( SerializeSamplerType( (E_SAMPLERTYPE)sprite.m_SamplerModeID, (E_SAMPLERTYPE)m_defaults.m_SamplerModeID, gSampler ) ){
 			gSpriteCompo.m_subElements.push_back(std::move(gSampler));
 		}
 
@@ -783,39 +793,102 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 		}
 
 		GfigElementA gColor("color");
-		ColorComponentFactory::SerializeRGBA(sprite.m_currentColor, gColor);
+		ColorComponentFactory::SerializeRGBA(sprite.m_currentColor, m_defaults.m_currentColor, gColor);
 		if( gColor.m_subElements.size() ){
 
 			gSpriteCompo.m_subElements.push_back(std::move(gColor));
 		}
-	}	
+	}
 }
 
-void game::SpriteComponent_Factory::SerializeXYZW( const DirectX::XMFLOAT4 & xywh_p, text::GfigElementA & gFig_p )
+void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, const Component * pDefaults_p, text::GfigElementA * pGFig_p )
+{
+	SpriteComponent_ & sprite = *((SpriteComponent_*)pCompo_p);
+	SpriteComponent_ & def = *((SpriteComponent_*)pDefaults_p);
+
+	pGFig_p->m_subElements.emplace_back( GfigElementA(COMPONENT_NAME(SpriteComponent_)) );
+
+	GfigElementA & gSpriteCompo = pGFig_p->m_subElements.back();
+	{
+		if( sprite.m_TextureID != def.m_TextureID ){
+
+			gSpriteCompo.m_subElements.push_back(
+				GfigElementA( "texture", m_pRendererRef->m_tex2D_cache.GetTextureName( sprite.GetTextureID() ).c_str() )
+				);
+		}
+		if( sprite.m_renderData.m_res.x != def.m_renderData.m_res.x ){
+
+			gSpriteCompo.m_subElements.push_back(
+				GfigElementA( "w", std::to_string((long double)sprite.m_renderData.m_res.x).c_str() )
+				);
+		}
+		if( sprite.m_renderData.m_res.y != def.m_renderData.m_res.y ){
+
+				gSpriteCompo.m_subElements.push_back(
+					GfigElementA( "h", std::to_string((long double)sprite.m_renderData.m_res.y).c_str() )
+					);
+		}
+
+		GfigElementA gRect(	"uvRect" );
+		SerializeXYZW( sprite.m_renderData.m_uvRect, def.m_renderData.m_uvRect, gRect );
+		if( gRect.m_subElements.size())
+			gSpriteCompo.m_subElements.push_back(std::move(gRect));
+
+		GfigElementA gBlend( "blend" );
+		if(SerializeBlendType( (E_BLENDTYPE)sprite.m_BlendModeID, (E_BLENDTYPE)def.m_BlendModeID, gBlend ) )
+			gSpriteCompo.m_subElements.push_back(std::move(gBlend));
+		
+
+		GfigElementA gSampler( "sampler" );
+		if( SerializeSamplerType( (E_SAMPLERTYPE)sprite.m_SamplerModeID, (E_SAMPLERTYPE)def.m_SamplerModeID, gSampler ) )
+			gSpriteCompo.m_subElements.push_back(std::move(gSampler));
+		
+
+		if( sprite.m_renderData.m_padding.x != def.m_renderData.m_padding.x ){
+			gSpriteCompo.m_subElements.push_back(GfigElementA("xoff", std::to_string((long double)sprite.m_renderData.m_padding.x).c_str()) );
+		}
+		if( sprite.m_renderData.m_padding.y != def.m_renderData.m_padding.y ){
+			gSpriteCompo.m_subElements.push_back(GfigElementA("yoff", std::to_string((long double)sprite.m_renderData.m_padding.y).c_str()) );
+		}
+		if( sprite.m_sortKey.bitfield.Zdepth != def.m_sortKey.bitfield.Zdepth  ){
+			gSpriteCompo.m_subElements.push_back(GfigElementA("d", std::to_string((_ULonglong)sprite.m_sortKey.bitfield.Zdepth).c_str()) );
+		}
+
+		GfigElementA gColor("color");
+		ColorComponentFactory::SerializeRGBA(sprite.m_currentColor, def.m_currentColor, gColor);
+		if( gColor.m_subElements.size() ){
+			gSpriteCompo.m_subElements.push_back(std::move(gColor));
+		}
+	}
+
+	if( gSpriteCompo.m_subElements.size() == 0 ) pGFig_p->m_subElements.pop_back();
+}
+
+void game::SpriteComponent_Factory::SerializeXYZW( const DirectX::XMFLOAT4 & xywh_p, const DirectX::XMFLOAT4 & defs_p, text::GfigElementA & gFig_p )
 {
 	// check if values are different than default values, since default values dont need to be loaded
 
-	if( xywh_p.x != 0.0f ){
+	if( xywh_p.x != defs_p.x ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("x", std::to_string((long double)xywh_p.x ).c_str()) );
 	}
-	if( xywh_p.y != 0.0f ){
-		//GfigElementA gY("y", std::to_string(xywh_p.y ));
+	if( xywh_p.y != defs_p.y ){
+
 		gFig_p.m_subElements.push_back(GfigElementA("y", std::to_string((long double)xywh_p.y ).c_str()) );
 	}
-	if( xywh_p.z != 1.0f ){
+	if( xywh_p.z != defs_p.z ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("w", std::to_string((long double)xywh_p.z ).c_str()) );
 	}
-	if( xywh_p.w != 1.0f ){
+	if( xywh_p.w != defs_p.w ){
 
 		gFig_p.m_subElements.push_back(GfigElementA("h", std::to_string((long double)xywh_p.w ).c_str()) );
 	}
 }
 
-bool game::SpriteComponent_Factory::SerializeBlendType( const E_BLENDTYPE eBlend_p, text::GfigElementA & gFig_p )
+bool game::SpriteComponent_Factory::SerializeBlendType( const E_BLENDTYPE eBlend_p, const E_BLENDTYPE def_p, text::GfigElementA & gFig_p )
 {
-	if( eBlend_p == E_BLEND_NONE_DEFAULT ) return false;
+	if( eBlend_p == def_p ) return false;
 
 	if( eBlend_p == E_BLEND_ALPHA_BLENDED ){
 		gFig_p.m_value = "alpha";
@@ -824,17 +897,32 @@ bool game::SpriteComponent_Factory::SerializeBlendType( const E_BLENDTYPE eBlend
 
 		gFig_p.m_value = "add";
 	}
+	else{
+
+		gFig_p.m_value = "none";
+	}
 
 	return true;
 }
 
-bool game::SpriteComponent_Factory::SerializeSamplerType( const sprite::E_SAMPLERTYPE eSampler_p, GfigElementA & gFig_p )
+bool game::SpriteComponent_Factory::SerializeSamplerType( const sprite::E_SAMPLERTYPE eSampler_p, const sprite::E_SAMPLERTYPE def_p, GfigElementA & gFig_p )
 {
-	if( eSampler_p == E_SAMPLER_NONE ) return false;
+	if( eSampler_p == def_p ) return false;
 
 	if( eSampler_p == E_SAMPLER_LINEAR ){
 		gFig_p.m_value = "linear";
 	}
+	else{
+
+		gFig_p.m_value = "none";
+	}
 
 	return true;
+}
+//------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------
+Component * game::SpriteComponent_Factory::VGetDefaultCompo()
+{
+	return &m_defaults;
 }
