@@ -97,6 +97,8 @@
       <Optimization>Disabled</Optimization>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>SOUND;NETWORK;_WINSOCKAPI_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>PCHF.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -154,6 +156,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCHF.h</PrecompiledHeaderFile>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -204,6 +208,8 @@
     <ClInclude Include="Legalia\SpriteDraggingSys.h" />
     <ClInclude Include="Legalia\SpringyFollowCamera.h" />
     <ClInclude Include="Legalia\SpriteResizingSys.h" />
+    <ClInclude Include="namespace game\components\SpriteAnimCache.h" />
+    <ClInclude Include="namespace game\components\SpriteAnimCompo_.h" />
     <ClInclude Include="namespace game\components\SpriteTextCompo.h" />
     <ClInclude Include="namespace game\systems\SpriteTextSys.h" />
     <ClInclude Include="mentle\mainmenu\fadelayer.h" />
@@ -362,6 +368,8 @@
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp" />
     <ClCompile Include="Legalia\SpringyFollowCamera.cpp" />
     <ClCompile Include="Legalia\SpriteResizingSys.cpp" />
+    <ClCompile Include="namespace game\components\SpriteAnimCache.cpp" />
+    <ClCompile Include="namespace game\components\SpriteAnimCompo_.cpp" />
     <ClCompile Include="namespace game\components\SpriteTextCompo.cpp" />
     <ClCompile Include="namespace game\systems\SpriteTextSys.cpp" />
     <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
@@ -460,6 +468,8 @@
     <ClCompile Include="PCHF.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PCHF.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

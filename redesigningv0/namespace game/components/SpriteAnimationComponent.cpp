@@ -294,7 +294,7 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 	
 	AnimationClip animClip;
 	animClip.configData.eWrapMode = E_ANIMWRAPMODE_LOOP;
-	animClip.configData.SPF = 0.083333; // 12 fps
+	animClip.configData.SPF = (animTimeUnit)0.083333; // 12 fps
 
 	for( int it = 0, nClips = (int)pGFig_p->m_subElements.size();
 		it < nClips;
@@ -334,7 +334,6 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 
 					 animClip.configData.vFrames.push_back( atoi(frame.m_name.c_str()) );
 			}
-
 
 			compo_p->m_vClips.push_back( animClip );
 	}
@@ -560,7 +559,7 @@ void game::SpriteAnimationComponentFactory::LoadClipStateDataFromGfig( text::Gfi
 		stateData_p.deltaAccum = (animTimeUnit)atof( pGFigParam->m_value.c_str() );
 	}
 	if( pGFig_p->GetSubElement( "speed", pGFigParam ) ){
-		stateData_p.deltaAccum = (animTimeUnit)atof( pGFigParam->m_value.c_str() );
+		stateData_p.speedMod = (animTimeUnit)atof( pGFigParam->m_value.c_str() );
 	}
 	if( pGFig_p->GetSubElement( "state", pGFigParam ) ){
 		stateData_p.eState = GetClipStateFromGfig(pGFigParam);

@@ -193,7 +193,9 @@ void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA *
 				||
 				pCompo->GetType() == COMPONENT_TYPE(TransformComponent)
 				||
-				pCompo->GetType() == COMPONENT_TYPE(SpriteComponent_)){ // testing just with AABB2d
+				pCompo->GetType() == COMPONENT_TYPE(SpriteComponent_)
+				||
+				pCompo->GetType() == COMPONENT_TYPE(SpriteAnimCompo_)){ // testing just with AABB2d
 
 				if( pPrefCompo != nullptr ){
 

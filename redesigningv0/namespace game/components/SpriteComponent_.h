@@ -13,7 +13,6 @@
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-#include <new>
 #include <memory>
 #include <DirectXMath.h>
 
@@ -84,6 +83,7 @@ namespace game{
 		void OnColorEventDelegate( const Event<ComponentEventData> & event_p );
 		void OnTransformEventDelegate( const Event<ComponentEventData> & event_p );
 		void OnAnimEventDelegate( const Event<ComponentEventData> & event_p );
+		void OnAnim_EventDelegate( const Event<ComponentEventData> & event_p );
 
 		int GetTextureID() const{ return m_TextureID; }
 
@@ -115,7 +115,7 @@ namespace game{
 		ID3D11Buffer * m_pBuffer;
 		sprite::Camera * m_pCamera;
 
-		ALLIGN16ONLY;
+		//ALLIGN16ONLY;
 	};
 
 	typedef gen::pool_ptr<SpriteComponent_> pool_SpriteCompo__ptr;

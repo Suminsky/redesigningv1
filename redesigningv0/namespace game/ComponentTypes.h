@@ -55,6 +55,7 @@ namespace game{
 	NEW_COMPONENT_TYPE(SpriteButtonCompo);
 	NEW_COMPONENT_TYPE(SpriteTextCompo);
 	NEW_COMPONENT_TYPE(MovableComponent);
+	NEW_COMPONENT_TYPE(SpriteAnimCompo_);
 
 	enum E_COMPONENTTYPE{
 		E_USERTYPE = __LINE__

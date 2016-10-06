@@ -4,6 +4,7 @@
 #include "ColorComponent.h"
 #include "TransformComponent.h"
 #include "SpriteAnimationComponent.h"
+#include "SpriteAnimCompo_.h"
 #include "../../namespace text/TextParser.h"
 
 using namespace std;
@@ -88,6 +89,10 @@ void SpriteComponent_::VOnAttach()
 	EventMachine<ComponentEventData>::EventHandler animDelegate =
 		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
 	m_pObjectOwner->RegisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
+
+	EventMachine<ComponentEventData>::EventHandler anim_Delegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnim_EventDelegate>(this);
+	m_pObjectOwner->RegisterForComponentEvent(anim_Delegate, COMPONENT_TYPE(SpriteAnimCompo_));
 }
 void game::SpriteComponent_::VOnDetach()
 {
@@ -102,6 +107,10 @@ void game::SpriteComponent_::VOnDetach()
 	EventMachine<ComponentEventData>::EventHandler animDelegate =
 		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnimEventDelegate>(this);
 	m_pObjectOwner->UnregisterForComponentEvent(animDelegate, COMPONENT_TYPE(SpriteAnimationComponent));
+
+	EventMachine<ComponentEventData>::EventHandler anim_Delegate =
+		EventMachine<ComponentEventData>::EventHandler::Build<SpriteComponent_, &SpriteComponent_::OnAnim_EventDelegate>(this);
+	m_pObjectOwner->UnregisterForComponentEvent(anim_Delegate, COMPONENT_TYPE(SpriteAnimCompo_));
 }
 
 void SpriteComponent_::OnColorEventDelegate( const Event<ComponentEventData> & event_p )
@@ -264,6 +273,35 @@ void game::SpriteComponent_::InterpolateColor( double dInterp )
 
 		m_renderData.m_bUpdate = true;
 	}
+}
+
+void game::SpriteComponent_::OnAnim_EventDelegate( const Event<ComponentEventData> & event_p )
+{
+	SpriteAnimCompo_ * pAnim = event_p.GetDataAs<SpriteAnimCompo_*>();
+
+	SpriteFrame_ spriteFrame = pAnim->GetCurrentFrame();
+
+	m_renderData.m_res.x = spriteFrame.fW;
+	m_renderData.m_res.y = spriteFrame.fH;
+	m_renderData.m_uvRect = spriteFrame.uvRect;
+	m_renderData.m_padding.x = spriteFrame.xOffset;
+	m_renderData.m_padding.y = spriteFrame.yOffset;
+	m_renderData.m_bUpdate = true;
+
+	if( m_bHFlip ){
+		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.x = -spriteFrame.xOffset;
+
+	}
+	if( m_bVFlip ){
+		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
+		m_renderData.m_padding.y = -spriteFrame.yOffset;
+	}
+
+	const TextureID_Binder_Pair_ & sprite = pAnim->GetSprite((iframe)spriteFrame.iSpriteUsedIndex);
+	(*(++m_pipeState.Begin())) = sprite.pBindPSSRV;
+	m_TextureID = sprite.iID;
+	m_sortKey.bitfield.textureID = m_TextureID;
 }
 
 void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )

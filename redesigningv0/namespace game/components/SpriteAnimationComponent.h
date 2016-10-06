@@ -34,7 +34,7 @@ namespace game{
 	class SpriteAnimationComponentFactory;
 
 	typedef unsigned int frame;
-	typedef double		animTimeUnit;
+	typedef float		animTimeUnit;
 
 	enum E_ANIMWRAPMODE{
 

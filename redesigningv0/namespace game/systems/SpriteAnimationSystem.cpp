@@ -6,8 +6,8 @@ using namespace game;
 
 void game::SpriteAnimationSystem::VOnInit()
 {
-	shared_SpriteAnimationComponentFactory_ptr pFactory = std::static_pointer_cast<SpriteAnimationComponentFactory>(
-		m_pSysMachineOwner->GetLayer()->m_componentFactory.GetComponentFactory<SpriteAnimationComponent>()
+	shared_SpriteAnimCompo_Factory_ptr pFactory = std::static_pointer_cast<SpriteAnimCompo_Factory>(
+		m_pSysMachineOwner->GetLayer()->m_componentFactory.GetComponentFactory<SpriteAnimCompo_>()
 		);
 
 	m_poolAccess = pFactory->m_pool.GetAccess();
@@ -19,21 +19,19 @@ void game::SpriteAnimationSystem::VOnUpdate( double /*dAccum_p*/, double dDelta_
 		itSprite < iSize;
 		++itSprite ){
 
-			SpriteAnimationComponent & animCompo = (*m_poolAccess.GetAllocated( itSprite ));
+			SpriteAnimCompo_ & animCompo = (*m_poolAccess.GetAllocated( itSprite ));
 			if( !animCompo.GetObjectOwner()->IsAttached() ) continue;
 
-			if( animCompo.m_vClips[ animCompo.m_iCurrentClip ].stateData.eState == E_ANIMSTATE_PLAYING ){
+			if( animCompo.m_pClips[ animCompo.m_iCurrentClip ].state.eState == E_ANIMSTATE_PLAYING ){
 
-				 animCompo.Update( dDelta_p );
+				 animCompo.Update( (animTimeUnit)dDelta_p );
 			}
 
-			if( animCompo.m_previousFrame != animCompo.m_currentFrame
-				||
-				animCompo.m_iCurrentClip != animCompo.m_iPreviousClip ){
+			if( animCompo.m_iPreviousFrame != animCompo.m_iCurrentFrame ){
 
-				animCompo.m_previousFrame = animCompo.m_currentFrame;
+				animCompo.m_iPreviousFrame = animCompo.m_iCurrentFrame;
 
-				animCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(SpriteAnimationComponent), &animCompo );
+				animCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(SpriteAnimCompo_), &animCompo );
 			}
 	}
 }

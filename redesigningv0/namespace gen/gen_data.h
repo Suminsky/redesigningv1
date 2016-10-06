@@ -59,6 +59,11 @@ namespace gen{
 	//========================================================================
 	// rounds to the next number thats a multiple of multiple_p
 	//========================================================================
+	inline uintptr_t RoundUpToNextMultiple_POT( uintptr_t n_p, uintptr_t multiplePOT_p){
+
+		return (n_p + multiplePOT_p - 1) & ~(multiplePOT_p - 1);
+	}
+
 	inline uint32_t RoundUpToNextMultiple( uint32_t n_p, uint32_t multiple_p ){
 
 		return n_p + multiple_p - 1 - (n_p - 1) % multiple_p;
@@ -451,13 +456,11 @@ namespace gen{
 		}
 		inline bool IsEqual( const char* string1_p, const char* string2_p, uint32_t nMaxSize_p = GEN_MAXSTRINGSIZE )
 		{
-			// the G is due name claching on stupid WinNIS.h or something
-
 			uint32_t it = 0;
 
 			while( string1_p[it] == string2_p[it] )
 			{
-				if( string1_p[it] == 0x00 )
+				if( string1_p[it] == 0x00 && string2_p[it] == 0x00 )
 				{
 					return true;
 				}
@@ -674,6 +677,13 @@ namespace gen{
 		unsigned char *m_data;
 		unsigned int m_currentByteIndex;
 
+		unsigned char * GetDataAtCurrent(){
+
+			assert( m_currentByteIndex < m_size );
+
+			return &m_data[m_currentByteIndex];
+		}
+
 		void Set( unsigned char * pData, unsigned int iSize ){
 
 			assert( iSize <= m_size );
@@ -683,7 +693,7 @@ namespace gen{
 			m_currentByteIndex = iSize;
 		}
 
-		void Queue( unsigned char * pData, unsigned int iSize ){
+		void Stack( unsigned char * pData, unsigned int iSize ){
 
 			assert( m_currentByteIndex + iSize <= m_size );
 
@@ -696,7 +706,7 @@ namespace gen{
 		// 
 		//------------------------------------------------------------------------
 		template< typename TYPE >
-		void QueueChunkAs( const TYPE & newData_p ){
+		void StackChunkAs( const TYPE & newData_p ){
 
 			assert( m_currentByteIndex + sizeof(TYPE) <= m_size );
 
@@ -728,6 +738,18 @@ namespace gen{
 			return *pT;
 		}
 
+		template< typename TYPE >
+		TYPE * GetNextChunkPtr(uint32_t count_p = 1){
+
+			assert( m_currentByteIndex + count_p * sizeof(TYPE) <= m_size );
+
+			TYPE * pT = (TYPE*)&m_data[m_currentByteIndex];
+
+			m_currentByteIndex += count_p * sizeof(TYPE);
+
+			return pT;
+		}
+
 		/*void GetNextChunk( unsigned char * pData, unsigned int iSize ){
 
 			assert( m_currentByteIndex + iSize <= m_size );
@@ -736,6 +758,14 @@ namespace gen{
 
 			m_currentByteIndex += iSize;
 		}*/
+
+		template< typename TYPE >
+		void SetChunkAs( unsigned int iByteOffset_p, TYPE newData_p ){
+
+			assert( iByteOffset_p + sizeof(TYPE) <= m_size );
+
+			*((TYPE*) (&(m_data[iByteOffset_p])) ) = newData_p;
+		}
 	};
 
 	//------------------------------------------------------------------------

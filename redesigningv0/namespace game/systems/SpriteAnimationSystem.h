@@ -18,6 +18,7 @@
 // private includes
 #include "../System.h"
 #include "../../namespace gen/Pool.h"
+#include "../components/SpriteAnimCompo_.h"
 #include "../components/SpriteAnimationComponent.h"
 
 namespace game{
@@ -36,7 +37,7 @@ namespace game{
 
 	private:
 
-		gen::Pool<SpriteAnimationComponent>::PoolAccessor m_poolAccess;
+		gen::Pool<SpriteAnimCompo_>::PoolAccessor m_poolAccess;
 
 		//------------------------------------------------------------------------
 		// 

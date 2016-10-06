@@ -498,6 +498,12 @@
     <ClInclude Include="Legalia\LedgeHang.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace game\components\SpriteAnimCompo_.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace game\components\SpriteAnimCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -888,6 +894,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\AlienPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\components\SpriteAnimCompo_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="namespace game\components\SpriteAnimCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
