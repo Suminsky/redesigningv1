@@ -189,7 +189,7 @@ uint32_t game::SpriteAnimCache::LoadDataFromSanim( const char * szFileName )
 	}
 
 	// for the sprites...needs to replace pointers to sprite filenames
-	keepAssert(m_dataStream.GetNextChunkPtr<TextureID_Binder_Pair_>(pHeader->nSprites) == pHeader->pSprites );
+	m_dataStream.GetNextChunkPtr<TextureID_Binder_Pair_>(pHeader->nSprites);// != pHeader->pSprites )
 	buffer.m_currentByteIndex = copySize;
 	for( int sprite = 0, n = pHeader->nSprites; sprite < n; ++sprite ){
 

@@ -475,9 +475,12 @@ pool_Component_ptr game::SpriteComponent_Factory::VCreateComponent( GfigElementA
 		eSampler = GetSamplerType( pParam );
 	}
 
-	keepAssert( pGFig_p->GetSubElement( "texture", pParam ) );
+	const char * szTexFilename = "default.png";
+	if( pGFig_p->GetSubElement( "texture", pParam ) ){
+		szTexFilename = pParam->m_value.c_str();
+	}
 
-	pSprite->Initialize( m_pDeviceRef_p, pParam->m_value.c_str(), w, h, uvRect, eBlend, eSampler, m_pRendererRef );
+	pSprite->Initialize( m_pDeviceRef_p, szTexFilename, w, h, uvRect, eBlend, eSampler, m_pRendererRef );
 	pSprite->m_renderData.m_padding.x = xOffset;
 	pSprite->m_renderData.m_padding.y = yOffset;
 	//return MAKE_STACK_SHAREDPTR( SpriteComponent_, pSprite );

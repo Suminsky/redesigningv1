@@ -65,7 +65,7 @@ namespace game{
 		float xOffset, yOffset;
 		DirectX::XMFLOAT4 uvRect;
 
-		bool UVRectCompareDifferent ( const DirectX::XMFLOAT4 & a, const DirectX::XMFLOAT4 & b ) const {
+		static bool UVRectCompareDifferent ( const DirectX::XMFLOAT4 & a, const DirectX::XMFLOAT4 & b ) {
 
 			if( a.x != b.x 
 				||

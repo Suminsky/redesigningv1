@@ -102,79 +102,152 @@ namespace dx{
 		E_MAX_BINDS
 	};
 
-#pragma region constants
+	enum class E_BIND_MASK : uint64_t {
 
-	static const UINT64 IA_InputLayout = 1LL << 0;
+		 IA_InputLayout = 1LL << 0,
 
-	static const UINT64 IA_VertexBuffer0 = 1LL << 1; // up to 16
-	static const UINT64 IA_VertexBuffer1 = 1LL << 2;
-	static const UINT64 IA_VertexBuffer2 = 1LL << 3;
-	static const UINT64 IA_VertexBuffer3 = 1LL << 4;
-	static const UINT64 IA_VertexBuffer4 = 1LL << 5;
+		 IA_VertexBuffer0 = 1LL << 1, // up to 16
+		 IA_VertexBuffer1 = 1LL << 2,
+		 IA_VertexBuffer2 = 1LL << 3,
+		 IA_VertexBuffer3 = 1LL << 4,
+		 IA_VertexBuffer4 = 1LL << 5,
 
-	static const UINT64 IA_IndexBuffer			= 1LL << 6;
-	static const UINT64 IA_PrimitiveTopology	= 1LL << 7;
+		 IA_IndexBuffer = 1LL << 6,
+		 IA_PrimitiveTopology = 1LL << 7,
 
-	static const UINT64 VS_VertexShader = 1LL << 8;
-	static const UINT64 PS_PixelShader	= 1LL << 9;
+		 VS_VertexShader = 1LL << 8,
+		 PS_PixelShader = 1LL << 9,
 
-	static const UINT64 VS_CBuffer0 = 1LL << 10;	// Each shader stage allows up to 15 shader-static constant buffers; each buffer can hold up to 4096 static constants.
-	static const UINT64 VS_CBuffer1 = 1LL << 11;
-	static const UINT64 VS_CBuffer2 = 1LL << 12;
-	static const UINT64 VS_CBuffer3 = 1LL << 13;
+		 VS_CBuffer0 = 1LL << 10,	// Each shader stage allows up to 15 shader-static constant buffers, each buffer can hold up to 4096 static constants.
+		 VS_CBuffer1 = 1LL << 11,
+		 VS_CBuffer2 = 1LL << 12,
+		 VS_CBuffer3 = 1LL << 13,
 
-	static const UINT64 GS_CBuffer0 = 1LL << 14;
-	static const UINT64 GS_CBuffer1 = 1LL << 15;
-	static const UINT64 GS_CBuffer2 = 1LL << 16;
-	static const UINT64 GS_CBuffer3 = 1LL << 17;
+		 GS_CBuffer0 = 1LL << 14,
+		 GS_CBuffer1 = 1LL << 15,
+		 GS_CBuffer2 = 1LL << 16,
+		 GS_CBuffer3 = 1LL << 17,
 
-	static const UINT64 PS_CBuffer0 = 1LL << 18;
-	static const UINT64 PS_CBuffer1 = 1LL << 19;
-	static const UINT64 PS_CBuffer2 = 1LL << 20;
-	static const UINT64 PS_CBuffer3 = 1LL << 21;
+		 PS_CBuffer0 = 1LL << 18,
+		 PS_CBuffer1 = 1LL << 19,
+		 PS_CBuffer2 = 1LL << 20,
+		 PS_CBuffer3 = 1LL << 21,
 
-	static const UINT64 VS_ShaderResourceView0 = 1LL << 22;	// 128 texture buffers!
-	static const UINT64 VS_ShaderResourceView1 = 1LL << 23;
-	static const UINT64 VS_ShaderResourceView2 = 1LL << 24;
-	static const UINT64 VS_ShaderResourceView3 = 1LL << 25;
+		 VS_ShaderResourceView0 = 1LL << 22,	// 128 texture buffers!
+		 VS_ShaderResourceView1 = 1LL << 23,
+		 VS_ShaderResourceView2 = 1LL << 24,
+		 VS_ShaderResourceView3 = 1LL << 25,
 
-	static const UINT64 GS_ShaderResourceView0 = 1LL << 26;
-	static const UINT64 GS_ShaderResourceView1 = 1LL << 27;
-	static const UINT64 GS_ShaderResourceView2 = 1LL << 28;
-	static const UINT64 GS_ShaderResourceView3 = 1LL << 29;
+		 GS_ShaderResourceView0 = 1LL << 26,
+		 GS_ShaderResourceView1 = 1LL << 27,
+		 GS_ShaderResourceView2 = 1LL << 28,
+		 GS_ShaderResourceView3 = 1LL << 29,
 
-	static const UINT64 PS_ShaderResourceView0 = 1LL << 30;
-	static const UINT64 PS_ShaderResourceView1 = 1LL << 31;
-	static const UINT64 PS_ShaderResourceView2 = 1LL << 32;
-	static const UINT64 PS_ShaderResourceView3 = 1LL << 33;
+		 PS_ShaderResourceView0 = 1LL << 30,
+		 PS_ShaderResourceView1 = 1LL << 31,
+		 PS_ShaderResourceView2 = 1LL << 32,
+		 PS_ShaderResourceView3 = 1LL << 33,
 
-	static const UINT64 VS_Sampler0 = 1LL << 34;	// 128 sampler buffers!
-	static const UINT64 VS_Sampler1 = 1LL << 35;
-	static const UINT64 VS_Sampler2 = 1LL << 36;
-	static const UINT64 VS_Sampler3 = 1LL << 37;
+		 VS_Sampler0 = 1LL << 34,	// 128 sampler buffers!
+		 VS_Sampler1 = 1LL << 35,
+		 VS_Sampler2 = 1LL << 36,
+		 VS_Sampler3 = 1LL << 37,
 
-	static const UINT64 GS_Sampler0 = 1LL << 38;
-	static const UINT64 GS_Sampler1 = 1LL << 39;
-	static const UINT64 GS_Sampler2 = 1LL << 40;
-	static const UINT64 GS_Sampler3 = 1LL << 41;
+		 GS_Sampler0 = 1LL << 38,
+		 GS_Sampler1 = 1LL << 39,
+		 GS_Sampler2 = 1LL << 40,
+		 GS_Sampler3 = 1LL << 41,
 
-	static const UINT64 PS_Sampler0 = 1LL << 42;
-	static const UINT64 PS_Sampler1 = 1LL << 43;
-	static const UINT64 PS_Sampler2 = 1LL << 44;
-	static const UINT64 PS_Sampler3 = 1LL << 45;
+		 PS_Sampler0 = 1LL << 42,
+		 PS_Sampler1 = 1LL << 43,
+		 PS_Sampler2 = 1LL << 44,
+		 PS_Sampler3 = 1LL << 45,
 
-	static const UINT64 RS_ViewPort = 1LL << 46;	// 16 viewports can be bound; but only one can be active
-													// To perform a per-primitive selection of the viewport in the geometry shader;
-													// specify the ViewportArrayIndex semantic on the appropriate GS output component in 
-													// the GS output signature declaration.
-	static const UINT64 RS_Scissor = 1LL << 47; 
-	static const UINT64 RS_RasterizerState = 1LL << 48;
+		 RS_ViewPort = 1LL << 46,	// 16 viewports can be bound, but only one can be active
+									// To perform a per-primitive selection of the viewport in the geometry shader,
+									// specify the ViewportArrayIndex semantic on the appropriate GS output component in 
+									// the GS output signature declaration.
+		 RS_Scissor = 1LL << 47,
+		 RS_RasterizerState = 1LL << 48,
 
-	static const UINT64 OM_RenderTargetDepthStencil = 1LL << 49; // up yo 8 rts; but at the same time and always overwrite everyone already bound
-	static const UINT64 OM_DepthStencilState = 1LL << 50;
-	static const UINT64 OM_BlendState = 1LL << 51;	
+		 OM_RenderTargetDepthStencil = 1LL << 49, // up yo 8 rts, but at the same time and always overwrite everyone already bound
+		 OM_DepthStencilState = 1LL << 50,
+		 OM_BlendState = 1LL << 51
+	};
 
-#pragma endregion
+//#pragma region constants
+//
+//	static const UINT64 IA_InputLayout = 1LL << 0;
+//
+//	static const UINT64 IA_VertexBuffer0 = 1LL << 1; // up to 16
+//	static const UINT64 IA_VertexBuffer1 = 1LL << 2;
+//	static const UINT64 IA_VertexBuffer2 = 1LL << 3;
+//	static const UINT64 IA_VertexBuffer3 = 1LL << 4;
+//	static const UINT64 IA_VertexBuffer4 = 1LL << 5;
+//
+//	static const UINT64 IA_IndexBuffer			= 1LL << 6;
+//	static const UINT64 IA_PrimitiveTopology	= 1LL << 7;
+//
+//	static const UINT64 VS_VertexShader = 1LL << 8;
+//	static const UINT64 PS_PixelShader	= 1LL << 9;
+//
+//	static const UINT64 VS_CBuffer0 = 1LL << 10;	// Each shader stage allows up to 15 shader-static constant buffers; each buffer can hold up to 4096 static constants.
+//	static const UINT64 VS_CBuffer1 = 1LL << 11;
+//	static const UINT64 VS_CBuffer2 = 1LL << 12;
+//	static const UINT64 VS_CBuffer3 = 1LL << 13;
+//
+//	static const UINT64 GS_CBuffer0 = 1LL << 14;
+//	static const UINT64 GS_CBuffer1 = 1LL << 15;
+//	static const UINT64 GS_CBuffer2 = 1LL << 16;
+//	static const UINT64 GS_CBuffer3 = 1LL << 17;
+//
+//	static const UINT64 PS_CBuffer0 = 1LL << 18;
+//	static const UINT64 PS_CBuffer1 = 1LL << 19;
+//	static const UINT64 PS_CBuffer2 = 1LL << 20;
+//	static const UINT64 PS_CBuffer3 = 1LL << 21;
+//
+//	static const UINT64 VS_ShaderResourceView0 = 1LL << 22;	// 128 texture buffers!
+//	static const UINT64 VS_ShaderResourceView1 = 1LL << 23;
+//	static const UINT64 VS_ShaderResourceView2 = 1LL << 24;
+//	static const UINT64 VS_ShaderResourceView3 = 1LL << 25;
+//
+//	static const UINT64 GS_ShaderResourceView0 = 1LL << 26;
+//	static const UINT64 GS_ShaderResourceView1 = 1LL << 27;
+//	static const UINT64 GS_ShaderResourceView2 = 1LL << 28;
+//	static const UINT64 GS_ShaderResourceView3 = 1LL << 29;
+//
+//	static const UINT64 PS_ShaderResourceView0 = 1LL << 30;
+//	static const UINT64 PS_ShaderResourceView1 = 1LL << 31;
+//	static const UINT64 PS_ShaderResourceView2 = 1LL << 32;
+//	static const UINT64 PS_ShaderResourceView3 = 1LL << 33;
+//
+//	static const UINT64 VS_Sampler0 = 1LL << 34;	// 128 sampler buffers!
+//	static const UINT64 VS_Sampler1 = 1LL << 35;
+//	static const UINT64 VS_Sampler2 = 1LL << 36;
+//	static const UINT64 VS_Sampler3 = 1LL << 37;
+//
+//	static const UINT64 GS_Sampler0 = 1LL << 38;
+//	static const UINT64 GS_Sampler1 = 1LL << 39;
+//	static const UINT64 GS_Sampler2 = 1LL << 40;
+//	static const UINT64 GS_Sampler3 = 1LL << 41;
+//
+//	static const UINT64 PS_Sampler0 = 1LL << 42;
+//	static const UINT64 PS_Sampler1 = 1LL << 43;
+//	static const UINT64 PS_Sampler2 = 1LL << 44;
+//	static const UINT64 PS_Sampler3 = 1LL << 45;
+//
+//	static const UINT64 RS_ViewPort = 1LL << 46;	// 16 viewports can be bound; but only one can be active
+//													// To perform a per-primitive selection of the viewport in the geometry shader;
+//													// specify the ViewportArrayIndex semantic on the appropriate GS output component in 
+//													// the GS output signature declaration.
+//	static const UINT64 RS_Scissor = 1LL << 47; 
+//	static const UINT64 RS_RasterizerState = 1LL << 48;
+//
+//	static const UINT64 OM_RenderTargetDepthStencil = 1LL << 49; // up yo 8 rts; but at the same time and always overwrite everyone already bound
+//	static const UINT64 OM_DepthStencilState = 1LL << 50;
+//	static const UINT64 OM_BlendState = 1LL << 51;	
+//
+//#pragma endregion
 
 	class Binder: public Command{
 
@@ -183,7 +256,7 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Binder( UINT64 typeBits_p, E_BIND typeIndex_p)
+		Binder(E_BIND_MASK typeBits_p, E_BIND typeIndex_p)
 			:
 		m_typeBits(typeBits_p),
 		m_typeIndex(typeIndex_p){
@@ -196,7 +269,7 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Set( UINT64 typeBits_p, E_BIND typeIndex_p ){
+		void Set(E_BIND_MASK typeBits_p, E_BIND typeIndex_p ){
 
 			assert( typeIndex_p >= 0 && typeIndex_p < E_MAX_BINDS );
 
@@ -207,12 +280,13 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// What this object binds?
 		//------------------------------------------------------------------------
-		UINT64 TypeBits() const { return m_typeBits;	}
+		E_BIND_MASK TypeBits() const { return m_typeBits;	}
+		uint64_t TypeBits_int() const { return (uint64_t)m_typeBits; }
 		E_BIND TypeIndex() const { return m_typeIndex;	}
 
 	private:
 
-		UINT64 m_typeBits;
+		E_BIND_MASK m_typeBits;
 		E_BIND m_typeIndex;
 	};
 

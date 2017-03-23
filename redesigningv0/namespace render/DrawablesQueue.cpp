@@ -59,9 +59,9 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 					// check redundancy: needs to check precedences redundancy between pipe states binds of the same drawable
 
-					if( (bindsSetMask & binds[itBinds]->TypeBits()) != binds[itBinds]->TypeBits() ){	// check if bind was not set by previous states* of the drawable
+					if( (bindsSetMask & binds[itBinds]->TypeBits_int()) != binds[itBinds]->TypeBits_int() ){	// check if bind was not set by previous states* of the drawable
 						
-						bindsSetMask |= binds[itBinds]->TypeBits();
+						bindsSetMask |= binds[itBinds]->TypeBits_int();
 
 						if(	m_stateCache[binds[itBinds]->TypeIndex()] != binds[itBinds] ){		// check if bind not already set
 

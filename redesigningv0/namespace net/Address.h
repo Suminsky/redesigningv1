@@ -14,7 +14,8 @@
 
 // standard includes
 #pragma warning( push )
-#pragma warning( disable: 4005 ) //'_WINSOCKAPI_' : macro redefinition
+#pragma warning( disable: 4005 ) //'_WINSOCKAPI_' : macro redefinition, cause Im defining on the prep myself to avoid win.h including old winsock
+#define _WINSOCK_DEPRECATED_NO_WARNINGS //inet_addr is deprecated
 #include <WinSock2.h>
 #pragma warning( pop )
 #include <stdint.h>

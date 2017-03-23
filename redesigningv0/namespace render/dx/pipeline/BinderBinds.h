@@ -35,12 +35,12 @@ public:
 
 	explicit BindIAInputLayout(ID3D11InputLayout * pInputLayout_p)
 		:
-	Binder( IA_InputLayout, E_IA_InputLayout ),
+	Binder(E_BIND_MASK::IA_InputLayout, E_IA_InputLayout ),
 	m_pInputLayout(pInputLayout_p){}
 
 	BindIAInputLayout()
 		:
-	Binder( IA_InputLayout, E_IA_InputLayout ){}
+	Binder(E_BIND_MASK::IA_InputLayout, E_IA_InputLayout ){}
 
 	void Initialize( ID3D11InputLayout * pInputLayout_p ){
 
@@ -63,7 +63,7 @@ public:
 
 	BindIAPrimitiveTopology( const D3D11_PRIMITIVE_TOPOLOGY & primitiveTopology_p )
 		:
-	Binder( IA_PrimitiveTopology, E_IA_PrimitiveTopology ),
+	Binder(E_BIND_MASK::IA_PrimitiveTopology, E_IA_PrimitiveTopology ),
 	m_topology(primitiveTopology_p){}
 
 
@@ -86,7 +86,7 @@ public:
 
 	BindIAVertexBuffer( const UINT iSlot_p, ID3D11Buffer * pVBuffer_p, const UINT iStride_p, const UINT iOffset_p = 0 )
 		:
-	Binder( 1LL << (E_IA_VertexBuffer0 + iSlot_p), E_BIND(E_IA_VertexBuffer0 + iSlot_p) ),
+	Binder(E_BIND_MASK(1LL << (E_IA_VertexBuffer0 + iSlot_p)), E_BIND(E_IA_VertexBuffer0 + iSlot_p) ),
 		m_iStartSlot(iSlot_p), m_pVertexBuffer(pVBuffer_p), m_iStride(iStride_p), m_iByteOffset(iOffset_p){}
 
 	BindIAVertexBuffer(){}
@@ -97,7 +97,7 @@ public:
 
 	void Initialize( const UINT iSlot_p, ID3D11Buffer * pVBuffer_p, const UINT iStride_p, const UINT iOffset_p = 0 ){
 
-		Binder::Set( 1LL << (E_IA_VertexBuffer0 + iSlot_p), E_BIND(E_IA_VertexBuffer0 + iSlot_p) );
+		Binder::Set(E_BIND_MASK(1LL << (E_IA_VertexBuffer0 + iSlot_p)), E_BIND(E_IA_VertexBuffer0 + iSlot_p) );
 		m_iStartSlot	= iSlot_p;
 		m_pVertexBuffer = pVBuffer_p;
 		m_iStride		= iStride_p;
@@ -122,12 +122,12 @@ public:
 
 	BindIAIndexBuffer( ID3D11Buffer * pIndexBuffer_p, const DXGI_FORMAT format_p = DXGI_FORMAT_R16_UINT, UINT iOffset_p = 0 )
 		:
-	Binder( IA_IndexBuffer, E_IA_IndexBuffer),
+	Binder(E_BIND_MASK::IA_IndexBuffer, E_IA_IndexBuffer),
 	m_pIndexBuffer(pIndexBuffer_p), m_format(format_p), m_iByteOffset(iOffset_p){}
 
 	BindIAIndexBuffer()
 		:
-	Binder( IA_IndexBuffer, E_IA_IndexBuffer){}
+	Binder(E_BIND_MASK::IA_IndexBuffer, E_IA_IndexBuffer){}
 
 	void Initialize( ID3D11Buffer * pIndexBuffer_p, const DXGI_FORMAT format_p = DXGI_FORMAT_R16_UINT, UINT iOffset_p = 0 ){
 
@@ -156,12 +156,12 @@ public:
 
 	explicit BindVSVertexShader( ID3D11VertexShader * pVS_p )
 		: 
-		Binder(VS_VertexShader, E_VertexShader),
+		Binder(E_BIND_MASK::VS_VertexShader, E_VertexShader),
 		m_pVS(pVS_p){}
 
 	BindVSVertexShader()
 		: 
-	Binder(VS_VertexShader, E_VertexShader){}
+	Binder(E_BIND_MASK::VS_VertexShader, E_VertexShader){}
 
 	void Initialize( ID3D11VertexShader * pVS_p ){
 
@@ -186,7 +186,7 @@ public:
 
 	BindVSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p,  const std::shared_ptr<render::ConstantBuffer> & pConstBufferData_p )
 		:
-	  Binder( 1LL << (E_VS_CBuffer0 + iSlot_p), E_BIND(E_VS_CBuffer0 + iSlot_p) ),
+	  Binder(E_BIND_MASK(1LL << (E_VS_CBuffer0 + iSlot_p)), E_BIND(E_VS_CBuffer0 + iSlot_p) ),
 	  m_iStartSlot( iSlot_p ), m_pConstantBuffer( pConstantBuffers_p ),
 	  m_pConstantBufferData(pConstBufferData_p){
 
@@ -194,7 +194,7 @@ public:
 	  }
 	  BindVSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p )
 		  :
-	  Binder( 1LL << (E_VS_CBuffer0 + iSlot_p), E_BIND(E_VS_CBuffer0 + iSlot_p) ),
+	  Binder(E_BIND_MASK(1LL << (E_VS_CBuffer0 + iSlot_p)), E_BIND(E_VS_CBuffer0 + iSlot_p) ),
 		  m_iStartSlot( iSlot_p ), m_pConstantBuffer( pConstantBuffers_p ){
 
 			  assert( iSlot_p < 4);	// handling up to 4 cbuffers slot
@@ -222,7 +222,7 @@ public:
 
 	BindVSShaderResourceView( UINT iSlot_p, ID3D11ShaderResourceView *pSRV_p )
 		:
-	Binder( 1LL << (E_VS_ShaderResourceView0 + iSlot_p), E_BIND(E_VS_ShaderResourceView0 + iSlot_p) ),
+	Binder(E_BIND_MASK(1LL << (E_VS_ShaderResourceView0 + iSlot_p)), E_BIND(E_VS_ShaderResourceView0 + iSlot_p) ),
 		m_iStartSlot( iSlot_p ), m_pSRV( pSRV_p ){
 
 			assert( iSlot_p < 4);	// handling up to 4 srv slot
@@ -245,7 +245,7 @@ public:
 
 	BindVSSampler( UINT iSlot_p, ID3D11SamplerState * pSamplerState_p )
 	:
-	Binder(1LL << (E_VS_Sampler0+iSlot_p), E_BIND(E_VS_Sampler0+iSlot_p)),
+	Binder(E_BIND_MASK(1LL << (E_VS_Sampler0+iSlot_p)), E_BIND(E_VS_Sampler0+iSlot_p)),
 		m_iSlot(iSlot_p), m_pSamplerState(pSamplerState_p){}
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
@@ -268,11 +268,11 @@ public:
 	explicit BindPSPixelShader( ID3D11PixelShader * pPS_p )
 		:
 	m_pPS(pPS_p),
-	Binder(PS_PixelShader, E_PixelShader){}
+	Binder(E_BIND_MASK::PS_PixelShader, E_PixelShader){}
 
 	BindPSPixelShader()
 		:
-	Binder(PS_PixelShader, E_PixelShader){}
+	Binder(E_BIND_MASK::PS_PixelShader, E_PixelShader){}
 
 	void Initialize( ID3D11PixelShader * pPS_p ){
 
@@ -297,7 +297,7 @@ public:
 
 	BindPSConstantBuffer( UINT iSlot_p, ID3D11Buffer *pConstantBuffers_p,  const std::shared_ptr<render::ConstantBuffer> & pConstBufferData_p )
 		:
-		Binder( 1LL << (E_PS_CBuffer0 + iSlot_p), E_BIND(E_PS_CBuffer0 + iSlot_p) ),
+		Binder(E_BIND_MASK(1LL << (E_PS_CBuffer0 + iSlot_p)), E_BIND(E_PS_CBuffer0 + iSlot_p) ),
 		m_iStartSlot( iSlot_p ), m_pConstantBuffer( pConstantBuffers_p ),
 		m_pConstantBufferData(pConstBufferData_p){
 
@@ -327,7 +327,7 @@ public:
 	BindPSShaderResourceView(){}
 	BindPSShaderResourceView( UINT iSlot_p, ID3D11ShaderResourceView *pSRV_p )
 		:
-	Binder( 1LL << (E_PS_ShaderResourceView0 + iSlot_p), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) ),
+	Binder(E_BIND_MASK(1LL << (E_PS_ShaderResourceView0 + iSlot_p)), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) ),
 		m_iStartSlot( iSlot_p ), m_pSRV( pSRV_p ){
 
 			assert( iSlot_p < 4);	// handling up to 4 srv slot
@@ -339,7 +339,7 @@ public:
 		m_iStartSlot = iSlot_p;
 		m_pSRV = pSRV_p;
 
-		Set( 1LL << (E_PS_ShaderResourceView0 + iSlot_p), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) );
+		Set(E_BIND_MASK(1LL << (E_PS_ShaderResourceView0 + iSlot_p)), E_BIND(E_PS_ShaderResourceView0 + iSlot_p) );
 	}
 
 	virtual void Execute( ID3D11DeviceContext * pDeviceContext_p ){
@@ -359,7 +359,7 @@ public:
 
 	BindPSSampler( UINT iSlot_p, ID3D11SamplerState * pSamplerState_p )
 	:
-	Binder(1LL << (E_PS_Sampler0+iSlot_p), E_BIND(E_PS_Sampler0+iSlot_p)),
+	Binder(E_BIND_MASK(1LL << (E_PS_Sampler0+iSlot_p)), E_BIND(E_PS_Sampler0+iSlot_p)),
 	m_iSlot(iSlot_p), m_pSamplerState(pSamplerState_p){}
 
 	BindPSSampler(){}
@@ -368,7 +368,7 @@ public:
 
 		//Binder::m_typeBits = 1LL << (E_PS_Sampler0+iSlot_p);
 		//Binder::m_typeIndex = E_BIND(E_PS_Sampler0+iSlot_p);
-		Set( 1LL << (E_PS_Sampler0+iSlot_p), E_BIND(E_PS_Sampler0+iSlot_p));
+		Set(E_BIND_MASK(1LL << (E_PS_Sampler0+iSlot_p)), E_BIND(E_PS_Sampler0+iSlot_p));
 
 		m_iSlot = iSlot_p;
 		m_pSamplerState = pSamplerState_p;
@@ -394,7 +394,7 @@ public:
 	//------------------------------------------------------------------------
 	BindRSViewPort( D3D11_VIEWPORT & vp_p )
 		:
-	Binder( RS_ViewPort, E_RS_ViewPort ),
+	Binder(E_BIND_MASK::RS_ViewPort, E_RS_ViewPort ),
 	m_viewPort(vp_p)
 	{}
 
@@ -429,11 +429,11 @@ public:
 
 	BindOMBlendState( ID3D11BlendState * pBlendState_p, float * blendFactor_p, UINT sampleMask_p = 0xffffffff )
 		:
-	Binder(OM_BlendState, E_OM_BlendState),
+	Binder(E_BIND_MASK::OM_BlendState, E_OM_BlendState),
 	pBlendState(pBlendState_p), m_pBlendFactor(blendFactor_p), m_sampleMask(sampleMask_p){}
 
 	BindOMBlendState()
-		: Binder(OM_BlendState, E_OM_BlendState){}
+		: Binder(E_BIND_MASK::OM_BlendState, E_OM_BlendState){}
 
 	void Init(  ID3D11BlendState * pBlendState_p, float * blendFactor_p, UINT sampleMask_p = 0xffffffff ){
 
@@ -463,13 +463,13 @@ public:
 	//------------------------------------------------------------------------
 	BindOMRenderTargetDepthStencil( ID3D11RenderTargetView * pRTV_p, ID3D11DepthStencilView * pDSV_p )
 		:
-	Binder( OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil ),
+	Binder(E_BIND_MASK::OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil ),
 	m_pRTV(pRTV_p), m_pDSV(pDSV_p)
 	{}
 
 	BindOMRenderTargetDepthStencil()
 		:
-	Binder( OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil )
+	Binder(E_BIND_MASK::OM_RenderTargetDepthStencil, E_OM_RenderTargetDepthStencil )
 	{}
 
 	//------------------------------------------------------------------------

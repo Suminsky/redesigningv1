@@ -78,14 +78,14 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		BindVSCameraCBuffer( ID3D11Buffer *pConstantBuffers_p, CameraCbuffer * pConstBufferData_p )
 			:
-		Binder( 1LL << dx::E_VS_CBuffer1 , dx::E_VS_CBuffer1 ),
+		Binder(dx::E_BIND_MASK(1LL << dx::E_VS_CBuffer1) , dx::E_VS_CBuffer1 ),
 		m_iStartSlot( 1 ),
 		m_pConstantBuffer( pConstantBuffers_p ),
 		m_pConstantBufferData(pConstBufferData_p)
 		{}
 		BindVSCameraCBuffer()
 			:
-		Binder( 1LL << dx::E_VS_CBuffer1 , dx::E_VS_CBuffer1 ),
+		Binder(dx::E_BIND_MASK(1LL << dx::E_VS_CBuffer1) , dx::E_VS_CBuffer1 ),
 		m_iStartSlot( 1 )
 		{}
 

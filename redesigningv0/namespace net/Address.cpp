@@ -22,6 +22,7 @@ net::Address_HostOrder_IPv4::Address_HostOrder_IPv4( int32_t iAddress_p, uint16_
 
 net::Address_HostOrder_IPv4::Address_HostOrder_IPv4( const char * szAddressDotedForm_p, uint16_t port_p )
 {
+	//InetPton()
 	m_address.iInteger = ntohl(inet_addr( szAddressDotedForm_p ));
 
 	m_usPort = port_p;

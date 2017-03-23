@@ -154,8 +154,16 @@ namespace text{
 		GfigElementA( const std::string && szName_p) : m_name( std::move(szName_p) ){}
 		GfigElementA( const std::string && szName_p, const std::string && szValue_p)
 			: m_name( std::move(szName_p) ), m_value( std::move(szValue_p) ){}
+
 		GfigElementA( const char * szName_p ) : m_name( szName_p ){}
 		GfigElementA( const char * szName_p, const char * szValue_p ) : m_name( szName_p ), m_value( szValue_p ){}
+
+		GfigElementA( const char * szName_p, unsigned long long value_p )
+			: m_name( szName_p ), m_value( std::to_string((_ULonglong)value_p)){}
+		GfigElementA( const char * szName_p, long long value_p )
+			: m_name( szName_p ), m_value( std::to_string((_Longlong)value_p)){}
+		GfigElementA( const char * szName_p, long double value_p )
+			: m_name( szName_p ), m_value( std::to_string(value_p)){}
 
 		bool GetSubElement( const char * szName_p, GfigElementA *& pElement_p );
 		bool GetSubElement( std::string szName_p, GfigElementA *& pElement_p  );

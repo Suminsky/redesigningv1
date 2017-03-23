@@ -16,10 +16,10 @@
 #pragma once
 
 // system/standard headers
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
+//#endif
+//#include <Windows.h>
 
 // private headers
 
@@ -228,7 +228,7 @@ namespace win{
 				)->m_hWnd = hWnd_p;
 
 				// set this pointer (given on CreateWindow) on windows user data
-				SetWindowLongPtr( hWnd_p, GWLP_USERDATA, (LONG) ((CREATESTRUCT*)lParam_p)->lpCreateParams );
+				SetWindowLongPtr( hWnd_p, GWLP_USERDATA, (LONG_PTR) ((CREATESTRUCT*)lParam_p)->lpCreateParams );
 				// returns last set value, witch can be 0 (so setlasterror to zero to test)
 
 

@@ -101,7 +101,7 @@ namespace sprite{
 		//------------------------------------------------------------------------
 		BindVSDrawableCBuffer( ID3D11Buffer *pConstantBuffers_p,  DrawableCbuffer * pConstBufferData_p )
 			:
-		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
+		Binder( dx::E_BIND_MASK(1LL << dx::E_VS_CBuffer0) , dx::E_VS_CBuffer0 ),
 		m_iStartSlot( 0 ),
 		m_pConstantBuffer( pConstantBuffers_p ),
 		m_pConstantBufferData(pConstBufferData_p)
@@ -109,7 +109,7 @@ namespace sprite{
 
 		BindVSDrawableCBuffer()
 			:
-		Binder( 1LL << dx::E_VS_CBuffer0 , dx::E_VS_CBuffer0 ),
+		Binder(dx::E_BIND_MASK(1LL << dx::E_VS_CBuffer0) , dx::E_VS_CBuffer0 ),
 		m_iStartSlot( 0 )
 		{}
 
