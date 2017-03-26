@@ -27,7 +27,7 @@ namespace phys{
 	class AABB2D{
 
 	public:
-
+		
 		enum E_BLOCKEDFACE{
 
 			E_BLOCKEDFACE_LEFT = 0x01 << 0,
@@ -414,14 +414,18 @@ namespace phys{
 			// logic:
 			// if going right, can only collide with left faces of other block, not right faces, etc.
 
-			if( dir.x <= 0.0f )
+			if (dir.x == 0.0f)
+				cMask |= E_BLOCKEDFACE_HORZ;
+			else if( dir.x < 0.0f )
 				cMask |= E_BLOCKEDFACE_LEFT;// 0x01 << 0;
-			if( dir.x >= 0.0f )
+			else//if( dir.x >= 0.0f )
 				cMask |= E_BLOCKEDFACE_RIGHT;//0x01 << 1;
 
-			if( dir.y <= 0.0f )
+			if (dir.y == 0.0f)
+				cMask |= E_BLOCKEDFACE_VERT;
+			else if( dir.y < 0.0f )
 				cMask |= E_BLOCKEDFACE_DOWN;//0x01 << 2;
-			if( dir.y >= 0.0f )
+			else//if( dir.y >= 0.0f )
 				cMask |= E_BLOCKEDFACE_UP;//0x01 << 3;
 		}
 

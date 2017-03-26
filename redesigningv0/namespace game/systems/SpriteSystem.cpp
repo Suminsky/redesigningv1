@@ -23,15 +23,15 @@ void game::SpriteSystem::VOnDraw( double dInterpolation_p )
 
 	// create cam box
 
-	float zoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
-	float camHalfW = m_pCameraRef->m_viewPort.Width * zoom;
-	float camHalfH = m_pCameraRef->m_viewPort.Height * zoom;
-	XMFLOAT2 camPos(
+	float defzoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
+	float defcamHalfW = m_pCameraRef->m_viewPort.Width * defzoom;
+	float defcamHalfH = m_pCameraRef->m_viewPort.Height * defzoom;
+	XMFLOAT2 defcamPos(
 		-XMVectorGetX( m_pCameraRef->m_mView.r[3] ),
 		-XMVectorGetY( m_pCameraRef->m_mView.r[3] )
 		);
 
-	phys::AABB2D camBox = { camPos, camHalfW, camHalfH };
+	phys::AABB2D camBox = { defcamPos, defcamHalfW, defcamHalfH };
 
 	
 	//int iCulled = 0;

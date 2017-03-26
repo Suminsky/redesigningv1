@@ -507,6 +507,9 @@
     <ClInclude Include="namespace win\RawKeyboardInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Legalia\ImageColliderCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">
@@ -906,6 +909,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace win\RawKeyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Legalia\ImageColliderCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

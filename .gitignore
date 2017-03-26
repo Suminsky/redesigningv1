@@ -61,6 +61,7 @@ local.properties
 # Build results
 [Dd]ebug/
 [Rr]elease/
+[Pp]rofiling/
 *_i.c
 *_p.c
 *.ilk
@@ -91,6 +92,9 @@ ipch/
 *.sdf
 *.db
 *.opendb
+*.VC.db
+*.VC.openDB
+*.VC.VC.openDB
 
 # Visual Studio profiler
 *.psess

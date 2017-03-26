@@ -326,11 +326,11 @@ void game::SpriteAnimationComponentFactory::LoadClipsFromGFig( text::GfigElement
 			keepAssert( clipGFig.GetSubElement( "frames", pGFigParam ) );
 
 			animClip.configData.vFrames.resize(0);
-			for( int it = 0, nFrames = (int) pGFigParam->m_subElements.size();
-				 it < nFrames;
-				 ++it ){
+			for( int it2 = 0, nFrames = (int) pGFigParam->m_subElements.size();
+				 it2 < nFrames;
+				 ++it2 ){
 
-					 GfigElementA & frame = pGFigParam->m_subElements[it];
+					 GfigElementA & frame = pGFigParam->m_subElements[it2];
 
 					 animClip.configData.vFrames.push_back( atoi(frame.m_name.c_str()) );
 			}

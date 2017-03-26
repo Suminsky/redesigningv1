@@ -31,7 +31,8 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 	// sort drawables
 
-	std::sort(m_sortqueue.begin(), m_sortqueue.end(), Entry());
+	//std::sort(m_sortqueue.begin(), m_sortqueue.end(), Entry());
+	Entry::InsertionSort(m_sortqueue);
 
 	// traverse "sorted drawables"
 

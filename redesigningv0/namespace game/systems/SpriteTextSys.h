@@ -86,7 +86,7 @@ namespace game{
 		struct Entry{
 
 			UINT64 drawableKey; // sort key
-			int index;	
+			uint32_t index;	
 		};
 		std::vector<Entry> m_sortArray;
 	};

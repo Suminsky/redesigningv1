@@ -6,7 +6,7 @@
 	file:		SpriteAnimCache.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	
+	purpose:	Cache for spriteanimcompo files (cfg only, no state), lookup from filename. 
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */

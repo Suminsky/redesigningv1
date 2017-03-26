@@ -72,6 +72,9 @@ namespace render{
 
 	private:
 
+		typedef std::vector<Drawable>	drawablearray;
+		
+
 		struct Entry{
 
 			UINT64 drawableKey; // sort key
@@ -81,10 +84,51 @@ namespace render{
 
 				return a.drawableKey < b.drawableKey;
 			}
+
+			bool Greater(Entry & other) {
+
+				return drawableKey > other.drawableKey;
+			}
+
+			static void InsertionSort(std::vector<Entry> & a)
+			{
+				int n = (int)a.size();
+
+				for (int i = 1; i < n; ++i)
+				{
+					Entry checkingValue = a[i];
+					int prev = i - 1;
+					while (prev >= 0 && a[prev].Greater(checkingValue))
+					{
+						a[prev + 1] = a[prev];
+						--prev;
+					}
+
+					a[prev + 1] = checkingValue;
+				}
+			}
+
+			// use to insert a new element in an already sorted array, withouth breaking the order
+			static void OrderedInsert(std::vector<Entry> & a, int n, Entry & newValue)
+			{
+				// assumes array is sorted
+				assert(n <= a.size());
+
+				a[n] = newValue;
+
+				int prev = n - 1;
+				while (prev >= 0 && a[prev].Greater(newValue))
+				{
+					a[prev + 1] = a[prev];
+					--prev;
+				}
+
+				a[prev + 1] = newValue;
+			}
 		};
 
-		typedef std::vector<Drawable>	drawablearray;
 		typedef std::vector<Entry>		sortarray;
+		
 
 		drawablearray	m_drawables;
 		sortarray		m_sortqueue;

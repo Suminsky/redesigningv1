@@ -101,7 +101,7 @@ namespace sprite{
 		struct Entry{
 
 			UINT64 drawableKey; // sort key
-			int index;			// index on the drawables array
+			UINT index;			// index on the drawables array
 
 			bool operator ()( const Entry & a, const Entry & b)const{ // used by stl sort algos
 
