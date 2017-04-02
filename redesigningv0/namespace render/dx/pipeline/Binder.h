@@ -289,8 +289,6 @@ namespace dx{
 		E_BIND_MASK m_typeBits;
 		E_BIND m_typeIndex;
 	};
-
-	typedef std::shared_ptr<Binder> shared_Binder_ptr;
 }
 
 //========================================================================

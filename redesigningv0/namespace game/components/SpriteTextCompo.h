@@ -119,9 +119,6 @@ namespace game{
 		bool m_bUpdateBindData;
 	};
 
-	//template<> const unsigned int   ComponentType<SpriteTextCompo>::s_value = E_USERTYPE+2;
-	//template<> const char *			ComponentType<SpriteTextCompo>::s_szName = "SpriteTextCompo";
-
 	typedef gen::pool_ptr<SpriteTextCompo> pool_SpriteTextCompo__ptr;
 
 	//========================================================================

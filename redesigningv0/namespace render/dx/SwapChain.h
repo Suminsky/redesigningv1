@@ -24,6 +24,10 @@
 // system/standard headers
 
 #include <D3D11.h>
+#include <wrl/client.h>
+#ifdef _DEBUG
+#include <dxgidebug.h>
+#endif
 
 namespace dx{
 
@@ -56,7 +60,7 @@ namespace dx{
 		//------------------------------------------------------------------------
 		SwapChain()
 			:
-		m_pSwapChain(nullptr), m_pOutput(nullptr), m_pBackBufferRTV(nullptr),
+		m_pSwapChain(nullptr), m_pOutput(nullptr), m_pBackBufferRTV(nullptr), m_pFactory(nullptr),
 		m_iSyncInterval(1),
 		m_bWindowed(false)
 		{}
@@ -72,6 +76,18 @@ namespace dx{
 				m_pOutput->Release();
 			if(m_pBackBufferRTV)
 				m_pBackBufferRTV->Release();
+
+			if (m_pFactory) m_pFactory->Release();
+
+
+			/*typedef HRESULT(__stdcall *fPtr)(const IID&, void**);
+			HMODULE hDll = LoadLibraryA("dxgidebug.dll");
+			fPtr DXGIGetDebugInterface = (fPtr)GetProcAddress(hDll, "DXGIGetDebugInterface");
+
+			Microsoft::WRL::ComPtr<IDXGIDebug> debug;
+			DXGIGetDebugInterface(__uuidof(IDXGIDebug), (void**)&debug);
+
+			debug->ReportLiveObjects(DXGI_DEBUG_DXGI, DXGI_DEBUG_RLO_DETAIL);*/
 		};
 
 		//------------------------------------------------------------------------
@@ -182,6 +198,6 @@ namespace dx{
 		UINT m_iMSAAQuality;
 		BOOL m_bWindowed;
 
-	
+		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
 	};
 }

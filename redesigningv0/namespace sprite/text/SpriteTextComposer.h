@@ -35,7 +35,9 @@ namespace sprite{
 		SpriteTextComposer( TextureBinders * pTexBinders_p )
 			:
 		m_fonts(pTexBinders_p)
-		{}
+		{
+			BREAKHERE;
+		}
 
 		//------------------------------------------------------------------------
 		// compose sprite instances based on font info

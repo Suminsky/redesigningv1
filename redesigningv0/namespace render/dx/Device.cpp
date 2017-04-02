@@ -2,11 +2,12 @@
 
 #include "Device.h"
 
+
 #include "../../namespace gen/gen_macros.h"
 
 using namespace dx;
 
-void Device::InitDevice( /*in: */ IDXGIAdapter1 *pAdapter_p, const BOOL bSingleThreaded_p, /*in/holded: */ IDXGIFactory1 *pFactory_p, /*not used only holded */ const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p )
+void Device::InitDevice( /*in: */ IDXGIAdapter1 *pAdapter_p, const BOOL bSingleThreaded_p, /*not used only holded */ const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p )
 {
 	//create a device(used for resource creation) with the adapter gattered previously, with the high feature level supported:
 
@@ -29,8 +30,6 @@ void Device::InitDevice( /*in: */ IDXGIAdapter1 *pAdapter_p, const BOOL bSingleT
 
 		throw std::exception("failed on dx device creation");	
 	}
-
-	m_pFactory = pFactory_p;
 }
 
 void Device::ExecutePipelineCommands( const render::RenderCommands & commandList_p )

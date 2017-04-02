@@ -6,6 +6,7 @@
 
 #include "../namespace render/dx/HLSLResource.h"
 #include "../namespace game/components/SpriteComponent_.h"
+
 #include <algorithm>
 
 sprite::SpriteRenderer::SpriteRenderer( dx::Device * pDevice_p, int maxInstances_p )
@@ -394,9 +395,12 @@ void sprite::SpriteRenderer::CreateInstacedVertexInputState( ID3DBlob * pShaderB
 
 void sprite::SpriteRenderer::Raster( ID3D11DeviceContext * pContext_p )
 {
-	render::RenderCommands cmds;
-	m_queue.CreateCommandBuffer( cmds , false);
-	ExecuteRenderCommands(cmds, pContext_p);
+	m_cmds.clear();
+	//render::RenderCommands cmds;
+
+	m_queue.CreateCommandBuffer(m_cmds, false);
+
+	ExecuteRenderCommands(m_cmds, pContext_p);
 }
 
 void sprite::SpriteRenderer::ExecuteRenderCommands( const render::RenderCommands & cmds_p, ID3D11DeviceContext * pContext_p )

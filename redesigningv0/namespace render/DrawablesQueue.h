@@ -78,7 +78,7 @@ namespace render{
 		struct Entry{
 
 			UINT64 drawableKey; // sort key
-			int index;			// index on the drawables array
+			uint32_t index;			// index on the drawables array
 
 			bool operator ()( const Entry & a, const Entry & b)const{ // used by stl sort algos
 
@@ -108,6 +108,24 @@ namespace render{
 				}
 			}
 
+			static void InsertionSort(std::vector<uint32_t> & a, const std::vector<Drawable> & drawables)
+			{
+				int n = (int)a.size();
+
+				for (int i = 1; i < n; ++i)
+				{
+					uint32_t checkingValue = a[i];
+					int prev = i - 1;
+					while (prev >= 0 && drawables[a[prev]].GetSortKey() > drawables[checkingValue].GetSortKey())
+					{
+						a[prev + 1] = a[prev];
+						--prev;
+					}
+
+					a[prev + 1] = checkingValue;
+				}
+			}
+
 			// use to insert a new element in an already sorted array, withouth breaking the order
 			static void OrderedInsert(std::vector<Entry> & a, int n, Entry & newValue)
 			{
@@ -127,7 +145,10 @@ namespace render{
 			}
 		};
 
-		typedef std::vector<Entry>		sortarray;
+		typedef std::vector<uint32_t>		sortarray;
+
+		// try to achieve temporal coerence
+		void PrepareForSort();
 		
 
 		drawablearray	m_drawables;

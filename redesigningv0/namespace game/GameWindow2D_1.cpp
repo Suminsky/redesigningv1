@@ -1,6 +1,8 @@
 #include "PCHF.h"
 #include "GameWindow2D_1.h"
 
+
+
 using namespace win;
 using namespace game;
 using namespace dx;
@@ -193,10 +195,14 @@ LRESULT CALLBACK GameWindow2D_1::OnWM_CREATE( HWND hWnd_p )
 		else
 			windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;*/
 
-		m_device.InitDevice( gpuAndMode.pAdapter, true, pFactory, &featureLVL, 1  );
+		m_device.InitDevice( gpuAndMode.pAdapter, true, &featureLVL, 1  );
+		gpuAndMode.pAdapter->Release();
 		UINT nRenderBuffers = 3;
 		m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, nRenderBuffers, gpuAndMode.pOutput );
 		m_swapChain.CreateRTVFromBackBuffer( m_device.GetDevice() );
+
+		
+		
 
 		//---
 

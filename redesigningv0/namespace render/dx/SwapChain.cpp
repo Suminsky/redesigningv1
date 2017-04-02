@@ -117,6 +117,8 @@ void dx::SwapChain::CreateTheSwapChain( /*in: */ ID3D11Device *pDevice_p, IDXGIF
 
 		throw std::exception("dxgi failed to make window association");
 	}
+
+	m_pFactory = pFactory_p;
 }
 
 bool dx::SwapChain::SwitchFullscreenMode()
@@ -165,13 +167,16 @@ FSerrorHandling:
 	}
 }
 
-int dx::SwapChain::GetCapableAdapterAndOutputAndModeClosestMatch( /*in: */ DXGI_MODE_DESC &desiredFSDisplayMode_p, /*in/out: */ GpuAndMode &gpuAndMode_p, /*in only thepriorities */ /*out: */ IDXGIFactory1 *& pFactory_p )
+int dx::SwapChain::GetCapableAdapterAndOutputAndModeClosestMatch(
+	/*in: */
+	DXGI_MODE_DESC &desiredFSDisplayMode_p,
+	/*in/out: */
+	GpuAndMode &gpuAndMode_p, /*in only thepriorities */ /*out: */ IDXGIFactory1 *& pFactory_p )
 {
 	//check if ColorFormat and resolution are available on any Adapter(vid cards):--------------------------------------
 	if( CreateDXGIFactory1( __uuidof(IDXGIFactory1), (void**)&pFactory_p ) != S_OK ){
 		throw std::exception("failed to create dxgi factory");
 	}
-
 
 	IDXGIAdapter1 *pAdapter = NULL;
 	IDXGIOutput *pAdapterCurrentOutput = NULL;
@@ -182,27 +187,17 @@ int dx::SwapChain::GetCapableAdapterAndOutputAndModeClosestMatch( /*in: */ DXGI_
 
 	//traverse adapters:
 	bool bGotValid = false;
-	for(	UINT i = 0;
+	for(UINT i = 0;
 		pFactory_p->EnumAdapters1( i, &pAdapter ) != DXGI_ERROR_NOT_FOUND;
 		i++ ){
-			for(	UINT j = 0;//traverse monitors/displays:
+
+			for(UINT j = 0;//traverse monitors/displays:
 				pAdapter->EnumOutputs( j, &pAdapterCurrentOutput ) != DXGI_ERROR_NOT_FOUND;
 				j++ ){
 
 					//check pOutput display mode availability:
 					if( !FAILED( FOUND = pAdapterCurrentOutput->FindClosestMatchingMode( &desiredFSDisplayMode_p, &gpuAndMode_p.mode, NULL ))){
 
-						/*switch(FOUND){
-
-						case DXGI_ERROR_INVALID_CALL:
-						BREAKHERE;
-						case DXGI_ERROR_NOT_FOUND:
-						BREAKHERE;
-						case DXGI_ERROR_UNSUPPORTED:
-						BREAKHERE;
-						}*/
-						//pAdapter_p = pAdapter;
-						//pOutput_p = pAdapterCurrentOutput;
 						validAdapters.push_back( GpuAndMode(pAdapter, pAdapterCurrentOutput, gpuAndMode_p.mode) );
 
 						bGotValid = true;

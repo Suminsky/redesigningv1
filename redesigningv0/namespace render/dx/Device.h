@@ -7,6 +7,7 @@
 // system/standard headers
 
 #include <D3D11.h>
+#include <wrl/client.h>
 
 // private headers
 
@@ -34,17 +35,13 @@ namespace dx{
 		//------------------------------------------------------------------------
 		Device()
 			:
-			m_pDevice(NULL), m_pContext(NULL), m_pFactory(NULL),
-			m_pCacheRTV(NULL), m_pCacheTex2D(NULL), m_pCacheVS(NULL), m_pCachePS(NULL), m_pCacheBuffer(NULL),
-			m_pCacheBlendState(NULL), m_pCacheSRV(NULL), m_pCacheInputLayout(NULL), m_pCacheSamplerState(NULL){
+			m_pDevice(nullptr), m_pContext(nullptr),
+			m_pCacheRTV(nullptr), m_pCacheTex2D(nullptr), m_pCacheVS(nullptr), m_pCachePS(nullptr), m_pCacheBuffer(nullptr),
+			m_pCacheBlendState(nullptr), m_pCacheSRV(nullptr), m_pCacheInputLayout(nullptr), m_pCacheSamplerState(nullptr){
 
 				InitCaches();
 		};
 		virtual ~Device(){
-
-			if( m_pDevice ) m_pDevice->Release();
-			if( m_pContext ) m_pContext->Release();
-			if( m_pFactory ) m_pFactory->Release();
 
 			if( m_pCacheRTV )		delete m_pCacheRTV;
 			if( m_pCacheTex2D )		delete m_pCacheTex2D;
@@ -55,6 +52,15 @@ namespace dx{
 			if( m_pCacheSRV )		delete m_pCacheSRV;
 			if( m_pCacheInputLayout ) delete m_pCacheInputLayout;
 			if( m_pCacheSamplerState ) delete m_pCacheSamplerState;
+
+			/*Microsoft::WRL::ComPtr<ID3D11Debug> debug;
+			m_pDevice->QueryInterface(IID_PPV_ARGS(&debug));
+			debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);*/
+
+
+			if( m_pContext ) m_pContext->Release();
+			if (m_pDevice) m_pDevice->Release();
+			
 		};
 
 		ID3D11Device * GetDevice(){ return m_pDevice;}
@@ -72,7 +78,6 @@ namespace dx{
 			IDXGIAdapter1 *pAdapter_p,
 			const BOOL bSingleThreaded_p,
 			//in/holded:
-			IDXGIFactory1 *pFactory_p, //not used only holded
 			const D3D_FEATURE_LEVEL *pFeatureLVLSrequested_p, const UINT nFeatures_p	);
 
 		//------------------------------------------------------------------------
@@ -110,8 +115,6 @@ namespace dx{
 
 		ID3D11Device * m_pDevice;
 		ID3D11DeviceContext * m_pContext;
-
-		IDXGIFactory1 *m_pFactory;	//used for recreating swap chain
 
 		D3D_FEATURE_LEVEL m_featureLVLavailable;
 	};

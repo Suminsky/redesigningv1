@@ -106,6 +106,7 @@ namespace sprite{
 
 	private:
 		
+		render::RenderCommands m_cmds;
 		render::Drawable m_drawableAux;
 
 		//------------------------------------------------------------------------
