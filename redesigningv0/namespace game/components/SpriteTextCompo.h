@@ -69,7 +69,8 @@ namespace game{
 			uint32_t fontID_p,
 			sprite::SpriteTextComposer * pTextComposer_p,
 			sprite::E_BLENDTYPE eBlend_p, sprite::E_SAMPLERTYPE eSampler_p,
-			sprite::SpriteRenderer * pSpriteRenderer_p
+			sprite::SpriteRenderer * pSpriteRenderer_p,
+			dx::Device * pDevice_p
 			);
 
 		//------------------------------------------------------------------------
@@ -147,7 +148,8 @@ namespace game{
 			:
 		m_pool(maxComponents_p),
 		m_pTextComposer(pTextComposer_p),
-		m_pSpriteRenderer(pSpriteRenderer_p)
+		m_pSpriteRenderer(pSpriteRenderer_p),
+		m_pDeviceRef(pDevice_p)
 		{
 			InitializeDxVBBuffer(pDevice_p);
 			m_instVBBinder.Initialize( 1, m_pDxInstVBBuffer, sizeof(spriteInstance) );
@@ -171,6 +173,7 @@ namespace game{
 		virtual void VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p );
 	
 		gen::Pool<SpriteTextCompo> m_pool;
+		dx::Device * m_pDeviceRef;
 		sprite::SpriteTextComposer * m_pTextComposer;
 		sprite::SpriteRenderer * m_pSpriteRenderer;
 

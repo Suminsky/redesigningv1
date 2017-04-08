@@ -272,29 +272,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h" />
     <ClInclude Include="Legalia\AlienPlayer.h" />
     <ClInclude Include="Legalia\ImageColliderCache.h" />
     <ClInclude Include="Legalia\LedgeHang.h" />
     <ClInclude Include="namespace game\components\MovableComponent.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h" />
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h" />
     <ClInclude Include="Legalia\AABB2DColliderComponent.h" />
     <ClInclude Include="Legalia\AABB2DCollisionSys.h" />
     <ClInclude Include="Legalia\CompoTypes.h" />
@@ -318,13 +299,10 @@
     <ClInclude Include="namespace game\components\SpriteAnimCompo_.h" />
     <ClInclude Include="namespace game\components\SpriteTextCompo.h" />
     <ClInclude Include="namespace game\systems\SpriteTextSys.h" />
-    <ClInclude Include="mentle\mainmenu\fadelayer.h" />
-    <ClInclude Include="Mentle\MentleWindow.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\FramesLayer.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimTool.h" />
     <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimToolEvents.h" />
-    <ClInclude Include="Mentle\TextureTool\TextureTool.h" />
     <ClInclude Include="namespace game\Component.h" />
     <ClInclude Include="namespace game\ComponentFactory.h" />
     <ClInclude Include="namespace game\components\ButtonComponent.h" />
@@ -372,12 +350,11 @@
     <ClInclude Include="namespace render\dx\pipeline\PipeState.h" />
     <ClInclude Include="namespace render\dx\BinderCache.h" />
     <ClInclude Include="namespace render\dx\BinderCache.inl" />
-    <ClInclude Include="namespace sprite\InstancedSprites.h" />
+    <ClInclude Include="namespace render\dx\TextureTool_.h" />
     <ClInclude Include="namespace sprite\SortMask.h" />
     <ClInclude Include="namespace sprite\text\BmpFont_.h" />
     <ClInclude Include="namespace sprite\text\FontCache.h" />
     <ClInclude Include="namespace sprite\text\SpriteTextComposer.h" />
-    <ClInclude Include="namespace text\BmpFont.h" />
     <ClInclude Include="namespace text\CreateFontTexture.h" />
     <ClInclude Include="namespace sound\FinitSoundTracks.h" />
     <ClInclude Include="namespace sound\sound.h" />
@@ -404,8 +381,6 @@
     <ClInclude Include="namespace sprite\binders cache\BlendStateBinders.h" />
     <ClInclude Include="namespace sprite\CameraCbuffer.h" />
     <ClInclude Include="namespace sprite\DrawableCbuffer.h" />
-    <ClInclude Include="namespace text\SpriteInstancedTexts.h" />
-    <ClInclude Include="namespace text\TextRenderer.h" />
     <ClInclude Include="namespace win\FileLogger.h" />
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
@@ -439,26 +414,9 @@
     <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp" />
     <ClCompile Include="Legalia\AlienPlayer.cpp" />
     <ClCompile Include="Legalia\ImageColliderCache.cpp" />
     <ClCompile Include="namespace game\components\MovableComponent.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp" />
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp" />
     <ClCompile Include="Legalia\AABB2DColliderComponent.cpp" />
     <ClCompile Include="Legalia\AABB2DCollisionSys.cpp" />
     <ClCompile Include="Legalia\ImageColliderAnimationCompo.cpp" />
@@ -480,12 +438,9 @@
     <ClCompile Include="namespace game\components\SpriteAnimCompo_.cpp" />
     <ClCompile Include="namespace game\components\SpriteTextCompo.cpp" />
     <ClCompile Include="namespace game\systems\SpriteTextSys.cpp" />
-    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp" />
-    <ClCompile Include="Mentle\MentleWindow.cpp" />
     <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp" />
     <ClCompile Include="Mentle\SpriteAnimTool\FramesLayer.cpp" />
     <ClCompile Include="Mentle\SpriteAnimTool\SpriteAnimTool.cpp" />
-    <ClCompile Include="Mentle\TextureTool\TextureTool.cpp" />
     <ClCompile Include="namespace game\Component.cpp" />
     <ClCompile Include="namespace game\ComponentFactory.cpp" />
     <ClCompile Include="namespace game\components\ButtonComponent.cpp" />
@@ -520,6 +475,7 @@
     <ClCompile Include="namespace render\ConstantBuffer.cpp" />
     <ClCompile Include="namespace render\dx\pipeline\PipeState.cpp" />
     <ClCompile Include="namespace render\dx\BinderCache.cpp" />
+    <ClCompile Include="namespace render\dx\TextureTool_.cpp" />
     <ClCompile Include="namespace sound\FinitSoundTracks.cpp" />
     <ClCompile Include="namespace sound\sound.cpp" />
     <ClCompile Include="namespace sound\SoundScreamer.cpp" />
@@ -540,15 +496,11 @@
     <ClCompile Include="namespace game\tasks\LerpValueTask.cpp" />
     <ClCompile Include="namespace sprite\CameraCbuffer.cpp" />
     <ClCompile Include="namespace sprite\DrawableCbuffer.cpp" />
-    <ClCompile Include="namespace sprite\InstancedSprites.cpp" />
     <ClCompile Include="namespace sprite\text\BmpFont_.cpp" />
     <ClCompile Include="namespace sprite\text\FontCache.cpp" />
     <ClCompile Include="namespace sprite\text\SpriteTextComposer.cpp" />
-    <ClCompile Include="namespace text\BmpFont.cpp" />
     <ClCompile Include="namespace text\CreateFontTexture.cpp" />
-    <ClCompile Include="namespace text\SpriteInstancedTexts.cpp" />
     <ClCompile Include="namespace text\TextParserW.cpp" />
-    <ClCompile Include="namespace text\TextRenderer.cpp" />
     <ClCompile Include="namespace win\FileLogger.cpp" />
     <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
     <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />
@@ -587,7 +539,6 @@
     <None Include="gsp_Icons.ico" />
     <None Include="namespace game\ComponentFactory.inl" />
     <None Include="namespace gen\TreeNode.inl" />
-    <None Include="namespace text\SpriteInstancedTexts.inl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RC_SpriteAnimDialogs.rc" />

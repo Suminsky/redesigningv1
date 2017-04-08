@@ -33,7 +33,8 @@ void game::SpriteTextCompo::Initialize(
 	uint32_t fontID_p,
 	SpriteTextComposer * pTextComposer_p,
 	sprite::E_BLENDTYPE eBlend_p, sprite::E_SAMPLERTYPE eSampler_p,
-	sprite::SpriteRenderer * pSpriteRenderer_p )
+	sprite::SpriteRenderer * pSpriteRenderer_p,
+	dx::Device * pDevice_p )
 {
 	m_szText = pSzMemBlock_p;
 	m_pRenderData = pInstMemBlock_p;
@@ -58,7 +59,7 @@ void game::SpriteTextCompo::Initialize(
 	m_bUpdateBindData = true;
 
 	//m_drawIndexedInstanced.UpdateNumberOfInstances( m_nCurrentSzLen ); // not really used
-
+	m_pipeState_texture_blend_sampler.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(3u), 3u);
 	m_pipeState_texture_blend_sampler.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(m_sortKey.bitfield.textureID) );
 	m_pipeState_texture_blend_sampler.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(eBlend_p) );
 	m_pipeState_texture_blend_sampler.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(eSampler_p) );
@@ -281,7 +282,8 @@ game::pool_Component_ptr game::SpriteTextCompoFactory::VCreateComponent( text::G
 		fontID,
 		m_pTextComposer,
 		eBlend, eSampler,
-		m_pSpriteRenderer
+		m_pSpriteRenderer,
+		m_pDeviceRef
 		);
 
 	if( pGFig_p->GetSubElement( "color", pParam ) ){
@@ -420,7 +422,7 @@ void game::SpriteTextCompoFactory::VSerialize( const Component * pCompo_p, text:
 		}
 
 		GfigElementA gSample("sampler");
-		E_SAMPLERTYPE eSampler = m_pSpriteRenderer->m_samplers_cache.InfereSamplerType( (dx::BindPSSampler *)*(text.m_pipeState_texture_blend_sampler.Begin()+2));
+		E_SAMPLERTYPE eSampler = m_pSpriteRenderer->m_samplers_cache.InfereSamplerType( (dx::BindPSSampler *)(text.m_pipeState_texture_blend_sampler[2]));
 		if( SpriteComponent_Factory::SerializeSamplerType( eSampler, E_SAMPLER_NONE, gSample) ){
 
 			gTextCompo.m_subElements.push_back(std::move(gSample));

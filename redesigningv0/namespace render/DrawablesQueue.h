@@ -154,6 +154,8 @@ namespace render{
 		drawablearray	m_drawables;
 		sortarray		m_sortqueue;
 		dx::Binder	*	m_stateCache[dx::E_MAX_BINDS];
+
+
 	};
 
 #pragma warning( pop ) 

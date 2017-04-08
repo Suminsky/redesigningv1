@@ -86,7 +86,4 @@ namespace net{
 		SOCKET m_socket;
 		// TODO: should I hold the port?
 	};
-
-	typedef std::shared_ptr<Socket_UDP_NonBlocking_IPv4> shared_Socket_UDP_NonBlocking_ptr;
-	typedef std::weak_ptr<Socket_UDP_NonBlocking_IPv4> weak_Socket_UDP_NonBlocking_ptr;
 }

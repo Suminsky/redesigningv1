@@ -1,4 +1,4 @@
-#include "PCHF.h"
+#include <PCHF.h>
 #include "GameWindow2D_1.h"
 
 
@@ -13,7 +13,8 @@ GameWindow2D_1::GameWindow2D_1( double dTimeStep_p, HINSTANCE hInst_p,
 	:
 Window(hInst_p),
 Game( dTimeStep_p ),
-m_spriteText(&m_spriteRenderer.m_tex2D_cache)
+m_spriteText(&m_spriteRenderer.m_tex2D_cache),
+m_fileLog(szWinName_p)
 {
 
 	// create window
@@ -210,22 +211,22 @@ LRESULT CALLBACK GameWindow2D_1::OnWM_CREATE( HWND hWnd_p )
 
 		m_spriteRenderer.Init(&m_device, 1024);
 		m_spriteRenderer.m_camera.BuildPipeState( m_cliRect.w, m_cliRect.h, &m_device, m_swapChain.m_pBackBufferRTV );
-		m_textRenderer.Initialize(&m_device, m_spriteRenderer);
+		//m_textRenderer.Initialize(&m_device, m_spriteRenderer);
 
 		//text::GlyphRect chardescs[512];
 		//WCHAR chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ·ÈÌÛ˙‚ÍÙ‡„ı¿√’¡…Õ”⁄¬ ‘1234567890/*-+-_=(){}[]<>/|\\\"`'~^!?,.:;@#$%&";
 		//text::CreateFontFiles( "arial_18", L"Arial", 18.0f, Gdiplus::FontStyleRegular, true, m_device, chardescs, chars, sizeof(chars)/sizeof(WCHAR) );
 
-		text::BmpFont font;
-		font.InitFromFile( "Arial_30.fnt", m_spriteRenderer.m_tex2D_cache );
-		text::BmpFont font2;
-		font2.InitFromFile( "Arial_14.fnt", m_spriteRenderer.m_tex2D_cache );
-		text::BmpFont font3;
-		font3.InitFromFile( "arial_18.fnt", m_spriteRenderer.m_tex2D_cache );
+		//text::BmpFont font;
+		//font.InitFromFile( "Arial_30.fnt", m_spriteRenderer.m_tex2D_cache );
+		//text::BmpFont font2;
+		//font2.InitFromFile( "Arial_14.fnt", m_spriteRenderer.m_tex2D_cache );
+		//text::BmpFont font3;
+		//font3.InitFromFile( "arial_18.fnt", m_spriteRenderer.m_tex2D_cache );
 
-		m_textRenderer.AddFont( font );
-		m_textRenderer.AddFont( font2 );
-		m_textRenderer.AddFont( font3 );
+		//m_textRenderer.AddFont( font );
+		//m_textRenderer.AddFont( font2 );
+		//m_textRenderer.AddFont( font3 );
 
 		return 0;
 }

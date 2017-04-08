@@ -102,7 +102,8 @@ bool net::Socket_UDP_NonBlocking_IPv4::Destroy( E_ERROR * peError_p /*= nullptr 
 	}
 }
 
-bool net::Socket_UDP_NonBlocking_IPv4::Receive(	int & nBytesRead_p, Address_HostOrder_IPv4 & remoteAddress_out_p, BYTE * pDataBuffer_p, UINT nMaxBytesToRead_p, E_ERROR * peError_p /*= nullptr */ )
+bool net::Socket_UDP_NonBlocking_IPv4::Receive(	int & nBytesRead_p, Address_HostOrder_IPv4 & remoteAddress_out_p,
+	BYTE * pDataBuffer_p, UINT nMaxBytesToRead_p, E_ERROR * peError_p /*= nullptr */ )
 {
 	sockaddr_in senderAddress;
 	int iSenderAddressSize = sizeof(senderAddress);
@@ -155,7 +156,8 @@ bool net::Socket_UDP_NonBlocking_IPv4::Receive(	int & nBytesRead_p, Address_Host
 	}
 }
 
-bool net::Socket_UDP_NonBlocking_IPv4::SendTo( const Address_HostOrder_IPv4 & remoteAddress_in_p, const BYTE * pData_p, UINT nDataBytes_p, E_ERROR * peError_p /*= nullptr */ )
+bool net::Socket_UDP_NonBlocking_IPv4::SendTo( const Address_HostOrder_IPv4 & remoteAddress_in_p, const BYTE * pData_p,
+	UINT nDataBytes_p, E_ERROR * peError_p /*= nullptr */ )
 {
 	sockaddr_in to;
 	to.sin_family = AF_INET;

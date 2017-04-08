@@ -108,7 +108,7 @@ namespace game{
 
 		bool m_bHFlip, m_bVFlip;
 
-		dx::PipeState m_pipeState;	// cbuffer, texture, blend state, sampler state
+		dx::PipeState m_pipeState_cb_tex_ss_bs;	// cbuffer, texture, sampler state, blend state
 		sprite::BindVSDrawableCBuffer m_VSDrawableCbufferBinder;
 
 		// testing

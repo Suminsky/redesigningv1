@@ -46,6 +46,19 @@ namespace dx{
 
 		dx::PipeState m_pipeState;	// collection of Bind shader PROGRAMS ONLY
 		UINT64 m_optionsBitMask;		// flags
+
+		ShaderPermutation(dx::Device * pDevice_p, uint32_t maxSize_p)
+			:
+			m_pipeState(pDevice_p->m_pPipeBindsMem->StackAlloc(maxSize_p), maxSize_p)
+		{}
+
+		ShaderPermutation() {}
+
+		void Initialize(dx::Device * pDevice_p, uint32_t maxSize_p) {
+
+			m_pipeState.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(maxSize_p), maxSize_p);
+		}
+
 	};
 
 	//========================================================================
@@ -54,8 +67,10 @@ namespace dx{
 	//========================================================================
 	struct ShaderResource{
 
+		static const int MAX_PERMUTATIONS = 2;
+
 		std::string m_szName;
-		std::unique_ptr<ShaderPermutation[]> m_permutations;
+		ShaderPermutation m_permutations[MAX_PERMUTATIONS]; // was an array, but now I changing shit, TODO
 		UINT m_nPermutations;
 
 		BinderCache< BindVSVertexShader, VSCache > m_VSCache;
@@ -66,22 +81,28 @@ namespace dx{
 		//------------------------------------------------------------------------
 		ShaderResource( const char* szHLSL_p, UINT nPermutations_p, UINT nShaderPrograms_p, dx::Device * pDevice_p )
 			:
-			m_permutations( new ShaderPermutation[nPermutations_p]()),
 			m_nPermutations(nPermutations_p),
 			m_szName(szHLSL_p)
 			{
+				
+				for( int it = 0; it < MAX_PERMUTATIONS; ++it)
+					m_permutations[it].Initialize(pDevice_p, 2);
+
+
 				m_VSCache.Init( nShaderPrograms_p, pDevice_p->m_pCacheVS );
 				m_PSCache.Init( nShaderPrograms_p, pDevice_p->m_pCachePS );
 			}
-		ShaderResource(){}
+		ShaderResource() {}
 		virtual ~ShaderResource(){};
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Init( const char* szHLSL_p, UINT nPermutations_p, UINT nShaderPrograms_p, dx::Device * pDevice_p ){
+		void Init( const char* szHLSL_p, UINT nPermutations_p, UINT nShaderPrograms_p, dx::Device * pDevice_p)
+		{
+			for (int it = 0; it < MAX_PERMUTATIONS; ++it)
+				m_permutations[it].Initialize(pDevice_p, 2);
 
-			m_permutations.reset(new ShaderPermutation[nPermutations_p]);
 			m_nPermutations = nPermutations_p;
 			m_szName = szHLSL_p;
 

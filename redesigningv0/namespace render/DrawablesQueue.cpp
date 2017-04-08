@@ -57,9 +57,9 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 			// traverse bind commands
 
-			const dx::vBinderPtrs & binds = stateGroup[itStates]->m_vBinderPtrs;
+			const dx::PipeState::Binds & binds = stateGroup[itStates]->m_vBinderPtrs;
 			
-			for(	uint32_t itBinds = 0, bindsSize = (uint32_t)binds.size();
+			for(	uint32_t itBinds = 0, bindsSize = (uint32_t)binds.Size();
 					itBinds < bindsSize;
 					++itBinds ){
 

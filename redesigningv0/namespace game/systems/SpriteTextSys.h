@@ -46,12 +46,13 @@ namespace game{
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		SpriteTextSys( sprite::SpriteRenderer * pSpriteRenderer_p, sprite::Camera * pCamera_p, dx::Device * pDevice_p )
+		SpriteTextSys( sprite::SpriteRenderer * pSpriteRenderer_p, sprite::Camera * pCamera_p, dx::Device * pDevice_p)
 			:
 		m_poolAccess(nullptr, nullptr),
 		m_pSpriteRendererRef(pSpriteRenderer_p),
 		m_pCameraRef(pCamera_p),
-		m_pDevice(pDevice_p)
+		m_pDevice(pDevice_p),
+		m_pipeState_instVB(pDevice_p->m_pPipeBindsMem->StackAlloc(), 1u)
 		{}
 
 	private:
@@ -81,7 +82,7 @@ namespace game{
 		dx::Device * m_pDevice;
 
 		render::Drawable m_drawableAux;
-		dx::PipeState m_pipeState_VB;
+		dx::PipeState m_pipeState_instVB; // this is added again when go trough spriterenderer, but it has precedence
 
 		struct Entry{
 

@@ -55,10 +55,11 @@ namespace sprite{
 
 			m_mProjection = m_mView = DirectX::XMMatrixIdentity();
 		}
-		Camera( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p )
+		Camera( UINT width_p, UINT height_p, dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p)
 			:
-		m_bindViewPort(m_viewPort),
-			m_fZoom(1.0f)
+			m_bindViewPort(m_viewPort),
+			m_fZoom(1.0f),
+			m_pipeState_vp_rt_cb(pDevice_p->m_pPipeBindsMem->StackAlloc(3u), 3u)
 		{
 
 			// initializes projection and view to identity

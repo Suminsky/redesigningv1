@@ -25,6 +25,7 @@ namespace dx{
 	typedef ResourceCache<ShaderResourceView,	60>	ShaderResourceViewCache;
 	typedef ResourceCache<InputLayout,			2>	InputLayoutCache;
 	typedef ResourceCache<SamplerState,			2>	SamplerStateCache;
+	typedef gen::Stack<Binder*,				4096u>	PipeBindsMemory;
 
 	class Device{
 
@@ -37,7 +38,8 @@ namespace dx{
 			:
 			m_pDevice(nullptr), m_pContext(nullptr),
 			m_pCacheRTV(nullptr), m_pCacheTex2D(nullptr), m_pCacheVS(nullptr), m_pCachePS(nullptr), m_pCacheBuffer(nullptr),
-			m_pCacheBlendState(nullptr), m_pCacheSRV(nullptr), m_pCacheInputLayout(nullptr), m_pCacheSamplerState(nullptr){
+			m_pCacheBlendState(nullptr), m_pCacheSRV(nullptr), m_pCacheInputLayout(nullptr), m_pCacheSamplerState(nullptr),
+			m_pPipeBindsMem(nullptr){
 
 				InitCaches();
 		};
@@ -52,6 +54,7 @@ namespace dx{
 			if( m_pCacheSRV )		delete m_pCacheSRV;
 			if( m_pCacheInputLayout ) delete m_pCacheInputLayout;
 			if( m_pCacheSamplerState ) delete m_pCacheSamplerState;
+			if (m_pPipeBindsMem)	delete m_pPipeBindsMem;
 
 			/*Microsoft::WRL::ComPtr<ID3D11Debug> debug;
 			m_pDevice->QueryInterface(IID_PPV_ARGS(&debug));
@@ -94,6 +97,7 @@ namespace dx{
 		ShaderResourceViewCache * m_pCacheSRV;
 		InputLayoutCache		* m_pCacheInputLayout;
 		SamplerStateCache		* m_pCacheSamplerState;
+		PipeBindsMemory			* m_pPipeBindsMem;
 
 		private:
 
@@ -111,6 +115,7 @@ namespace dx{
 			m_pCacheSRV = new ShaderResourceViewCache(m_pDevice);
 			m_pCacheInputLayout = new InputLayoutCache(m_pDevice);
 			m_pCacheSamplerState = new SamplerStateCache(m_pDevice);
+			m_pPipeBindsMem = new PipeBindsMemory();
 		}
 
 		ID3D11Device * m_pDevice;

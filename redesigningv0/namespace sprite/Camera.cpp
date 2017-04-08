@@ -11,25 +11,9 @@ void sprite::Camera::BuildPipeState(
 	dx::Device * pDevice_p, ID3D11RenderTargetView * pRTV_p,
 	UINT x_p /*= 0*/, UINT y_p /*= 0*/ )
 {
-	m_pipeState_vp_rt_cb.Reset(); //m_binds.resize(0);
-
-	// viewport
-
-	m_viewPort.Width = (float)width_p;///2.0f;
-	m_viewPort.Height = (float)height_p;///2.0f;
-	m_viewPort.TopLeftX = (float)x_p;//0.0f;
-	m_viewPort.TopLeftY = (float)y_p;//0.0f;
-	m_viewPort.MinDepth = 0.0f;
-	m_viewPort.MaxDepth = 1.0f;
-
-	//m_bindViewPort ( m_viewPort );
-	m_pipeState_vp_rt_cb.AddBinderCommand( &m_bindViewPort );
-
-	// cbuffer
-
-	m_renderData.m_mViewProjection = m_mProjection = DirectX::XMMatrixOrthographicLH( (float)width_p, (float)height_p, 0.0f, 1.0f );
-
 	if( !m_pBuffer ){
+
+		m_pipeState_vp_rt_cb.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(3u), 3u);
 
 		dx::BufferResource::CreationParams params = {0};
 		params.desc.bufferDesc.ByteWidth = CameraCbuffer::s_SIZE;
@@ -43,10 +27,28 @@ void sprite::Camera::BuildPipeState(
 		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), params );
 	}
 
+	m_pipeState_vp_rt_cb.Reset(); //m_binds.resize(0);
+
+	// viewport
+
+	m_viewPort.Width = (float)width_p;///2.0f;
+	m_viewPort.Height = (float)height_p;///2.0f;
+	m_viewPort.TopLeftX = (float)x_p;//0.0f;
+	m_viewPort.TopLeftY = (float)y_p;//0.0f;
+	m_viewPort.MinDepth = 0.0f;
+	m_viewPort.MaxDepth = 1.0f;
+
+	//m_bindViewPort ( m_viewPort );
+	m_pipeState_vp_rt_cb.AddBinderCommand(&m_bindViewPort);
+
+	// cbuffer
+
+	m_renderData.m_mViewProjection = m_mProjection = DirectX::XMMatrixOrthographicLH((float)width_p, (float)height_p, 0.0f, 1.0f);
 	m_bindVSCameraCbuffer.Initialize( m_pBuffer, &m_renderData );
 	m_pipeState_vp_rt_cb.AddBinderCommand( &m_bindVSCameraCbuffer );
 
 	// render target
+
 	m_bindOMRTVDS.Initialize(pRTV_p, nullptr );
 	m_pipeState_vp_rt_cb.AddBinderCommand( &m_bindOMRTVDS );
 }

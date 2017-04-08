@@ -33,15 +33,22 @@ namespace render{
 
 	public:
 
+		DBG(static uint32_t s_count;)
+
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
-		Drawable(){}
+		Drawable(){
+		
+			DBG(++s_count;)
+		}
 		Drawable( UINT64 sortKey_p, dx::DrawCall * pDrawCall_p )
 		:
 		m_sortKey(sortKey_p),
 		m_pDrawCall(pDrawCall_p)
-		{}
+		{
+			DBG(++s_count;)
+		}
 		virtual ~Drawable(){}
 
 		//------------------------------------------------------------------------

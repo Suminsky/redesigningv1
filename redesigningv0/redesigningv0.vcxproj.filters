@@ -210,9 +210,6 @@
     <ClInclude Include="namespace text\CreateFontTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace text\TextRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace gen\Delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -291,9 +288,6 @@
     <ClInclude Include="namespace render\dx\BinderCache.inl">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace sprite\InstancedSprites.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace win\OpenDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -315,15 +309,6 @@
     <ClInclude Include="namespace win\KeyboardInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace text\SpriteInstancedTexts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\MentleWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mentle\mainmenu\fadelayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -334,9 +319,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mentle\SpriteAnimTool\SpriteAnimToolEvents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mentle\TextureTool\TextureTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace phys\AABB3D.h">
@@ -381,9 +363,6 @@
     <ClInclude Include="namespace sprite\text\SpriteTextComposer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace text\BmpFont.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="namespace sprite\text\FontCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -409,63 +388,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Legalia\ImageCollisionSys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\CircleColliderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\HUDLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\InputActionKeys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTesting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\IsoTileSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\KeyMapLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\LevelTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\MapLayer_v2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\ParalaxLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\PlayerLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\PunkAudioHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\PunkEvents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="namespace gen\Stack.h">
@@ -508,6 +430,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Legalia\ImageColliderCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="namespace render\dx\TextureTool_.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -671,9 +596,6 @@
     <ClCompile Include="namespace text\CreateFontTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace text\TextRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace game\tasks\OnUpdateDelegateTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -734,22 +656,10 @@
     <ClCompile Include="namespace render\dx\BinderCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace sprite\InstancedSprites.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace net\P2PConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace win\KeyboardInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="namespace text\SpriteInstancedTexts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\MentleWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\MainMenu\FadeLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp">
@@ -759,9 +669,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\SpriteAnimTool\SpriteAnimTool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mentle\TextureTool\TextureTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\AABB2DColliderComponent.cpp">
@@ -800,9 +707,6 @@
     <ClCompile Include="Legalia\SpriteDraggingSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="namespace text\BmpFont.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="namespace sprite\text\FontCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -825,57 +729,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Legalia\ImageCollisionSys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DColliderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\AABB3DCollisionSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\CircleColliderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\HUDLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTesting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\IsoTileSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\KeyMapLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\LevelTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\MapLayer_v2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\ParalaxLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\PlayerLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\PunkAudioHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMap3DCollisionSys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapColliderComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CynerPunk_SonaTheHooker\TileMapCollisionSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace phys\AABB2D.cpp">
@@ -914,6 +767,9 @@
     <ClCompile Include="Legalia\ImageColliderCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="namespace render\dx\TextureTool_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gsp_Icons.ico">
@@ -923,9 +779,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="namespace game\ComponentFactory.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="namespace text\SpriteInstancedTexts.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="bin1.bin">

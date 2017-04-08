@@ -10,7 +10,10 @@
 using namespace dx;
 
 
-void dx::ShaderResource::LoadShaderProgram( dx::E_BIND type_p, dx::Device * pDevice_p, const char * szXS_p, const char* szProfile_p, bool bRowMajor_p /*= false*/, ID3DBlob ** ppShaderBytes_p /*= NULL*/, UINT64 iPermutationMask_p /*= 0*/, UINT iPermutationIndex_p /*= 0*/, const D3D10_SHADER_MACRO * pDefines_p /*= NULL */ )
+void dx::ShaderResource::LoadShaderProgram(
+	dx::E_BIND type_p, dx::Device * pDevice_p, const char * szXS_p, const char* szProfile_p,
+	bool bRowMajor_p /*= false*/, ID3DBlob ** ppShaderBytes_p /*= NULL*/,
+	UINT64 iPermutationMask_p /*= 0*/, UINT iPermutationIndex_p /*= 0*/, const D3D10_SHADER_MACRO * pDefines_p /*= NULL */ )
 {
 	assert( iPermutationIndex_p < m_nPermutations );
 

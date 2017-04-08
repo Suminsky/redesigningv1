@@ -26,8 +26,8 @@ void SpriteTextSys::VOnInit()
 
 	m_sortArray.reserve(m_poolAccess.GetNAllocated());
 
-	m_pipeState_VB.AddBinderCommand(&m_pTextCompoFactoryRef->m_instVBBinder);
-	m_drawableAux.AddPipelineState(&m_pipeState_VB);
+	m_pipeState_instVB.AddBinderCommand(&m_pTextCompoFactoryRef->m_instVBBinder);
+	m_drawableAux.AddPipelineState(&m_pipeState_instVB);
 }
 
 void SpriteTextSys::VOnDraw( double interp_p )

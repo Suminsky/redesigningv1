@@ -27,8 +27,6 @@ namespace render{
 }
 
 namespace dx{
-
-	typedef std::vector<Binder*> vBinderPtrs;
 	
 	class PipeState{
 
@@ -36,15 +34,36 @@ namespace dx{
 	
 	public:
 
+		typedef gen::Stack<Binder*, (uint32_t)-1> Binds;
+		DBG(static uint32_t s_count;)
+
 		//------------------------------------------------------------------------
 		// ctor/dctor
 		//------------------------------------------------------------------------
+		PipeState(Binder** ppMem_p, uint32_t maxSize_p)
+			:
+			m_stateMask(0LL),
+			m_vBinderPtrs(ppMem_p, maxSize_p)
+		{
+			DBG(++s_count;)
+		}
+
 		PipeState()
 			:
-		m_stateMask(0LL)
-		{}
+			m_stateMask(0LL)
+		{
+			DBG(++s_count;)
+		}
 
 		~PipeState(){}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Initialize(Binder** ppMem_p, uint32_t maxSize_p) {
+
+			m_vBinderPtrs.Initialize(ppMem_p, maxSize_p);
+		}
 
 		//------------------------------------------------------------------------
 		// Adds a command updating the state mask
@@ -54,7 +73,7 @@ namespace dx{
 			assert( !(m_stateMask & pBinder_p->TypeBits_int() ) );
 			assert( pBinder_p->TypeIndex() >= 0 &&  pBinder_p->TypeIndex() < E_MAX_BINDS );
 
-			m_vBinderPtrs.push_back(pBinder_p);
+			m_vBinderPtrs.PushBack(pBinder_p);
 			m_stateMask |= pBinder_p->TypeBits_int();
 		}
 
@@ -63,28 +82,31 @@ namespace dx{
 		//------------------------------------------------------------------------
 		void Reset(){
 
-			m_vBinderPtrs.clear();
+			m_vBinderPtrs.Reset();
 			m_stateMask = 0LL;
 		}
 
 		//------------------------------------------------------------------------
 		// Iterators
 		//------------------------------------------------------------------------
-		vBinderPtrs::iterator Begin(){	return m_vBinderPtrs.begin();	}
-		vBinderPtrs::const_iterator End(){	return m_vBinderPtrs.end();	}
+		Binder* & operator[](uint32_t index_p){
+
+			return m_vBinderPtrs[index_p];
+		}
+		const Binder *const & operator[](uint32_t index_p)const{
+
+			return m_vBinderPtrs[index_p];
+		}
 
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
 		UINT64 GetStateMask()const{	return m_stateMask;	}
 
+		
 	private:
 
-		std::vector<Binder*>	m_vBinderPtrs;
 		UINT64					m_stateMask; // mark all binds it binds
+		Binds	m_vBinderPtrs;
 	};
-
-
-	typedef std::shared_ptr<PipeState> shared_State_ptr;
-	typedef std::weak_ptr<PipeState> weak_State_ptr;
 }

@@ -26,9 +26,11 @@
 
 #include "../namespace sprite/SpriteRenderer.h"
 #include "../namespace sprite/text/SpriteTextComposer.h"
-#include "../namespace text/TextRenderer.h"
+//#include "../namespace text/TextRenderer.h"
 
 #include "../namespace sound/sound.h"
+
+#include "../namespace win/FileLogger.h"
 
 //#include "../namespace gen/gen_data.h"
 
@@ -49,7 +51,9 @@ public:
 	dx::SwapChain			m_swapChain;
 	sprite::SpriteRenderer	m_spriteRenderer;
 	sprite::SpriteTextComposer m_spriteText;
-	text::TextRenderer		m_textRenderer;
+	//text::TextRenderer		m_textRenderer;
+
+	win::FileLogger m_fileLog;
 
 protected:
 

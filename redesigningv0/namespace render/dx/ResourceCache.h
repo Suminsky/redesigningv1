@@ -160,6 +160,18 @@ namespace dx{
 
 		}
 
+		//
+
+		UINT GetAmount()const {
+			return m_iCurrentIndex;
+		}
+
+		const SlotInfo & GetSlotInfo(unsigned int index)const {
+
+			assert(index < (m_iCurrentIndex));
+			return m_slotsInfo[index];
+		}
+
 	private:
 
 		//------------------------------------------------------------------------

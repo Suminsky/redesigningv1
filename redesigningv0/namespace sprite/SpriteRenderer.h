@@ -73,7 +73,7 @@ namespace sprite{
 		// queue the states of a sprite
 		//------------------------------------------------------------------------
 		void Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p );
-		void Render( InstancedSprites * pInstSprites, Camera *pCamera_p );
+		//void Render( InstancedSprites * pInstSprites, Camera *pCamera_p );
 		void Render( render::Drawable * pInstDrawable, Camera *pCamera_p );
 
 		//------------------------------------------------------------------------
@@ -83,10 +83,10 @@ namespace sprite{
 
 		render::DrawablesQueue	m_queue;		
 
-		dx::PipeState	m_defaultVertexInput; //vertex, index, input layout, primitive topology
+		dx::PipeState	m_defaultVertexInput_to_il_vb_ib; //vertex, index, input layout, primitive topology
 		dx::DrawIndexed m_drawIndexed;
 
-		dx::PipeState	m_instancedVertexInput;
+		dx::PipeState	m_instancedVertexInput_to_il_vb_ib_ivb;
 
 		BlendStateBinders	m_blends_cache;
 		TextureBinders		m_tex2D_cache;
@@ -95,7 +95,7 @@ namespace sprite{
 
 		Camera m_camera;
 
-		InstancesVertexBuffer		m_dynamic_tmp_instancesVB;	
+		//InstancesVertexBuffer		m_dynamic_tmp_instancesVB;	
 
 		// TODO: a cache class for each of those binders would be the right thing
 		dx::BindIAPrimitiveTopology m_bindPrimitiveTopo;

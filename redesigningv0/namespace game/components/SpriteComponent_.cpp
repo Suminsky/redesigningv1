@@ -60,14 +60,16 @@ SpriteComponent_::SpriteComponent_(
 
 	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
+	m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
+
 	// initialize pipe state for this sprite
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
-	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
 	unsigned int iTextureID;
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
 
 	m_TextureID = iTextureID;
 	m_BlendModeID = blendType_p;
@@ -152,7 +154,7 @@ void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData
 		m_renderData.m_padding.y = -spriteFrame.yOffset;
 	}
 
-	(*(++m_pipeState.Begin())) = pAnim->GetSprite().pBindPSSRV;
+	m_pipeState_cb_tex_ss_bs[1] = pAnim->GetSprite().pBindPSSRV;
 	m_TextureID = pAnim->GetSprite().iID;
 	m_sortKey.bitfield.textureID = m_TextureID;
 }
@@ -299,7 +301,7 @@ void game::SpriteComponent_::OnAnim_EventDelegate( const Event<ComponentEventDat
 	}
 
 	const TextureID_Binder_Pair_ & sprite = pAnim->GetSprite((iframe)spriteFrame.iSpriteUsedIndex);
-	(*(++m_pipeState.Begin())) = sprite.pBindPSSRV;
+	m_pipeState_cb_tex_ss_bs[1] = sprite.pBindPSSRV;
 	m_TextureID = sprite.iID;
 	m_sortKey.bitfield.textureID = m_TextureID;
 }
@@ -343,18 +345,21 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTextur
 		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
 	
 		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+
+		m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
 	}
 
 	// initialize pipe state for this sprite
 
-	m_pipeState.Reset();
+	m_pipeState_cb_tex_ss_bs.Reset();
+
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer/*pBuffer*/, &m_renderData );
-	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
 	unsigned int iTextureID;
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
 
 	m_TextureID = iTextureID;
 	m_BlendModeID = blendType_p;
@@ -401,18 +406,21 @@ void SpriteComponent_::Initialize( dx::Device * pDevice_p, game::TextureID_Binde
 		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
 	
 		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
+
+		m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
 	}
 
 	// initialize pipe state for this sprite
 
-	m_pipeState.Reset();
+	m_pipeState_cb_tex_ss_bs.Reset();
+
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
-	m_pipeState.AddBinderCommand( &m_VSDrawableCbufferBinder );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &m_VSDrawableCbufferBinder );
 
 	int iTextureID = pTexture_p->iID;
-	m_pipeState.AddBinderCommand( pTexture_p->pBindPSSRV );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
-	m_pipeState.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( pTexture_p->pBindPSSRV );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
 
 	m_TextureID = iTextureID;
 	m_BlendModeID = blendType_p;
@@ -641,15 +649,14 @@ game::pool_Component_ptr game::SpriteComponent_Factory::VCloneComponent( const C
 	
 	pSprite->m_VSDrawableCbufferBinder.Initialize( pSprite->m_pBuffer, &pSprite->m_renderData );
 
-	pSprite->m_pipeState.AddBinderCommand( &pSprite->m_VSDrawableCbufferBinder );
+	pSprite->m_pipeState_cb_tex_ss_bs.Initialize(m_pDeviceRef_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
+	pSprite->m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSprite->m_VSDrawableCbufferBinder );
 
 	//
 
-	vBinderPtrs::iterator itBinders = pOther->m_pipeState.Begin();
-	++itBinders;
-	pSprite->m_pipeState.AddBinderCommand( *itBinders ); ++itBinders;
-	pSprite->m_pipeState.AddBinderCommand( *itBinders ); ++itBinders;
-	pSprite->m_pipeState.AddBinderCommand( *itBinders );
+	pSprite->m_pipeState_cb_tex_ss_bs.AddBinderCommand(pOther->m_pipeState_cb_tex_ss_bs[1]);
+	pSprite->m_pipeState_cb_tex_ss_bs.AddBinderCommand(pOther->m_pipeState_cb_tex_ss_bs[2]);
+	pSprite->m_pipeState_cb_tex_ss_bs.AddBinderCommand(pOther->m_pipeState_cb_tex_ss_bs[3]);
 
 	//
 
@@ -696,10 +703,7 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 
 			pSprite->m_BlendModeID = eBlend;
 			pSprite->m_sortKey.bitfield.blending = eBlend;
-
-			auto pipeIt = pSprite->m_pipeState.Begin();
-			pipeIt+=3;
-			*pipeIt = &m_pRendererRef->m_blends_cache.GetBlendBind(eBlend);
+			pSprite->m_pipeState_cb_tex_ss_bs[3] = &m_pRendererRef->m_blends_cache.GetBlendBind(eBlend);
 		}
 	}
 	if( pGFig_p->GetSubElement( "sampler", pParam ) ){
@@ -709,10 +713,7 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 		if( pSprite->m_SamplerModeID != (unsigned)eSampler ){
 
 			pSprite->m_SamplerModeID = eSampler;
-
-			auto pipeIt = pSprite->m_pipeState.Begin();
-			pipeIt+=2;
-			*pipeIt = &m_pRendererRef->m_samplers_cache.GetSamplerBind(eSampler);
+			pSprite->m_pipeState_cb_tex_ss_bs[2] = &m_pRendererRef->m_samplers_cache.GetSamplerBind(eSampler);
 		}
 	}
 
@@ -720,9 +721,8 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 		
 		if( m_pRendererRef->m_tex2D_cache.GetTextureName( pSprite->m_TextureID ) != pParam->m_value.c_str() ){
 
-			auto pipeIt = pSprite->m_pipeState.Begin();
-			pipeIt++;
-			*pipeIt = &m_pRendererRef->m_tex2D_cache.Get( pParam->m_value.c_str(), &pSprite->m_TextureID );
+			pSprite->m_pipeState_cb_tex_ss_bs[1] =
+				&m_pRendererRef->m_tex2D_cache.Get(pParam->m_value.c_str(), &pSprite->m_TextureID);
 		}
 	}
 

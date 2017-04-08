@@ -11,6 +11,7 @@
 #include <new>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 #include <assert.h>
 
@@ -28,4 +29,5 @@
 // private
 #include "namespace gen/gen_data.h"
 #include "namespace win/win_genData.h"
+#include "namespace win/FileLogger.h"
 //#pragma warning(pop)
