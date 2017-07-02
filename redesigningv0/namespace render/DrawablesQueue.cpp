@@ -10,18 +10,20 @@
 
 void render::DrawablesQueue::Submit( Drawable & drawable_p )
 {
-	m_drawables.push_back( drawable_p );
+	Drawable* pNew = m_drawables.StackAlloc();
+	pNew->Initialize(m_drawablesPipeMemBuff.StackAlloc(drawable_p.m_vStatePtrs.Size()), drawable_p.m_vStatePtrs.Size());
+	*pNew = drawable_p;
 
-	//Entry newEntry = {drawable_p.GetSortKey(), ((uint32_t)m_drawables.size())-1};
-	m_sortqueue.push_back((uint32_t)(m_drawables.size()) - 1);//newEntry);//
+	//m_drawables.PushBack( drawable_p );
 }
 
 void render::DrawablesQueue::Submit( Drawable && drawable_p )
 {
-	m_drawables.emplace_back( std::move(drawable_p) );
+	Drawable* pNew = m_drawables.StackAlloc();
+	pNew->Initialize(m_drawablesPipeMemBuff.StackAlloc(drawable_p.m_vStatePtrs.Size()), drawable_p.m_vStatePtrs.Size());
+	*pNew = drawable_p;
 
-	//Entry newEntry = {drawable_p.GetSortKey(), ((uint32_t)m_drawables.size())-1};
-	m_sortqueue.push_back((uint32_t)(m_drawables.size()) - 1);//newEntry);//
+	//m_drawables.PushBack( std::move(drawable_p) );
 }
 
 void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p, bool bClearStateCache_p )
@@ -37,21 +39,21 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 	// sort drawables
 
 	PrepareForSort();
-	Entry::InsertionSort(m_sortqueue, m_drawables);
+	InsertionSort(m_sortqueue, m_drawables);
 
 	// traverse "sorted drawables"
 
-	for(	uint32_t itSorted = 0, sortedSize = (uint32_t)m_sortqueue.size();
+	for(	uint32_t itSorted = 0, sortedSize = (uint32_t)m_sortqueue.Size();
 			itSorted < sortedSize;
 			++ itSorted ){
 
-		const vStatePtrs & stateGroup = m_drawables[m_sortqueue[itSorted]].m_vStatePtrs;
+		const render::Drawable::States & stateGroup = m_drawables[m_sortqueue[itSorted]].m_vStatePtrs;
 
 		// traverse pipe states
 
 		UINT64 bindsSetMask = 0;
 
-		for(	uint32_t itStates = 0, statesSize = (uint32_t)stateGroup.size();
+		for(	uint32_t itStates = 0, statesSize = (uint32_t)stateGroup.Size();
 				itStates < statesSize;
 				++ itStates ){
 
@@ -99,30 +101,48 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 
 }
 
-// try to achieve temporal coerence
-
 inline void render::DrawablesQueue::PrepareForSort() {
 
-	uint32_t nDrawables = (uint32_t)m_drawables.size();
-	uint32_t nPrevSorted = (uint32_t)m_sortqueue.size();
+	uint32_t nDrawables = (uint32_t)m_drawables.Size();
+	uint32_t nPrevSorted = (uint32_t)m_sortqueue.Size();
 
 	if (nPrevSorted > nDrawables) {
 
-		m_sortqueue.resize(nDrawables);
+		m_sortqueue.Reset();
+		m_sortqueue.StackAlloc(nDrawables);
 		for (uint32_t it = 0; it < nDrawables; ++it)
 			m_sortqueue[it] = it;
 	}
-
 	else {// <=
 
 		for (uint32_t it = nPrevSorted; it < nDrawables; ++it)
-			m_sortqueue.push_back(it);
+			m_sortqueue.PushBack(it);
+	}
+}
+
+inline void render::DrawablesQueue::InsertionSort(sortstack & a, const drawablestack & drawables)
+{
+	int n = (int)a.Size();
+
+	for (int i = 1; i < n; ++i)
+	{
+		uint32_t checkingValue = a[i];
+		int prev = i - 1;
+		while (prev >= 0 && drawables[a[prev]].GetSortKey() > drawables[checkingValue].GetSortKey())
+		{
+			a[prev + 1] = a[prev];
+			--prev;
+		}
+
+		a[prev + 1] = checkingValue;
 	}
 }
 
 void render::DrawablesQueue::Prepare()
 {
-	m_drawables.clear();
+	m_drawables.Reset();
+	m_drawablesPipeMemBuff.Reset();
+
 	//m_sortqueue.clear();
 }
 

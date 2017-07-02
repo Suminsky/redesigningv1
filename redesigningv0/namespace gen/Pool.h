@@ -37,7 +37,7 @@ namespace gen{
 			struct RosterElement{
 
 				uint iPoolIndex;
-				uint nTimesFree;
+				DBG(uint nTimesFree;)
 			};
 
 			//------------------------------------------------------------------------
@@ -68,7 +68,7 @@ namespace gen{
 				for( uint it = 0; it < m_size; ++it ){
 
 					m_elements[it].iPoolIndex = it;
-					m_elements[it].nTimesFree = 0;
+					DBG(m_elements[it].nTimesFree = 0;)
 				}
 			}
 
@@ -151,7 +151,7 @@ namespace gen{
 			:
 		m_roster(size_p), m_size(size_p){
 
-			m_pool = (T*)_aligned_malloc( sizeof(T) * size_p, __alignof(T) );
+			m_pool = (T*)_aligned_malloc( sizeof(T) * size_p, alignof(T) );
 
 			for( uint it = 0; it < m_size;++it ){
 
@@ -193,7 +193,7 @@ namespace gen{
 			Roster::RosterElement lastAllocatedcpy = m_roster.m_elements[iRosterIndexLastAllocated];
 
 			m_roster.m_elements[iRosterIndexLastAllocated] = m_roster.m_elements[iRosterIndex_p];
-			++m_roster.m_elements[iRosterIndexLastAllocated].nTimesFree;
+			DBG(++m_roster.m_elements[iRosterIndexLastAllocated].nTimesFree;)
 			m_pool[m_roster.m_elements[iRosterIndexLastAllocated].iPoolIndex].m_iCurrentRosterIndex = iRosterIndexLastAllocated;
 			m_roster.m_elements[iRosterIndex_p] = lastAllocatedcpy;
 
@@ -223,7 +223,7 @@ namespace gen{
 			Roster::RosterElement lastAllocated = m_roster.m_elements[iRosterIndexLastAllocated];
 
 			m_roster.m_elements[iRosterIndexLastAllocated] = m_roster.m_elements[iRosterIndex_p];
-			++m_roster.m_elements[iRosterIndexLastAllocated].nTimesFree;
+			DBG(++m_roster.m_elements[iRosterIndexLastAllocated].nTimesFree;)
 			m_pool[m_roster.m_elements[iRosterIndexLastAllocated].iPoolIndex].m_iCurrentRosterIndex = iRosterIndexLastAllocated;
 
 			m_roster.m_elements[iRosterIndex_p] = lastAllocated;

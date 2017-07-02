@@ -28,8 +28,6 @@
 
 namespace render{
 
-#pragma warning( push )
-#pragma warning( disable : 4351 ) // array on initialization list now default initialized, VS specific
 
 	typedef std::vector<dx::Command*> RenderCommands;
 
@@ -72,91 +70,17 @@ namespace render{
 
 	private:
 
-		typedef std::vector<Drawable>	drawablearray;
+		typedef gen::Stack<Drawable, 2048>	drawablestack;
+		typedef gen::Stack<uint32_t, 2048>	sortstack;
 		
-
-		struct Entry{
-
-			UINT64 drawableKey; // sort key
-			uint32_t index;			// index on the drawables array
-
-			bool operator ()( const Entry & a, const Entry & b)const{ // used by stl sort algos
-
-				return a.drawableKey < b.drawableKey;
-			}
-
-			bool Greater(Entry & other) {
-
-				return drawableKey > other.drawableKey;
-			}
-
-			static void InsertionSort(std::vector<Entry> & a)
-			{
-				int n = (int)a.size();
-
-				for (int i = 1; i < n; ++i)
-				{
-					Entry checkingValue = a[i];
-					int prev = i - 1;
-					while (prev >= 0 && a[prev].Greater(checkingValue))
-					{
-						a[prev + 1] = a[prev];
-						--prev;
-					}
-
-					a[prev + 1] = checkingValue;
-				}
-			}
-
-			static void InsertionSort(std::vector<uint32_t> & a, const std::vector<Drawable> & drawables)
-			{
-				int n = (int)a.size();
-
-				for (int i = 1; i < n; ++i)
-				{
-					uint32_t checkingValue = a[i];
-					int prev = i - 1;
-					while (prev >= 0 && drawables[a[prev]].GetSortKey() > drawables[checkingValue].GetSortKey())
-					{
-						a[prev + 1] = a[prev];
-						--prev;
-					}
-
-					a[prev + 1] = checkingValue;
-				}
-			}
-
-			// use to insert a new element in an already sorted array, withouth breaking the order
-			static void OrderedInsert(std::vector<Entry> & a, int n, Entry & newValue)
-			{
-				// assumes array is sorted
-				assert(n <= a.size());
-
-				a[n] = newValue;
-
-				int prev = n - 1;
-				while (prev >= 0 && a[prev].Greater(newValue))
-				{
-					a[prev + 1] = a[prev];
-					--prev;
-				}
-
-				a[prev + 1] = newValue;
-			}
-		};
-
-		typedef std::vector<uint32_t>		sortarray;
-
 		// try to achieve temporal coerence
 		void PrepareForSort();
+		static void InsertionSort(sortstack & a, const drawablestack & drawables);
 		
-
-		drawablearray	m_drawables;
-		sortarray		m_sortqueue;
 		dx::Binder	*	m_stateCache[dx::E_MAX_BINDS];
+		drawablestack	m_drawables;
+		sortstack		m_sortqueue;
 
-
+		gen::Stack<const dx::PipeState *, 4 * drawablestack::MaxSize()> m_drawablesPipeMemBuff;
 	};
-
-#pragma warning( pop ) 
 }

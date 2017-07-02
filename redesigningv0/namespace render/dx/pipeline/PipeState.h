@@ -19,6 +19,7 @@
 
 // private includes
 #include "Binder.h"
+#include "../../../namespace gen/gen_data.h"
 
 
 namespace render{
@@ -27,7 +28,10 @@ namespace render{
 }
 
 namespace dx{
-	
+
+	//========================================================================
+	// 
+	//========================================================================
 	class PipeState{
 
 		friend render::DrawablesQueue;
@@ -35,6 +39,7 @@ namespace dx{
 	public:
 
 		typedef gen::Stack<Binder*, (uint32_t)-1> Binds;
+
 		DBG(static uint32_t s_count;)
 
 		//------------------------------------------------------------------------
@@ -101,12 +106,24 @@ namespace dx{
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		UINT64 GetStateMask()const{	return m_stateMask;	}
+		uint64_t GetStateMask()const{	return m_stateMask;	}
+
+
+
+		////------------------------------------------------------------------------
+		//// copy meant to be readonly, modifying this obj after calling this
+		//// will mostly screw the original copied object
+		////------------------------------------------------------------------------
+		//void ReadOnlyCopy(const PipeState & other) {
+
+		//	m_stateMask = other.m_stateMask;
+		//	m_vBinderPtrs.ReadOnlyCopy(other.m_vBinderPtrs);
+		//}
 
 		
 	private:
 
-		UINT64					m_stateMask; // mark all binds it binds
-		Binds	m_vBinderPtrs;
+		uint64_t	m_stateMask; // mark all binds it binds
+		Binds		m_vBinderPtrs;
 	};
 }

@@ -115,7 +115,7 @@ namespace game{
 		sprite::SortMask m_sortKey;
 
 		dx::DrawIndexedInstanced m_drawIndexedInstanced;
-		dx::PipeState m_pipeState_texture_blend_sampler;
+		dx::PipeState m_pipeState_tex_bs_ss;
 
 		bool m_bUpdateBindData;
 	};

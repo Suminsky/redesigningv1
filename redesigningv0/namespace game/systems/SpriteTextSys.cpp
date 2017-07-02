@@ -27,6 +27,7 @@ void SpriteTextSys::VOnInit()
 	m_sortArray.reserve(m_poolAccess.GetNAllocated());
 
 	m_pipeState_instVB.AddBinderCommand(&m_pTextCompoFactoryRef->m_instVBBinder);
+	m_drawableAux.Initialize(m_drawablePipeMemBuff.StackAlloc(2u), 2u);
 	m_drawableAux.AddPipelineState(&m_pipeState_instVB);
 }
 
@@ -155,7 +156,7 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 	DrawIndexedInstanced *	currentDrawCall =	&startingTextCompo.m_drawIndexedInstanced;
 	currentDrawCall->UpdateInstanceOffset( 0 );
 	uint32_t				currentNInstances = 0;
-	m_drawableAux.AddPipelineState(&startingTextCompo.m_pipeState_texture_blend_sampler);
+	m_drawableAux.AddPipelineState(&startingTextCompo.m_pipeState_tex_bs_ss);
 
 	uint32_t nSorted = (uint32_t) m_sortArray.size();
 
@@ -186,7 +187,7 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 			currentNInstances = textCompo.m_nCurremtDrawnChars;
 
 			m_drawableAux.PopLastPipelineState();
-			m_drawableAux.AddPipelineState(&textCompo.m_pipeState_texture_blend_sampler);
+			m_drawableAux.AddPipelineState(&textCompo.m_pipeState_tex_bs_ss);
 		}
 		else
 			currentNInstances += textCompo.m_nCurremtDrawnChars;

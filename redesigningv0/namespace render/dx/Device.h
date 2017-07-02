@@ -26,6 +26,7 @@ namespace dx{
 	typedef ResourceCache<InputLayout,			2>	InputLayoutCache;
 	typedef ResourceCache<SamplerState,			2>	SamplerStateCache;
 	typedef gen::Stack<Binder*,				4096u>	PipeBindsMemory;
+	typedef gen::Stack<PipeState*,			2048u>	DrawablesPipesMemory;
 
 	class Device{
 
@@ -54,7 +55,8 @@ namespace dx{
 			if( m_pCacheSRV )		delete m_pCacheSRV;
 			if( m_pCacheInputLayout ) delete m_pCacheInputLayout;
 			if( m_pCacheSamplerState ) delete m_pCacheSamplerState;
-			if (m_pPipeBindsMem)	delete m_pPipeBindsMem;
+			if(m_pPipeBindsMem)		delete m_pPipeBindsMem;
+			if(m_pDrawablePipesMem) delete m_pDrawablePipesMem;
 
 			/*Microsoft::WRL::ComPtr<ID3D11Debug> debug;
 			m_pDevice->QueryInterface(IID_PPV_ARGS(&debug));
@@ -98,6 +100,7 @@ namespace dx{
 		InputLayoutCache		* m_pCacheInputLayout;
 		SamplerStateCache		* m_pCacheSamplerState;
 		PipeBindsMemory			* m_pPipeBindsMem;
+		DrawablesPipesMemory	* m_pDrawablePipesMem;
 
 		private:
 
@@ -116,6 +119,7 @@ namespace dx{
 			m_pCacheInputLayout = new InputLayoutCache(m_pDevice);
 			m_pCacheSamplerState = new SamplerStateCache(m_pDevice);
 			m_pPipeBindsMem = new PipeBindsMemory();
+			m_pDrawablePipesMem = new DrawablesPipesMemory();
 		}
 
 		ID3D11Device * m_pDevice;

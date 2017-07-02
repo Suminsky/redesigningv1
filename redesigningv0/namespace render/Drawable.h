@@ -3,9 +3,6 @@
 /*
 	created:	2013/02/15
 	created:	15:2:2013   19:26
-	filename: 	C:\Users\Gateway\documents\visual studio 2010\Projects\redesigningv0\redesigningv0\namespace render\DrawablesQueue.h
-	file path:	C:\Users\Gateway\documents\visual studio 2010\Projects\redesigningv0\redesigningv0\namespace render
-	file base:	DrawablesQueue
 	file ext:	h
 	author:		Icebone1000 (Giuliano SUminsky Pieta)
 	
@@ -23,15 +20,22 @@
 
 namespace render{
 
+	// forward decls
+
 	class DrawablesQueue;
 
-	typedef std::vector<dx::PipeState*> vStatePtrs;
-
+	//========================================================================
+	// 
+	//========================================================================
 	class Drawable{
 
 		friend DrawablesQueue;
 
 	public:
+		
+		typedef gen::Stack<const dx::PipeState*> States;
+		// but...if drawables are volatile, they cant have any stack as member either
+		// (not only be stacked thenselves)
 
 		DBG(static uint32_t s_count;)
 
@@ -42,43 +46,43 @@ namespace render{
 		
 			DBG(++s_count;)
 		}
-		Drawable( UINT64 sortKey_p, dx::DrawCall * pDrawCall_p )
-		:
-		m_sortKey(sortKey_p),
-		m_pDrawCall(pDrawCall_p)
+
+		Drawable(
+			uint64_t sortKey_p, dx::DrawCall * pDrawCall_p,
+			const dx::PipeState** pMem_p, uint32_t maxSize_p)
+			:
+			m_sortKey(sortKey_p),
+			m_pDrawCall(pDrawCall_p),
+			m_vStatePtrs(pMem_p, maxSize_p)
 		{
 			DBG(++s_count;)
 		}
+
 		virtual ~Drawable(){}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		void Initialize(const dx::PipeState** pMem_p, uint32_t maxSize_p) {
+
+			m_vStatePtrs.Reinitialize(pMem_p, maxSize_p);
+		}
 
 		//------------------------------------------------------------------------
 		// add a new state to the drawable
 		//------------------------------------------------------------------------
-		void AddPipelineState( dx::PipeState * pState_p ){
+		void AddPipelineState(const dx::PipeState * pState_p ){
 
-			m_vStatePtrs.push_back( pState_p );
+			m_vStatePtrs.PushBack( pState_p );
 		}
 
 		//------------------------------------------------------------------------
 		// aux created for text render, that way you can have a tmp drawable
 		// that can have some states used, and the last ones replaced every every time.
-		// 
 		//------------------------------------------------------------------------
-		void PopLastPipelineState(){
+		void PopLastPipelineState( uint32_t nStates = 1 ){
 
-			m_vStatePtrs.pop_back();
-		}
-		void PopLastPipelineStates( UINT nStates ){
-
-			m_vStatePtrs.resize( m_vStatePtrs.size() - nStates );
-		}
-
-		//------------------------------------------------------------------------
-		// add a group of states to the drawable
-		//------------------------------------------------------------------------
-		void AddPipelineStateGroup( const vStatePtrs & vStatePtrs_p ){
-
-			m_vStatePtrs.insert( m_vStatePtrs.cend(), vStatePtrs_p.cbegin(), vStatePtrs_p.cend() );
+			m_vStatePtrs.Unstack(nStates);
 		}
 
 		//------------------------------------------------------------------------
@@ -89,15 +93,11 @@ namespace render{
 		//------------------------------------------------------------------------
 		// setters
 		//------------------------------------------------------------------------
-		void SetPipelineStateGroup( const vStatePtrs & vStatePtrs_p ){
-
-			m_vStatePtrs = vStatePtrs_p; // copy all states from the given state group
-		}
 		void SetDrawCall( dx::DrawCall * pDrawCall_p ){
 
 			m_pDrawCall = pDrawCall_p;
 		}
-		void SetSortKey( UINT64 llSortKey_p ){
+		void SetSortKey(uint64_t llSortKey_p ){
 
 			m_sortKey = llSortKey_p;
 		}
@@ -107,14 +107,14 @@ namespace render{
 		//------------------------------------------------------------------------
 		void Clear(){
 
-			m_vStatePtrs.clear();
+			m_vStatePtrs.Reset();
 		}
 
 	private: // TODO
 
-		std::vector<dx::PipeState*> 	m_vStatePtrs;			// states w binder commands
-		dx::DrawCall *					m_pDrawCall;			// draw
+		States			m_vStatePtrs;			// states w binder commands
+		dx::DrawCall *	m_pDrawCall;			// draw
 
-		UINT64 m_sortKey; // viewport, distance, material..defined on a higer lvl
+		uint64_t m_sortKey; // viewport, distance, material..defined on a higer lvl
 	};
 }

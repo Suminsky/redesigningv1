@@ -108,6 +108,7 @@ namespace sprite{
 		
 		render::RenderCommands m_cmds;
 		render::Drawable m_drawableAux;
+		gen::Stack<const dx::PipeState *, 6u> m_drawablePipeMemBuff;
 
 		//------------------------------------------------------------------------
 		// 

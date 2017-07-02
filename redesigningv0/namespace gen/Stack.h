@@ -6,40 +6,44 @@
 	file:		Stack.h
 	author:		Icebone1000 (Giuliano Suminsky Pieta)
 	
-	purpose:	fixed size stack
+	purpose:	fixed size stack, those are containers, not allocators
 
 	© Icebone1000 (Giuliano Suminsky Pieta) , rights reserved.
 */
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 // standard includes
-#include <memory>
 
 // private includes
 
 namespace gen{
 
-	template<typename T, uint32_t SIZE>
+	template<typename T, uint32_t SIZE = (uint32_t)-1>
 	class Stack{
 
 	public:
 
 		//------------------------------------------------------------------------
-		// 
+		// ctor
 		//------------------------------------------------------------------------
 		Stack()
 			:
 		m_topIndex(0){}
 
-		static uint32_t MaxSize(){
+		constexpr static uint32_t MaxSize(){
 
 			return SIZE;
 		}
+
 		uint32_t Size() const{
 
 			return m_topIndex;
 		}
 
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		T* StackAlloc( uint32_t count_p = 1 ){
 
 			assert( m_topIndex + count_p <= SIZE );
@@ -55,6 +59,10 @@ namespace gen{
 			m_topIndex -= count_p;
 		}
 
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		void PushBack(const T & element_p){
 
 			T* newElement = StackAlloc();
@@ -101,12 +109,12 @@ namespace gen{
 	// version that receives pointer to mem and size
 	//========================================================================
 	template<typename T>
-	class Stack<T, (uint32_t)-1>: public NonCopyable {
+	class Stack<T, (uint32_t)-1>{
 
 	public:
 		
 		//------------------------------------------------------------------------
-		// 
+		// ctor
 		//------------------------------------------------------------------------
 		Stack(T* mem_p, uint32_t size_p)
 			:
@@ -129,6 +137,11 @@ namespace gen{
 			m_size = size_p;
 			m_data = mem_p;
 		}
+		void Reinitialize(T* mem_p, uint32_t size_p) {
+
+			m_size = size_p;
+			m_data = mem_p;
+		}
 
 		uint32_t MaxSize() const {
 
@@ -139,6 +152,10 @@ namespace gen{
 			return m_topIndex;
 		}
 
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		T* StackAlloc(uint32_t count_p = 1) {
 
 			assert(m_topIndex + count_p <= m_size);
@@ -154,6 +171,10 @@ namespace gen{
 			m_topIndex -= count_p;
 		}
 
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
 		void PushBack(const T & element_p) {
 
 			T* newElement = StackAlloc();
@@ -187,6 +208,35 @@ namespace gen{
 			assert(m_topIndex > 0);
 			return m_data[m_topIndex - 1];
 		}
+
+
+		//------------------------------------------------------------------------
+		// assign operator
+		// mem copy, assert stack size is enough
+		//------------------------------------------------------------------------
+		const Stack& operator = (const Stack & other) {
+
+			assert(m_size != 0 && other.m_topIndex != 0);
+			assert(m_size >= other.m_topIndex);
+			
+			m_topIndex = other.m_topIndex;
+
+			memcpy( (void*)m_data, (void*)other.m_data, other.m_topIndex * sizeof(T) );
+
+			return *this;
+		}
+
+		////------------------------------------------------------------------------
+		//// shalow copy
+		//// copy meant to be readonly, modifying this obj after calling this
+		//// will mostly screw the original copied object
+		////------------------------------------------------------------------------
+		//void ReadOnlyCopy(const Stack & other) {
+
+		//	m_topIndex = other.m_topIndex;
+		//	m_size = other.m_size;
+		//	m_data = other.m_data;
+		//}
 
 	private:
 

@@ -435,6 +435,9 @@
     <ClInclude Include="namespace render\dx\TextureTool_.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="namespace gen\Pool_.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="namespace win\Window.cpp">

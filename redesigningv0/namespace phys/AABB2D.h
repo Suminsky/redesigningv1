@@ -331,10 +331,10 @@ namespace phys{
 		DirectX::XMFLOAT4 GetIntersectionRect( const AABB2D & other_p )const{
 
 			return DirectX::XMFLOAT4(
-				gen::Max( Left(), other_p.Left() ),
-				gen::Min( Right(), other_p.Right() ),
-				gen::Max( Down(), other_p.Down() ),
-				gen::Min( Up(), other_p.Up() )
+				gen::numbers::Max( Left(), other_p.Left() ),
+				gen::numbers::Min( Right(), other_p.Right() ),
+				gen::numbers::Max( Down(), other_p.Down() ),
+				gen::numbers::Min( Up(), other_p.Up() )
 				);
 		}
 

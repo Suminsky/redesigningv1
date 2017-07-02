@@ -56,41 +56,139 @@ namespace gen{
 		delete [] obj;
 	}
 
-	//========================================================================
-	// rounds to the next number thats a multiple of multiple_p
-	//========================================================================
-	inline uintptr_t RoundUpToNextMultiple_POT( uintptr_t n_p, uintptr_t multiplePOT_p){
+	namespace numbers {
 
-		return (n_p + multiplePOT_p - 1) & ~(multiplePOT_p - 1);
-	}
+		//------------------------------------------------------------------------
+		// verify if given number is power of 2
+		//------------------------------------------------------------------------
+		inline bool IsPowerOfTwo_zeroUnaware(int value_p) {
 
-	inline uint32_t RoundUpToNextMultiple( uint32_t n_p, uint32_t multiple_p ){
+			return (value_p & (value_p - 1)) == 0;
+		}
+		inline bool IsPowerOfTwo(int value_p) {
 
-		return n_p + multiple_p - 1 - (n_p - 1) % multiple_p;
-	}
-	inline uint32_t RoundUpToNextMultiple_POT( uint32_t n_p, uint32_t multiplePOT_p ){
-
-		return (n_p + multiplePOT_p - 1) & ~(multiplePOT_p - 1);
-	}
-	inline int32_t RoundUpToNextMultiple( int32_t n_p, int32_t multiple_p ){
-
-		if( n_p < 0 ){
-			// multiple_p = -multiple_p; rounds in the left direction (rounds down)
-
-			return - ((int)(RoundUpToNextMultiple( (uint32_t)-n_p, (uint32_t)multiple_p )) - multiple_p );
+			return  value_p
+				&&
+				(value_p & (value_p - 1)) == 0;
 		}
 
-		return RoundUpToNextMultiple( (uint32_t)n_p, (uint32_t)multiple_p );
-	}
-	inline int32_t RoundUpToNextMultiple_POT( int32_t n_p, int32_t multiplePOT_p ){
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		inline bool isPrime(int n) {
 
-		if( n_p < 0 ){
-			// multiple_p = -multiple_p; rounds in the left direction (rounds down)
+			if (n < 2) return false;
+			if (n == 2) return true;
+			if (n % 2 == 0) return false;
 
-			return - ((int)(RoundUpToNextMultiple_POT( (uint32_t)-n_p, (uint32_t)multiplePOT_p )) - multiplePOT_p );
+			for (int i = 3; (i*i) < n; i += 2) {
+
+				if (n % i == 0) return false;
+			}
+
+			return true;
 		}
 
-		return RoundUpToNextMultiple_POT( (uint32_t)n_p, (uint32_t)multiplePOT_p );
+		inline bool isOdd(int n) {
+
+			return n & 1; // cause even finish in 0 and odds in 1
+		}
+		inline bool isEven(int n) {
+
+			return (n & 1) == 0;
+		}
+
+
+		//------------------------------------------------------------------------
+		// rounds to the next number thats a multiple of multiple_p
+		//------------------------------------------------------------------------
+		inline uintptr_t RoundUpToNextMultiple_POT(uintptr_t n_p, uintptr_t multiplePOT_p) {
+
+			return (n_p + multiplePOT_p - 1) & ~(multiplePOT_p - 1);
+		}
+		inline uint32_t RoundUpToNextMultiple(uint32_t n_p, uint32_t multiple_p) {
+
+			return n_p + multiple_p - 1 - (n_p - 1) % multiple_p;
+		}
+		inline uint32_t RoundUpToNextMultiple_POT(uint32_t n_p, uint32_t multiplePOT_p) {
+
+			return (n_p + multiplePOT_p - 1) & ~(multiplePOT_p - 1);
+		}
+		inline int32_t RoundUpToNextMultiple(int32_t n_p, int32_t multiple_p) {
+
+			if (n_p < 0) {
+				// multiple_p = -multiple_p; rounds in the left direction (rounds down)
+
+				return -((int)(RoundUpToNextMultiple((uint32_t)-n_p, (uint32_t)multiple_p)) - multiple_p);
+			}
+
+			return RoundUpToNextMultiple((uint32_t)n_p, (uint32_t)multiple_p);
+		}
+		inline int32_t RoundUpToNextMultiple_POT(int32_t n_p, int32_t multiplePOT_p) {
+
+			if (n_p < 0) {
+				// multiple_p = -multiple_p; rounds in the left direction (rounds down)
+
+				return -((int)(RoundUpToNextMultiple_POT((uint32_t)-n_p, (uint32_t)multiplePOT_p)) - multiplePOT_p);
+			}
+
+			return RoundUpToNextMultiple_POT((uint32_t)n_p, (uint32_t)multiplePOT_p);
+		}
+
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		template<typename T>
+		inline T Min(T a, T b) {
+
+			return a < b ? a : b;
+		}
+		template<typename T>
+		inline T Max(T a, T b) {
+
+			return a > b ? a : b;
+		}
+
+		//========================================================================
+		// min max clamping
+		// TODO: try branchless version
+		//========================================================================
+		template<typename T>
+		inline void MinClamp(T & f_p, T min_p = (T)0) {
+
+			if (f_p < min_p) f_p = min_p;
+		}
+		template<typename T>
+		inline void MaxClamp(T & f_p, T max_p = (T)1.0f) {
+
+			if (f_p > max_p) f_p = max_p;
+		}
+
+		#include <xmmintrin.h>
+		
+		float minss ( float a, float b )
+		{
+			// Branchless SSE min.
+			_mm_store_ss( &a, _mm_min_ss(_mm_set_ss(a),_mm_set_ss(b)) );
+			return a;
+		}
+		
+		float maxss ( float a, float b )
+		{
+			// Branchless SSE max.
+			_mm_store_ss( &a, _mm_max_ss(_mm_set_ss(a),_mm_set_ss(b)) );
+			return a;
+		}
+		
+		float clamp ( float val, float minval, float maxval )
+		{
+			// Branchless SSE clamp.
+			// return minss( maxss(val,minval), maxval );
+		
+			_mm_store_ss( &val, _mm_min_ss( _mm_max_ss(_mm_set_ss(val),_mm_set_ss(minval)), _mm_set_ss(maxval) ) );
+			return val;
+		}
 	}
 
 	namespace Math2DUtil{
@@ -131,70 +229,9 @@ namespace gen{
 		return (value_p - start_p) / (end_p - start_p) * (newEnd_p - newStart_p) + newStart_p;
 	}
 
-	template<typename T>
-	inline T Min( T a, T b ){
 
-		return a < b ? a : b;
-	}
-	template<typename T>
-	inline T Max( T a, T b ){
 
-		return a > b ? a : b;
-	}
 
-	//========================================================================
-	// min max clamping
-	// TODO: try branchless version
-	//========================================================================
-	template<typename T>	
-	inline void MinClamp( T & f_p, T min_p = (T)0 ){
-
-		if( f_p < min_p ) f_p = min_p;
-	}
-	template<typename T>
-	inline void MaxClamp( T & f_p, T max_p = (T)1.0f ){
-
-		if( f_p > max_p ) f_p = max_p;
-	}
-
-//#include <xmmintrin.h>
-//
-//	float minss ( float a, float b )
-//	{
-//		// Branchless SSE min.
-//		_mm_store_ss( &a, _mm_min_ss(_mm_set_ss(a),_mm_set_ss(b)) );
-//		return a;
-//	}
-//
-//	float maxss ( float a, float b )
-//	{
-//		// Branchless SSE max.
-//		_mm_store_ss( &a, _mm_max_ss(_mm_set_ss(a),_mm_set_ss(b)) );
-//		return a;
-//	}
-//
-//	float clamp ( float val, float minval, float maxval )
-//	{
-//		// Branchless SSE clamp.
-//		// return minss( maxss(val,minval), maxval );
-//
-//		_mm_store_ss( &val, _mm_min_ss( _mm_max_ss(_mm_set_ss(val),_mm_set_ss(minval)), _mm_set_ss(maxval) ) );
-//		return val;
-//	}
-
-	//========================================================================
-	// verify if given number is power of 2
-	//========================================================================
-	inline bool IsPowerOfTwo_zeroUnaware( int value_p ){
-
-		return ( value_p & ( value_p -1 ) ) == 0;
-	}
-	inline bool IsPowerOfTwo( int value_p ){
-
-		return  value_p
-				&&
-				( value_p & ( value_p -1 ) ) == 0;
-	}
 
 	//========================================================================
 	// uvRect should be x, y, w, h
@@ -858,3 +895,4 @@ namespace gen{
 #include "Tweening.h"
 #include "Delegate.h"
 #include "Stack.h"
+#include "Pool_.h"

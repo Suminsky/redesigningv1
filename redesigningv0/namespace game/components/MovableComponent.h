@@ -102,7 +102,7 @@ namespace game{
 
 				// not moving, deccelerate, watch out to no go to the other dir (trough zero)
 
-				m_state.vVel.x -= gen::Min( currDeccel * delta, abs(m_state.vVel.x) )*velDir;
+				m_state.vVel.x -= gen::numbers::Min( currDeccel * delta, abs(m_state.vVel.x) )*velDir;
 
 				if( abs(m_state.vVel.x) < m_config.fVelStopThreshold )
 					m_state.vVel.x = 0.0f;
@@ -197,8 +197,8 @@ namespace game{
 
 				float dirX = (DirectX::XMVectorGetX(vvelDir));
 				float dirZ = (DirectX::XMVectorGetZ(vvelDir));
-				m_state.vVel.x -= gen::Min( currDeccel * delta * dirX, abs(m_state.vVel.x) );
-				m_state.vVel.z -= gen::Min( currDeccel * delta * dirZ, abs(m_state.vVel.z) );
+				m_state.vVel.x -= gen::numbers::Min( currDeccel * delta * dirX, abs(m_state.vVel.x) );
+				m_state.vVel.z -= gen::numbers::Min( currDeccel * delta * dirZ, abs(m_state.vVel.z) );
 
 				float speed = DirectX::XMVectorGetX(DirectX::XMVector3Length(vVel));
 				if( speed < m_config.fVelStopThreshold ){

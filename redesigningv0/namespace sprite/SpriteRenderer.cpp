@@ -19,6 +19,8 @@ sprite::SpriteRenderer::SpriteRenderer( dx::Device * pDevice_p, int maxInstances
 	m_bindPrimitiveTopo(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 {
 	LoadShader(pDevice_p, maxInstances_p );
+
+	m_drawableAux.Initialize(m_drawablePipeMemBuff.StackAlloc(6u), 6u);
 }
 sprite::SpriteRenderer::SpriteRenderer()
 	:
@@ -35,6 +37,8 @@ void sprite::SpriteRenderer::Init( dx::Device * pDevice_p, int maxInstances_p )
 	m_samplers_cache.Init(pDevice_p);
 
 	LoadShader( pDevice_p, maxInstances_p );
+
+	m_drawableAux.Initialize(m_drawablePipeMemBuff.StackAlloc(6u), 6u);
 }
 
 void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *pCamera_p )
@@ -93,18 +97,18 @@ void sprite::SpriteRenderer::Render( game::SpriteComponent_ *pSprite_p, Camera *
 
 void sprite::SpriteRenderer::Render( render::Drawable * pInstDrawable, Camera *pCamera_p )
 {	
+	m_drawableAux = *pInstDrawable;
+
 	SortMask sortKey;
 	sortKey.intRepresentation = pInstDrawable->GetSortKey();
 	sortKey.bitfield.shaderID = 1;
-	pInstDrawable->SetSortKey(sortKey.intRepresentation);
+	m_drawableAux.SetSortKey(sortKey.intRepresentation);
 
-	pInstDrawable->AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
-	pInstDrawable->AddPipelineState( &m_instancedVertexInput_to_il_vb_ib_ivb );
-	pInstDrawable->AddPipelineState( &pCamera_p->m_pipeState_vp_rt_cb );
+	m_drawableAux.AddPipelineState( &m_spriteShaderRes.m_permutations[1].m_pipeState );
+	m_drawableAux.AddPipelineState( &m_instancedVertexInput_to_il_vb_ib_ivb );
+	m_drawableAux.AddPipelineState( &pCamera_p->m_pipeState_vp_rt_cb );
 
-	m_queue.Submit( *pInstDrawable );
-
-	pInstDrawable->PopLastPipelineStates(3);
+	m_queue.Submit(m_drawableAux);
 }
 
 void sprite::SpriteRenderer::LoadShader( dx::Device *pDevice_p, UINT maxInstances_p )

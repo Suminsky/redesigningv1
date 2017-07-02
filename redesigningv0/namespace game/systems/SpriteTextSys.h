@@ -84,6 +84,8 @@ namespace game{
 		render::Drawable m_drawableAux;
 		dx::PipeState m_pipeState_instVB; // this is added again when go trough spriterenderer, but it has precedence
 
+		gen::Stack<const dx::PipeState *, 2u> m_drawablePipeMemBuff;
+
 		struct Entry{
 
 			UINT64 drawableKey; // sort key
