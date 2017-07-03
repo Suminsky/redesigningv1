@@ -124,19 +124,19 @@ void SpriteAnimCompo_Factory::SerializeAnimState( SpriteAnimCompo_ * pCompo, Spr
 
 	if( pCompo->m_iCurrentClip != pDef->m_iCurrentClip ){
 
-		stateGfig.m_subElements.push_back( GfigElementA("clip", std::to_string((_Longlong)pCompo->m_iCurrentClip).c_str() ) );
+		stateGfig.m_subElements.push_back( GfigElementA("clip", pCompo->m_iCurrentClip ) );
 	}
 	if( pCompo->m_iPreviousClip != pDef->m_iPreviousClip ){
 
-		stateGfig.m_subElements.push_back( GfigElementA("prev clip", std::to_string((_Longlong) pCompo->m_iPreviousClip).c_str() ) );
+		stateGfig.m_subElements.push_back( GfigElementA("prev clip", pCompo->m_iPreviousClip ) );
 	}
 	if( pCompo->m_iCurrentFrame != pDef->m_iCurrentFrame){
 
-		stateGfig.m_subElements.push_back( GfigElementA("frame", std::to_string((_Longlong)pCompo->m_iCurrentFrame).c_str() ) );
+		stateGfig.m_subElements.push_back( GfigElementA("frame", pCompo->m_iCurrentFrame ) );
 	}
 	if( pCompo->m_iPreviousFrame != pDef->m_iPreviousFrame ){
 
-		stateGfig.m_subElements.push_back( GfigElementA("prev frame", std::to_string((_Longlong)pCompo->m_iPreviousFrame).c_str() ) );
+		stateGfig.m_subElements.push_back( GfigElementA("prev frame", pCompo->m_iPreviousFrame ) );
 	}
 
 	GfigElementA clipStatesGfig("clip states");
@@ -168,15 +168,15 @@ void SpriteAnimCompo_Factory::SerializeAnimState( SpriteAnimCompo_ * pCompo, Spr
 
 void SpriteAnimCompo_Factory::SerializeClipState( int itC, AnimClipState * state_p, AnimClipState * pDef, GfigElementA * pGFig_p )
 {
-	GfigElementA clipStateGfig( std::to_string((_Longlong)itC));
+	GfigElementA clipStateGfig( std::to_string(itC));
 
 	if( state_p->deltaAccum != pDef->deltaAccum ){
 
-		clipStateGfig.m_subElements.push_back( GfigElementA("delta", std::to_string((long double)state_p->deltaAccum).c_str() ) );
+		clipStateGfig.m_subElements.push_back( GfigElementA("delta", state_p->deltaAccum ) );
 	}
 	if( state_p->speedMod != pDef->speedMod ){
 
-		clipStateGfig.m_subElements.push_back( GfigElementA("speed", std::to_string((long double)state_p->speedMod).c_str()));
+		clipStateGfig.m_subElements.push_back( GfigElementA("speed", state_p->speedMod));
 	}
 
 	const char * szAnimClipStates[] = {
@@ -190,7 +190,7 @@ void SpriteAnimCompo_Factory::SerializeClipState( int itC, AnimClipState * state
 	}
 	if( state_p->iCurrentFrame != pDef->iCurrentFrame ){
 
-		clipStateGfig.m_subElements.push_back( GfigElementA("frame", std::to_string((_Longlong)state_p->iCurrentFrame).c_str()));
+		clipStateGfig.m_subElements.push_back( GfigElementA("frame", state_p->iCurrentFrame));
 	}
 
 	if( clipStateGfig.m_subElements.size() != 0 ){

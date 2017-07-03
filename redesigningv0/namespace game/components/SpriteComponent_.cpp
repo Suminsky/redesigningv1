@@ -798,11 +798,11 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 			(float)res.h != sprite.m_renderData.m_res.y ){
 
 				gSpriteCompo.m_subElements.push_back(
-					GfigElementA( "w", std::to_string((long double)sprite.m_renderData.m_res.x).c_str() )
+					GfigElementA( "w", sprite.m_renderData.m_res.x )
 					);
 
 				gSpriteCompo.m_subElements.push_back(
-					GfigElementA( "h", std::to_string((long double)sprite.m_renderData.m_res.y).c_str() )
+					GfigElementA( "h", sprite.m_renderData.m_res.y )
 					);
 		}
 
@@ -824,13 +824,13 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text
 		}
 
 		if( sprite.m_renderData.m_padding.x != 0.0f ){
-			gSpriteCompo.m_subElements.push_back(GfigElementA("xoff", std::to_string((long double)sprite.m_renderData.m_padding.x).c_str()) );
+			gSpriteCompo.m_subElements.push_back(GfigElementA("xoff", sprite.m_renderData.m_padding.x) );
 		}
 		if( sprite.m_renderData.m_padding.y != 0.0f ){
-			gSpriteCompo.m_subElements.push_back(GfigElementA("yoff", std::to_string((long double)sprite.m_renderData.m_padding.y).c_str()) );
+			gSpriteCompo.m_subElements.push_back(GfigElementA("yoff", sprite.m_renderData.m_padding.y) );
 		}
 		if( sprite.m_sortKey.bitfield.Zdepth != 0.0f ){
-			gSpriteCompo.m_subElements.push_back(GfigElementA("d", std::to_string((_ULonglong)sprite.m_sortKey.bitfield.Zdepth).c_str()) );
+			gSpriteCompo.m_subElements.push_back(GfigElementA("d", sprite.m_sortKey.bitfield.Zdepth) );
 		}
 
 		GfigElementA gColor("color");
@@ -860,13 +860,13 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, cons
 		if( sprite.m_renderData.m_res.x != def.m_renderData.m_res.x ){
 
 			gSpriteCompo.m_subElements.push_back(
-				GfigElementA( "w", std::to_string((long double)sprite.m_renderData.m_res.x).c_str() )
+				GfigElementA( "w", sprite.m_renderData.m_res.x )
 				);
 		}
 		if( sprite.m_renderData.m_res.y != def.m_renderData.m_res.y ){
 
 				gSpriteCompo.m_subElements.push_back(
-					GfigElementA( "h", std::to_string((long double)sprite.m_renderData.m_res.y).c_str() )
+					GfigElementA( "h", sprite.m_renderData.m_res.y )
 					);
 		}
 
@@ -886,13 +886,13 @@ void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, cons
 		
 
 		if( sprite.m_renderData.m_padding.x != def.m_renderData.m_padding.x ){
-			gSpriteCompo.m_subElements.push_back(GfigElementA("xoff", std::to_string((long double)sprite.m_renderData.m_padding.x).c_str()) );
+			gSpriteCompo.m_subElements.push_back(GfigElementA("xoff", sprite.m_renderData.m_padding.x) );
 		}
 		if( sprite.m_renderData.m_padding.y != def.m_renderData.m_padding.y ){
-			gSpriteCompo.m_subElements.push_back(GfigElementA("yoff", std::to_string((long double)sprite.m_renderData.m_padding.y).c_str()) );
+			gSpriteCompo.m_subElements.push_back(GfigElementA("yoff", sprite.m_renderData.m_padding.y) );
 		}
 		if( sprite.m_sortKey.bitfield.Zdepth != def.m_sortKey.bitfield.Zdepth  ){
-			gSpriteCompo.m_subElements.push_back(GfigElementA("d", std::to_string((_ULonglong)sprite.m_sortKey.bitfield.Zdepth).c_str()) );
+			gSpriteCompo.m_subElements.push_back(GfigElementA("d", sprite.m_sortKey.bitfield.Zdepth) );
 		}
 
 		GfigElementA gColor("color");

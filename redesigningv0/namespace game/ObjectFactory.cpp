@@ -176,7 +176,7 @@ void game::ObjectFactory::Serialize( const Object * pObj_p, text::GfigElementA *
 	else{
 
 		pGFig_p->m_subElements.emplace_back(
-			GfigElementA(pObj_p->m_szName,   std::to_string((_ULonglong)pObj_p->m_prefab).c_str() )
+			GfigElementA(pObj_p->m_szName,   pObj_p->m_prefab )
 			);
 
 		Object * pPrefab = m_prefabs[pObj_p->m_prefab].pObj.Get();
@@ -227,7 +227,7 @@ void game::ObjectFactory::SerializePrefabs( text::GfigElementA * pGFig_p )
 		const Object * pObj_p = m_prefabs[it].pObj.Get();
 
 		pGFig_p->m_subElements.emplace_back(
-			GfigElementA(pObj_p->m_szName,  std::to_string((_ULonglong)it).c_str() )
+			GfigElementA(pObj_p->m_szName, it )
 			);
 
 		int nCompos = (int)pObj_p->m_components.Size();

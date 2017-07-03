@@ -401,7 +401,7 @@ void game::SpriteTextCompoFactory::VSerialize( const Component * pCompo_p, text:
 		if( text.m_maxChars != text.m_nCurrentSzLen ){
 
 			gTextCompo.m_subElements.emplace_back(
-				GfigElementA("max len", to_string((_ULonglong)text.m_maxChars).c_str() )
+				GfigElementA("max len", text.m_maxChars )
 				);
 		}
 
@@ -431,7 +431,7 @@ void game::SpriteTextCompoFactory::VSerialize( const Component * pCompo_p, text:
 		if( text.m_sortKey.bitfield.Zdepth != (uint64_t)0 ){
 
 			gTextCompo.m_subElements.push_back(
-				GfigElementA("d", std::to_string( (_ULonglong)text.m_sortKey.bitfield.Zdepth).c_str() )
+				GfigElementA("d", text.m_sortKey.bitfield.Zdepth )
 				);
 		}
 		

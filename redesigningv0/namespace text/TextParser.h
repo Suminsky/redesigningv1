@@ -155,15 +155,31 @@ namespace text{
 		GfigElementA( const std::string && szName_p, const std::string && szValue_p)
 			: m_name( std::move(szName_p) ), m_value( std::move(szValue_p) ){}
 
-		GfigElementA( const char * szName_p ) : m_name( szName_p ){}
-		GfigElementA( const char * szName_p, const char * szValue_p ) : m_name( szName_p ), m_value( szValue_p ){}
+		GfigElementA( const char * szName_p )
+			: m_name( szName_p ){}
+		GfigElementA( const char * szName_p, const char * szValue_p )
+			: m_name( szName_p ), m_value( szValue_p ){}
 
-		GfigElementA( const char * szName_p, unsigned long long value_p )
-			: m_name( szName_p ), m_value( std::to_string((_ULonglong)value_p)){}
+		/*GfigElementA( const char * szName_p, unsigned long long value_p )
+			: m_name( szName_p ), m_value( std::to_string(value_p)){}
 		GfigElementA( const char * szName_p, long long value_p )
-			: m_name( szName_p ), m_value( std::to_string((_Longlong)value_p)){}
+			: m_name( szName_p ), m_value( std::to_string(value_p)){}
 		GfigElementA( const char * szName_p, long double value_p )
 			: m_name( szName_p ), m_value( std::to_string(value_p)){}
+		GfigElementA(const char * szName_p, unsigned int value_p)
+			: m_name(szName_p), m_value(std::to_string(value_p)) {}
+		GfigElementA(const char * szName_p, int value_p)
+			: m_name(szName_p), m_value(std::to_string(value_p)) {}
+		GfigElementA(const char * szName_p, float value_p)
+			: m_name(szName_p), m_value(std::to_string(value_p)) {}*/
+
+		template<typename VALUE>
+		GfigElementA(const char * szName_p, VALUE value_p)
+			: m_name(szName_p), m_value(std::to_string(value_p)) {}
+
+		template<typename NAME, typename VALUE>
+		GfigElementA(NAME name, VALUE value)
+			: m_name(std::to_string(name)), m_name(std::to_string(value)) {}
 
 		bool GetSubElement( const char * szName_p, GfigElementA *& pElement_p );
 		bool GetSubElement( std::string szName_p, GfigElementA *& pElement_p  );

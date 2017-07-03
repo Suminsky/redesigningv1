@@ -663,19 +663,19 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 	GfigElementA gState("state");
 	if( anim.m_iCurrentClip ){
 
-		gState.m_subElements.push_back( GfigElementA("clip", std::to_string((_Longlong)anim.m_iCurrentClip).c_str() ) );
+		gState.m_subElements.push_back( GfigElementA("clip", anim.m_iCurrentClip ) );
 	}
 	if( anim.m_iPreviousClip ){
 
-		gState.m_subElements.push_back( GfigElementA("prev clip", std::to_string((_Longlong)anim.m_iPreviousClip).c_str() ) );
+		gState.m_subElements.push_back( GfigElementA("prev clip", anim.m_iPreviousClip ) );
 	}
 	if( anim.m_currentFrame != (unsigned)-1){
 
-		gState.m_subElements.push_back( GfigElementA("frame", std::to_string((_Longlong)anim.m_currentFrame).c_str() ) );
+		gState.m_subElements.push_back( GfigElementA("frame", anim.m_currentFrame ) );
 	}
 	if( anim.m_previousFrame != (unsigned)-1){
 
-		gState.m_subElements.push_back( GfigElementA("prev frame", std::to_string((_Longlong)anim.m_previousFrame).c_str() ) );
+		gState.m_subElements.push_back( GfigElementA("prev frame", anim.m_previousFrame ) );
 	}
 
 	unsigned int iSize = 3;
@@ -729,12 +729,12 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 
 		SpriteFrame frame = anim.GetNTHFrame(it);
 
-		gFrame.m_name = to_string( (_Longlong) it );
+		gFrame.m_name = to_string(  it );
 
-		gFrame.m_subElements[0].m_value = to_string( (_Longlong) frame.iSpriteUsedIndex );
+		gFrame.m_subElements[0].m_value = to_string(  frame.iSpriteUsedIndex );
 
-		gFrame.m_subElements[1].m_value = to_string( (_Longlong) frame.fW );
-		gFrame.m_subElements[2].m_value = to_string( (_Longlong) frame.fH );
+		gFrame.m_subElements[1].m_value = to_string(  frame.fW );
+		gFrame.m_subElements[2].m_value = to_string(  frame.fH );
 
 		gFrame.m_subElements[3].m_subElements[0].m_value = to_string( (long double) frame.uvRect.x );
 		gFrame.m_subElements[3].m_subElements[1].m_value = to_string( (long double) frame.uvRect.y );
@@ -764,15 +764,15 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 		GfigElementA gClipState("state");
 		if( clip.stateData.itCurrentFrame ){
 
-			gClipState.m_subElements.push_back( GfigElementA("frame", std::to_string((_Longlong)clip.stateData.itCurrentFrame).c_str()));
+			gClipState.m_subElements.push_back( GfigElementA("frame", clip.stateData.itCurrentFrame));
 		}
 		if( clip.stateData.deltaAccum ){
 
-			gClipState.m_subElements.push_back( GfigElementA("delta", std::to_string((long double)clip.stateData.deltaAccum).c_str()));
+			gClipState.m_subElements.push_back( GfigElementA("delta", clip.stateData.deltaAccum));
 		}
 		if( clip.stateData.speedMod != 1.0f ){
 
-			gClipState.m_subElements.push_back( GfigElementA("speed", std::to_string((long double)clip.stateData.speedMod).c_str()));
+			gClipState.m_subElements.push_back( GfigElementA("speed", clip.stateData.speedMod));
 		}
 		if( clip.stateData.eState != E_ANIMSTATE_STOPPED ){
 
@@ -786,13 +786,13 @@ void game::SpriteAnimationComponentFactory::VSerialize( const Component * pCompo
 			}
 			
 			gClip.m_subElements.push_back( GfigElementA("wrap", s_szAnimWrapModes[ clip.configData.eWrapMode ]) );
-			gClip.m_subElements.push_back( GfigElementA("spf", to_string( (long double)clip.configData.SPF).c_str() ) );
+			gClip.m_subElements.push_back( GfigElementA("spf", clip.configData.SPF ) );
 
 			GfigElementA gClipFrames("frames");
 			gClipFrames.m_subElements.resize( (int)clip.configData.vFrames.size() );
 			for( int itF = 0, nFrames = (int)clip.configData.vFrames.size(); itF < nFrames; ++itF ){
 
-				gClipFrames.m_subElements[itF].m_name = to_string( (_Longlong) clip.configData.vFrames[itF] );
+				gClipFrames.m_subElements[itF].m_name = to_string( clip.configData.vFrames[itF] );
 			}
 			gClip.m_subElements.push_back(std::move(gClipFrames));
 		}
