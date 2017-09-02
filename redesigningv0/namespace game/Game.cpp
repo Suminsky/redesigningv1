@@ -19,8 +19,7 @@ void Game::FixedStepLoop(){
 		dDeltaSeconds = m_dMaxFrameTimeDelay;
 
 	// add the delta to the delta remained from previous updates (deltas not used)
-	static double dFrameDeltaRemainingsAccumulated = 0.0;
-	dFrameDeltaRemainingsAccumulated += dDeltaSeconds;
+	m_dFrameDeltaRemainingsAccumulated += dDeltaSeconds;
 
 	//win::UniqueFileLogger()<<"deltaSec: "<<dDeltaSeconds<<SZ_NEWLINE;
 	//win::UniqueFileLogger()<<"while: "<<dFrameDeltaRemainingsAccumulated<<" >= "<<m_dFixedTimeStep<<SZ_NEWLINE;
@@ -28,12 +27,12 @@ void Game::FixedStepLoop(){
 	// perform updates by fixed steps, any time remaining will accumulate to the next iteration
 	// any time missing will skip the update till a fix step amount is reached
 	//int count = 0;
-	while( dFrameDeltaRemainingsAccumulated >= m_dFixedTimeStep ){
+	while( m_dFrameDeltaRemainingsAccumulated >= m_dFixedTimeStep ){
 
 		//++count;
 
 		// consume the fixed amount from the accumulated buffer
-		dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;
+		m_dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;
 
 		m_stateControl.Update( m_dFixedTimeStep );
 
@@ -47,7 +46,7 @@ void Game::FixedStepLoop(){
 
 	// compute the interpolation factor based on the remaining timing
 	// the interpolation is used to fix rendering motion across the discrete update steps
-	double dInterpolationAmount = dFrameDeltaRemainingsAccumulated/m_dFixedTimeStep;
+	double dInterpolationAmount = m_dFrameDeltaRemainingsAccumulated/m_dFixedTimeStep;
 
 	// draw
 
@@ -100,19 +99,18 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 	//win::UniqueFileLogger()<<"S DELTA: "<<dDeltaSeconds<<SZ_NEWLINE;
 
 	// add the delta to the delta remained from previous updates (deltas not used)
-	static double dFrameDeltaRemainingsAccumulated = 0.0;
-	dFrameDeltaRemainingsAccumulated += dDeltaSeconds;
+	m_dFrameDeltaRemainingsAccumulated += dDeltaSeconds;
 
 	// perform updates by fixed steps, any time remaining will accumulate to the next iteration
 	// any time missing will skip the update till a fix step amount is reached
 
 	int count = 0;
-	while( dFrameDeltaRemainingsAccumulated >= m_dFixedTimeStep ){
+	while( m_dFrameDeltaRemainingsAccumulated >= m_dFixedTimeStep ){
 
 		++count;
 
 		// consume the fixed amount from the accumulated buffer
-		dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;
+		m_dFrameDeltaRemainingsAccumulated -= m_dFixedTimeStep;
 
 		m_stateControl.Update( m_dFixedTimeStep );
 
@@ -126,7 +124,7 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 
 	// compute the interpolation factor based on the remaining timing
 	// the interpolation is used to fix rendering motion across the discrete update steps
-	double dInterpolationAmount = dFrameDeltaRemainingsAccumulated/m_dFixedTimeStep;
+	double dInterpolationAmount = m_dFrameDeltaRemainingsAccumulated/m_dFixedTimeStep;
 
 	// draw
 
@@ -145,11 +143,8 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 
 void game::Game::SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p )
 {
-	// this buffer keeps track of the extra bits of time
-	static double dDeltaBuffer = 0;
-
 	// add in whatever time we currently have saved in the buffer
-	dDelta_p += dDeltaBuffer;
+	dDelta_p += m_dSmoothDeltaBuffer;
 
 	// calculate how many frames will have passed on the next vsync
 	int frameCount = (int)(dDelta_p * dVsyncRefreshRate_p + 1);
@@ -165,5 +160,5 @@ void game::Game::SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p )
 	dDelta_p = frameCount / dVsyncRefreshRate_p;
 
 	// update delta buffer so we keep the same time on average
-	dDeltaBuffer = dOldDelta - dDelta_p;
+	m_dSmoothDeltaBuffer = dOldDelta - dDelta_p;
 }

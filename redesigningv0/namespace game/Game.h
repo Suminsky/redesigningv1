@@ -65,5 +65,10 @@ namespace game{
 		StateMachine				m_stateControl;
 		win::HighPerformanceTimer	m_timer;
 		double						m_dFixedTimeStep, m_dMaxFrameTimeDelay;
+
+	private:
+
+		double m_dFrameDeltaRemainingsAccumulated = 0.0;
+		double m_dSmoothDeltaBuffer = 0;
 	};
 }

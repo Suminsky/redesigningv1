@@ -28,7 +28,7 @@ void render::DrawablesQueue::Submit( Drawable && drawable_p )
 
 void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p, bool bClearStateCache_p )
 {
-	win::UniqueHigPerfTimer().m_cronometer.StartCount();
+	//win::UniqueHigPerfTimer().m_cronometer.StartCount();
 
 	if( bClearStateCache_p){
 		ZeroMemory(m_stateCache, sizeof(dx::Binder*)*dx::E_MAX_BINDS);
@@ -95,9 +95,9 @@ void render::DrawablesQueue::CreateCommandBuffer( RenderCommands & commandList_p
 	//Prepare();
 
 
-	DOUBLE sec = 0.0;
-	win::UniqueHigPerfTimer().m_cronometer.EndCountSeconds(sec);
-	win::UniqueFileLogger()<<sec<<SZ_NEWLINE;
+	/*DOUBLE sec = 0.0;
+	win::UniqueHigPerfTimer().m_cronometer.EndCountMilliseconds(sec);
+	win::UniqueFileLogger()<<sec<<SZ_NEWLINE;*/
 
 }
 

@@ -31,11 +31,11 @@
 
 namespace dx{
 
-	class SwapChain{
+	class SwapChain {
 
 	public:
 
-		struct ModePriority{
+		struct ModePriority {
 
 			int iResolution,
 				iFormat,
@@ -43,16 +43,16 @@ namespace dx{
 				iScanlineOrder,
 				iScaling;
 		};
-		struct GpuAndMode{
+		struct GpuAndMode {
 
 			IDXGIAdapter1 * pAdapter;
 			IDXGIOutput * pOutput;
 			DXGI_MODE_DESC mode;
 			ModePriority modeMatchPriority;
 
-			GpuAndMode(){}
+			GpuAndMode() {}
 			GpuAndMode(IDXGIAdapter1 * adapter_p, IDXGIOutput * outputMode_p, DXGI_MODE_DESC & mode_p)
-				: pAdapter(adapter_p), pOutput(outputMode_p), mode(mode_p){}
+				: pAdapter(adapter_p), pOutput(outputMode_p), mode(mode_p) {}
 		};
 
 		//------------------------------------------------------------------------
@@ -60,21 +60,21 @@ namespace dx{
 		//------------------------------------------------------------------------
 		SwapChain()
 			:
-		m_pSwapChain(nullptr), m_pOutput(nullptr), m_pBackBufferRTV(nullptr), m_pFactory(nullptr),
-		m_iSyncInterval(1),
-		m_bWindowed(false)
+			m_pSwapChain(nullptr), m_pOutput(nullptr), m_pBackBufferRTV(nullptr), m_pFactory(nullptr),
+			m_iSyncInterval(1),
+			m_bWindowed(false)
 		{}
 
-		virtual ~SwapChain(){
+		virtual ~SwapChain() {
 
-			if(!m_bWindowed)
+			if (!m_bWindowed)
 				SwitchFullscreenMode(); // otherwise debug outputs shows live states //TODO: should I move it to swap chain dctor?
 
-			if( m_pSwapChain )
+			if (m_pSwapChain)
 				m_pSwapChain->Release();
-			if( m_pOutput )
+			if (m_pOutput)
 				m_pOutput->Release();
-			if(m_pBackBufferRTV)
+			if (m_pBackBufferRTV)
 				m_pBackBufferRTV->Release();
 
 			if (m_pFactory) m_pFactory->Release();
@@ -104,13 +104,13 @@ namespace dx{
 			const DXGI_MODE_DESC OutputMode_p,//used also to check MSAA for the format								
 			const UINT nBuffer_p,
 			IDXGIOutput *pOutput_p	 //not used only holded
-			);
+		);
 
 		//------------------------------------------------------------------------
 		// resize buffers
 		// the rtv is released and recreated
 		//------------------------------------------------------------------------
-		void Resize( UINT width_p, UINT height_p, ID3D11Device * pDevice_p );
+		void Resize(UINT width_p, UINT height_p, ID3D11Device * pDevice_p);
 
 		//------------------------------------------------------------------------
 		// changes between windowed and fullscreen mode, depending on current mode.
@@ -161,25 +161,36 @@ namespace dx{
 			//in/out:
 			GpuAndMode &gpuAndMode_p, //in only thepriorities
 			//out:
-			IDXGIFactory1 *& pFactory_p );
+			IDXGIFactory1 *& pFactory_p);
 
 		//------------------------------------------------------------------------
 		// get a view from from the swap chain back buffer.
 		// makes the back buffer drawable
 		//------------------------------------------------------------------------
-		void CreateRTVFromBackBuffer( ID3D11Device * pDevice_p );
+		void CreateRTVFromBackBuffer(ID3D11Device * pDevice_p);
 
 		//------------------------------------------------------------------------
 		// 
 		//------------------------------------------------------------------------
-		void Present()const{
+		void Present()const {
 
-			m_pSwapChain->Present( m_iSyncInterval, 0 );
+			m_pSwapChain->Present(m_iSyncInterval, 0);
 		}
-		void Present( int iSyncInterval_p )const{
+		void Present(int iSyncInterval_p)const {
 
-			m_pSwapChain->Present( iSyncInterval_p, 0 );
+			m_pSwapChain->Present(iSyncInterval_p, 0);
 		}
+
+		//------------------------------------------------------------------------
+		// 
+		//------------------------------------------------------------------------
+		double GetCurrentOutputRefreshRate() {
+			return
+				m_BackBufferDisplayMode.RefreshRate.Numerator
+				/
+				m_BackBufferDisplayMode.RefreshRate.Denominator;
+		}
+
 
 	public:
 
