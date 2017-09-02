@@ -411,10 +411,8 @@ void sprite::SpriteRenderer::Raster( ID3D11DeviceContext * pContext_p )
 
 void sprite::SpriteRenderer::ExecuteRenderCommands( const render::RenderCommands & cmds_p, ID3D11DeviceContext * pContext_p )
 {
-	for(	render::RenderCommands::const_iterator it = cmds_p.begin(), itEnd = cmds_p.end();
-			it != itEnd;
-			++it ){
+	for (int it = 0; it < cmds_p.size(); ++it ) {
 
-		(*it)->Execute(pContext_p);
+		cmds_p[it]->Execute(pContext_p);
 	}
 }
