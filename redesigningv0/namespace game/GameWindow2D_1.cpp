@@ -28,35 +28,6 @@ m_fileLog(szWinName_p)
 	Create(winRect, TEXT("GameWindow2D_1"), NULL, TEXT(szWinName_p),
 		WS_VISIBLE|WS_CAPTION|WS_SYSMENU,
 		WS_EX_CLIENTEDGE );
-
-	//set raster and scissor state
-
-	D3D11_RASTERIZER_DESC rasterDesc;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.ScissorEnable = true;
-	rasterDesc.MultisampleEnable = false;
-	rasterDesc.AntialiasedLineEnable = false;
-
-	ID3D11RasterizerState *pRS = nullptr;
-	m_device.GetDevice()->CreateRasterizerState( &rasterDesc, &pRS );
-	m_device.GetContext()->RSSetState( pRS );
-	pRS->Release();
-
-	// NOTE: setting scissor to true and not setting a scissor fucks things up..I have no idea why
-
-	D3D11_RECT scissor;
-	scissor.left = 0;
-	scissor.right = winW_p;
-	scissor.top = 0;
-	scissor.bottom = winH_p;
-
-	m_device.GetContext()->RSSetScissorRects( 1, &scissor );
 }
 
 LRESULT CALLBACK GameWindow2D_1::VWndProcHandler( HWND hWnd_p, UINT Msg_p, WPARAM wParam_p, LPARAM lParam_p )
@@ -159,76 +130,106 @@ void GameWindow2D_1::ResizeIfNeed()
 
 LRESULT CALLBACK GameWindow2D_1::OnWM_CREATE( HWND hWnd_p )
 {
+	// create dx swap chain and device
 
-		// create dx swap chain and device
+	DXGI_MODE_DESC modeDesc;
+	modeDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	modeDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	modeDesc.Width = GetSystemMetrics( SM_CXSCREEN );
+	modeDesc.Height = GetSystemMetrics( SM_CYSCREEN );
+	modeDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	modeDesc.RefreshRate.Numerator = modeDesc.RefreshRate.Denominator = 0;
 
-		DXGI_MODE_DESC modeDesc;
-		modeDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		modeDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		modeDesc.Width = GetSystemMetrics( SM_CXSCREEN );
-		modeDesc.Height = GetSystemMetrics( SM_CYSCREEN );
-		modeDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		modeDesc.RefreshRate.Numerator = modeDesc.RefreshRate.Denominator = 0;
+	SwapChain::GpuAndMode gpuAndMode;
+	gpuAndMode.modeMatchPriority.iFormat = 60;
+	gpuAndMode.modeMatchPriority.iScaling = 0;
+	gpuAndMode.modeMatchPriority.iRefreshRate = gpuAndMode.modeMatchPriority.iResolution = gpuAndMode.modeMatchPriority.iScanlineOrder = 0;
 
-		SwapChain::GpuAndMode gpuAndMode;
-		gpuAndMode.modeMatchPriority.iFormat = 60;
-		gpuAndMode.modeMatchPriority.iScaling = 0;
-		gpuAndMode.modeMatchPriority.iRefreshRate = gpuAndMode.modeMatchPriority.iResolution = gpuAndMode.modeMatchPriority.iScanlineOrder = 0;
+	IDXGIFactory1 * pFactory = NULL;
+	int result = m_swapChain.GetCapableAdapterAndOutputAndModeClosestMatch( modeDesc, gpuAndMode, pFactory );
+	if( !result ) return -1;
 
-		IDXGIFactory1 * pFactory = NULL;
-		int result = m_swapChain.GetCapableAdapterAndOutputAndModeClosestMatch( modeDesc, gpuAndMode, pFactory );
-		if( !result ) return -1;
+	D3D_FEATURE_LEVEL featureLVL = D3D_FEATURE_LEVEL_10_0;
 
-		D3D_FEATURE_LEVEL featureLVL = D3D_FEATURE_LEVEL_10_0;
+	DXGI_MODE_DESC windowMode = {0};
+	windowMode = gpuAndMode.mode; // initialize defaults
 
-		DXGI_MODE_DESC windowMode = {0};
-		windowMode = gpuAndMode.mode; // initialize defaults
-
-		// I think I should always do that, cause as recommended on the SDK, the swap chain should always be created windowed..
-		windowMode.Width = m_cliRect.w;
-		windowMode.Height = m_cliRect.h;
+	// I think I should always do that, cause as recommended on the SDK, the swap chain should always be created windowed..
+	windowMode.Width = m_cliRect.w;
+	windowMode.Height = m_cliRect.h;
 		
 
-		/*UINT scW, scH;
-		GetCurrentScreenResolution( scW, scH );
-		if( scW == (UINT)m_cliRect.w && scH == (UINT)m_cliRect.h )
-			windowMode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		else
-			windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;*/
+	/*UINT scW, scH;
+	GetCurrentScreenResolution( scW, scH );
+	if( scW == (UINT)m_cliRect.w && scH == (UINT)m_cliRect.h )
+		windowMode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	else
+		windowMode.Scaling = DXGI_MODE_SCALING_STRETCHED;*/
 
-		m_device.InitDevice( gpuAndMode.pAdapter, true, &featureLVL, 1  );
-		gpuAndMode.pAdapter->Release();
-		UINT nRenderBuffers = 3;
-		m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, nRenderBuffers, gpuAndMode.pOutput );
-		m_swapChain.CreateRTVFromBackBuffer( m_device.GetDevice() );
+	m_device.InitDevice( gpuAndMode.pAdapter, true, &featureLVL, 1  );
+	gpuAndMode.pAdapter->Release();
+	UINT nRenderBuffers = 3;
+	m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, nRenderBuffers, gpuAndMode.pOutput );
+	m_swapChain.CreateRTVFromBackBuffer( m_device.GetDevice() );
 
+	//---
+
+	//set raster and scissor state
+
+	D3D11_RASTERIZER_DESC rasterDesc;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.FrontCounterClockwise = false;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.ScissorEnable = true;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.AntialiasedLineEnable = false;
+
+	ID3D11RasterizerState *pRS = nullptr;
+	m_device.GetDevice()->CreateRasterizerState(&rasterDesc, &pRS);
+	m_device.GetContext()->RSSetState(pRS);
+	pRS->Release();
+
+	// NOTE: setting scissor to true and not setting a scissor fucks things up..I have no idea why
+
+	D3D11_RECT scissor;
+	scissor.left = 0;
+	scissor.right = ::Window::m_cliRect.w;
+	scissor.top = 0;
+	scissor.bottom = ::Window::m_cliRect.h;
+
+	m_device.GetContext()->RSSetScissorRects(1, &scissor);
+	
+	//--
 		
-		
+	// initialize sprite and text renderer
 
-		//---
+	m_spriteRenderer.Init(&m_device, 1024);
+	m_spriteRenderer.m_camera.BuildPipeState( m_cliRect.w, m_cliRect.h, &m_device, m_swapChain.m_pBackBufferRTV );
 
-		// initialize sprite and text renderer
 
-		m_spriteRenderer.Init(&m_device, 1024);
-		m_spriteRenderer.m_camera.BuildPipeState( m_cliRect.w, m_cliRect.h, &m_device, m_swapChain.m_pBackBufferRTV );
-		//m_textRenderer.Initialize(&m_device, m_spriteRenderer);
 
-		//text::GlyphRect chardescs[512];
-		//WCHAR chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ·ÈÌÛ˙‚ÍÙ‡„ı¿√’¡…Õ”⁄¬ ‘1234567890/*-+-_=(){}[]<>/|\\\"`'~^!?,.:;@#$%&";
-		//text::CreateFontFiles( "arial_18", L"Arial", 18.0f, Gdiplus::FontStyleRegular, true, m_device, chardescs, chars, sizeof(chars)/sizeof(WCHAR) );
+	//m_textRenderer.Initialize(&m_device, m_spriteRenderer);
 
-		//text::BmpFont font;
-		//font.InitFromFile( "Arial_30.fnt", m_spriteRenderer.m_tex2D_cache );
-		//text::BmpFont font2;
-		//font2.InitFromFile( "Arial_14.fnt", m_spriteRenderer.m_tex2D_cache );
-		//text::BmpFont font3;
-		//font3.InitFromFile( "arial_18.fnt", m_spriteRenderer.m_tex2D_cache );
+	//text::GlyphRect chardescs[512];
+	//WCHAR chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ·ÈÌÛ˙‚ÍÙ‡„ı¿√’¡…Õ”⁄¬ ‘1234567890/*-+-_=(){}[]<>/|\\\"`'~^!?,.:;@#$%&";
+	//text::CreateFontFiles( "arial_18", L"Arial", 18.0f, Gdiplus::FontStyleRegular, true, m_device, chardescs, chars, sizeof(chars)/sizeof(WCHAR) );
 
-		//m_textRenderer.AddFont( font );
-		//m_textRenderer.AddFont( font2 );
-		//m_textRenderer.AddFont( font3 );
+	//text::BmpFont font;
+	//font.InitFromFile( "Arial_30.fnt", m_spriteRenderer.m_tex2D_cache );
+	//text::BmpFont font2;
+	//font2.InitFromFile( "Arial_14.fnt", m_spriteRenderer.m_tex2D_cache );
+	//text::BmpFont font3;
+	//font3.InitFromFile( "arial_18.fnt", m_spriteRenderer.m_tex2D_cache );
 
-		return 0;
+	//m_textRenderer.AddFont( font );
+	//m_textRenderer.AddFont( font2 );
+	//m_textRenderer.AddFont( font3 );
+
+	return 0;
 }
 
 LRESULT CALLBACK GameWindow2D_1::OnWM_CLOSE( HWND hWnd_p )

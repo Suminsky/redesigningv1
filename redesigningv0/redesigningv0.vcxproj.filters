@@ -306,9 +306,6 @@
     <ClInclude Include="resource1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="namespace win\KeyboardInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mentle\SpriteAnimTool\ClipsLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -660,9 +657,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="namespace net\P2PConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="namespace win\KeyboardInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mentle\SpriteAnimTool\ClipsLayer.cpp">

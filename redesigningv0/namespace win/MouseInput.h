@@ -27,21 +27,21 @@ namespace win{
 
 	public:
 
-		struct Buttons{
+		struct Buttons {
 
 			bool left, middle, right;
 
-			Buttons(): left(false), middle(false), right(false){}
-			
-			void Reset(){
+			Buttons() : left(false), middle(false), right(false) {}
+
+			void Reset() {
 				left = middle = right = false;
 			}
 		};
-		struct Pos{
+		struct Pos {
 
 			int x, y;
 
-			Pos():x(0), y(0){}
+			Pos() :x(0), y(0) {}
 		};
 
 		//------------------------------------------------------------------------
@@ -60,11 +60,10 @@ namespace win{
 
 			m_prevPos = m_pos;
 
-			
-
 			m_iWheelDelta = m_iWheelAmount - m_iWheelPrevAmount;
 			m_iWheelPrevAmount = m_iWheelAmount;
 		}
+
 		//------------------------------------------------------------------------
 		// call per frame
 		// must be called after game logic
@@ -200,6 +199,7 @@ namespace win{
 
 			SetCursorPos( mousePoint.x, mousePoint.y );
 		}
+
 
 
 		//------------------------------------------------------------------------

@@ -32,8 +32,8 @@ namespace win{
 		//time per frame data:-----------------------
 		LARGE_INTEGER m_nowCount, m_lastCount;
 
-		LONGLONG m_nDeltaCounts, m_nCounts_persistent;	// persistent == since the first call
-		LONGLONG m_nFrameCount;						// obviously persistent, also works like a frame ID
+		ULONGLONG m_nDeltaCounts, m_nCounts_persistent;	// persistent == since the first call
+		ULONGLONG m_nFrameCount;						// obviously persistent, also works like a frame ID
 		//-------------------------------------------
 
 		//========================================================================
@@ -110,8 +110,8 @@ namespace win{
 		//-----------------------
 		DOUBLE GetSecondsAccum()const;		//get how much seconds ellapsed since Init
 		DOUBLE GetMillisecondsAccum()const;	//get how much milliseconds ellapsed since Init
-		LONGLONG GetFrameCountAccum()const;	//get frame count accumulated since begining
-		LONGLONG GetCountAccum() const;
+		ULONGLONG GetFrameCountAccum()const;	//get frame count accumulated since begining
+		ULONGLONG GetCountAccum() const;
 		//--------------------------------------------------------
 		VOID GetDeltaSeconds( DOUBLE &sec )const;
 		VOID GetDeltaMilliseconds( DOUBLE &msec )const;

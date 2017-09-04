@@ -392,7 +392,6 @@
     <ClInclude Include="namespace win\FileLogger.h" />
     <ClInclude Include="namespace win\HighPerformanceTimer.h" />
     <ClInclude Include="namespace win\KeyboardAsyncInput.h" />
-    <ClInclude Include="namespace win\KeyboardInput.h" />
     <ClInclude Include="namespace win\MouseInput.h" />
     <ClInclude Include="namespace win\OpenDialog.h" />
     <ClInclude Include="namespace win\RawKeyboardInput.h" />
@@ -512,7 +511,6 @@
     <ClCompile Include="namespace win\FileLogger.cpp" />
     <ClCompile Include="namespace win\HighPerformanceTimer.cpp" />
     <ClCompile Include="namespace win\KeyboardAsyncInput.cpp" />
-    <ClCompile Include="namespace win\KeyboardInput.cpp" />
     <ClCompile Include="namespace win\MouseInput.cpp" />
     <ClCompile Include="namespace win\RawKeyboardInput.cpp" />
     <ClCompile Include="namespace win\Window.cpp" />

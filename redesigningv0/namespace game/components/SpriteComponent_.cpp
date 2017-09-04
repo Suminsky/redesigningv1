@@ -240,7 +240,7 @@ void game::SpriteComponent_::InterpolateWorld( double dInterp_p )
 		XMVECTOR vScale, qRot, vPos; 
 		keepAssert( DirectX::XMMatrixDecompose( &vScale, &qRot, &vPos, mCurrentTrafo ) );
 
-		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo );
+		XMMATRIX mPrevousTrafo = XMLoadFloat4x4( &m_previousTrafo ); // TODO: forgot the logic here, but why not use m_renderData.m_mWorld as previous (last drawn)
 		XMVECTOR vPrevScale, qPrevRot, vPrevPos;
 		keepAssert( DirectX::XMMatrixDecompose( &vPrevScale, &qPrevRot, &vPrevPos, mPrevousTrafo ) );
 

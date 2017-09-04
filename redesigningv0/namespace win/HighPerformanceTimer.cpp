@@ -164,7 +164,7 @@ VOID HighPerformanceTimer::GetMillisecondsAccum( DOUBLE &msecAccum )const{
 	msecAccum = (m_nCounts_persistent * m_counterFrequency_inverse)*1000.0;
 }
 //
-LONGLONG HighPerformanceTimer::GetFrameCountAccum()const{
+ULONGLONG HighPerformanceTimer::GetFrameCountAccum()const{
 
 	return m_nFrameCount;
 }
@@ -173,7 +173,7 @@ VOID HighPerformanceTimer::GetFrameCountAccum(LONGLONG &nCountAccum)const{
 	nCountAccum = m_nFrameCount;
 }
 //
-LONGLONG HighPerformanceTimer::GetCountAccum()const{
+ULONGLONG HighPerformanceTimer::GetCountAccum()const{
 	return m_nCounts_persistent;
 }
 //=====================================================================================================================
