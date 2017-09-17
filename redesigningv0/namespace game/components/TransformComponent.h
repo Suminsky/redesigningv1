@@ -157,12 +157,10 @@ namespace game{
 
 		bool m_bSnap; // hack
 
-		gen::TreeNode_MC<TransformComponent*, E_MAXCHILDREN> m_node;
+		gen::TreeNode_MC<TransformComponent*, E_MAXCHILDREN> m_node; // TODO, memory block on the factory for everyone? needs sibling linked list?
 	};
 
 	typedef gen::pool_ptr<TransformComponent> pool_TransformCompo_ptr;
-	typedef std::shared_ptr<TransformComponent> shared_TransformComponent_ptr;
-	typedef std::weak_ptr<TransformComponent> weak_TransformComponent_ptr;
 
 	//========================================================================
 	// 

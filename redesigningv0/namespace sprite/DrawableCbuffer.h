@@ -86,8 +86,6 @@ namespace sprite{
 
 #pragma warning(pop)
 
-	typedef std::shared_ptr<DrawableCbuffer> shared_DrawableCbuffer_ptr;
-
 
 	//========================================================================
 	// bind command specialized for drawable cbuffer

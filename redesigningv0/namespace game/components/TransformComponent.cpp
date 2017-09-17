@@ -64,6 +64,7 @@ bool game::TransformComponent::BUpdateWorldAndFinalTransformation( const DirectX
 		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
 		||
 		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
+	// I dont remember why i was doing that
 
 	m_previousFinal = m_final;
 
@@ -85,7 +86,8 @@ bool game::TransformComponent::BUpdateWorldAndFinalTransformation( const DirectX
 
 	mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
 
-	return	bPreviousUpdated
+	return
+		bPreviousUpdated
 		||
 		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
 		||
@@ -149,7 +151,8 @@ bool game::TransformComponent::BUpdateWorldAndFinalTransformation( const DirectX
 
 	mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
 
-	return	bPreviousUpdated
+	return
+		bPreviousUpdated
 		||
 		XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
 		||
@@ -194,7 +197,7 @@ bool game::TransformComponent::BUpdateWorldAndFinalTransformation()
 		XMVector4NotEqual( mPrevFinal.r[1], mFinal.r[1] )
 		||
 		XMVector4NotEqual( mPrevFinal.r[2], mFinal.r[2] );
-
+	// I dont remember why i was doing that
 	//
 
 	m_previousFinal = m_final;
@@ -216,7 +219,8 @@ bool game::TransformComponent::BUpdateWorldAndFinalTransformation()
 
 	mPrevFinal = XMLoadFloat4x4( &m_previousFinal );
 
-	return	bPreviousUpdated
+	return	
+			bPreviousUpdated
 			||
 			XMVector4NotEqual( mPrevFinal.r[3], mFinal.r[3] ) // position first
 			||

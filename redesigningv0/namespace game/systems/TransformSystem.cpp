@@ -15,41 +15,6 @@ void game::TransformSystem::VOnInit()
 }
 
 
-void game::TransformSystem::VOnUpdate_oldRecursive( double , double )
-{
-	// recursive version
-
-	for( unsigned int itTrafo = 0, iSize = m_poolAccess.GetNAllocated();
-		itTrafo < iSize;
-		++itTrafo ){
-
-			TransformComponent & transformCompo = (*m_poolAccess.GetAllocated( itTrafo )); //(*m_poolAccess.GetAllocatedLinearly(itTrafo));//
-			if( !transformCompo.GetObjectOwner()->IsAttached() ) continue;
-
-			// ignore if not root trafo
-
-			if( transformCompo.m_node.GetParent() ) continue;
-
-			// compute final trafo
-			
-			//transformCompo.UpdateWorldAndFinalTransformation();
-			if( transformCompo.BUpdateWorldAndFinalTransformation() || transformCompo.m_bSnap ){
-
-				// TODO shouldnt dispatch if unchanged..(profile)-> actually, sprite need to receive the last previous for
-				// proper interpolation
-			
-				transformCompo.GetObjectOwner()
-					->DispatchComponentEventImmediately( COMPONENT_TYPE(TransformComponent), &transformCompo );
-
-				transformCompo.m_bSnap = false;
-
-			}
-			// recurse on childs
-
-			RecursiveUpdate( transformCompo );
-	}
-}
-
 void game::TransformSystem::VOnUpdate/*_newBFS*/( double, double )
 {
 	// bfs version
@@ -107,24 +72,6 @@ void game::TransformSystem::VOnUpdate/*_newBFS*/( double, double )
 
 				nonRootTrafos.PushBack(&childTransform);
 		}
-	}
-}
-
-
-void game::TransformSystem::RecursiveUpdate( TransformComponent & currentParent_p )
-{
-	for( unsigned int itChild = 0, nChilds = currentParent_p.m_node.GetNumberOfChilds();
-		itChild < nChilds;
-		++itChild ){
-
-			TransformComponent & childTransform = (*currentParent_p.m_node.GetChild(itChild)->GetData());
-			if( !childTransform.GetObjectOwner()->IsAttached() ) continue;
-
-			UpdateWorldAndFinalAndDispatchEveIfNeeded(childTransform, currentParent_p.m_world);
-
-			// recurse on childes
-
-			RecursiveUpdate( childTransform );
 	}
 }
 

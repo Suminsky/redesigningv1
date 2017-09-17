@@ -61,6 +61,8 @@ SpriteComponent_::SpriteComponent_(
 	m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
 
 	m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
+	// NOTE: sprites destroyed and recreated at runtime will keep increasing m_pPipeBindsMem allocation...needs "dynamic" mem
+	// needs to use both stack and maybe pool(of 4 binder*) for runtime allocations.
 
 	// initialize pipe state for this sprite
 	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
@@ -77,6 +79,144 @@ SpriteComponent_::SpriteComponent_(
 	m_sortKey.bitfield.textureID = m_TextureID;
 	m_sortKey.bitfield.blending = blendType_p;
 }
+
+void SpriteComponent_::Initialize(
+	Device * pDevice_p,
+	const char * szTexture_p, float fWidth_p, float fHeight_p, XMFLOAT4 uvRect_p,
+	E_BLENDTYPE blendType_p, E_SAMPLERTYPE sampler_p,
+	SpriteRenderer * pSpriteRenderer_p)
+{
+	m_pCamera = nullptr;
+	m_sortKey.intRepresentation = 0LL;
+
+	m_bHFlip = m_bVFlip = false;
+
+	//m_BlendModeID= m_SamplerModeID= 
+	m_ShaderID = 0;
+	m_iShaderPermutation = 0;
+
+	m_renderData.m_mWorld = XMMatrixIdentity();
+	m_renderData.m_res.x = fWidth_p;
+	m_renderData.m_res.y = fHeight_p;
+	m_renderData.m_uvRect = uvRect_p;
+	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
+	m_renderData.m_bUpdate = true;
+
+	m_previousColor = m_currentColor = m_renderData.m_color;
+	XMStoreFloat4x4(&m_currentTrafo, m_renderData.m_mWorld);
+	m_previousTrafo = m_currentTrafo;
+
+	if (!m_pBuffer) {
+
+		// creates a ID3DBuffer for the vs constant buffer
+
+		BufferResource::CreationParams cbufferParams;
+		ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
+		cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
+		cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
+		cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbufferParams.desc.bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; //0; //
+		cbufferParams.desc.bufferDesc.StructureByteStride = 0;
+		cbufferParams.desc.bufferDesc.MiscFlags = 0;
+
+		//ID3D11Buffer * pBuffer = NULL;
+		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+
+		m_pBuffer = dx::BufferResource::Create(pDevice_p->GetDevice(), cbufferParams);
+
+		m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
+	}
+
+	// initialize pipe state for this sprite
+
+	m_pipeState_cb_tex_ss_bs.Reset();
+
+	m_VSDrawableCbufferBinder.Initialize(m_pBuffer/*pBuffer*/, &m_renderData);
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&m_VSDrawableCbufferBinder);
+
+	unsigned int iTextureID;
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID));
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p));
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p));
+
+	m_TextureID = iTextureID;
+	m_BlendModeID = blendType_p;
+	m_SamplerModeID = sampler_p;
+	m_sortKey.bitfield.textureID = m_TextureID;
+	m_sortKey.bitfield.blending = blendType_p;
+}
+
+void SpriteComponent_::Initialize(
+	Device * pDevice_p,
+	TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, XMFLOAT4 uvRect_p,
+	E_BLENDTYPE blendType_p, E_SAMPLERTYPE sampler_p,
+	SpriteRenderer * pSpriteRenderer_p)
+{
+	m_pCamera = nullptr;
+	m_sortKey.intRepresentation = 0LL;
+
+	m_bHFlip = m_bVFlip = false;
+
+	//m_BlendModeID= m_SamplerModeID= 
+	m_ShaderID = 0;
+	m_iShaderPermutation = 0;
+
+	m_renderData.m_mWorld = XMMatrixIdentity();
+	m_renderData.m_res.x = fWidth_p;
+	m_renderData.m_res.y = fHeight_p;
+	m_renderData.m_uvRect = uvRect_p;
+	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
+	m_renderData.m_bUpdate = true;
+
+	m_previousColor = m_currentColor = m_renderData.m_color;
+	XMStoreFloat4x4(&m_currentTrafo, m_renderData.m_mWorld);
+	m_previousTrafo = m_currentTrafo;
+
+	// creates a ID3DBuffer for the vs constant buffer
+
+	if (!m_pBuffer) {
+
+		BufferResource::CreationParams cbufferParams;
+		ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
+		cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
+		cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
+		cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbufferParams.desc.bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; //0; //
+		cbufferParams.desc.bufferDesc.StructureByteStride = 0;
+		cbufferParams.desc.bufferDesc.MiscFlags = 0;
+
+		//ID3D11Buffer * pBuffer = NULL;
+		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
+
+		m_pBuffer = dx::BufferResource::Create(pDevice_p->GetDevice(), cbufferParams);
+
+		m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
+	}
+
+	// initialize pipe state for this sprite
+
+	m_pipeState_cb_tex_ss_bs.Reset();
+
+	m_VSDrawableCbufferBinder.Initialize(m_pBuffer, &m_renderData);
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&m_VSDrawableCbufferBinder);
+
+	int iTextureID = pTexture_p->iID;
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(pTexture_p->pBindPSSRV);
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p));
+	m_pipeState_cb_tex_ss_bs.AddBinderCommand(&pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p));
+
+	m_TextureID = iTextureID;
+	m_BlendModeID = blendType_p;
+	m_SamplerModeID = sampler_p;
+	m_sortKey.bitfield.textureID = m_TextureID;
+	m_sortKey.bitfield.blending = blendType_p;
+}
+
+game::SpriteComponent_::~SpriteComponent_()
+{
+	if (m_pBuffer)m_pBuffer->Release();
+}
+
 
 void SpriteComponent_::VOnAttach()
 {
@@ -158,6 +298,34 @@ void game::SpriteComponent_::OnAnimEventDelegate( const Event<ComponentEventData
 	m_TextureID = pAnim->GetSprite().iID;
 	m_sortKey.bitfield.textureID = m_TextureID;
 }
+void game::SpriteComponent_::OnAnim_EventDelegate(const Event<ComponentEventData> & event_p)
+{
+	SpriteAnimCompo_ * pAnim = event_p.GetDataAs<SpriteAnimCompo_*>();
+
+	SpriteFrame_ spriteFrame = pAnim->GetCurrentFrame();
+
+	m_renderData.m_res.x = spriteFrame.fW;
+	m_renderData.m_res.y = spriteFrame.fH;
+	m_renderData.m_uvRect = spriteFrame.uvRect;
+	m_renderData.m_padding.x = spriteFrame.xOffset;
+	m_renderData.m_padding.y = spriteFrame.yOffset;
+	m_renderData.m_bUpdate = true;
+
+	if (m_bHFlip) {
+		gen::FlipUVRectHorz(((float*)(&m_renderData.m_uvRect)));
+		m_renderData.m_padding.x = -spriteFrame.xOffset;
+
+	}
+	if (m_bVFlip) {
+		gen::FlipUVRectVertc(((float*)(&m_renderData.m_uvRect)));
+		m_renderData.m_padding.y = -spriteFrame.yOffset;
+	}
+
+	const TextureID_Binder_Pair_ & sprite = pAnim->GetSprite((iframe)spriteFrame.iSpriteUsedIndex);
+	m_pipeState_cb_tex_ss_bs[1] = sprite.pBindPSSRV;
+	m_TextureID = sprite.iID;
+	m_sortKey.bitfield.textureID = m_TextureID;
+}
 
 void game::SpriteComponent_::SetColor( DirectX::XMFLOAT4 color_p )
 {
@@ -219,11 +387,6 @@ void game::SpriteComponent_::UnFlipVertc()
 	}
 }
 
-game::SpriteComponent_::~SpriteComponent_()
-{
-	if( m_pBuffer )m_pBuffer->Release();
-}
-
 void game::SpriteComponent_::InterpolateWorld( double dInterp_p )
 {
 	XMMATRIX mCurrentTrafo = XMLoadFloat4x4( &m_currentTrafo );
@@ -277,157 +440,6 @@ void game::SpriteComponent_::InterpolateColor( double dInterp )
 	}
 }
 
-void game::SpriteComponent_::OnAnim_EventDelegate( const Event<ComponentEventData> & event_p )
-{
-	SpriteAnimCompo_ * pAnim = event_p.GetDataAs<SpriteAnimCompo_*>();
-
-	SpriteFrame_ spriteFrame = pAnim->GetCurrentFrame();
-
-	m_renderData.m_res.x = spriteFrame.fW;
-	m_renderData.m_res.y = spriteFrame.fH;
-	m_renderData.m_uvRect = spriteFrame.uvRect;
-	m_renderData.m_padding.x = spriteFrame.xOffset;
-	m_renderData.m_padding.y = spriteFrame.yOffset;
-	m_renderData.m_bUpdate = true;
-
-	if( m_bHFlip ){
-		gen::FlipUVRectHorz( ((float*)(&m_renderData.m_uvRect)) );
-		m_renderData.m_padding.x = -spriteFrame.xOffset;
-
-	}
-	if( m_bVFlip ){
-		gen::FlipUVRectVertc( ((float*)(&m_renderData.m_uvRect)) );
-		m_renderData.m_padding.y = -spriteFrame.yOffset;
-	}
-
-	const TextureID_Binder_Pair_ & sprite = pAnim->GetSprite((iframe)spriteFrame.iSpriteUsedIndex);
-	m_pipeState_cb_tex_ss_bs[1] = sprite.pBindPSSRV;
-	m_TextureID = sprite.iID;
-	m_sortKey.bitfield.textureID = m_TextureID;
-}
-
-void SpriteComponent_::Initialize( dx::Device * pDevice_p, const char * szTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
-{
-	m_pCamera = nullptr;
-	m_sortKey.intRepresentation = 0LL;
-
-	m_bHFlip = m_bVFlip = false;
-
-	//m_BlendModeID= m_SamplerModeID= 
-	m_ShaderID = 0;
-	m_iShaderPermutation = 0;
-
-	m_renderData.m_mWorld = XMMatrixIdentity();
-	m_renderData.m_res.x = fWidth_p;
-	m_renderData.m_res.y = fHeight_p;
-	m_renderData.m_uvRect = uvRect_p;
-	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
-	m_renderData.m_bUpdate = true;
-
-	m_previousColor = m_currentColor = m_renderData.m_color;
-	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
-	m_previousTrafo = m_currentTrafo;
-
-	if( !m_pBuffer ){
-	
-		// creates a ID3DBuffer for the vs constant buffer
-
-		BufferResource::CreationParams cbufferParams;
-		ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
-		cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
-		cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
-		cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
-		cbufferParams.desc.bufferDesc.StructureByteStride = 0;
-		cbufferParams.desc.bufferDesc.MiscFlags = 0;
-
-		//ID3D11Buffer * pBuffer = NULL;
-		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	
-		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
-
-		m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
-	}
-
-	// initialize pipe state for this sprite
-
-	m_pipeState_cb_tex_ss_bs.Reset();
-
-	m_VSDrawableCbufferBinder.Initialize( m_pBuffer/*pBuffer*/, &m_renderData );
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &m_VSDrawableCbufferBinder );
-
-	unsigned int iTextureID;
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_tex2D_cache.Get(szTexture_p, &iTextureID) );
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
-
-	m_TextureID = iTextureID;
-	m_BlendModeID = blendType_p;
-	m_SamplerModeID = sampler_p;
-	m_sortKey.bitfield.textureID = m_TextureID;
-	m_sortKey.bitfield.blending = blendType_p;
-}
-void SpriteComponent_::Initialize( dx::Device * pDevice_p, game::TextureID_Binder_Pair * pTexture_p, float fWidth_p, float fHeight_p, DirectX::XMFLOAT4 uvRect_p, sprite::E_BLENDTYPE blendType_p, sprite::E_SAMPLERTYPE sampler_p, sprite::SpriteRenderer * pSpriteRenderer_p )
-{
-	m_pCamera = nullptr;
-	m_sortKey.intRepresentation = 0LL;
-
-	m_bHFlip = m_bVFlip = false;
-
-	//m_BlendModeID= m_SamplerModeID= 
-	m_ShaderID = 0;
-	m_iShaderPermutation = 0;
-
-	m_renderData.m_mWorld = XMMatrixIdentity();
-	m_renderData.m_res.x = fWidth_p;
-	m_renderData.m_res.y = fHeight_p;
-	m_renderData.m_uvRect = uvRect_p;
-	m_renderData.m_color.x = m_renderData.m_color.y = m_renderData.m_color.z = m_renderData.m_color.w = 1.0f;
-	m_renderData.m_bUpdate = true;
-
-	m_previousColor = m_currentColor = m_renderData.m_color;
-	XMStoreFloat4x4( &m_currentTrafo, m_renderData.m_mWorld );
-	m_previousTrafo = m_currentTrafo;
-
-	// creates a ID3DBuffer for the vs constant buffer
-
-	if( !m_pBuffer ){
-	
-		BufferResource::CreationParams cbufferParams;
-		ZeroMemory(&cbufferParams, sizeof(BufferResource::CreationParams));
-		cbufferParams.desc.bufferDesc.ByteWidth = DrawableCbuffer::s_SIZE;
-		cbufferParams.desc.bufferDesc.Usage = D3D11_USAGE_DYNAMIC; //D3D11_USAGE_DEFAULT; // 
-		cbufferParams.desc.bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cbufferParams.desc.bufferDesc.CPUAccessFlags =  D3D11_CPU_ACCESS_WRITE; //0; //
-		cbufferParams.desc.bufferDesc.StructureByteStride = 0;
-		cbufferParams.desc.bufferDesc.MiscFlags = 0;
-
-		//ID3D11Buffer * pBuffer = NULL;
-		//pDevice_p->m_pCacheBuffer->Acquire( cbufferParams, pBuffer );
-	
-		m_pBuffer = dx::BufferResource::Create( pDevice_p->GetDevice(), cbufferParams );
-
-		m_pipeState_cb_tex_ss_bs.Initialize(pDevice_p->m_pPipeBindsMem->StackAlloc(4u), 4u);
-	}
-
-	// initialize pipe state for this sprite
-
-	m_pipeState_cb_tex_ss_bs.Reset();
-
-	m_VSDrawableCbufferBinder.Initialize( m_pBuffer, &m_renderData );
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &m_VSDrawableCbufferBinder );
-
-	int iTextureID = pTexture_p->iID;
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( pTexture_p->pBindPSSRV );
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_samplers_cache.GetSamplerBind(sampler_p) );
-	m_pipeState_cb_tex_ss_bs.AddBinderCommand( &pSpriteRenderer_p->m_blends_cache.GetBlendBind(blendType_p) );
-
-	m_TextureID = iTextureID;
-	m_BlendModeID = blendType_p;
-	m_SamplerModeID = sampler_p;
-	m_sortKey.bitfield.textureID = m_TextureID;
-	m_sortKey.bitfield.blending = blendType_p;
-}
 
 //========================================================================
 // 
@@ -631,6 +643,7 @@ void game::SpriteComponent_Factory::LoadInstanceData( spriteInstance & inst_p, t
 	}
 }
 
+
 game::pool_Component_ptr game::SpriteComponent_Factory::VCloneComponent( const Component * pCompo_p )
 {
 	pool_SpriteCompo__ptr pSprite( m_pool );
@@ -738,6 +751,7 @@ void game::SpriteComponent_Factory::VUpdateComponent( Component * pCompo_p, text
 	}
 }
 
+
 void game::SpriteComponent_Factory::UpdateXYWHFromGfig( DirectX::XMFLOAT4 & xywh_p, text::GfigElementA * pGFig_p )
 {
 	GfigElementA * pElement;
@@ -755,9 +769,11 @@ void game::SpriteComponent_Factory::UpdateXYWHFromGfig( DirectX::XMFLOAT4 & xywh
 		xywh_p.w = (float)atof(pElement->m_value.c_str());
 	}
 }
+
 //------------------------------------------------------------------------
 // 
 //------------------------------------------------------------------------
+
 void game::SpriteComponent_Factory::VSerialize( const Component * pCompo_p, text::GfigElementA * pGFig_p )
 {
 	/*
