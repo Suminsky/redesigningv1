@@ -63,7 +63,7 @@ void Game::FixedStepLoop(){
 	m_stateControl.ResolveStateChange();
 }
 
-void game::Game::LooseStepLoop()
+void Game::LooseStepLoop()
 {
 	// update timer
 	m_timer.Update();
@@ -78,7 +78,7 @@ void game::Game::LooseStepLoop()
 	m_stateControl.ResolveStateChange();
 }
 
-void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
+void Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 {
 	// update timer
 	m_timer.Update();
@@ -112,7 +112,7 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 
 		m_stateControl.Update( m_dFixedTimeStep );
 
-		//win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
+		win::UniqueFileLogger()<<"*FIXED UPDATE*"<<SZ_NEWLINE;
 		//win::UniqueFileLogger()<<"FIX: "<<m_dFixedTimeStep<<SZ_NEWLINE;
 	}
 
@@ -130,13 +130,13 @@ void game::Game::SmoothedFixedStepLoop( double dVsyncRefreshRate_p )
 
 	// scream?
 
-	//win::UniqueFileLogger()<<"*DRAW*"<<SZ_NEWLINE;
+	win::UniqueFileLogger()<<"*DRAW* I: "<< dInterpolationAmount << " dt:"<< dDeltaSeconds<< SZ_NEWLINE;
 	//win::UniqueFileLogger()<<"i:  "<<dInterpolationAmount<<SZ_NEWLINE<<SZ_NEWLINE;
 
 	m_stateControl.ResolveStateChange();
 }
 
-void game::Game::SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p )
+void Game::SmoothDelta( double & dDelta_p, double dVsyncRefreshRate_p )
 {
 	// add in whatever time we currently have saved in the buffer
 	dDelta_p += m_dSmoothDeltaBuffer;

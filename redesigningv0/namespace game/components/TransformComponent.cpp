@@ -8,6 +8,60 @@ using namespace DirectX;
 using namespace text;
 
 
+
+void game::Trafo::RotateAround(const XMVECTOR & pivot_p, const XMVECTOR & qRot_p)
+{
+	// TESTED, works, didnt tested with parenting tho
+
+	//----------------------- works, buts heaviweight
+	//XMMATRIX mAfine =
+	//XMMatrixAffineTransformation( // TODO: version of this that just uses rotation and pivot
+	//	g_XMOne,
+	//	pivot_p,
+	//	qRot_p,
+	//	g_XMZero);
+	//XMMATRIX mWorld = DeriveMatrix();
+	//FromMatrix( XMMatrixMultiply(mWorld, afTrafo) );	// frommatrix expensive af
+	//--------------------------------------------
+
+	// remove the w
+	XMVECTOR VPivot = XMVectorSelect(g_XMSelect1110.v, pivot_p, g_XMSelect1110.v);
+	
+	//--------------------------- works (basically stripped XMMatrixAffineTransformation of unused params)
+
+	//inv(t) * rot * t
+
+	//XMMATRIX MRotation = XMMatrixRotationQuaternion(qRot_p);
+
+	//XMMATRIX mAfine = XMMatrixIdentity();
+	//mAfine.r[3] = XMVectorSubtract(mAfine.r[3], VPivot);// XMVectorNegate(VPivot);
+	//mAfine = XMMatrixMultiply(mAfine, MRotation);
+	//mAfine.r[3] = XMVectorAdd(mAfine.r[3], VPivot);
+
+
+	//XMVECTOR vPos = XMLoadFloat4(&position);
+
+	//XMStoreFloat4(&position, XMVector4Transform(vPos, mAfine));
+	//-------------------------------------
+
+	//------------------ works
+	
+	XMVECTOR vPos = XMLoadFloat4(&position);
+	vPos = XMVectorSubtract(vPos, VPivot);
+	vPos = XMVector3Rotate(vPos, qRot_p); // loses W
+	vPos = XMVectorAdd(vPos, VPivot);
+	vPos = XMVectorSetW(vPos, 1.0f);
+
+	XMStoreFloat4(&position, vPos);
+	//----------------
+
+	XMVECTOR qRot = XMLoadFloat4(&qRotation);
+	XMStoreFloat4(&qRotation, XMQuaternionMultiply(qRot, qRot_p)); // works
+	//XMStoreFloat4(&qRotation, XMQuaternionMultiply(qRot, XMQuaternionRotationMatrix(mAfine) ) );//works, same as above
+	//XMStoreFloat4(&qRotation, XMVector4Transform(qRot, mAfine )); // that is wrong, matrix decompose fails
+}
+
+
 game::TransformComponent::TransformComponent()
 {
 	m_type = COMPONENT_TYPE(TransformComponent);

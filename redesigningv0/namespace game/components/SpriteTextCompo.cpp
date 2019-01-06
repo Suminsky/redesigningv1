@@ -40,6 +40,7 @@ void game::SpriteTextCompo::Initialize(
 	m_pRenderData = pInstMemBlock_p;
 	m_maxChars = maxChars_p;
 	m_sortKey.intRepresentation = 0LL;
+	m_pCamera = nullptr;
 
 	m_nCurrentSzLen = gen::stringUtil::CountWString( szText_p, maxChars_p );
 	memcpy( m_szText, szText_p, sizeof(wchar_t)*m_nCurrentSzLen );

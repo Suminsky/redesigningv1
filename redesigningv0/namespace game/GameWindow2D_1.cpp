@@ -168,7 +168,7 @@ LRESULT CALLBACK GameWindow2D_1::OnWM_CREATE( HWND hWnd_p )
 
 	m_device.InitDevice( gpuAndMode.pAdapter, true, &featureLVL, 1  );
 	gpuAndMode.pAdapter->Release();
-	UINT nRenderBuffers = 3;
+	UINT nRenderBuffers = 1;
 	m_swapChain.CreateTheSwapChain( m_device.GetDevice(), pFactory, hWnd_p, false, true, 1,0, windowMode, nRenderBuffers, gpuAndMode.pOutput );
 	m_swapChain.CreateRTVFromBackBuffer( m_device.GetDevice() );
 

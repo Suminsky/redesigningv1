@@ -30,88 +30,88 @@
 
 namespace win{
 
-	class Window{
+	class Window {
 
 	public:
 
 		//------------------------------------------------------------------------
 		// ctor
 		//------------------------------------------------------------------------
-		Window( HINSTANCE hAppInstance_p )
-			: m_hWnd(NULL), m_szTitle_p(NULL), m_hAppInstance(hAppInstance_p), m_bMenu(false){};
+		Window(HINSTANCE hAppInstance_p)
+			: m_hWnd(NULL), m_szTitle_p(NULL), m_hAppInstance(hAppInstance_p), m_bMenu(false) {};
 
 		//------------------------------------------------------------------------
 		// dctor
 		//------------------------------------------------------------------------
-		virtual ~Window(){};
+		virtual ~Window() {};
 
 		//------------------------------------------------------------------------
 		// Registers a WndClass (common properties shared among wnds of same class)
 		//------------------------------------------------------------------------
-		void RegisterWndClass(  TCHAR * szClassName_p,
+		void RegisterWndClass(TCHAR * szClassName_p,
 			HBRUSH bgBrush_p,
 			const HICON hIcon_p,		// application icon(include all sizes in the .ico file)
-			UINT style_p								) const;
+			UINT style_p) const;
 
 		//------------------------------------------------------------------------
 		// Creates a Win32 window, initializing m_hWnd
 		//------------------------------------------------------------------------
-		bool Create(	Rect & cliRect_p,							// desired client rect
+		bool Create(Rect & cliRect_p,							// desired client rect
 			const TCHAR * szRegisteredWndClassName_p,
 			HWND hParent,								// OPT parent
 			const TCHAR *szTitle_p,						// displayed name in the caption bar
-			const DWORD dwWS_p, const DWORD dwWSEX_p );
+			const DWORD dwWS_p, const DWORD dwWSEX_p);
 
 		//------------------------------------------------------------------------
 		// Resizes the window, anchor centralized
 		//------------------------------------------------------------------------
-		bool Resize( int ClientW_p, int ClientH_p );
+		bool Resize(int ClientW_p, int ClientH_p);
 
 		//------------------------------------------------------------------------
 		// Repositions the window
 		//------------------------------------------------------------------------
-		bool MoveTo( int ClientX_p, int ClientY_p );
+		bool MoveTo(int ClientX_p, int ClientY_p);
 
 		//------------------------------------------------------------------------
 		// change monitor resolution
 		//------------------------------------------------------------------------
-		static bool ChangeResolution( UINT W_p, UINT H_p );
+		static bool ChangeResolution(UINT W_p, UINT H_p);
 		static bool ResetMonitorResolution();
 		static bool GetCurrentScreenResolution(UINT & W_p, UINT & H_p);
 
 		//------------------------------------------------------------------------
 		// Updates the window style
 		//------------------------------------------------------------------------
-		bool ChangeStyle( DWORD dwWS_p, DWORD dwWSEX_p );
+		bool ChangeStyle(DWORD dwWS_p, DWORD dwWSEX_p);
 
 		//------------------------------------------------------------------------
 		// Set window visibility
 		//------------------------------------------------------------------------
-		inline void SetVisibility( bool bVisible_p){
+		void SetVisibility(bool bVisible_p) {
 
-			ShowWindow( m_hWnd, bVisible_p ? SW_SHOW : SW_HIDE );
+			ShowWindow(m_hWnd, bVisible_p ? SW_SHOW : SW_HIDE);
 		}
 
 		//------------------------------------------------------------------------
 		// send close message
 		//------------------------------------------------------------------------
-		inline void Close(){
+		void Close() {
 
-			PostMessage( m_hWnd, WM_CLOSE, 0, 0 );
+			PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 			//SendMessage( m_hWnd, WM_CLOSE, 0, 0 );
 		}
 
 		//------------------------------------------------------------------------
 		// Set window "state" functions
 		//------------------------------------------------------------------------
-		inline void Minimize(){
-			ShowWindow( m_hWnd, SW_MINIMIZE );
+		void Minimize() {
+			ShowWindow(m_hWnd, SW_MINIMIZE);
 		}
-		inline void Maximize(){
-			ShowWindow( m_hWnd, SW_MAXIMIZE );
+		void Maximize() {
+			ShowWindow(m_hWnd, SW_MAXIMIZE);
 		}
-		inline void Restore(){
-			ShowWindow( m_hWnd, SW_RESTORE );
+		void Restore() {
+			ShowWindow(m_hWnd, SW_RESTORE);
 		}
 
 		//------------------------------------------------------------------------
@@ -119,13 +119,14 @@ namespace win{
 		// (like if its selected, the one that gets a colored caption/title and a
 		// border thing when the user clicks on it)
 		//------------------------------------------------------------------------
-		bool IsActive(){
+		bool IsActive() {
 			return (GetActiveWindow() == m_hWnd);
 		}
-		bool HaveKeyboardFocus(){
+		bool HaveKeyboardFocus() {
 
 			return (GetFocus() == m_hWnd);
 		}
+
 
 		//------------------------------------------------------------------------
 		// Sets a menu bar to the window
@@ -147,16 +148,16 @@ namespace win{
 		//------------------------------------------------------------------------
 		// getters
 		//------------------------------------------------------------------------
-		inline HWND GetHWND(){ return m_hWnd;}
-		inline HINSTANCE GetHINSTANCE(){ return m_hAppInstance; }
-		inline const TCHAR* GetTitle(){ return m_szTitle_p; }
-		inline Rect GetCLientRect(){ return m_cliRect; }
-		inline Rect GetWindowRect(){ return m_rect; }
+		HWND GetHWND(){ return m_hWnd;}
+		HINSTANCE GetHINSTANCE(){ return m_hAppInstance; }
+		const TCHAR* GetTitle(){ return m_szTitle_p; }
+		Rect GetCLientRect(){ return m_cliRect; }
+		Rect GetWindowRect(){ return m_rect; }
 
 		//------------------------------------------------------------------------
 		// setters
 		//------------------------------------------------------------------------
-		inline void UpdateTitle( const TCHAR * szNewTitle_p ){
+		void UpdateTitle( const TCHAR * szNewTitle_p ){
 
 			TESTBOOLNULL(SetWindowText( m_hWnd, szNewTitle_p ));
 

@@ -30,14 +30,14 @@ void game::SpriteAnimationSystem::VOnUpdate( double /*dAccum_p*/, double dDelta_
 
 			if( animCompo.m_pClips[ animCompo.m_iCurrentClip ].state.eState == E_ANIMSTATE_PLAYING ){
 
-			animCompo.Update( (animTimeUnit)dDelta_p );
+				animCompo.Update( (animTimeUnit)dDelta_p );
 			}
 
 			if( animCompo.m_iPreviousFrame != animCompo.m_iCurrentFrame ){
 
-			animCompo.m_iPreviousFrame = animCompo.m_iCurrentFrame;
+				animCompo.m_iPreviousFrame = animCompo.m_iCurrentFrame;
 
-			animCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(SpriteAnimCompo_), &animCompo );
+				animCompo.GetObjectOwner()->DispatchComponentEventImmediately( COMPONENT_TYPE(SpriteAnimCompo_), &animCompo );
 			}
 
 			/*SpriteAnimationComponent & animCompo = (*m_poolAccess.GetAllocated( itSprite ));

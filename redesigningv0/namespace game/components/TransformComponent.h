@@ -88,6 +88,15 @@ namespace game{
 			DirectX::XMStoreFloat4( &qRotation, qRot );
 			DirectX::XMStoreFloat4( &scale, vScale );
 		}
+
+		void RotateAround(const DirectX::XMVECTOR & pivot_p, const DirectX::XMVECTOR & qRot_p);
+
+		void Rotate( const DirectX::XMVECTOR & normalAxis,  const float rad ) {
+
+			DirectX::XMVECTOR qRot = DirectX::XMQuaternionRotationNormal(normalAxis, rad);
+			DirectX::XMVECTOR qQ = DirectX::XMLoadFloat4(&qRotation);
+			DirectX::XMStoreFloat4(&qRotation, DirectX::XMQuaternionMultiply(qQ, qRot));
+		}
 	};
 
 	//========================================================================

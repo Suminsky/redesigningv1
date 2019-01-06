@@ -8,6 +8,8 @@
 #include "../namespace win/HighPerformanceTimer.h"
 #include "../namespace win/FileLogger.h"
 
+
+
 void render::DrawablesQueue::Submit( Drawable & drawable_p )
 {
 	Drawable* pNew = m_drawables.StackAlloc();

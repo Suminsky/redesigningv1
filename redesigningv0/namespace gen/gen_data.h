@@ -193,7 +193,7 @@ namespace gen{
 
 	namespace Math2DUtil{
 
-		#define gen_PI       3.14159265358979323846
+		static const double gen_PI = 3.14159265358979323846;
 
 		inline void VectorFromAngleD( float & x, float & y, float degree_p ){
 			//orientationVector( cosAngle, sinAngle )

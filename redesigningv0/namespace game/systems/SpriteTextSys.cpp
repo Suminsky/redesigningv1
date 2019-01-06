@@ -37,15 +37,15 @@ void SpriteTextSys::VOnDraw( double interp_p )
 
 	// create cam box
 
-	float zoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
-	float camHalfW = m_pCameraRef->m_viewPort.Width * zoom;
-	float camHalfH = m_pCameraRef->m_viewPort.Height * zoom;
-	XMFLOAT2 camPos(
+	float defzoom = m_pCameraRef->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
+	float defcamHalfW = m_pCameraRef->m_viewPort.Width * defzoom;
+	float defcamHalfH = m_pCameraRef->m_viewPort.Height * defzoom;
+	XMFLOAT2 defcamPos(
 		-XMVectorGetX( m_pCameraRef->m_mView.r[3] ),
 		-XMVectorGetY( m_pCameraRef->m_mView.r[3] )
 		);
 
-	phys::AABB2D camBox = { camPos, camHalfW, camHalfH };
+	phys::AABB2D camBox = { defcamPos, defcamHalfW, defcamHalfH };
 
 	for( uint32_t itText = 0, iSize = m_poolAccess.GetNAllocated();
 		 itText < iSize;
@@ -80,8 +80,25 @@ void SpriteTextSys::VOnDraw( double interp_p )
 
 			phys::AABB2D textBox = { pos, halfW, halfH };
 
-			// no per camera text...yet?
-			
+			if (textCompo.m_pCamera) {
+				float zoom = textCompo.m_pCamera->m_fZoom * 0.5f; // halving on zoom (order of prod dont aff res)
+				float camHalfW = textCompo.m_pCamera->m_viewPort.Width * zoom;
+				float camHalfH = textCompo.m_pCamera->m_viewPort.Height * zoom;
+				XMFLOAT2 camPos(
+					-XMVectorGetX(textCompo.m_pCamera->m_mView.r[3]),
+					-XMVectorGetY(textCompo.m_pCamera->m_mView.r[3])
+				);
+
+				phys::AABB2D ScamBox = { camPos, camHalfW, camHalfH };
+
+				if (textBox.IsColliding_e(ScamBox)) {
+					// so it needs rendering
+
+					Entry entry = { textCompo.m_sortKey.intRepresentation, itText };
+					m_sortArray.push_back(entry);
+				}
+			}
+			else
 			if( textBox.IsColliding_e( camBox ) ){
 
 				// so it needs rendering
@@ -157,6 +174,7 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 	currentDrawCall->UpdateInstanceOffset( 0 );
 	uint32_t				currentNInstances = 0;
 	m_drawableAux.AddPipelineState(&startingTextCompo.m_pipeState_tex_bs_ss);
+	sprite::Camera * pCurrentCamera = startingTextCompo.m_pCamera ? startingTextCompo.m_pCamera : m_pCameraRef;
 
 	uint32_t nSorted = (uint32_t) m_sortArray.size();
 
@@ -170,6 +188,8 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 
 		// combine text compos that share the same sort key into a single drawable
 		// (note that they now being copied linearly on the VB)
+		// diff cameras MUST reflect on the key (specifically, viewport or viewportlayer) otherwise will (most likely)
+		// be discarded by the render queue
 
 		if(	currentKey != textCompo.m_sortKey.intRepresentation){
 
@@ -177,7 +197,7 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 			m_drawableAux.SetSortKey(currentKey);
 			m_drawableAux.SetDrawCall(currentDrawCall);
 			
-			m_pSpriteRendererRef->Render( &m_drawableAux, m_pCameraRef );
+			m_pSpriteRendererRef->Render( &m_drawableAux, pCurrentCamera);
 
 			// update next drawable data
 
@@ -185,6 +205,7 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 			currentDrawCall = &textCompo.m_drawIndexedInstanced;
 			currentDrawCall->UpdateInstanceOffset( currentNInstances );
 			currentNInstances = textCompo.m_nCurremtDrawnChars;
+			pCurrentCamera = textCompo.m_pCamera ? textCompo.m_pCamera : m_pCameraRef;
 
 			m_drawableAux.PopLastPipelineState();
 			m_drawableAux.AddPipelineState(&textCompo.m_pipeState_tex_bs_ss);
@@ -197,7 +218,7 @@ void SpriteTextSys::PrepareSortedTexts_MappedPerText()
 	m_drawableAux.SetSortKey(currentKey);
 	m_drawableAux.SetDrawCall(currentDrawCall);
 
-	m_pSpriteRendererRef->Render( &m_drawableAux, m_pCameraRef );
+	m_pSpriteRendererRef->Render( &m_drawableAux, pCurrentCamera);
 
 	m_drawableAux.PopLastPipelineState();
 

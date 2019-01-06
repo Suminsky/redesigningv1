@@ -350,10 +350,10 @@ namespace phys{
 			closest_p = p_p; // start as the point itself, if inside it will stay like that
 
 			if( p_p.x < Left() ) closest_p.x = Left();
-			if( p_p.x > Right() ) closest_p.x = Right();
+			else if( p_p.x > Right() ) closest_p.x = Right();
 
 			if( p_p.y < Down() ) closest_p.y = Down();
-			if( p_p.y > Up() ) closest_p.y = Up();
+			else if( p_p.y > Up() ) closest_p.y = Up();
 		}
 
 		bool IsPointInside( const DirectX::XMFLOAT2 & p_p )const{
@@ -373,40 +373,6 @@ namespace phys{
 			hGap_p = H() - other_p.H();
 
 			return wGap_p >= 0 && hGap_p >= 0;
-		}
-
-		//------------------------------------------------------------------------
-		// 
-		//------------------------------------------------------------------------
-		static float SquareDistanceToPoint( const AABB2D & a_p, const DirectX::XMFLOAT2 & p_p ){
-
-			float dist = 0.0f;
-			
-			float Xdist;
-			if( p_p.x < a_p.Left() ){
-
-				Xdist = a_p.Left() - p_p.x;
-				dist += (Xdist) * (Xdist);
-			}
-			else if( p_p.x > a_p.Right() ){
-
-				Xdist = p_p.x - a_p.Right();
-				dist += (Xdist) * (Xdist);
-			}
-
-			float Ydist;
-			if( p_p.y < a_p.Down() ){
-
-				Ydist = a_p.Down() - p_p.y;
-				dist += (Ydist) * (Ydist);
-			}
-			else if( p_p.y > a_p.Up() ){
-
-				Ydist = p_p.y - a_p.Up();
-				dist += (Ydist) * (Ydist);
-			}
-
-			return dist;
 		}
 
 		static void GetOppositeToDirFacesMask( const DirectX::XMFLOAT2 & dir, char & cMask ){

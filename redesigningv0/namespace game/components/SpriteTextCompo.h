@@ -86,6 +86,7 @@ namespace game{
 		void UpdateInterpolatedRenderDataToAllInstances();
 
 		void SetColor( DirectX::XMFLOAT4 color_p );
+		void SetCamera(sprite::Camera * pCamera) { m_pCamera = pCamera; m_sortKey.bitfield.viewportLayer = 200; } // this vp layer is a hack, TODO fix this shit
 
 		void SetSortKey( UINT64 key ){m_sortKey.intRepresentation = key;}
 		UINT64 GetSortKey()const{return m_sortKey.intRepresentation;}
@@ -116,6 +117,7 @@ namespace game{
 
 		dx::DrawIndexedInstanced m_drawIndexedInstanced;
 		dx::PipeState m_pipeState_tex_bs_ss;
+		sprite::Camera * m_pCamera;
 
 		bool m_bUpdateBindData;
 	};
